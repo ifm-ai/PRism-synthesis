@@ -1,0 +1,60 @@
+#  apptainer build --fakeroot sandbox.sif sandbox.def
+#
+# The sandbox the environment builder works in. Unlike pr_agent_gen's, this one has to BUILD
+# container images from inside an already-unprivileged container, so it carries buildah (to run
+# the Dockerfile the agent writes) and apptainer itself (to turn the result into a .sif that
+# eval.sh can be run against).
+
+Bootstrap: docker
+From: node:25-slim
+
+%post
+    set -eux
+    export DEBIAN_FRONTEND=noninteractive
+
+    apt-get update
+    apt-get install -y --no-install-recommends \
+        ca-certificates curl wget git jq ripgrep unzip rsync \
+        procps psmisc lsof less vim uidmap \
+        python3 python3-pip build-essential \
+        buildah
+    rm -rf /var/lib/apt/lists/*
+
+    # Apptainer, for the validation build: the agent's Dockerfile is built with buildah, then
+    # converted to a .sif and run to check that eval.sh really does fail before the fix and
+    # pass after it.
+    APPTAINER_VERSION=1.4.5
+    curl -fsSL -o /tmp/apptainer.deb \
+        "https://github.com/apptainer/apptainer/releases/download/v${APPTAINER_VERSION}/apptainer_${APPTAINER_VERSION}_amd64.deb"
+    apt-get update && apt-get install -y --no-install-recommends /tmp/apptainer.deb
+    rm /tmp/apptainer.deb /var/lib/apt/lists/* -rf
+
+    npm install -g opencode-ai@1.4.6
+
+    # Nested user namespaces: buildah needs a subuid/subgid range to map root into.
+    echo "root:100000:65536" > /etc/subuid
+    echo "root:100000:65536" > /etc/subgid
+
+    # A private Python for the trajectory export, kept away from whatever the task repository
+    # installs. opencode is denied access to /.environ.
+    mkdir -p /.environ
+    curl -fsSL -o /tmp/miniconda.sh \
+        https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    bash /tmp/miniconda.sh -b -p /.environ/miniconda
+    rm /tmp/miniconda.sh
+    . /.environ/miniconda/bin/activate
+    conda create -y -n venv python=3.11
+    conda activate venv
+    pip install --no-cache-dir cloudpickle
+
+    mkdir -p /tasks /artifacts /workspace
+
+%environment
+    export DEBIAN_FRONTEND=noninteractive
+    export BUILDAH_ISOLATION=chroot
+    export STORAGE_DRIVER=vfs
+    export BUILDAH_LAYERS=false
+    export FAKEROOTDONTTRYCHOWN=1
+
+%labels
+    Description Sandbox for pr_task_synthesis — building and verifying SWE environments

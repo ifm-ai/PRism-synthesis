@@ -1,0 +1,935 @@
+STEP 1/13: FROM rust:1.70-slim-bookworm
+STEP 2/13: ENV CARGO_HOME=/root/.cargo
+STEP 3/13: ENV RUSTUP_HOME=/root/.rustup
+STEP 4/13: ENV PATH="/root/.cargo/bin:${PATH}"
+STEP 5/13: RUN apt-get update && apt-get install -y     git     curl     pkg-config     libssl-dev     ca-certificates     && rm -rf /var/lib/apt/lists/*
+Get:1 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm InRelease [151 kB]
+Get:2 http://package-mirror.invalid:8081/repository/apt-debian-bookworm-updates bookworm-updates InRelease [55.4 kB]
+Get:3 http://package-mirror.invalid:8081/repository/apt-debian-bookworm-security bookworm-security InRelease [48.0 kB]
+Get:4 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 Packages [8790 kB]
+Get:5 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/non-free amd64 Packages [102 kB]
+Get:6 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/non-free-firmware amd64 Packages [6368 B]
+Get:7 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/contrib amd64 Packages [53.5 kB]
+Get:8 http://package-mirror.invalid:8081/repository/apt-debian-bookworm-updates bookworm-updates/main amd64 Packages [6924 B]
+Get:9 http://package-mirror.invalid:8081/repository/apt-debian-bookworm-security bookworm-security/contrib amd64 Packages [896 B]
+Get:10 http://package-mirror.invalid:8081/repository/apt-debian-bookworm-security bookworm-security/main amd64 Packages [312 kB]
+Get:11 http://package-mirror.invalid:8081/repository/apt-debian-bookworm-security bookworm-security/non-free-firmware amd64 Packages [688 B]
+Get:12 http://deb.debian.org/debian bookworm InRelease [151 kB]
+Get:13 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+Get:14 http://deb.debian.org/debian-security bookworm-security InRelease [48.0 kB]
+Get:15 http://deb.debian.org/debian bookworm/main amd64 Packages [8790 kB]
+Get:16 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [6924 B]
+Get:17 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [312 kB]
+Fetched 18.9 MB in 31s (605 kB/s)
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  git-man less libbrotli1 libbsd0 libcbor0.8 libcurl3-gnutls libcurl4 libedit2
+  liberror-perl libexpat1 libfido2-1 libgdbm-compat4 libgdbm6 libldap-2.5-0
+  libldap-common libnghttp2-14 libperl5.36 libpkgconf3 libpsl5 librtmp1
+  libsasl2-2 libsasl2-modules libsasl2-modules-db libssh2-1 libssl3 libx11-6
+  libx11-data libxau6 libxcb1 libxdmcp6 libxext6 libxmuu1 netbase
+  openssh-client openssl patch perl perl-base perl-modules-5.36 pkgconf
+  pkgconf-bin publicsuffix xauth
+Suggested packages:
+  gettext-base git-daemon-run | git-daemon-sysvinit git-doc git-email git-gui
+  gitk gitweb git-cvs git-mediawiki git-svn gdbm-l10n sensible-utils
+  libsasl2-modules-gssapi-mit | libsasl2-modules-gssapi-heimdal
+  libsasl2-modules-ldap libsasl2-modules-otp libsasl2-modules-sql libssl-doc
+  keychain libpam-ssh monkeysphere ssh-askpass ed diffutils-doc perl-doc
+  libterm-readline-gnu-perl | libterm-readline-perl-perl make
+  libtap-harness-archive-perl
+The following NEW packages will be installed:
+  curl git git-man less libbrotli1 libbsd0 libcbor0.8 libcurl3-gnutls libcurl4
+  libedit2 liberror-perl libexpat1 libfido2-1 libgdbm-compat4 libgdbm6
+  libldap-2.5-0 libldap-common libnghttp2-14 libperl5.36 libpkgconf3 libpsl5
+  librtmp1 libsasl2-2 libsasl2-modules libsasl2-modules-db libssh2-1
+  libssl-dev libx11-6 libx11-data libxau6 libxcb1 libxdmcp6 libxext6 libxmuu1
+  netbase openssh-client patch perl perl-modules-5.36 pkg-config pkgconf
+  pkgconf-bin publicsuffix xauth
+The following packages will be upgraded:
+  ca-certificates libssl3 openssl perl-base
+4 upgraded, 44 newly installed, 0 to remove and 63 not upgraded.
+Need to get 29.8 MB of archives.
+After this operation, 127 MB of additional disk space will be used.
+Get:1 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 perl-base amd64 5.36.0-7+deb12u3 [1608 kB]
+Get:2 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 perl-modules-5.36 all 5.36.0-7+deb12u3 [2815 kB]
+Get:3 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libgdbm6 amd64 1.23-3 [72.2 kB]
+Get:4 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libgdbm-compat4 amd64 1.23-3 [48.2 kB]
+Get:5 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libperl5.36 amd64 5.36.0-7+deb12u3 [4196 kB]
+Get:6 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 perl amd64 5.36.0-7+deb12u3 [239 kB]
+Get:7 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 less amd64 590-2.1~deb12u2 [132 kB]
+Get:8 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 netbase all 6.4 [12.8 kB]
+Get:9 http://package-mirror.invalid:8081/repository/apt-debian-bookworm-security bookworm-security/main amd64 libssl3 amd64 3.0.20-1~deb12u2 [2036 kB]
+Get:10 http://package-mirror.invalid:8081/repository/apt-debian-bookworm-security bookworm-security/main amd64 openssl amd64 3.0.20-1~deb12u2 [1439 kB]
+Get:11 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 ca-certificates all 20230311+deb12u1 [155 kB]
+Get:12 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libbsd0 amd64 0.11.7-2 [117 kB]
+Get:13 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libedit2 amd64 3.1-20221030-2 [93.0 kB]
+Get:14 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libcbor0.8 amd64 0.8.0-2+b1 [27.4 kB]
+Get:15 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libfido2-1 amd64 1.12.0-2+b1 [77.2 kB]
+Get:16 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 openssh-client amd64 1:9.2p1-2+deb12u10 [994 kB]
+Get:17 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libbrotli1 amd64 1.0.9-2+b6 [275 kB]
+Get:18 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libsasl2-modules-db amd64 2.1.28+dfsg-10 [20.3 kB]
+Get:19 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libsasl2-2 amd64 2.1.28+dfsg-10 [59.7 kB]
+Get:20 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libldap-2.5-0 amd64 2.5.13+dfsg-5 [183 kB]
+Get:21 http://package-mirror.invalid:8081/repository/apt-debian-bookworm-security bookworm-security/main amd64 libnghttp2-14 amd64 1.52.0-1+deb12u3 [72.4 kB]
+Get:22 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libpsl5 amd64 0.21.2-1 [58.7 kB]
+Get:23 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 librtmp1 amd64 2.4+20151223.gitfa8646d.1-2+b2 [60.8 kB]
+Get:24 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libssh2-1 amd64 1.10.0-3+b1 [179 kB]
+Get:25 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libcurl4 amd64 7.88.1-10+deb12u14 [392 kB]
+Get:26 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 curl amd64 7.88.1-10+deb12u14 [316 kB]
+Get:27 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libcurl3-gnutls amd64 7.88.1-10+deb12u14 [386 kB]
+Get:28 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libexpat1 amd64 2.5.0-1+deb12u2 [99.9 kB]
+Get:29 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 liberror-perl all 0.17029-2 [29.0 kB]
+Get:30 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 git-man all 1:2.39.5-0+deb12u3 [2053 kB]
+Get:31 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 git amd64 1:2.39.5-0+deb12u3 [7264 kB]
+Get:32 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libldap-common all 2.5.13+dfsg-5 [29.3 kB]
+Get:33 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libpkgconf3 amd64 1.8.1-1 [36.1 kB]
+Get:34 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libsasl2-modules amd64 2.1.28+dfsg-10 [66.6 kB]
+Get:35 http://package-mirror.invalid:8081/repository/apt-debian-bookworm-security bookworm-security/main amd64 libssl-dev amd64 3.0.20-1~deb12u2 [2443 kB]
+Get:36 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libxau6 amd64 1:1.0.9-1 [19.7 kB]
+Get:37 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libxdmcp6 amd64 1:1.1.2-3 [26.3 kB]
+Get:38 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libxcb1 amd64 1.15-1 [144 kB]
+Get:39 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libx11-data all 2:1.8.4-2+deb12u2 [292 kB]
+Get:40 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libx11-6 amd64 2:1.8.4-2+deb12u2 [760 kB]
+Get:41 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libxext6 amd64 2:1.3.4-1+b1 [52.9 kB]
+Get:42 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 libxmuu1 amd64 2:1.1.3-3 [23.9 kB]
+Get:43 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 patch amd64 2.7.6-7 [128 kB]
+Get:44 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 pkgconf-bin amd64 1.8.1-1 [29.5 kB]
+Get:45 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 pkgconf amd64 1.8.1-1 [25.9 kB]
+Get:46 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 pkg-config amd64 1.8.1-1 [13.7 kB]
+Get:47 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 publicsuffix all 20230209.2326-1 [126 kB]
+Get:48 http://package-mirror.invalid:8081/repository/apt-debian-bookworm bookworm/main amd64 xauth amd64 1:1.1.2-1 [36.0 kB]
+debconf: delaying package configuration, since apt-utils is not installed
+Fetched 29.8 MB in 0s (62.6 MB/s)
+(Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 9037 files and directories currently installed.)
+Preparing to unpack .../perl-base_5.36.0-7+deb12u3_amd64.deb ...
+Unpacking perl-base (5.36.0-7+deb12u3) over (5.36.0-7) ...
+Setting up perl-base (5.36.0-7+deb12u3) ...
+Selecting previously unselected package perl-modules-5.36.
+(Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 9037 files and directories currently installed.)
+Preparing to unpack .../00-perl-modules-5.36_5.36.0-7+deb12u3_all.deb ...
+Unpacking perl-modules-5.36 (5.36.0-7+deb12u3) ...
+Selecting previously unselected package libgdbm6:amd64.
+Preparing to unpack .../01-libgdbm6_1.23-3_amd64.deb ...
+Unpacking libgdbm6:amd64 (1.23-3) ...
+Selecting previously unselected package libgdbm-compat4:amd64.
+Preparing to unpack .../02-libgdbm-compat4_1.23-3_amd64.deb ...
+Unpacking libgdbm-compat4:amd64 (1.23-3) ...
+Selecting previously unselected package libperl5.36:amd64.
+Preparing to unpack .../03-libperl5.36_5.36.0-7+deb12u3_amd64.deb ...
+Unpacking libperl5.36:amd64 (5.36.0-7+deb12u3) ...
+Selecting previously unselected package perl.
+Preparing to unpack .../04-perl_5.36.0-7+deb12u3_amd64.deb ...
+Unpacking perl (5.36.0-7+deb12u3) ...
+Selecting previously unselected package less.
+Preparing to unpack .../05-less_590-2.1~deb12u2_amd64.deb ...
+Unpacking less (590-2.1~deb12u2) ...
+Selecting previously unselected package netbase.
+Preparing to unpack .../06-netbase_6.4_all.deb ...
+Unpacking netbase (6.4) ...
+Preparing to unpack .../07-libssl3_3.0.20-1~deb12u2_amd64.deb ...
+Unpacking libssl3:amd64 (3.0.20-1~deb12u2) over (3.0.9-1) ...
+Preparing to unpack .../08-openssl_3.0.20-1~deb12u2_amd64.deb ...
+Unpacking openssl (3.0.20-1~deb12u2) over (3.0.9-1) ...
+Preparing to unpack .../09-ca-certificates_20230311+deb12u1_all.deb ...
+Unpacking ca-certificates (20230311+deb12u1) over (20230311) ...
+Selecting previously unselected package libbsd0:amd64.
+Preparing to unpack .../10-libbsd0_0.11.7-2_amd64.deb ...
+Unpacking libbsd0:amd64 (0.11.7-2) ...
+Selecting previously unselected package libedit2:amd64.
+Preparing to unpack .../11-libedit2_3.1-20221030-2_amd64.deb ...
+Unpacking libedit2:amd64 (3.1-20221030-2) ...
+Selecting previously unselected package libcbor0.8:amd64.
+Preparing to unpack .../12-libcbor0.8_0.8.0-2+b1_amd64.deb ...
+Unpacking libcbor0.8:amd64 (0.8.0-2+b1) ...
+Selecting previously unselected package libfido2-1:amd64.
+Preparing to unpack .../13-libfido2-1_1.12.0-2+b1_amd64.deb ...
+Unpacking libfido2-1:amd64 (1.12.0-2+b1) ...
+Selecting previously unselected package openssh-client.
+Preparing to unpack .../14-openssh-client_1%3a9.2p1-2+deb12u10_amd64.deb ...
+Unpacking openssh-client (1:9.2p1-2+deb12u10) ...
+Selecting previously unselected package libbrotli1:amd64.
+Preparing to unpack .../15-libbrotli1_1.0.9-2+b6_amd64.deb ...
+Unpacking libbrotli1:amd64 (1.0.9-2+b6) ...
+Selecting previously unselected package libsasl2-modules-db:amd64.
+Preparing to unpack .../16-libsasl2-modules-db_2.1.28+dfsg-10_amd64.deb ...
+Unpacking libsasl2-modules-db:amd64 (2.1.28+dfsg-10) ...
+Selecting previously unselected package libsasl2-2:amd64.
+Preparing to unpack .../17-libsasl2-2_2.1.28+dfsg-10_amd64.deb ...
+Unpacking libsasl2-2:amd64 (2.1.28+dfsg-10) ...
+Selecting previously unselected package libldap-2.5-0:amd64.
+Preparing to unpack .../18-libldap-2.5-0_2.5.13+dfsg-5_amd64.deb ...
+Unpacking libldap-2.5-0:amd64 (2.5.13+dfsg-5) ...
+Selecting previously unselected package libnghttp2-14:amd64.
+Preparing to unpack .../19-libnghttp2-14_1.52.0-1+deb12u3_amd64.deb ...
+Unpacking libnghttp2-14:amd64 (1.52.0-1+deb12u3) ...
+Selecting previously unselected package libpsl5:amd64.
+Preparing to unpack .../20-libpsl5_0.21.2-1_amd64.deb ...
+Unpacking libpsl5:amd64 (0.21.2-1) ...
+Selecting previously unselected package librtmp1:amd64.
+Preparing to unpack .../21-librtmp1_2.4+20151223.gitfa8646d.1-2+b2_amd64.deb ...
+Unpacking librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2+b2) ...
+Selecting previously unselected package libssh2-1:amd64.
+Preparing to unpack .../22-libssh2-1_1.10.0-3+b1_amd64.deb ...
+Unpacking libssh2-1:amd64 (1.10.0-3+b1) ...
+Selecting previously unselected package libcurl4:amd64.
+Preparing to unpack .../23-libcurl4_7.88.1-10+deb12u14_amd64.deb ...
+Unpacking libcurl4:amd64 (7.88.1-10+deb12u14) ...
+Selecting previously unselected package curl.
+Preparing to unpack .../24-curl_7.88.1-10+deb12u14_amd64.deb ...
+Unpacking curl (7.88.1-10+deb12u14) ...
+Selecting previously unselected package libcurl3-gnutls:amd64.
+Preparing to unpack .../25-libcurl3-gnutls_7.88.1-10+deb12u14_amd64.deb ...
+Unpacking libcurl3-gnutls:amd64 (7.88.1-10+deb12u14) ...
+Selecting previously unselected package libexpat1:amd64.
+Preparing to unpack .../26-libexpat1_2.5.0-1+deb12u2_amd64.deb ...
+Unpacking libexpat1:amd64 (2.5.0-1+deb12u2) ...
+Selecting previously unselected package liberror-perl.
+Preparing to unpack .../27-liberror-perl_0.17029-2_all.deb ...
+Unpacking liberror-perl (0.17029-2) ...
+Selecting previously unselected package git-man.
+Preparing to unpack .../28-git-man_1%3a2.39.5-0+deb12u3_all.deb ...
+Unpacking git-man (1:2.39.5-0+deb12u3) ...
+Selecting previously unselected package git.
+Preparing to unpack .../29-git_1%3a2.39.5-0+deb12u3_amd64.deb ...
+Unpacking git (1:2.39.5-0+deb12u3) ...
+Selecting previously unselected package libldap-common.
+Preparing to unpack .../30-libldap-common_2.5.13+dfsg-5_all.deb ...
+Unpacking libldap-common (2.5.13+dfsg-5) ...
+Selecting previously unselected package libpkgconf3:amd64.
+Preparing to unpack .../31-libpkgconf3_1.8.1-1_amd64.deb ...
+Unpacking libpkgconf3:amd64 (1.8.1-1) ...
+Selecting previously unselected package libsasl2-modules:amd64.
+Preparing to unpack .../32-libsasl2-modules_2.1.28+dfsg-10_amd64.deb ...
+Unpacking libsasl2-modules:amd64 (2.1.28+dfsg-10) ...
+Selecting previously unselected package libssl-dev:amd64.
+Preparing to unpack .../33-libssl-dev_3.0.20-1~deb12u2_amd64.deb ...
+Unpacking libssl-dev:amd64 (3.0.20-1~deb12u2) ...
+Selecting previously unselected package libxau6:amd64.
+Preparing to unpack .../34-libxau6_1%3a1.0.9-1_amd64.deb ...
+Unpacking libxau6:amd64 (1:1.0.9-1) ...
+Selecting previously unselected package libxdmcp6:amd64.
+Preparing to unpack .../35-libxdmcp6_1%3a1.1.2-3_amd64.deb ...
+Unpacking libxdmcp6:amd64 (1:1.1.2-3) ...
+Selecting previously unselected package libxcb1:amd64.
+Preparing to unpack .../36-libxcb1_1.15-1_amd64.deb ...
+Unpacking libxcb1:amd64 (1.15-1) ...
+Selecting previously unselected package libx11-data.
+Preparing to unpack .../37-libx11-data_2%3a1.8.4-2+deb12u2_all.deb ...
+Unpacking libx11-data (2:1.8.4-2+deb12u2) ...
+Selecting previously unselected package libx11-6:amd64.
+Preparing to unpack .../38-libx11-6_2%3a1.8.4-2+deb12u2_amd64.deb ...
+Unpacking libx11-6:amd64 (2:1.8.4-2+deb12u2) ...
+Selecting previously unselected package libxext6:amd64.
+Preparing to unpack .../39-libxext6_2%3a1.3.4-1+b1_amd64.deb ...
+Unpacking libxext6:amd64 (2:1.3.4-1+b1) ...
+Selecting previously unselected package libxmuu1:amd64.
+Preparing to unpack .../40-libxmuu1_2%3a1.1.3-3_amd64.deb ...
+Unpacking libxmuu1:amd64 (2:1.1.3-3) ...
+Selecting previously unselected package patch.
+Preparing to unpack .../41-patch_2.7.6-7_amd64.deb ...
+Unpacking patch (2.7.6-7) ...
+Selecting previously unselected package pkgconf-bin.
+Preparing to unpack .../42-pkgconf-bin_1.8.1-1_amd64.deb ...
+Unpacking pkgconf-bin (1.8.1-1) ...
+Selecting previously unselected package pkgconf:amd64.
+Preparing to unpack .../43-pkgconf_1.8.1-1_amd64.deb ...
+Unpacking pkgconf:amd64 (1.8.1-1) ...
+Selecting previously unselected package pkg-config:amd64.
+Preparing to unpack .../44-pkg-config_1.8.1-1_amd64.deb ...
+Unpacking pkg-config:amd64 (1.8.1-1) ...
+Selecting previously unselected package publicsuffix.
+Preparing to unpack .../45-publicsuffix_20230209.2326-1_all.deb ...
+Unpacking publicsuffix (20230209.2326-1) ...
+Selecting previously unselected package xauth.
+Preparing to unpack .../46-xauth_1%3a1.1.2-1_amd64.deb ...
+Unpacking xauth (1:1.1.2-1) ...
+Setting up libexpat1:amd64 (2.5.0-1+deb12u2) ...
+Setting up libxau6:amd64 (1:1.0.9-1) ...
+Setting up libpsl5:amd64 (0.21.2-1) ...
+Setting up libcbor0.8:amd64 (0.8.0-2+b1) ...
+Setting up libbrotli1:amd64 (1.0.9-2+b6) ...
+Setting up libssl3:amd64 (3.0.20-1~deb12u2) ...
+Setting up libnghttp2-14:amd64 (1.52.0-1+deb12u3) ...
+Setting up less (590-2.1~deb12u2) ...
+Setting up libldap-common (2.5.13+dfsg-5) ...
+Setting up libsasl2-modules-db:amd64 (2.1.28+dfsg-10) ...
+Setting up perl-modules-5.36 (5.36.0-7+deb12u3) ...
+Setting up libpkgconf3:amd64 (1.8.1-1) ...
+Setting up libx11-data (2:1.8.4-2+deb12u2) ...
+Setting up librtmp1:amd64 (2.4+20151223.gitfa8646d.1-2+b2) ...
+Setting up libssl-dev:amd64 (3.0.20-1~deb12u2) ...
+Setting up patch (2.7.6-7) ...
+Setting up pkgconf-bin (1.8.1-1) ...
+Setting up libsasl2-2:amd64 (2.1.28+dfsg-10) ...
+Setting up git-man (1:2.39.5-0+deb12u3) ...
+Setting up libssh2-1:amd64 (1.10.0-3+b1) ...
+Setting up netbase (6.4) ...
+Setting up libfido2-1:amd64 (1.12.0-2+b1) ...
+Setting up openssl (3.0.20-1~deb12u2) ...
+Setting up libbsd0:amd64 (0.11.7-2) ...
+Setting up publicsuffix (20230209.2326-1) ...
+Setting up libgdbm6:amd64 (1.23-3) ...
+Setting up libxdmcp6:amd64 (1:1.1.2-3) ...
+Setting up libxcb1:amd64 (1.15-1) ...
+Setting up libedit2:amd64 (3.1-20221030-2) ...
+Setting up libsasl2-modules:amd64 (2.1.28+dfsg-10) ...
+Setting up libldap-2.5-0:amd64 (2.5.13+dfsg-5) ...
+Setting up pkgconf:amd64 (1.8.1-1) ...
+Setting up ca-certificates (20230311+deb12u1) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (This frontend requires a controlling tty.)
+debconf: falling back to frontend: Teletype
+Updating certificates in /etc/ssl/certs...
+rehash: warning: skipping ca-certificates.crt,it does not contain exactly one certificate or CRL
+2 added, 0 removed; done.
+Setting up pkg-config:amd64 (1.8.1-1) ...
+Setting up libgdbm-compat4:amd64 (1.23-3) ...
+Setting up libcurl4:amd64 (7.88.1-10+deb12u14) ...
+Setting up libx11-6:amd64 (2:1.8.4-2+deb12u2) ...
+Setting up curl (7.88.1-10+deb12u14) ...
+Setting up libperl5.36:amd64 (5.36.0-7+deb12u3) ...
+Setting up libxmuu1:amd64 (2:1.1.3-3) ...
+Setting up openssh-client (1:9.2p1-2+deb12u10) ...
+Setting up libxext6:amd64 (2:1.3.4-1+b1) ...
+Setting up libcurl3-gnutls:amd64 (7.88.1-10+deb12u14) ...
+Setting up perl (5.36.0-7+deb12u3) ...
+Setting up xauth (1:1.1.2-1) ...
+Setting up liberror-perl (0.17029-2) ...
+Setting up git (1:2.39.5-0+deb12u3) ...
+Processing triggers for libc-bin (2.36-9) ...
+Processing triggers for ca-certificates (20230311+deb12u1) ...
+Updating certificates in /etc/ssl/certs...
+0 added, 0 removed; done.
+Running hooks in /etc/ca-certificates/update.d...
+done.
+STEP 6/13: RUN mkdir -p /opt/benchmark
+STEP 7/13: COPY setup_runtime.sh /opt/benchmark/setup_runtime.sh
+STEP 8/13: COPY repo_setup.sh /opt/benchmark/repo_setup.sh
+STEP 9/13: RUN chmod +x /opt/benchmark/setup_runtime.sh /opt/benchmark/repo_setup.sh
+STEP 10/13: RUN /opt/benchmark/repo_setup.sh
+hint: Using 'master' as the name for the initial branch. This default branch name
+hint: is subject to change. To configure the initial branch name to use in all
+hint: of your new repositories, which will suppress this warning, call:
+hint: 
+hint: 	git config --global init.defaultBranch <name>
+hint: 
+hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+hint: 'development'. The just-created branch can be renamed via this command:
+hint: 
+hint: 	git branch -m <name>
+Initialized empty Git repository in /workspace/.git/
+From https://github.com/apache/arrow-rs
+ * branch            a693f0f9c37567b2b121e261fc0a4587776d5ca4 -> FETCH_HEAD
+Updating files:   0% (2/655)
+Updating files:   1% (7/655)
+Updating files:   2% (14/655)
+Updating files:   3% (20/655)
+Updating files:   4% (27/655)
+Updating files:   5% (33/655)
+Updating files:   6% (40/655)
+Updating files:   7% (46/655)
+Updating files:   8% (53/655)
+Updating files:   9% (59/655)
+Updating files:  10% (66/655)
+Updating files:  11% (73/655)
+Updating files:  12% (79/655)
+Updating files:  13% (86/655)
+Updating files:  14% (92/655)
+Updating files:  15% (99/655)
+Updating files:  16% (105/655)
+Updating files:  17% (112/655)
+Updating files:  18% (118/655)
+Updating files:  19% (125/655)
+Updating files:  20% (131/655)
+Updating files:  21% (138/655)
+Updating files:  22% (145/655)
+Updating files:  23% (151/655)
+Updating files:  24% (158/655)
+Updating files:  25% (164/655)
+Updating files:  26% (171/655)
+Updating files:  27% (177/655)
+Updating files:  28% (184/655)
+Updating files:  29% (190/655)
+Updating files:  30% (197/655)
+Updating files:  31% (204/655)
+Updating files:  32% (210/655)
+Updating files:  33% (217/655)
+Updating files:  34% (223/655)
+Updating files:  35% (230/655)
+Updating files:  36% (236/655)
+Updating files:  37% (243/655)
+Updating files:  38% (249/655)
+Updating files:  39% (256/655)
+Updating files:  40% (262/655)
+Updating files:  41% (269/655)
+Updating files:  42% (276/655)
+Updating files:  43% (282/655)
+Updating files:  44% (289/655)
+Updating files:  45% (295/655)
+Updating files:  46% (302/655)
+Updating files:  47% (308/655)
+Updating files:  48% (315/655)
+Updating files:  49% (321/655)
+Updating files:  50% (328/655)
+Updating files:  51% (335/655)
+Updating files:  52% (341/655)
+Updating files:  53% (348/655)
+Updating files:  54% (354/655)
+Updating files:  55% (361/655)
+Updating files:  56% (367/655)
+Updating files:  57% (374/655)
+Updating files:  58% (380/655)
+Updating files:  59% (387/655)
+Updating files:  60% (393/655)
+Updating files:  61% (400/655)
+Updating files:  62% (407/655)
+Updating files:  63% (413/655)
+Updating files:  64% (420/655)
+Updating files:  65% (426/655)
+Updating files:  66% (433/655)
+Updating files:  67% (439/655)
+Updating files:  68% (446/655)
+Updating files:  69% (452/655)
+Updating files:  70% (459/655)
+Updating files:  71% (466/655)
+Updating files:  72% (472/655)
+Updating files:  73% (479/655)
+Updating files:  74% (485/655)
+Updating files:  75% (492/655)
+Updating files:  76% (498/655)
+Updating files:  77% (505/655)
+Updating files:  78% (511/655)
+Updating files:  79% (518/655)
+Updating files:  80% (524/655)
+Updating files:  81% (531/655)
+Updating files:  82% (538/655)
+Updating files:  83% (544/655)
+Updating files:  84% (551/655)
+Updating files:  85% (557/655)
+Updating files:  86% (564/655)
+Updating files:  87% (570/655)
+Updating files:  88% (577/655)
+Updating files:  89% (583/655)
+Updating files:  90% (590/655)
+Updating files:  91% (597/655)
+Updating files:  92% (603/655)
+Updating files:  93% (610/655)
+Updating files:  94% (616/655)
+Updating files:  95% (623/655)
+Updating files:  96% (629/655)
+Updating files:  97% (636/655)
+Updating files:  98% (642/655)
+Updating files:  99% (649/655)
+Updating files: 100% (655/655)
+Updating files: 100% (655/655), done.
+HEAD is now at a693f0f Improve interval parsing (#6211)
+Reset branch 'master'
+STEP 11/13: RUN /opt/benchmark/setup_runtime.sh
+=== Setting up Rust runtime environment ===
+Found existing rustc: unknown
+Rust version unknown is too old. Installing newer version via rustup...
+info: downloading installer
+warn: It looks like you have an existing installation of Rust at:
+warn: /usr/local/cargo/bin
+warn: It is recommended that rustup be the primary Rust installation.
+warn: Otherwise you may have confusion unless you are careful with your PATH.
+warn: If you are sure that you want both rustup and your already installed Rust
+warn: then please reply `y' or `yes' or set RUSTUP_INIT_SKIP_PATH_CHECK to yes
+warn: or pass `-y' to ignore all ignorable checks.
+error: cannot install while Rust is installed
+warn: continuing (because the -y flag is set and the error is ignorable)
+warn: It looks like you have an existing rustup settings file at:
+warn: /root/.rustup/settings.toml
+warn: Rustup will install the default toolchain as specified in the settings file,
+warn: instead of the one inferred from the default host triple.
+info: profile set to minimal
+info: default host triple is x86_64-unknown-linux-gnu
+info: syncing channel updates for stable-x86_64-unknown-linux-gnu
+info: latest update on 2026-05-28 for version 1.96.0 (ac68faa20 2026-05-25)
+info: downloading 3 components
+
+info: default toolchain set to stable-x86_64-unknown-linux-gnu
+  stable-x86_64-unknown-linux-gnu installed - rustc 1.96.0 (ac68faa20 2026-05-25)
+
+
+Rust is installed now. Great!
+
+To get started you may need to restart your current shell.
+This would reload your PATH environment variable to include
+Cargo's bin directory ($HOME/.cargo/bin).
+
+To configure your current shell, you need to source
+the corresponding env file under $HOME/.cargo.
+
+This is usually done by running one of the following (note the leading DOT):
+. "$HOME/.cargo/env"            # For sh/bash/zsh/ash/dash/pdksh
+source "$HOME/.cargo/env.fish"  # For fish
+source "~/.cargo/env.nu"  # For nushell
+source "$HOME/.cargo/env.tcsh"  # For tcsh
+. "$HOME/.cargo/env.ps1"        # For pwsh
+source "$HOME/.cargo/env.xsh"   # For xonsh
+Cargo environment sourced from rustup installation.
+rustc 1.96.0 (ac68faa20 2026-05-25)
+cargo 1.96.0 (30a34c682 2026-05-25)
+Ensuring base system dependencies...
+Fetching project dependencies...
+    Updating crates.io index
+     Locking 365 packages to latest compatible versions
+      Adding atoi v2.0.0 (available: v3.0.0)
+      Adding bincode v1.3.3 (available: v3.0.0)
+      Adding brotli v6.0.0 (available: v8.0.4)
+      Adding chrono-tz v0.9.0 (available: v0.10.4)
+      Adding clap v4.5.60 (available: v4.6.1)
+      Adding clap_builder v4.5.60 (available: v4.6.0)
+      Adding clap_derive v4.5.55 (available: v4.6.1)
+      Adding criterion v0.5.1 (available: v0.8.2)
+      Adding flatbuffers v24.12.23 (available: v25.12.19)
+      Adding hashbrown v0.14.5 (available: v0.17.1)
+      Adding lexical-core v0.8.5 (available: v1.0.6)
+      Adding lz4_flex v0.11.6 (available: v0.13.1)
+      Adding object_store v0.10.2 (available: v0.13.2)
+      Adding prettyplease v0.2.25 (available: v0.2.37)
+      Adding proc-macro2 v1.0.86 (available: v1.0.106)
+      Adding prost v0.13.5 (available: v0.14.4)
+      Adding prost-build v0.13.1 (available: v0.13.5)
+      Adding prost-types v0.13.5 (available: v0.14.4)
+      Adding pyo3 v0.22.6 (available: v0.29.0)
+      Adding rand v0.8.6 (available: v0.10.1)
+      Adding syn v2.0.87 (available: v2.0.118)
+      Adding sysinfo v0.31.4 (available: v0.39.3)
+      Adding thrift v0.17.0 (available: v0.23.0)
+      Adding tonic v0.12.3 (available: v0.14.6)
+      Adding tonic-build v0.12.0 (available: v0.12.3)
+      Adding tower v0.4.13 (available: v0.5.3)
+      Adding twox-hash v1.6.3 (available: v2.1.2)
+      Adding zstd-safe v7.2.1 (available: v7.2.4)
+      Adding zstd-sys v2.0.13+zstd.1.5.6 (available: v2.0.16+zstd.1.5.7)
+ Downloading crates ...
+  Downloaded wasm-bindgen-macro v0.2.125
+  Downloaded percent-encoding v2.3.2
+  Downloaded utf8_iter v1.0.4
+  Downloaded winapi-util v0.1.11
+  Downloaded errno v0.3.14
+  Downloaded windows-targets v0.53.5
+  Downloaded zerofrom-derive v0.1.7
+  Downloaded yoke-derive v0.8.2
+  Downloaded tinyvec_macros v0.1.1
+  Downloaded openssl-probe v0.2.1
+  Downloaded serde_urlencoded v0.7.1
+  Downloaded rustc-hash v2.1.2
+  Downloaded http-body v1.0.1
+  Downloaded sync_wrapper v1.0.2
+  Downloaded form_urlencoded v1.2.2
+  Downloaded potential_utf v0.1.5
+  Downloaded want v0.3.1
+  Downloaded subtle v2.6.1
+  Downloaded tower-service v0.3.3
+  Downloaded wasm-bindgen-shared v0.2.125
+  Downloaded zerofrom v0.1.8
+  Downloaded lru-slab v0.1.2
+  Downloaded try-lock v0.2.5
+  Downloaded untrusted v0.9.0
+  Downloaded ordered-float v2.10.1
+  Downloaded futures-sink v0.3.32
+  Downloaded integer-encoding v3.0.4
+  Downloaded windows-link v0.2.1
+  Downloaded httpdate v1.0.3
+  Downloaded doc-comment v0.3.4
+  Downloaded futures-io v0.3.32
+  Downloaded itoa v1.0.18
+  Downloaded futures-core v0.3.32
+  Downloaded windows-interface v0.57.0
+  Downloaded windows-implement v0.57.0
+  Downloaded futures-macro v0.3.32
+  Downloaded rand_chacha v0.3.1
+  Downloaded cfg-if v1.0.4
+  Downloaded futures-task v0.3.32
+  Downloaded stable_deref_trait v1.2.1
+  Downloaded seq-macro v0.3.6
+  Downloaded windows-targets v0.52.6
+  Downloaded tokio-macros v2.7.0
+  Downloaded wasm-bindgen-futures v0.4.75
+  Downloaded heck v0.4.1
+  Downloaded tower-layer v0.3.3
+  Downloaded idna_adapter v1.2.2
+  Downloaded windows-result v0.1.2
+  Downloaded equivalent v1.0.2
+  Downloaded cfg_aliases v0.2.1
+  Downloaded security-framework-sys v2.17.0
+  Downloaded displaydoc v0.2.6
+  Downloaded writeable v0.6.3
+  Downloaded rustls-native-certs v0.8.4
+  Downloaded tinystr v0.8.3
+  Downloaded web-time v1.1.0
+  Downloaded atomic-waker v1.1.2
+  Downloaded same-file v1.0.6
+  Downloaded unicode-ident v1.0.24
+  Downloaded pkg-config v0.3.33
+  Downloaded fnv v1.0.7
+  Downloaded windows-result v0.4.1
+  Downloaded windows-interface v0.59.3
+  Downloaded windows-implement v0.60.2
+  Downloaded zerovec-derive v0.11.3
+  Downloaded iana-time-zone-haiku v0.1.2
+  Downloaded rand_core v0.9.5
+  Downloaded thiserror-impl v2.0.18
+  Downloaded num v0.4.3
+  Downloaded find-msvc-tools v0.1.9
+  Downloaded quote v1.0.45
+  Downloaded byteorder v1.5.0
+  Downloaded static_assertions v1.1.0
+  Downloaded wasi v0.11.1+wasi-snapshot-preview1
+  Downloaded slab v0.4.12
+  Downloaded pin-project-lite v0.2.17
+  Downloaded zmij v1.0.21
+  Downloaded twox-hash v1.6.3
+  Downloaded core-foundation v0.10.1
+  Downloaded ipnet v2.12.0
+  Downloaded rand_chacha v0.9.0
+  Downloaded autocfg v1.5.1
+  Downloaded shlex v2.0.1
+  Downloaded rustversion v1.0.22
+  Downloaded paste v1.0.15
+  Downloaded jobserver v0.1.34
+  Downloaded synstructure v0.13.2
+  Downloaded thiserror v2.0.18
+  Downloaded zeroize v1.9.0
+  Downloaded snafu-derive v0.7.5
+  Downloaded ppv-lite86 v0.2.21
+  Downloaded walkdir v2.5.0
+  Downloaded rand_core v0.6.4
+  Downloaded once_cell v1.21.4
+  Downloaded quinn-udp v0.5.14
+  Downloaded rustls-pki-types v1.14.1
+  Downloaded litemap v0.8.2
+  Downloaded smallvec v1.15.2
+  Downloaded scopeguard v1.2.0
+  Downloaded valuable v0.1.1
+  Downloaded windows-strings v0.5.1
+  Downloaded tracing-attributes v0.1.31
+  Downloaded http-body-util v0.1.3
+  Downloaded num-iter v0.1.45
+  Downloaded schannel v0.1.29
+  Downloaded tokio-rustls v0.26.4
+  Downloaded wasm-streams v0.4.2
+  Downloaded crunchy v0.2.4
+  Downloaded num-integer v0.1.46
+  Downloaded num-rational v0.4.2
+  Downloaded getrandom v0.2.17
+  Downloaded fastrand v2.4.1
+  Downloaded snap v1.1.1
+  Downloaded yoke v0.8.3
+  Downloaded redox_syscall v0.5.18
+  Downloaded zstd-safe v7.2.1
+  Downloaded humantime v2.3.0
+  Downloaded hyper-rustls v0.27.9
+  Downloaded futures-channel v0.3.32
+  Downloaded proc-macro2 v1.0.86
+  Downloaded tempfile v3.27.0
+  Downloaded either v1.16.0
+  Downloaded async-trait v0.1.89
+  Downloaded adler2 v2.0.1
+  Downloaded parking_lot_core v0.9.12
+  Downloaded icu_provider v2.2.0
+  Downloaded tinyvec v1.11.0
+  Downloaded httparse v1.10.1
+  Downloaded tracing-core v0.1.36
+  Downloaded icu_properties v2.2.0
+  Downloaded android_system_properties v0.1.5
+  Downloaded thrift v0.17.0
+  Downloaded serde_derive v1.0.228
+  Downloaded snafu v0.7.5
+  Downloaded lock_api v0.4.14
+  Downloaded ryu v1.0.23
+  Downloaded icu_normalizer_data v2.2.0
+  Downloaded iana-time-zone v0.1.65
+  Downloaded simd-adler32 v0.3.9
+  Downloaded windows-core v0.62.2
+  Downloaded icu_locale_core v2.2.0
+  Downloaded wasm-bindgen v0.2.125
+  Downloaded uuid v1.23.3
+  Downloaded r-efi v6.0.0
+  Downloaded heck v0.5.0
+  Downloaded cast v0.3.0
+  Downloaded is_terminal_polyfill v1.70.2
+  Downloaded anstyle-wincon v3.0.11
+  Downloaded anstyle-query v1.1.5
+  Downloaded once_cell_polyfill v1.70.2
+  Downloaded strsim v0.11.1
+  Downloaded colorchoice v1.0.5
+  Downloaded ciborium-io v0.2.2
+  Downloaded log v0.4.33
+  Downloaded ciborium-ll v0.2.2
+  Downloaded parking_lot v0.12.5
+  Downloaded alloc-no-stdlib v2.0.4
+  Downloaded lz4_flex v0.11.6
+  Downloaded futures-executor v0.3.32
+  Downloaded num-traits v0.2.19
+  Downloaded getrandom v0.4.3
+  Downloaded bitflags v2.13.0
+  Downloaded core-foundation-sys v0.8.7
+  Downloaded windows-core v0.57.0
+  Downloaded serde_core v1.0.228
+  Downloaded getrandom v0.3.4
+  Downloaded security-framework v3.7.0
+  Downloaded is-terminal v0.4.17
+  Downloaded futures v0.3.32
+  Downloaded clap_lex v1.1.0
+  Downloaded utf8parse v0.2.2
+  Downloaded socket2 v0.6.4
+  Downloaded icu_normalizer v2.2.0
+  Downloaded quinn v0.11.9
+  Downloaded rustls-webpki v0.103.13
+  Downloaded url v2.5.8
+  Downloaded zstd v0.13.3
+  Downloaded icu_collections v2.2.0
+  Downloaded zerotrie v0.2.4
+  Downloaded hyper-util v0.1.20
+  Downloaded oorandom v11.1.5
+  Downloaded rand v0.9.4
+  Downloaded anstream v0.6.21
+  Downloaded criterion-plot v0.5.0
+  Downloaded base64 v0.22.1
+  Downloaded alloc-stdlib v0.2.4
+  Downloaded half v2.7.1
+  Downloaded twox-hash v2.1.2
+  Downloaded phf_generator v0.11.3
+  Downloaded phf_codegen v0.11.3
+  Downloaded chrono-tz-build v0.3.0
+  Downloaded indexmap v2.14.0
+  Downloaded num-complex v0.4.6
+  Downloaded tower v0.5.3
+  Downloaded version_check v0.9.5
+  Downloaded tinytemplate v1.2.1
+  Downloaded anstyle v1.0.14
+  Downloaded terminal_size v0.4.4
+  Downloaded anstyle-parse v0.2.7
+  Downloaded phf v0.11.3
+  Downloaded const-random v0.1.18
+  Downloaded anes v0.1.6
+  Downloaded r-efi v5.3.0
+  Downloaded crc32fast v1.5.0
+  Downloaded hermit-abi v0.5.2
+  Downloaded wasm-bindgen-macro-support v0.2.125
+  Downloaded const-random-macro v0.1.16
+  Downloaded http v1.4.2
+  Downloaded rustc_version v0.4.1
+  Downloaded siphasher v1.0.3
+  Downloaded bytes v1.12.0
+  Downloaded idna v1.1.0
+  Downloaded rand v0.8.6
+  Downloaded wit-bindgen v0.57.1
+  Downloaded serde v1.0.228
+  Downloaded zerocopy-derive v0.8.52
+  Downloaded phf_shared v0.11.3
+  Downloaded clap_derive v4.5.55
+  Downloaded zerovec v0.11.6
+  Downloaded ciborium v0.2.2
+  Downloaded flatbuffers v24.12.23
+  Downloaded tiny-keccak v2.0.2
+  Downloaded atoi v2.0.0
+  Downloaded lazy_static v1.5.0
+  Downloaded lexical-core v0.8.5
+  Downloaded memoffset v0.9.1
+  Downloaded bincode v1.3.3
+  Downloaded tower-http v0.6.11
+  Downloaded bitflags v1.3.2
+  Downloaded semver v1.0.28
+  Downloaded reqwest v0.12.28
+  Downloaded tokio-util v0.7.18
+  Downloaded hyper v1.10.1
+  Downloaded lexical-parse-integer v0.8.6
+  Downloaded clap v4.5.60
+  Downloaded ahash v0.8.12
+  Downloaded csv-core v0.1.13
+  Downloaded criterion v0.5.1
+  Downloaded mime v0.3.17
+  Downloaded pyo3-build-config v0.22.6
+  Downloaded miniz_oxide v0.8.9
+  Downloaded itertools v0.13.0
+  Downloaded async-stream v0.3.6
+  Downloaded async-stream-impl v0.3.6
+  Downloaded hashbrown v0.17.1
+  Downloaded hex v0.4.3
+  Downloaded thread_local v1.1.9
+  Downloaded cc v1.2.65
+  Downloaded bumpalo v3.20.3
+  Downloaded memchr v2.8.2
+  Downloaded termtree v0.5.1
+  Downloaded h2 v0.4.15
+  Downloaded webpki-roots v0.26.11
+  Downloaded matchers v0.2.0
+  Downloaded lexical-write-integer v0.8.5
+  Downloaded itertools v0.10.5
+  Downloaded target-lexicon v0.12.16
+  Downloaded predicates-tree v1.0.13
+  Downloaded nu-ansi-term v0.50.3
+  Downloaded predicates-core v1.0.10
+  Downloaded wait-timeout v0.2.1
+  Downloaded fixedbitset v0.4.2
+  Downloaded crc v3.4.0
+  Downloaded multimap v0.10.1
+  Downloaded matchit v0.7.3
+  Downloaded tracing-log v0.2.0
+  Downloaded axum-core v0.4.5
+  Downloaded js-sys v0.3.102
+  Downloaded pin-project-internal v1.1.13
+  Downloaded prost v0.13.5
+  Downloaded prost-derive v0.13.5
+  Downloaded comfy-table v7.2.2
+  Downloaded lexical-util v0.8.5
+  Downloaded hyper-timeout v0.5.2
+  Downloaded icu_properties_data v2.2.0
+  Downloaded rustls-pemfile v2.2.0
+  Downloaded quick-xml v0.36.2
+  Downloaded difflib v0.4.0
+  Downloaded anyhow v1.0.102
+  Downloaded pyo3-ffi v0.22.6
+  Downloaded predicates v3.1.4
+  Downloaded socket2 v0.5.10
+  Downloaded indexmap v1.9.3
+  Downloaded pin-project v1.1.13
+  Downloaded crc-catalog v2.5.0
+  Downloaded assert_cmd v2.2.2
+  Downloaded tonic-build v0.12.0
+  Downloaded tokio-stream v0.1.18
+  Downloaded num-bigint v0.4.6
+  Downloaded flate2 v1.1.9
+  Downloaded aho-corasick v1.1.4
+  Downloaded regex v1.12.4
+  Downloaded mio v1.2.1
+  Downloaded sharded-slab v0.1.7
+  Downloaded syn v1.0.109
+  Downloaded quinn-proto v0.11.14
+  Downloaded parse-zoneinfo v0.3.1
+  Downloaded ntapi v0.4.3
+  Downloaded tonic v0.12.3
+  Downloaded chrono v0.4.45
+  Downloaded prost-build v0.13.1
+  Downloaded brotli-decompressor v4.0.3
+  Downloaded tower v0.4.13
+  Downloaded wasip2 v1.0.4+wasi-0.2.12
+  Downloaded prost-types v0.13.5
+  Downloaded lexical-parse-float v0.8.5
+  Downloaded serde_json v1.0.150
+  Downloaded prettyplease v0.2.25
+  Downloaded axum v0.7.9
+  Downloaded itertools v0.14.0
+  Downloaded portable-atomic v1.13.1
+  Downloaded lexical-write-float v0.8.5
+  Downloaded hashbrown v0.14.5
+  Downloaded futures-util v0.3.32
+  Downloaded rustls v0.23.40
+  Downloaded object_store v0.10.2
+  Downloaded sysinfo v0.31.4
+  Downloaded libm v0.2.16
+  Downloaded webpki-roots v1.0.8
+  Downloaded regex-syntax v0.8.11
+  Downloaded unicode-segmentation v1.13.3
+  Downloaded hashbrown v0.12.3
+  Downloaded clap_builder v4.5.60
+  Downloaded tracing v0.1.44
+  Downloaded syn v2.0.87
+  Downloaded zerocopy v0.8.52
+  Downloaded tracing-subscriber v0.3.23
+  Downloaded web-sys v0.3.102
+  Downloaded pyo3 v0.22.6
+  Downloaded regex-automata v0.4.14
+  Downloaded unicode-width v0.2.2
+  Downloaded windows_aarch64_gnullvm v0.53.1
+  Downloaded windows_x86_64_gnullvm v0.53.1
+  Downloaded windows_aarch64_msvc v0.53.1
+  Downloaded windows_x86_64_msvc v0.53.1
+  Downloaded windows_i686_gnullvm v0.53.1
+  Downloaded windows_i686_msvc v0.53.1
+  Downloaded windows_x86_64_gnu v0.53.1
+  Downloaded chrono-tz v0.9.0
+  Downloaded windows_i686_gnu v0.53.1
+  Downloaded windows_x86_64_gnullvm v0.52.6
+  Downloaded bstr v1.12.1
+  Downloaded rustix v1.1.4
+  Downloaded windows_aarch64_gnullvm v0.52.6
+  Downloaded windows_i686_gnullvm v0.52.6
+  Downloaded brotli v6.0.0
+  Downloaded ring v0.17.14
+  Downloaded windows-sys v0.60.2
+  Downloaded windows-sys v0.52.0
+  Downloaded zstd-sys v2.0.13+zstd.1.5.6
+  Downloaded petgraph v0.6.5
+  Downloaded windows_aarch64_msvc v0.52.6
+  Downloaded windows_x86_64_msvc v0.52.6
+  Downloaded libc v0.2.186
+  Downloaded windows_i686_gnu v0.52.6
+  Downloaded windows_x86_64_gnu v0.52.6
+  Downloaded windows_i686_msvc v0.52.6
+  Downloaded tokio v1.52.3
+  Downloaded csv v1.4.0
+  Downloaded winapi v0.3.9
+  Downloaded windows-sys v0.61.2
+  Downloaded winapi-i686-pc-windows-gnu v0.4.0
+  Downloaded winapi-x86_64-pc-windows-gnu v0.4.0
+  Downloaded linux-raw-sys v0.12.1
+  Downloaded windows v0.57.0
+Project dependencies fetched.
+=== Runtime setup complete ===
+STEP 12/13: WORKDIR /workspace
+STEP 13/13: CMD ["/bin/bash"]
+COMMIT openenv-validation:latest
+Getting image source signatures
+Copying blob sha256:24839d45ca455f36659219281e0f2304520b92347eb536ad5cc7b4dbb8163588
+Copying blob sha256:ca45e76ea437a73be6ed48c98edddc50b56978b56d605109f108f9ee1aee6256
+Copying blob sha256:e7a7c19bf1054d6fc34aabf76a36aaf22dd7fcba390442aca5f23b71ecb3bc85
+Copying config sha256:090c0a25bfdc2b3e61989a4da28eaeded5737c1c6ae19f68f85e6e2b2a5113df
+Writing manifest to image destination
+--> 090c0a25bfdc
+Successfully tagged localhost/openenv-validation:latest
+090c0a25bfdc2b3e61989a4da28eaeded5737c1c6ae19f68f85e6e2b2a5113df

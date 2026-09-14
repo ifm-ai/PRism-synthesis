@@ -1,0 +1,12 @@
+[package]
+name = "parquet_zero_rep_level_test"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bytes = "1.1"
+
+# The parquet dependency path is set by eval.sh via .cargo/config.toml
+# Default to /workspace/parquet if not patched
+[dependencies.parquet]
+path = "/workspace_fixed/parquet"

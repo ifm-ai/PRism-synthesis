@@ -1,0 +1,27 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.1, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /artifacts/evaluation/tests
+plugins: xdist-3.8.0, anyio-4.14.0, timeout-2.4.0
+collecting ... collected 14 items
+
+../artifacts/evaluation/tests/test_lora_conversion.py::TestKohyaFluxLoRAConversion::test_convert_kohya_function_exists PASSED [  7%]
+../artifacts/evaluation/tests/test_lora_conversion.py::TestKohyaFluxLoRAConversion::test_convert_kohya_basic_conversion PASSED [ 14%]
+../artifacts/evaluation/tests/test_lora_conversion.py::TestKohyaFluxLoRAConversion::test_convert_kohya_alpha_scaling PASSED [ 21%]
+../artifacts/evaluation/tests/test_lora_conversion.py::TestKohyaFluxLoRAConversion::test_convert_kohya_multiple_layers PASSED [ 28%]
+../artifacts/evaluation/tests/test_lora_conversion.py::TestKohyaFluxLoRAConversion::test_convert_kohya_qkv_cat_conversion PASSED [ 35%]
+../artifacts/evaluation/tests/test_lora_conversion.py::TestKohyaFluxLoRAConversion::test_convert_kohya_double_blocks_img_mlp PASSED [ 42%]
+../artifacts/evaluation/tests/test_lora_conversion.py::TestXLabsFluxLoRAConversion::test_convert_xlabs_function_exists PASSED [ 50%]
+../artifacts/evaluation/tests/test_lora_conversion.py::TestXLabsFluxLoRAConversion::test_convert_xlabs_basic_conversion PASSED [ 57%]
+../artifacts/evaluation/tests/test_lora_conversion.py::TestXLabsFluxLoRAConversion::test_convert_xlabs_qkv_lora2_conversion PASSED [ 64%]
+../artifacts/evaluation/tests/test_lora_conversion.py::TestXLabsFluxLoRAConversion::test_convert_xlabs_no_alpha PASSED [ 71%]
+../artifacts/evaluation/tests/test_lora_conversion.py::TestXLabsFluxLoRAConversion::test_convert_xlabs_empty_dict PASSED [ 78%]
+../artifacts/evaluation/tests/test_lora_conversion.py::TestIntegrationWithFluxLoraLoader::test_kohya_detection_in_state_dict PASSED [ 85%]
+../artifacts/evaluation/tests/test_lora_conversion.py::TestIntegrationWithFluxLoraLoader::test_xlabs_detection_in_state_dict PASSED [ 92%]
+../artifacts/evaluation/tests/test_lora_conversion.py::TestIntegrationWithFluxLoraLoader::test_non_diffusers_not_detected_as_kohya_or_xlabs PASSED [100%]
+
+============================== 14 passed in 5.41s ==============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0
+EXIT_CODE=0

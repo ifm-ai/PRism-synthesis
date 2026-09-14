@@ -1,0 +1,34 @@
+schema_version = "1.1"
+
+[task]
+name = "huggingface_diffusers_pr9295"
+description = "OpenEnv: huggingface/diffusers PR #9295"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/huggingface/diffusers.git"
+git_pr_id = "9295"
+git_base_commit = "089cf798eb199ddc0d396c7bbb0172fecf2845e9"
+task_id = "huggingface_diffusers_pr9295"
+repo_full_name = "huggingface/diffusers"
+domain = "ML_DEEP_LEARNING"
+primary_language = "Python"
+complexity = "medium"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

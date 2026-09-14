@@ -1,0 +1,33 @@
+schema_version = "1.1"
+
+[task]
+name = "apache_arrow-rs_pr6232"
+description = "OpenEnv: apache/arrow-rs PR #6232"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/apache/arrow-rs.git"
+git_pr_id = "6232"
+git_base_commit = "a693f0f9c37567b2b121e261fc0a4587776d5ca4"
+task_id = "apache_arrow-rs_pr6232"
+repo_full_name = "apache/arrow-rs"
+domain = "DATA_ENGINEERING_ETL"
+primary_language = "Rust"
+runtime_family = "rust"
+complexity = "medium"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

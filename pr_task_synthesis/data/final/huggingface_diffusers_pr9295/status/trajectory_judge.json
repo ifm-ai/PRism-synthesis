@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "fail",
+  "oracle_outcome": "fail",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "Solver correctly localized the problem and edited relevant files but implemented incorrect key naming patterns. Oracle verifier is behavioral and correctly discriminates between buggy and fixed states. This is a valid RL training example showing partial progress with implementation errors."
+}
