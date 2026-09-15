@@ -2,6 +2,7 @@
  "task_id": "surveyjs__survey-library-1988",
  "run_id": "10a90eccfd484d4d9ff3050f1573fba1",
  "repo_full_name": "surveyjs/survey-library",
+ "license": "MIT",
  "pr_numbers": [
   1988,
   2071,
@@ -612,7 +613,7 @@
   },
   {
    "role": "tool",
-   "content": "npm notice PING http://package-mirror.invalid:8081/repository/npm-proxy/\nnpm notice PONG 53ms\nexit:0\n"
+   "content": "npm notice PING http://mirror.proxy.hpc:8081/repository/npm-proxy/\nnpm notice PONG 53ms\nexit:0\n"
   },
   {
    "role": "assistant",
@@ -621,7 +622,7 @@
     {
      "name": "bash",
      "arguments": {
-      "command": "cd /project && timeout 290 npm install --no-save --legacy-peer-deps --ignore-scripts --registry http://package-mirror.invalid:8081/repository/npm-proxy/ typescript@3.6.2 2>&1 | tail -8; echo \"exit:$?\"",
+      "command": "cd /project && timeout 290 npm install --no-save --legacy-peer-deps --ignore-scripts --registry http://mirror.proxy.hpc:8081/repository/npm-proxy/ typescript@3.6.2 2>&1 | tail -8; echo \"exit:$?\"",
       "timeout": 300000
      }
     }
@@ -663,7 +664,7 @@
   },
   {
    "role": "tool",
-   "content": "---npm cache/registry detail---\nhttp://package-mirror.invalid:8081/repository/npm-proxy/\n"
+   "content": "---npm cache/registry detail---\nhttp://mirror.proxy.hpc:8081/repository/npm-proxy/\n"
   },
   {
    "role": "assistant",
@@ -1201,7 +1202,7 @@
   },
   {
    "role": "tool",
-   "content": "npm notice PING http://package-mirror.invalid:8081/repository/npm-proxy/\nnpm notice PONG 43ms\n---\n_cacache\n_logs\n_npx\n_update-notifier-last-checked\n"
+   "content": "npm notice PING http://mirror.proxy.hpc:8081/repository/npm-proxy/\nnpm notice PONG 43ms\n---\n_cacache\n_logs\n_npx\n_update-notifier-last-checked\n"
   },
   {
    "role": "assistant",
@@ -1333,7 +1334,7 @@
   },
   {
    "role": "tool",
-   "content": "npm error code ETIMEDOUT\nnpm error syscall connect\nnpm error errno ETIMEDOUT\nnpm error network request to http://package-mirror.invalid/repository/npm-proxy/typescript/-/typescript-3.6.2.tgz failed, reason: connect ETIMEDOUT 10.104.116.125:80\nnpm error network This is a problem related to network connectivity.\nnpm error network In most cases you are behind a proxy or have bad network settings.\nnpm error network\nnpm error network If you are behind a proxy, please make sure that the\nnpm error network 'proxy' config is set properly.  See: 'npm help config'\nnpm error A complete log of this run can be found in: /home/agent_sandbox/.npm/_logs/2026-08-17T19_38_53_282Z-debug-0.log\n---\n"
+   "content": "npm error code ETIMEDOUT\nnpm error syscall connect\nnpm error errno ETIMEDOUT\nnpm error network request to http://mirror.proxy.hpc/repository/npm-proxy/typescript/-/typescript-3.6.2.tgz failed, reason: connect ETIMEDOUT 10.104.116.125:80\nnpm error network This is a problem related to network connectivity.\nnpm error network In most cases you are behind a proxy or have bad network settings.\nnpm error network\nnpm error network If you are behind a proxy, please make sure that the\nnpm error network 'proxy' config is set properly.  See: 'npm help config'\nnpm error A complete log of this run can be found in: /home/agent_sandbox/.npm/_logs/2026-08-17T19_38_53_282Z-debug-0.log\n---\n"
   },
   {
    "role": "assistant",
@@ -2022,7 +2023,7 @@
   },
   {
    "role": "tool",
-   "content": "npm error code ETIMEDOUT\nnpm error syscall connect\nnpm error errno ETIMEDOUT\nnpm error network request to http://package-mirror.invalid/repository/npm-proxy/typescript/-/typescript-3.6.2.tgz failed, reason: connect ETIMEDOUT 10.104.116.125:80\nnpm error network This is a problem related to network connectivity.\nnpm error network In most cases you are behind a proxy or have bad network settings.\nnpm error network\nnpm error network If you are behind a proxy, please make sure that the\nnpm error network 'proxy' config is set properly.  See: 'npm help config'\nnpm error A complete log of this run can be found in: /home/agent_sandbox/.npm/_logs/2026-08-18T05_30_36_137Z-debug-0.log\n---\n"
+   "content": "npm error code ETIMEDOUT\nnpm error syscall connect\nnpm error errno ETIMEDOUT\nnpm error network request to http://mirror.proxy.hpc/repository/npm-proxy/typescript/-/typescript-3.6.2.tgz failed, reason: connect ETIMEDOUT 10.104.116.125:80\nnpm error network This is a problem related to network connectivity.\nnpm error network In most cases you are behind a proxy or have bad network settings.\nnpm error network\nnpm error network If you are behind a proxy, please make sure that the\nnpm error network 'proxy' config is set properly.  See: 'npm help config'\nnpm error A complete log of this run can be found in: /home/agent_sandbox/.npm/_logs/2026-08-18T05_30_36_137Z-debug-0.log\n---\n"
   },
   {
    "role": "user",
@@ -4090,7 +4091,7 @@
   },
   {
    "role": "tool",
-   "content": "npm error code E500\nnpm error 500 Server Error - GET http://package-mirror.invalid:8081/repository/npm-proxy/typescript\nnpm error A complete log of this run can be found in: /home/agent_sandbox/.npm/_logs/2026-08-18T18_43_31_194Z-debug-0.log\n"
+   "content": "npm error code E500\nnpm error 500 Server Error - GET http://mirror.proxy.hpc:8081/repository/npm-proxy/typescript\nnpm error A complete log of this run can be found in: /home/agent_sandbox/.npm/_logs/2026-08-18T18_43_31_194Z-debug-0.log\n"
   },
   {
    "role": "assistant",

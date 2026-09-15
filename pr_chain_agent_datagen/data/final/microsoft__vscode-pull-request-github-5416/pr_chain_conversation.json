@@ -2,6 +2,7 @@
  "task_id": "microsoft__vscode-pull-request-github-5416",
  "run_id": "4f77795108464011a771a432ed5090fa",
  "repo_full_name": "microsoft/vscode-pull-request-github",
+ "license": "MIT",
  "pr_numbers": [
   5416,
   5595,

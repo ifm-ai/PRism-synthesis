@@ -2,6 +2,7 @@
  "task_id": "erlang__otp-7427",
  "run_id": "c62342c3d62a4fe286bf068391d790dd",
  "repo_full_name": "erlang/otp",
+ "license": "Apache-2.0",
  "pr_numbers": [
   7427,
   7697,

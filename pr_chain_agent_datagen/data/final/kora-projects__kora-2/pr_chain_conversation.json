@@ -2,6 +2,7 @@
  "task_id": "kora-projects__kora-2",
  "run_id": "ea638dded8df4c5381dec88a22c41b96",
  "repo_full_name": "kora-projects/kora",
+ "license": "Apache-2.0",
  "pr_numbers": [
   2,
   3,
