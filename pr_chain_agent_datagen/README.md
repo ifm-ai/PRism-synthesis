@@ -1,4 +1,4 @@
-# pr_agent_gen
+# pr_chain_agent_datagen
 
 Turns a chain of real merged PRs into one long agentic coding session. The repository is cloned
 once at the chain's base commit and an LLM agent (opencode, driving a model served over an
