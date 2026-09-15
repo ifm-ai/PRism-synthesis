@@ -51,8 +51,8 @@ rejected and retried twice before the chain fails.
 - `trajectory.py`: `ChainSegment` and the flattener that turns N sessions into one conversation.
 - `sandbox.def`: the Apptainer image — opencode, git, and a private Python at `/.environ` that the
   trajectory export runs under, kept separate from whatever the task's repository installs.
-- `data/input.jsonl`: fifteen real chain definitions, each up to twenty PRs with their
-  per-PR descriptions.
+- `data/input.jsonl`: one hundred real chain definitions, each with its per-PR descriptions and
+  the `license` of the repository it came from.
 - `data/final/<task_id>/`: the matching run for each — `pr_chain_conversation.json` (the flattened
   conversation and the per-turn record) and `final_stats.json`. Directory names are the `task_id`
   of the corresponding row in `input.jsonl`.
@@ -79,37 +79,30 @@ happened in `/workspace`.
 
 ## About the examples
 
-The fifteen chains are real runs over fifteen distinct repositories — `erlang/otp`,
-`twbs/bootstrap`, `istio/client-go`, `linkerd/linkerd2-proxy`,
-`microsoft/vscode-pull-request-github` and others. Every one of them **ran out of token budget
-rather than finishing its chain**, which is the normal outcome: they were chosen from the 4,984
-budget-exhausted runs of a 11,615-chain job, taking the ones that burned the most tokens, at most
-one per repository.
+The hundred chains are real runs over a hundred distinct repositories — `reduxjs/redux`,
+`Azure/azure-rest-api-specs`, `ZcashFoundation/zebra`, `spinnaker/clouddriver`, `baidu/amis` and
+others. Every one of them **ran out of token budget rather than finishing its chain**, which is
+the normal outcome: they were drawn from the 4,984 budget-exhausted runs of an 11,615-chain job,
+taking the ones that burned the most tokens, one per repository.
 
-That makes them useful and also lopsided. Each spent between 746k and 869k tokens, but completed
-anywhere from 3 to 18 turns — a run can burn the whole budget wrestling with three PRs in a large
-codebase, or work steadily through eighteen in a small one. `stats.total_solved` is how many turns
-finished; `stats.budget_exhausted` is true for all of them.
+That makes them useful and also lopsided. Each spent between 639k and 869k tokens, but completed
+anywhere from 3 to 27 turns — a run can burn the whole budget wrestling with three PRs in a large
+codebase, or work steadily through twenty-seven in a small one. `stats.total_solved` is how many
+turns finished; `stats.budget_exhausted` is true for all of them.
 
-The chains are capped at twenty PRs. The original records name up to fifty, but no run here got
-past eighteen turns, so the rest were never read.
+Chains are capped at twenty PRs, except where a run solved more than that — the record always
+covers at least the turns its run actually completed. The original records name up to fifty.
 
-Conversations are long — 602 to 1,396 messages — and carry the model's `reasoning_content`
+Conversations are long — 438 to 2,400 messages — and carry the model's `reasoning_content`
 alongside its output, which is about half the bytes. They are one directory per run rather than
-one file so no single file is unwieldy.
+one file so no single file is unwieldy; the largest is about 4.5 MB.
 
 The trajectories are what the agent actually saw and did, so they contain the contents of the
-repositories it worked in. Credentials and internal hostnames that the sandbox environment leaked
-into them have been removed.
+repositories it worked in. Credentials the sandbox environment leaked into them have been removed,
+and internal hostnames renamed — the package mirror, model endpoint and registry appear as
+`mirror.proxy.hpc`, `model.proxy.hpc` and `registry.proxy.hpc`.
 
 ## Licences of the repositories shown
 
 Because each trajectory quotes the repository the agent worked in, the examples are limited to
-repositories whose licence permits redistribution here: seven Apache-2.0, four MIT, one
-BSD-3-Clause, two CC-BY, and `ocaml-flambda/flambda-backend`, which is MIT for Jane Street files
-and LGPL-2.1-with-linking-exception for the INRIA-derived ones. Each repository's own licence and
-copyright continue to apply to its content; this folder's Apache-2.0 licence covers the pipeline,
-not the quoted material.
-
-Runs over repositories under GPL, under CC BY-NC-ND, or with no licence at all were excluded, even
-where the run itself was good.
+repositories under a permissive Apache 2.0 and MIT licence
