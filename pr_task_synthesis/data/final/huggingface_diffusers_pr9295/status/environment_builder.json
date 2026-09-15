@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "python:3.11-slim",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Python 3.11 venv at /opt/benchmark/venv with diffusers installed in editable mode, torch (CPU-only), transformers<5.0.0, peft, and test dependencies",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "tests/lora/test_lora_layers_flux.py::FluxLoRATests::test_get_adapters\ntests/lora/test_lora_layers_flux.py::FluxLoRATests::test_get_list_adapters\ntests/lora/test_lora_layers_flux.py::FluxLoRATests::test_lora_fuse_nan\ntests/lora/test_lora_layers_flux.py::FluxLoRATests::test_modify_padding_mode\ntests/lora/test_lora_layers_flux.py::FluxLoRATests::test_simple_inference",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "source /opt/benchmark/venv/bin/activate",
+  "notes": "Base image specification fixed: Using python:3.11-slim instead of invalid pytorch/pytorch:2.0.1-cpu tag. Official PyTorch Docker images only offer CUDA variants (no CPU-only tags available), which would be unnecessarily large for CPU-only testing. PyTorch CPU version is now installed via pip from https://download.pytorch.org/whl/cpu index for faster, smaller download. This avoids the invalid image tag error while keeping the image lean."
+}

@@ -1,0 +1,18 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "base_image": "python:3.11-slim",
+  "copied_artifacts": [
+    "setup_runtime.sh",
+    "repo_setup.sh"
+  ],
+  "uses_repo_setup_script": true,
+  "repo_materialization_mode": "git_clone_at_build_time",
+  "container_build_plan_written": true,
+  "build_backend_target": "buildah",
+  "buildability_assessment": "buildable",
+  "blocking_risks": [],
+  "warnings": [],
+  "recommended_fixes": [],
+  "notes": "Dockerfile.final uses python:3.11-slim base with apt-get for system packages. setup_runtime.sh installs PyTorch from CPU-only index (https://download.pytorch.org/whl/cpu). repo_setup.sh materializes /workspace from git at build time. eval.sh and test assets are runtime-mounted, not baked into image. Final WORKDIR is /workspace. All COPY sources exist in build context."
+}

@@ -1,0 +1,9 @@
+{
+  "status": "success",
+  "blocks_outer_progress": false,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "route_to": null,
+  "notes": "Build validation complete. Dockerfile.final successfully built with Buildah. OCI archive exported. No routing needed - container spec is buildable and ready for use."
+}

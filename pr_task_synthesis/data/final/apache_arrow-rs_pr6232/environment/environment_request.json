@@ -1,0 +1,46 @@
+{
+  "base_image_candidate": "rust:1.70-slim-bookworm",
+  "system_packages": [
+    "git",
+    "curl",
+    "pkg-config",
+    "libssl-dev",
+    "ca-certificates"
+  ],
+  "base_setup_commands": [
+    "apt-get update && apt-get install -y git curl pkg-config libssl-dev ca-certificates"
+  ],
+  "setup_runtime_commands": [
+    "source /root/.cargo/env || true",
+    "cd /workspace && cargo fetch"
+  ],
+  "activation_commands": [
+    "source /root/.cargo/env || true"
+  ],
+  "activation_command": "source /root/.cargo/env || true",
+  "activation_type": "cargo",
+  "activation_validation_command": "bash -c 'source /root/.cargo/env || true && rustc --version && cargo --version'",
+  "detected_test_command": "cargo test -p parquet",
+  "runtime_smoke_command": "cargo check -p parquet",
+  "runtime_profile": {
+    "ecosystem": "rust",
+    "package_manager": "cargo",
+    "env": "cargo",
+    "env_name": "stable",
+    "prepare_commands": [
+      "source /root/.cargo/env || true",
+      "cargo fetch"
+    ],
+    "activation_commands": [
+      "source /root/.cargo/env || true"
+    ],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "cargo test handles its own dependency resolution",
+    "cache_dirs": [
+      "/root/.cargo",
+      "/root/.rustup"
+    ],
+    "notes": "Rust toolchain pre-installed in rust:1.70-slim-bookworm base image. Script detects existing rustc >= 1.70.0 and skips rustup. Cargo and rustc are already in PATH. Activation sources rustup env only when rustup was installed."
+  },
+  "notes": "Base image rust:1.70-slim-bookworm has Rust 1.70 pre-installed without rustup. The setup_runtime.sh script now detects pre-existing rustc >= 1.70.0 and uses it directly, skipping rustup installation. Activation command includes '|| true' to handle cases where rustup env file doesn't exist (pre-installed Rust scenario). Git and curl are included in system packages."
+}

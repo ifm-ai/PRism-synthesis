@@ -1,0 +1,8 @@
+{
+ "total_solved": 10,
+ "total_turns": 40,
+ "incomplete_turns": [],
+ "cumulative_tokens": 738831,
+ "token_budget": 513000,
+ "budget_exhausted": true
+}
