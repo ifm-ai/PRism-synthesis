@@ -90,18 +90,6 @@ anywhere from 3 to 27 turns — a run can burn the whole budget wrestling with t
 codebase, or work steadily through twenty-seven in a small one. `stats.total_solved` is how many
 turns finished; `stats.budget_exhausted` is true for all of them.
 
-Chains are capped at twenty PRs, except where a run solved more than that — the record always
-covers at least the turns its run actually completed. The original records name up to fifty.
-
-Conversations are long — 438 to 2,400 messages — and carry the model's `reasoning_content`
-alongside its output, which is about half the bytes. They are one directory per run rather than
-one file so no single file is unwieldy; the largest is about 4.5 MB.
-
-The trajectories are what the agent actually saw and did, so they contain the contents of the
-repositories it worked in. Credentials the sandbox environment leaked into them have been removed,
-and internal hostnames renamed — the package mirror, model endpoint and registry appear as
-`mirror.proxy.hpc`, `model.proxy.hpc` and `registry.proxy.hpc`.
-
 ## Licences of the repositories shown
 
 Because each trajectory quotes the repository the agent worked in, the examples are limited to
