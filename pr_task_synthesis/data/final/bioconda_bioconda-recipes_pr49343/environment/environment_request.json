@@ -1,0 +1,63 @@
+{
+  "base_image_candidate": "condaforge/mambaforge:latest",
+  "base_image_os": "debian",
+  "base_image_codename": "bookworm",
+  "apt_sources": null,
+  "system_packages": [
+    "git",
+    "curl",
+    "wget",
+    "make",
+    "gcc",
+    "g++",
+    "bash"
+  ],
+  "base_setup_commands": [
+    "apt-get update && apt-get install -y git curl wget make gcc g++ bash || true"
+  ],
+  "setup_runtime_commands": [
+    "source /opt/conda/etc/profile.d/conda.sh",
+    "conda config --add channels defaults",
+    "conda config --add channels conda-forge",
+    "conda config --add channels bioconda",
+    "conda config --set channel_priority flexible",
+    "conda create -n bioconda -y python conda-build conda-verify make wget gcc gxx"
+  ],
+  "activation_commands": [
+    "source /opt/conda/etc/profile.d/conda.sh && conda activate bioconda"
+  ],
+  "activation_command": "source /opt/conda/etc/profile.d/conda.sh && conda activate bioconda",
+  "activation_type": "conda",
+  "activation_validation_command": "bash -c 'source /opt/conda/etc/profile.d/conda.sh && conda activate bioconda && echo ACTIVATION_OK'",
+  "detected_test_command": "conda-build recipes/cancerit-allelecount",
+  "runtime_smoke_command": "alleleCounter -h",
+  "runtime_profile": {
+    "ecosystem": "conda",
+    "package_manager": "conda",
+    "env": "bioconda",
+    "env_name": "bioconda",
+    "prepare_commands": [
+      "source /opt/conda/etc/profile.d/conda.sh",
+      "conda activate bioconda"
+    ],
+    "activation_commands": [
+      "source /opt/conda/etc/profile.d/conda.sh && conda activate bioconda"
+    ],
+    "base_deps_installed": [
+      "python",
+      "conda-build",
+      "conda-verify",
+      "make",
+      "wget",
+      "gcc",
+      "gxx"
+    ],
+    "test_only_install_strategy": "The test command 'alleleCounter -h' runs after building the recipe with conda-build. The built package installs alleleCounter binary which is then tested.",
+    "cache_dirs": [
+      "/opt/conda/pkgs",
+      "/opt/conda/envs/bioconda"
+    ],
+    "notes": "Bioconda environment for building conda recipes. Simplified to remove bioconda-utils (known import/conflict issues). Uses conda-build directly for building recipes. The cancerit-allelecount recipe builds a C-based tool that requires htslib, zlib, bzip2, and xz. Test is 'alleleCounter -h' which verifies the binary executes correctly."
+  },
+  "notes": "Base image is condaforge/mambaforge:latest with conda pre-installed at /opt/conda on Debian bookworm. Simplified package list removes bioconda-utils to avoid dependency conflicts (bioconda-utils requires conda-build 3.19.1.* which is not available). Uses channel_priority flexible to help conda resolve compatible versions. GCC/GXX are installed from conda-forge rather than gcc_linux-64/gxx_linux-64 to simplify. The test command 'alleleCounter -h' verifies the built binary works."
+}

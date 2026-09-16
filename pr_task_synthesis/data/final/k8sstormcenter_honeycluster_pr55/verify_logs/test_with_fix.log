@@ -1,0 +1,12 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.0, pluggy-1.6.0
+rootdir: /tests/tests
+plugins: anyio-4.14.0
+collected 6 items
+
+../tests/tests/test_kubehound_stix_bundles.py ......                     [100%]
+
+============================== 6 passed in 0.01s ===============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

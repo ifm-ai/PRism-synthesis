@@ -1,0 +1,11 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "build_exit_code": 0,
+  "oci_archive_created": true,
+  "build_backend": "Buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "route_to": null,
+  "notes": "Build completed successfully. Image tagged as openenv-validation:latest and exported to OCI archive at /artifacts/environment/openenv_validation_oci.tar (1.6GB)."
+}

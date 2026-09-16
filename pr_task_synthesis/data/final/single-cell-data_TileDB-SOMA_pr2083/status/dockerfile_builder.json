@@ -1,0 +1,26 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "base_image": "python:3.11-slim",
+  "copied_artifacts": [
+    {
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh"
+    },
+    {
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh"
+    }
+  ],
+  "uses_repo_setup_script": true,
+  "repo_materialization_mode": "git_clone_via_script",
+  "container_build_plan_written": true,
+  "build_backend_target": "buildah",
+  "buildability_assessment": "buildable",
+  "blocking_risks": [],
+  "warnings": [
+    "eval.sh and test.patch are runtime-mounted verifier assets, not baked into the image"
+  ],
+  "recommended_fixes": [],
+  "notes": "Dockerfile.final is the single authoritative packaging spec. The image uses python:3.11-slim base, installs system packages (cmake, libssl-dev, pkg-config, python3.11-venv, patch, python3-dev, git, curl), runs repo_setup.sh to materialize /workspace from git, runs setup_runtime.sh to create Python venv and install TileDB-SOMA with dependencies. WORKDIR is /workspace. Verifier assets (eval.sh, test.patch) are runtime-mounted, not baked into the image. Ready for Buildah validation."
+}

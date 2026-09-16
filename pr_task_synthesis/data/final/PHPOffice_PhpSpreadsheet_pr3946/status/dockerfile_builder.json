@@ -1,0 +1,26 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "base_image": "mirror.gcr.io/library/php:8.2-cli",
+  "copied_artifacts": [
+    "repo_setup.sh",
+    "setup_runtime.sh"
+  ],
+  "uses_repo_setup_script": true,
+  "repo_materialization_mode": "build-time-git-clone",
+  "container_build_plan_written": true,
+  "build_backend_target": "buildah",
+  "recommended_fixes": [
+    "Updated PHP extension installation order: non-dom extensions (fileinfo, ctype, iconv, mbstring, zip) installed first, then dom-dependent extensions (dom, xml, xmlreader, xmlwriter, simplexml) installed together at the end"
+  ],
+  "buildability_assessment": {
+    "status": "buildable",
+    "dockerfile_path": "/artifacts/environment/Dockerfile.final",
+    "approach": "PHP extensions installed in a single RUN command with non-dom extensions first, then dom-dependent extensions together at the end: docker-php-source extract && docker-php-ext-install fileinfo ctype iconv mbstring zip && docker-php-ext-configure gd --with-freetype --with-jpeg && docker-php-ext-install gd && docker-php-ext-install dom xml xmlreader xmlwriter simplexml && docker-php-source delete",
+    "review_notes": "Dockerfile syntax valid, build context files present, system libraries match Debian bookworm base, script paths consistent, workspace contract respected, verifier assets separated. PHP extensions installed in a single RUN command with docker-php-source kept extracted. Non-dom extensions (fileinfo, ctype, iconv, mbstring, zip, gd) are installed first, then dom-dependent extensions (dom, xml, xmlreader, xmlwriter, simplexml) are installed together at the end. This avoids docker-php-ext-install cleaning up dom headers before xmlreader compiles. docker-php-source delete runs only at the very end. System libraries (libpng-dev, libjpeg62-turbo-dev, libfreetype-dev, libzip-dev, libonig-dev, libxml2-dev) installed first for GD, ZIP, mbstring, and XML extension compilation."
+  },
+  "blocking_risks": [],
+  "warnings": [],
+  "recommended_fixes": [],
+  "notes": "PHP extensions are now installed in a single RUN command with non-dom extensions first, then dom-dependent extensions together at the end: docker-php-source extract && docker-php-ext-install fileinfo ctype iconv mbstring zip && docker-php-ext-configure gd --with-freetype --with-jpeg && docker-php-ext-install gd && docker-php-ext-install dom xml xmlreader xmlwriter simplexml && docker-php-source delete. This approach addresses the issue where docker-php-ext-install cleans up after each extension internally - by installing dom-dependent extensions (dom, xml, xmlreader, xmlwriter, simplexml) together at the end, dom headers remain available for xmlreader compilation. Buildability review passed - ready for Buildah validation."
+}

@@ -1,0 +1,54 @@
+{
+  "schema_version": "2.0",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "scores": {
+    "environment_readiness": 4,
+    "dependency_completeness": 4,
+    "verifier_integrity": 4,
+    "instruction_verifier_alignment": 4,
+    "trajectory_progress_value": 5
+  },
+  "struggle_patterns": [
+    {
+      "pattern": "test_never_ran",
+      "phase": "verification",
+      "evidence": "The solver made the correct edit to .idea/vcs.xml but did not run any local tests to verify the fix before completing.",
+      "score_impacts": [{"dimension": "trajectory_progress_value", "delta": 0}]
+    }
+  ],
+  "phase_signals": {
+    "tests_executed": false,
+    "first_meaningful_edit_made": true,
+    "touched_relevant_files": true,
+    "solver_time_budget_exhausted": false,
+    "oracle_verifier_executed": true,
+    "oracle_verifier_passed": true
+  },
+  "signal_strength": {
+    "solver_signal": "strong",
+    "oracle_signal": "strong"
+  },
+  "verifier_diagnosis": {
+    "verifier_coverage_class": "behavioral",
+    "solver_approach_valid": true,
+    "repair_priority": "none"
+  },
+  "needs_verifier_change": false,
+  "needs_instruction_change": false,
+  "instruction_tuning_advice": {
+    "priority": "none",
+    "missing_spec_type": "none",
+    "tuning_context": "The instruction clearly described the regex capture group problem and the solver correctly identified and fixed it.",
+    "anti_contamination_constraints": []
+  },
+  "filter_label": "keep",
+  "summary": "The solver successfully localized the issue to .idea/vcs.xml and made the correct edit changing the regex from '#(\\d+)|GLUTEN-(\\d+)' to '(?:#|GLUTEN-)(\\d+)'. The oracle verifier executed and all 5 tests passed, confirming the fix is correct. The solver did not run local tests but completed the task within the time budget.",
+  "evidence": [
+    "Solver found .idea/vcs.xml using grep and read tools",
+    "Solver edited issueRegexp from '#(\\d+)|GLUTEN-(\\d+)' to '(?:#|GLUTEN-)(\\d+)' matching fix.patch",
+    "Oracle verifier ran pytest on tests/test_vcs_regex.py and all 5 tests passed",
+    "Oracle exit code was 0 (OPENENV_EXIT_CODE=0)",
+    "Solver did not execute any local test commands before completing"
+  ]
+}

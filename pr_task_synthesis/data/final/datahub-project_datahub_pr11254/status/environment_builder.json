@@ -1,0 +1,17 @@
+{
+  "status": "success",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "python:3.11-slim",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Python 3.11 virtualenv with acryl-datahub (editable), snowflake-connector-python, pytest",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "pytest collected 2 tests from test_snowflake.py",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "source /opt/benchmark/venv/bin/activate",
+  "notes": "Environment requires pre-generated metadata module from PyPI package. OpenJDK 21 JRE installed for Gradle support (JDK 17 not available in Debian Trixie; Gradle works fine with JDK 21). Fixed package names for Debian Trixie: python3-venv (generic, not python3.11-venv). git and curl are pre-installed in python:3.11-slim base image. Additional dependencies: msal for OAuth support.",
+  "packages_fixed": true
+}

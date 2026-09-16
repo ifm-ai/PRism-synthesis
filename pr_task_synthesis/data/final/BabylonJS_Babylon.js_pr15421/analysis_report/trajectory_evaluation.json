@@ -1,0 +1,60 @@
+{
+  "schema_version": "2.0",
+  "solver_outcome": "fail",
+  "oracle_outcome": "fail",
+  "scores": {
+    "environment_readiness": 4,
+    "dependency_completeness": 4,
+    "verifier_integrity": 3,
+    "instruction_verifier_alignment": 4,
+    "trajectory_progress_value": 3
+  },
+  "struggle_patterns": [
+    {
+      "pattern": "solver_oracle_disagreement",
+      "phase": "verification",
+      "evidence": "Solver claimed all tasks completed but oracle tests show 11 of 15 tests failed, with solver edits not matching fix.patch patterns.",
+      "score_impacts": [{"dimension": "verifier_integrity", "delta": -1}, {"dimension": "instruction_verifier_alignment", "delta": -1}]
+    },
+    {
+      "pattern": "patch_churn_without_progress",
+      "phase": "edit",
+      "evidence": "Solver edited 3 files but missed 2 files entirely (oitFragment.fx, default.fragment.fx) and made incorrect edits in morphTargetsVertex.fx that kept buggy patterns.",
+      "score_impacts": [{"dimension": "trajectory_progress_value", "delta": -1}]
+    }
+  ],
+  "phase_signals": {
+    "tests_executed": false,
+    "first_meaningful_edit_made": true,
+    "touched_relevant_files": true,
+    "solver_time_budget_exhausted": false,
+    "oracle_verifier_executed": true,
+    "oracle_verifier_passed": false
+  },
+  "signal_strength": {
+    "solver_signal": "medium",
+    "oracle_signal": "strong"
+  },
+  "verifier_diagnosis": {
+    "verifier_coverage_class": "implementation_pattern",
+    "solver_approach_valid": true,
+    "repair_priority": "low"
+  },
+  "needs_verifier_change": false,
+  "needs_instruction_change": false,
+  "instruction_tuning_advice": {
+    "priority": "none",
+    "missing_spec_type": "none",
+    "tuning_context": "The instruction clearly describes the behavioral outcomes needed; solver localized to correct files but implementation was incomplete.",
+    "anti_contamination_constraints": []
+  },
+  "filter_label": "keep",
+  "summary": "Solver correctly identified the ShadersWGSL directory and relevant files (bumpFragment.fx, depthPrePass.fx, morphTargetsVertex.fx) but made incomplete edits - missed oitFragment.fx and default.fragment.fx entirely, and the morphTargetsVertex.fx edit kept buggy patterns. Oracle verifier executed 15 behavioral tests checking source patterns, with 11 failures indicating the solver's approach was valid but implementation incomplete.",
+  "evidence": [
+    "Solver explored codebase and found /workspace/packages/dev/core/src/ShadersWGSL/ directory containing target files",
+    "Solver made edits to 3 files (bumpFragment.fx, depthPrePass.fx, morphTargetsVertex.fx) but fix.patch requires 5 files",
+    "Oracle test output shows 11 failed tests including missing fixes in oitFragment.fx (uvar→var) and default.fragment.fx (decal UV, refraction matrix)",
+    "Solver's morphTargetsVertex.fx edit kept buggy pattern 'tangentUpdated.xyz = tangentUpdated.xyz + ...' instead of fix 'tangentUpdated = vec4f(...)'",
+    "Oracle verifier uses behavioral pattern matching on source files, which is appropriate for verifying WGSL shader syntax fixes"
+  ]
+}

@@ -1,0 +1,755 @@
+diff --git a/.NET/Microsoft.Recognizers.Definitions.Common/Spanish/DateTimeDefinitions.cs b/.NET/Microsoft.Recognizers.Definitions.Common/Spanish/DateTimeDefinitions.cs
+index 8c1a3b2b..e0a069fa 100644
+--- a/.NET/Microsoft.Recognizers.Definitions.Common/Spanish/DateTimeDefinitions.cs
++++ b/.NET/Microsoft.Recognizers.Definitions.Common/Spanish/DateTimeDefinitions.cs
+@@ -51,7 +51,7 @@ namespace Microsoft.Recognizers.Definitions.Spanish
+       public const string RelativeMonthRegex = @"(?<relmonth>(de\s+)?((este|pr[oó]ximo|([uú]ltim(o|as|os)))\s+mes)|(del\s+)?(mes\s+((que\s+viene)|pasado)))\b";
+       public const string MonthRegex = @"\b(?<month>abr(\.|(il)?\b)|ago(\.|(sto)?\b)|dic(\.|(iembre)?\b)|feb(\.|(rero)?\b)|ene(\.|(ro)?\b)|ju[ln](\.|(io)?\b)|mar(\.|(zo)?\b)|may(\.|(o)?\b)|nov(\.|(iembre)?\b)|oct(\.|(ubre)?\b)|sep?t(\.|(iembre)?\b)|sep(\.|\b))";
+       public static readonly string MonthSuffixRegex = $@"(?<msuf>((del?|la|el)\s+)?({RelativeMonthRegex}|{MonthRegex}))";
+-      public const string DateUnitRegex = @"(?<unit>(año|(?<uoy>semana))(?<plural>s)?|(?<uoy>mes)(?<plural>es)?|(?<uoy>d[ií]a)(?<plural>s)?(?<business>\s+(h[aá]biles|laborales))?)\b";
++      public const string DateUnitRegex = @"(?<unit>(a[nñ]o|(?<uoy>semana))(?<plural>s)?|(?<uoy>mes)(?<plural>es)?|(?<uoy>d[ií]a)(?<plural>s)?(?<business>\s+(h[aá]biles|laborales))?)\b";
+       public const string PastRegex = @"(?<past>\b(pasad(a|o)(s)?|[uú]ltim[oa](s)?|anterior(es)?|previo(s)?)\b)";
+       public const string FutureRegex = @"\b(siguiente(s)?|pr[oó]xim[oa](s)?)\b";
+       public static readonly string SimpleCasesRegex = $@"\b((desde(\s+el)?|entre|del?)\s+)?({DayRegex})\s*{TillRegex}\s*({DayRegex})\s+{MonthSuffixRegex}((\s+|\s*,\s*)((en|del?)\s+)?{YearRegex})?\b";
+@@ -83,7 +83,7 @@ namespace Microsoft.Recognizers.Definitions.Spanish
+       public static readonly string WhichWeekRegex = $@"\b(semana)(\s*)(?<number>5[0-3]|[1-4]\d|0?[1-9])(\s+del?\s+({YearRegex}|(?<order>pr[oó]ximo|[uú]ltimo|este)\s+año|año\s+(?<order>pasado)))?\b";
+       public static readonly string WeekOfRegex = $@"((del?|el|la)\s+)?(semana)(\s*)({OfPrepositionRegex}|que\s+(inicia|comienza)\s+el|(que\s+va|a\s+partir)\s+del)";
+       public static readonly string MonthOfRegex = $@"(mes)(\s+)({OfPrepositionRegex})";
+-      public const string RangeUnitRegex = @"\b(?<unit>años?|mes(es)?|semanas?)\b";
++      public const string RangeUnitRegex = @"\b(?<unit>a[nñ]os?|mes(es)?|semanas?)\b";
+       public const string BeforeAfterRegex = @"^[.]";
+       public const string InConnectorRegex = @"\b(en)(?=\s*$)\b";
+       public const string TodayNowRegex = @"\b(hoy|ahora|este entonces)\b";
+@@ -178,7 +178,7 @@ namespace Microsoft.Recognizers.Definitions.Spanish
+       public const string DateTimeTimeOfDayRegex = @"\b(?<timeOfDay>mañana|madrugada|(?<pm>pasado\s+(el\s+)?medio\s?d[ií]a|tarde|noche))\b";
+       public static readonly string PeriodTimeOfDayRegex = $@"\b((en\s+(el|la|lo)?\s+)?({LaterEarlyRegex}\s+)?(est[ae]\s+)?{DateTimeTimeOfDayRegex})\b";
+       public static readonly string PeriodSpecificTimeOfDayRegex = $@"\b(({LaterEarlyRegex}\s+)?est[ae]\s+{DateTimeTimeOfDayRegex}|({StrictRelativeRegex}\s+{PeriodTimeOfDayRegex})|anoche)\b";
+-      public const string UnitRegex = @"(?<unit>años?|(bi|tri|cuatri|se)mestre|mes(es)?|semanas?|fin(es)?\s+de\s+semana|finde|d[ií]as?|horas?|hra?s?|hs?|minutos?|mins?|segundos?|segs?|noches?)\b";
++      public const string UnitRegex = @"(?<unit>a[nñ]os?|(bi|tri|cuatri|se)mestre|mes(es)?|semanas?|fin(es)?\s+de\s+semana|finde|d[ií]as?|horas?|hra?s?|hs?|minutos?|mins?|segundos?|segs?|noches?)\b";
+       public const string ConnectorRegex = @"^(,|t|(para|y|a|en|por) las?|(\s*,\s*)?((cerca|alrededor)\s+)?(de\s+las?|del))$";
+       public const string TimeHourNumRegex = @"(?<hour>veint(i(uno|dos|tres|cuatro)|e)|cero|uno|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|once|doce|trece|catorce|quince|dieci(s([eé])is|siete|ocho|nueve))";
+       public static readonly string PureNumFromTo = $@"((\b(desde|de)\s+(la(s)?\s+)?)?({BaseDateTime.HourRegex}|{TimeHourNumRegex})(?!\s+al?\b)(\s*(?<leftDesc>{DescRegex}))?|(\b(desde|de)\s+(la(s)?\s+)?)({BaseDateTime.HourRegex}|{TimeHourNumRegex})(\s*(?<leftDesc>{DescRegex}))?)\s*{TillRegex}\s*({BaseDateTime.HourRegex}|{TimeHourNumRegex})\s*(?<rightDesc>{PmRegex}|{AmRegex}|{DescRegex})?";
+@@ -225,14 +225,14 @@ namespace Microsoft.Recognizers.Definitions.Spanish
+       public const string MiddlePauseRegex = @"^[.]";
+       public const string PrefixArticleRegex = @"\b(e[ln]\s+(d[ií]a\s+)?)";
+       public const string OrRegex = @"^[.]";
+-      public static readonly string SpecialYearTermsRegex = $@"\b(({SpecialYearPrefixes}\s+años?\s+|años?\s+({SpecialYearPrefixes}\s+)?)(de\s+)?)";
++      public static readonly string SpecialYearTermsRegex = $@"\b(({SpecialYearPrefixes}\s+a[nñ]os?\s+|a[nñ]os?\s+({SpecialYearPrefixes}\s+)?)(de\s+)?)";
+       public static readonly string YearPlusNumberRegex = $@"\b({SpecialYearTermsRegex}((?<year>(\d{{2,4}}))|{FullTextYearRegex}))\b";
+       public static readonly string NumberAsTimeRegex = $@"\b({WrittenTimeRegex}|{HourRegex}(?<desc>\s*h(oras)?)?)\b";
+       public static readonly string TimeBeforeAfterRegex = $@"\b((?<=\b(antes|no\s+m[aá]s\s+tard(e|ar)\s+(de|a\s+las?)|por| después)\s+)({WrittenTimeRegex}|{HourNumRegex}|{BaseDateTime.HourRegex}|{MidTimeRegex}))\b";
+       public const string DateNumberConnectorRegex = @"^\s*(?<connector>a\s+las)\s*$";
+       public const string CenturyRegex = @"^[.]";
+       public const string DecadeRegex = @"(?<decade>diez|veinte|treinta|cuarenta|cincuenta|se[st]enta|ochenta|noventa)";
+-      public static readonly string DecadeWithCenturyRegex = $@"(los\s+)?((((d[ée]cada(\s+de)?)\s+)(((?<century>\d|1\d|2\d)?(?<decade>\d0))))|a[ñn]os\s+((((dos\s+)?mil\s+)?({WrittenOneHundredToNineHundredRegex}\s+)?{DecadeRegex})|((dos\s+)?mil\s+)?({WrittenOneHundredToNineHundredRegex})(\s+{DecadeRegex}?)|((dos\s+)?mil)(\s+{WrittenOneHundredToNineHundredRegex}\s+)?{DecadeRegex}?))";
++      public static readonly string DecadeWithCenturyRegex = $@"(los\s+)?((((d[ée]cada(\s+de)?)\s+)(((?<century>\d|1\d|2\d)?(?<decade>\d0))))|a[ñn]os\s+((?<century>\d|1\d|2\d)?(?<decade>\d0)\b)|a[ñn]os\s+(((?<century>((dos\s+)?mil\s+)?({WrittenOneHundredToNineHundredRegex}\s+)?)?{DecadeRegex})|(?<century>((dos\s+)?mil\s+)?({WrittenOneHundredToNineHundredRegex}))(\s+{DecadeRegex}?)|(?<century>((dos\s+)?mil)(\s+{WrittenOneHundredToNineHundredRegex}\s+)?){DecadeRegex}?))";
+       public static readonly string RelativeDecadeRegex = $@"\b(((el|las?)\s+)?{RelativeRegex}\s+((?<number>[\w,]+)\s+)?(d[eé]cada|decenio)s?)\b";
+       public static readonly string ComplexDatePeriodRegex = $@"(?:((de(sde)?)\s+)?(?<start>.+)\s*({StrictTillRegex})\s*(?<end>.+)|((entre)\s+)(?<start>.+)\s*({RangeConnectorRegex})\s*(?<end>.+))";
+       public const string AmbiguousPointRangeRegex = @"^(mar\.?)$";
+@@ -245,6 +245,8 @@ namespace Microsoft.Recognizers.Definitions.Spanish
+         {
+             { @"años", @"Y" },
+             { @"año", @"Y" },
++            { @"anos", @"Y" },
++            { @"ano", @"Y" },
+             { @"meses", @"MON" },
+             { @"mes", @"MON" },
+             { @"trimestre", @"3MON" },
+@@ -287,6 +289,8 @@ namespace Microsoft.Recognizers.Definitions.Spanish
+         {
+             { @"años", 31536000 },
+             { @"año", 31536000 },
++            { @"anos", 31536000 },
++            { @"ano", 31536000 },
+             { @"meses", 2592000 },
+             { @"mes", 2592000 },
+             { @"semanas", 604800 },
+@@ -639,7 +643,15 @@ namespace Microsoft.Recognizers.Definitions.Spanish
+       public static readonly string ModSuffixRegex = $@"\b({AgoRegex}|{LaterRegex}|{BeforeAfterRegex}|{FutureSuffixRegex}|{PastSuffixRegex})\b";
+       public static readonly Dictionary<string, int> WrittenDecades = new Dictionary<string, int>
+         {
+-            { @"", 0 }
++            { @"diez", 10 },
++            { @"veinte", 20 },
++            { @"treinta", 30 },
++            { @"cuarenta", 40 },
++            { @"cincuenta", 50 },
++            { @"sesenta", 60 },
++            { @"setenta", 70 },
++            { @"ochenta", 80 },
++            { @"noventa", 90 }
+         };
+       public static readonly Dictionary<string, int> SpecialDecadeCases = new Dictionary<string, int>
+         {
+@@ -747,7 +759,9 @@ namespace Microsoft.Recognizers.Definitions.Spanish
+       public static readonly IList<string> YearTerms = new List<string>
+         {
+             @"año",
+-            @"años"
++            @"años",
++            @"ano",
++            @"anos"
+         };
+       public static readonly IList<string> YearToDateTerms = new List<string>
+         {
+@@ -770,7 +784,7 @@ namespace Microsoft.Recognizers.Definitions.Spanish
+       public const string MonthTypeRegex = @"(mes(es)?|mensual(es|mente)?)$";
+       public const string QuarterTypeRegex = @"(trimestral(es|mente)?)$";
+       public const string SemiAnnualTypeRegex = @"(semestral(es|mente)?)$";
+-      public const string YearTypeRegex = @"(años?|anual(mente)?)$";
++      public const string YearTypeRegex = @"(a[nñ]os?|anual(mente)?)$";
+       public static readonly IList<string> ThisTerms = new List<string>
+         {
+             @"esta"
+diff --git a/.NET/Microsoft.Recognizers.Definitions.Common/Spanish/NumbersWithUnitDefinitions.cs b/.NET/Microsoft.Recognizers.Definitions.Common/Spanish/NumbersWithUnitDefinitions.cs
+index 45f847a4..7cc9787f 100644
+--- a/.NET/Microsoft.Recognizers.Definitions.Common/Spanish/NumbersWithUnitDefinitions.cs
++++ b/.NET/Microsoft.Recognizers.Definitions.Common/Spanish/NumbersWithUnitDefinitions.cs
+@@ -23,7 +23,7 @@ namespace Microsoft.Recognizers.Definitions.Spanish
+     {
+       public static readonly Dictionary<string, string> AgeSuffixList = new Dictionary<string, string>
+         {
+-            { @"Año", @"años|año" },
++            { @"Año", @"años|anos|año|ano" },
+             { @"Mes", @"meses|mes" },
+             { @"Semana", @"semanas|semana" },
+             { @"Día", @"dias|días|día|dia" }
+@@ -31,7 +31,9 @@ namespace Microsoft.Recognizers.Definitions.Spanish
+       public static readonly IList<string> AmbiguousAgeUnitList = new List<string>
+         {
+             @"años",
++            @"anos",
+             @"año",
++            @"ano",
+             @"meses",
+             @"mes",
+             @"semanas",
+@@ -737,7 +739,7 @@ namespace Microsoft.Recognizers.Definitions.Spanish
+             { @"Yarda", @"yd|yarda|yardas" },
+             { @"Pulgada", @"pulgada|pulgadas|""" },
+             { @"Pie", @"pie|pies|ft" },
+-            { @"Año luz", @"año luz|años luz|al" }
++            { @"Año luz", @"año luz|ano luz|años luz|anos luz|al" }
+         };
+       public static readonly IList<string> AmbiguousLengthUnitList = new List<string>
+         {
+diff --git a/Patterns/Spanish/Spanish-DateTime.yaml b/Patterns/Spanish/Spanish-DateTime.yaml
+index d57db36c..9c0d1340 100644
+--- a/Patterns/Spanish/Spanish-DateTime.yaml
++++ b/Patterns/Spanish/Spanish-DateTime.yaml
+@@ -73,7 +73,7 @@ MonthSuffixRegex: !nestedRegex
+   def: (?<msuf>((del?|la|el)\s+)?({RelativeMonthRegex}|{MonthRegex}))
+   references: [ RelativeMonthRegex, MonthRegex ]
+ DateUnitRegex: !simpleRegex
+-  def: (?<unit>(año|(?<uoy>semana))(?<plural>s)?|(?<uoy>mes)(?<plural>es)?|(?<uoy>d[ií]a)(?<plural>s)?(?<business>\s+(h[aá]biles|laborales))?)\b
++  def: (?<unit>(a[nñ]o|(?<uoy>semana))(?<plural>s)?|(?<uoy>mes)(?<plural>es)?|(?<uoy>d[ií]a)(?<plural>s)?(?<business>\s+(h[aá]biles|laborales))?)\b
+ PastRegex: !simpleRegex
+   def: (?<past>\b(pasad(a|o)(s)?|[uú]ltim[oa](s)?|anterior(es)?|previo(s)?)\b)
+ FutureRegex: !simpleRegex
+@@ -162,7 +162,7 @@ MonthOfRegex: !nestedRegex
+   def: (mes)(\s+)({OfPrepositionRegex})
+   references: [ OfPrepositionRegex ]
+ RangeUnitRegex: !simpleRegex
+-  def: \b(?<unit>años?|mes(es)?|semanas?)\b
++  def: \b(?<unit>a[nñ]os?|mes(es)?|semanas?)\b
+ BeforeAfterRegex: !simpleRegex
+   def: ^[.]
+ InConnectorRegex: !simpleRegex
+@@ -433,7 +433,7 @@ PeriodSpecificTimeOfDayRegex: !nestedRegex
+   def: \b(({LaterEarlyRegex}\s+)?est[ae]\s+{DateTimeTimeOfDayRegex}|({StrictRelativeRegex}\s+{PeriodTimeOfDayRegex})|anoche)\b
+   references: [ PeriodTimeOfDayRegex, StrictRelativeRegex, DateTimeTimeOfDayRegex, LaterEarlyRegex ]
+ UnitRegex: !simpleRegex
+-  def: (?<unit>años?|(bi|tri|cuatri|se)mestre|mes(es)?|semanas?|fin(es)?\s+de\s+semana|finde|d[ií]as?|horas?|hra?s?|hs?|minutos?|mins?|segundos?|segs?|noches?)\b
++  def: (?<unit>a[nñ]os?|(bi|tri|cuatri|se)mestre|mes(es)?|semanas?|fin(es)?\s+de\s+semana|finde|d[ií]as?|horas?|hra?s?|hs?|minutos?|mins?|segundos?|segs?|noches?)\b
+ ConnectorRegex: !simpleRegex
+   def: ^(,|t|(para|y|a|en|por) las?|(\s*,\s*)?((cerca|alrededor)\s+)?(de\s+las?|del))$
+ # SpanishTimePeriodExtractorConfiguration
+@@ -561,7 +561,7 @@ OrRegex: !simpleRegex
+   # TODO: modify below regex according to the counterpart in English
+   def: ^[.]
+ SpecialYearTermsRegex: !nestedRegex
+-  def: \b(({SpecialYearPrefixes}\s+años?\s+|años?\s+({SpecialYearPrefixes}\s+)?)(de\s+)?)
++  def: \b(({SpecialYearPrefixes}\s+a[nñ]os?\s+|a[nñ]os?\s+({SpecialYearPrefixes}\s+)?)(de\s+)?)
+   references: [ SpecialYearPrefixes ]
+ YearPlusNumberRegex: !nestedRegex
+   def: \b({SpecialYearTermsRegex}((?<year>(\d{2,4}))|{FullTextYearRegex}))\b
+@@ -580,7 +580,7 @@ CenturyRegex: !simpleRegex
+ DecadeRegex: !simpleRegex
+   def: (?<decade>diez|veinte|treinta|cuarenta|cincuenta|se[st]enta|ochenta|noventa)
+ DecadeWithCenturyRegex: !nestedRegex
+-  def: (los\s+)?((((d[ée]cada(\s+de)?)\s+)(((?<century>\d|1\d|2\d)?(?<decade>\d0))))|a[ñn]os\s+((((dos\s+)?mil\s+)?({WrittenOneHundredToNineHundredRegex}\s+)?{DecadeRegex})|((dos\s+)?mil\s+)?({WrittenOneHundredToNineHundredRegex})(\s+{DecadeRegex}?)|((dos\s+)?mil)(\s+{WrittenOneHundredToNineHundredRegex}\s+)?{DecadeRegex}?))
++  def: (los\s+)?((((d[ée]cada(\s+de)?)\s+)(((?<century>\d|1\d|2\d)?(?<decade>\d0))))|a[ñn]os\s+((?<century>\d|1\d|2\d)?(?<decade>\d0)\b)|a[ñn]os\s+(((?<century>((dos\s+)?mil\s+)?({WrittenOneHundredToNineHundredRegex}\s+)?)?{DecadeRegex})|(?<century>((dos\s+)?mil\s+)?({WrittenOneHundredToNineHundredRegex}))(\s+{DecadeRegex}?)|(?<century>((dos\s+)?mil)(\s+{WrittenOneHundredToNineHundredRegex}\s+)?){DecadeRegex}?))
+   references: [ WrittenOneHundredToNineHundredRegex, DecadeRegex ]
+ RelativeDecadeRegex: !nestedRegex
+   def: \b(((el|las?)\s+)?{RelativeRegex}\s+((?<number>[\w,]+)\s+)?(d[eé]cada|decenio)s?)\b
+@@ -609,6 +609,8 @@ UnitMap: !dictionary
+   entries:
+     años: Y
+     año: Y
++    anos: Y
++    ano: Y
+     meses: MON
+     mes: MON
+     trimestre: 3MON
+@@ -651,6 +653,8 @@ UnitValueMap: !dictionary
+   entries:
+     años: 31536000
+     año: 31536000
++    anos: 31536000
++    ano: 31536000
+     meses: 2592000
+     mes: 2592000
+     semanas: 604800
+@@ -1048,9 +1052,16 @@ ModSuffixRegex: !nestedRegex
+   references: [AgoRegex, LaterRegex, BeforeAfterRegex, FutureSuffixRegex, PastSuffixRegex]
+ WrittenDecades: !dictionary
+   types: [ string, int ]
+-  # TODO: modify below dictionary according to the counterpart in English
+   entries:
+-    "": 0
++    'diez': 10
++    'veinte': 20
++    'treinta': 30
++    'cuarenta': 40
++    'cincuenta': 50
++    'sesenta': 60
++    'setenta': 70
++    'ochenta': 80
++    'noventa': 90
+ SpecialDecadeCases: !dictionary
+   types: [ string, int ]
+   # TODO: modify below dictionary there're special cases for written decades
+@@ -1167,6 +1178,8 @@ YearTerms: !list
+   entries:
+     - año
+     - años
++    - ano
++    - anos
+ YearToDateTerms: !list
+   types: [ string ]
+   entries:
+@@ -1198,7 +1211,7 @@ QuarterTypeRegex: !simpleRegex
+ SemiAnnualTypeRegex: !simpleRegex
+   def: (semestral(es|mente)?)$
+ YearTypeRegex: !simpleRegex
+-  def: (años?|anual(mente)?)$
++  def: (a[nñ]os?|anual(mente)?)$
+ ThisTerms: !list
+   types: [ string ]
+   entries:
+diff --git a/Patterns/Spanish/Spanish-NumbersWithUnit.yaml b/Patterns/Spanish/Spanish-NumbersWithUnit.yaml
+index a3bfc1ac..0dbb6e88 100644
+--- a/Patterns/Spanish/Spanish-NumbersWithUnit.yaml
++++ b/Patterns/Spanish/Spanish-NumbersWithUnit.yaml
+@@ -3,7 +3,7 @@
+ AgeSuffixList: !dictionary
+   types: [ string, string ]
+   entries:
+-    Año: años|año
++    Año: años|anos|año|ano
+     Mes: meses|mes
+     Semana: semanas|semana
+     Día: dias|días|día|dia
+@@ -12,7 +12,9 @@ AmbiguousAgeUnitList: !list
+   types: [ string ]
+   entries:
+     - años
++    - anos
+     - año
++    - ano
+     - meses
+     - mes
+     - semanas
+@@ -969,7 +971,7 @@ LengthSuffixList: !dictionary
+     Yarda: yd|yarda|yardas
+     Pulgada: pulgada|pulgadas|"
+     Pie: pie|pies|ft
+-    Año luz: año luz|años luz|al
++    Año luz: año luz|ano luz|años luz|anos luz|al
+ AmbiguousLengthUnitList: !list
+   types: [ string ]
+   entries:
+diff --git a/Specs/DateTime/Spanish/DatePeriodExtractor.json b/Specs/DateTime/Spanish/DatePeriodExtractor.json
+index 142455d6..1346e932 100644
+--- a/Specs/DateTime/Spanish/DatePeriodExtractor.json
++++ b/Specs/DateTime/Spanish/DatePeriodExtractor.json
+@@ -3482,10 +3482,10 @@
+     "NotSupportedByDesign": "javascript, python",
+     "Results": [
+       {
+-        "Text": "años 1970",
++        "Text": "los años 1970",
+         "Type": "daterange",
+-        "Start": 7,
+-        "Length": 9
++        "Start": 3,
++        "Length": 13
+       }
+     ]
+   },
+@@ -3495,10 +3495,10 @@
+     "NotSupportedByDesign": "javascript, python",
+     "Results": [
+       {
+-        "Text": "años 2000",
++        "Text": "los años 2000",
+         "Type": "daterange",
+-        "Start": 13,
+-        "Length": 9
++        "Start": 9,
++        "Length": 13
+       }
+     ]
+   },
+@@ -3521,10 +3521,36 @@
+     "NotSupportedByDesign": "javascript, python",
+     "Results": [
+       {
+-        "Text": "años 70",
++        "Text": "los años 70",
+         "Type": "daterange",
+-        "Start": 7,
+-        "Length": 7
++        "Start": 3,
++        "Length": 11
++      }
++    ]
++  },
++  {
++    "Input": "escrito en los anos 90",
++    "NotSupported": "java",
++    "NotSupportedByDesign": "javascript, python",
++    "Results": [
++      {
++        "Text": "los anos 90",
++        "Type": "daterange",
++        "Start": 11,
++        "Length": 11
++      }
++    ]
++  },
++  {
++    "Input": "escritos en los ultimos 3 anos",
++    "NotSupported": "java",
++    "NotSupportedByDesign": "javascript, python",
++    "Results": [
++      {
++        "Text": "ultimos 3 anos",
++        "Type": "daterange",
++        "Start": 16,
++        "Length": 14
+       }
+     ]
+   },
+diff --git a/Specs/DateTime/Spanish/DatePeriodParser.json b/Specs/DateTime/Spanish/DatePeriodParser.json
+index 04654e75..aada5ea3 100644
+--- a/Specs/DateTime/Spanish/DatePeriodParser.json
++++ b/Specs/DateTime/Spanish/DatePeriodParser.json
+@@ -3908,11 +3908,11 @@
+     "Context": {
+       "ReferenceDateTime": "2016-11-07T00:00:00"
+     },
+-    "NotSupported": "dotnet, java, python",
++    "NotSupported": "java, python",
+     "NotSupportedByDesign": "javascript, python",
+     "Results": [
+       {
+-        "Text": "años 1970",
++        "Text": "los años 1970",
+         "Type": "daterange",
+         "Value": {
+           "Timex": "(1970-01-01,1980-01-01,P10Y)",
+@@ -3925,8 +3925,8 @@
+             "endDate": "1980-01-01"
+           }
+         },
+-        "Start": 7,
+-        "Length": 9
++        "Start": 3,
++        "Length": 13
+       }
+     ]
+   },
+@@ -3935,11 +3935,11 @@
+     "Context": {
+       "ReferenceDateTime": "2016-11-07T00:00:00"
+     },
+-    "NotSupported": "dotnet, java, python",
++    "NotSupported": "java, python",
+     "NotSupportedByDesign": "javascript",
+     "Results": [
+       {
+-        "Text": "años 2000",
++        "Text": "los años 2000",
+         "Type": "daterange",
+         "Value": {
+           "Timex": "(2000-01-01,2010-01-01,P10Y)",
+@@ -3952,8 +3952,8 @@
+             "endDate": "2010-01-01"
+           }
+         },
+-        "Start": 13,
+-        "Length": 9
++        "Start": 9,
++        "Length": 13
+       }
+     ]
+   },
+@@ -3989,11 +3989,11 @@
+     "Context": {
+       "ReferenceDateTime": "2016-11-07T00:00:00"
+     },
+-    "NotSupported": "dotnet, java, python",
++    "NotSupported": "java, python",
+     "NotSupportedByDesign": "javascript",
+     "Results": [
+       {
+-        "Text": "años 70",
++        "Text": "los años 70",
+         "Type": "daterange",
+         "Value": {
+           "Timex": "(XX70-01-01,XX80-01-01,P10Y)",
+@@ -4006,8 +4006,8 @@
+             "endDate": "1980-01-01"
+           }
+         },
+-        "Start": 7,
+-        "Length": 7
++        "Start": 3,
++        "Length": 11
+       }
+     ]
+   },
+@@ -4070,11 +4070,11 @@
+     "Context": {
+       "ReferenceDateTime": "2016-11-07T00:00:00"
+     },
+-    "NotSupported": "dotnet, java, python",
++    "NotSupported": "java, python",
+     "NotSupportedByDesign": "javascript",
+     "Results": [
+       {
+-        "Text": "años 40",
++        "Text": "los años 40",
+         "Type": "daterange",
+         "Value": {
+           "Timex": "(XX40-01-01,XX50-01-01,P10Y)",
+@@ -4087,8 +4087,8 @@
+             "endDate": "1950-01-01"
+           }
+         },
+-        "Start": 7,
+-        "Length": 7
++        "Start": 3,
++        "Length": 11
+       }
+     ]
+   },
+@@ -4097,11 +4097,11 @@
+     "Context": {
+       "ReferenceDateTime": "2016-11-07T00:00:00"
+     },
+-    "NotSupported": "dotnet, java, python",
++    "NotSupported": "java, python",
+     "NotSupportedByDesign": "javascript",
+     "Results": [
+       {
+-        "Text": "años setenta",
++        "Text": "los años setenta",
+         "Type": "daterange",
+         "Value": {
+           "Timex": "(XX70-01-01,XX80-01-01,P10Y)",
+@@ -4114,8 +4114,8 @@
+             "endDate": "1980-01-01"
+           }
+         },
+-        "Start": 7,
+-        "Length": 12
++        "Start": 3,
++        "Length": 16
+       }
+     ]
+   },
+@@ -4124,11 +4124,11 @@
+     "Context": {
+       "ReferenceDateTime": "2016-11-07T00:00:00"
+     },
+-    "NotSupported": "dotnet, java, python",
++    "NotSupported": "java, python",
+     "NotSupportedByDesign": "javascript",
+     "Results": [
+       {
+-        "Text": "años mil novecientos setenta",
++        "Text": "los años mil novecientos setenta",
+         "Type": "daterange",
+         "Value": {
+           "Timex": "(1970-01-01,1980-01-01,P10Y)",
+@@ -4141,8 +4141,62 @@
+             "endDate": "1980-01-01"
+           }
+         },
+-        "Start": 7,
+-        "Length": 28
++        "Start": 3,
++        "Length": 32
++      }
++    ]
++  },
++  {
++    "Input": "escrito en los anos 90",
++    "Context": {
++      "ReferenceDateTime": "2016-11-07T00:00:00"
++    },
++    "NotSupported": "java, python",
++    "NotSupportedByDesign": "javascript",
++    "Results": [
++      {
++        "Text": "los anos 90",
++        "Type": "daterange",
++        "Value": {
++          "Timex": "(XX90-01-01,XX00-01-01,P10Y)",
++          "FutureResolution": {
++            "startDate": "2090-01-01",
++            "endDate": "2100-01-01"
++          },
++          "PastResolution": {
++            "startDate": "1990-01-01",
++            "endDate": "2000-01-01"
++          }
++        },
++        "Start": 11,
++        "Length": 11
++      }
++    ]
++  },
++  {
++    "Input": "escritos en los ultimos 3 anos",
++    "Context": {
++      "ReferenceDateTime": "2016-11-07T00:00:00"
++    },
++    "NotSupported": "java, python",
++    "NotSupportedByDesign": "javascript",
++    "Results": [
++      {
++        "Text": "ultimos 3 anos",
++        "Type": "daterange",
++        "Value": {
++          "Timex": "(2013-11-07,2016-11-07,P3Y)",
++          "FutureResolution": {
++            "startDate": "2013-11-07",
++            "endDate": "2016-11-07"
++          },
++          "PastResolution": {
++            "startDate": "2013-11-07",
++            "endDate": "2016-11-07"
++          }
++        },
++        "Start": 16,
++        "Length": 14
+       }
+     ]
+   },
+diff --git a/Specs/DateTime/Spanish/DateTimeModel.json b/Specs/DateTime/Spanish/DateTimeModel.json
+index 6bc79bc5..c8f52769 100644
+--- a/Specs/DateTime/Spanish/DateTimeModel.json
++++ b/Specs/DateTime/Spanish/DateTimeModel.json
+@@ -12121,8 +12121,8 @@
+             }
+           ]
+         }
+-	  }
+-	]
++      }
++    ]
+   },
+   {
+     "Input": "Reserve una reunión para el lunes 21, entre las 9:30 y las 3:00 p.m. PST.",
+@@ -13494,8 +13494,7 @@
+     "Context": {
+       "ReferenceDateTime": "2019-05-23T00:00:00"
+     },
+-    "Comment": "WRONGRES Incorrect resolution.",
+-    "NotSupported": "dotnet, javascript, python, java",
++    "NotSupported": "javascript, python, java",
+     "Results": [
+       {
+         "Text": "los años noventa",
+@@ -13505,13 +13504,13 @@
+         "Resolution": {
+           "values": [
+             {
+-              "timex": "(XX90-01-01,XX100-01-01,P10Y)",
++              "timex": "(XX90-01-01,XX00-01-01,P10Y)",
+               "type": "daterange",
+               "start": "1990-01-01",
+               "end": "2000-01-01"
+             },
+             {
+-              "timex": "(XX90-01-01,XX100-01-01,P10Y)",
++              "timex": "(XX90-01-01,XX00-01-01,P10Y)",
+               "type": "daterange",
+               "start": "2090-01-01",
+               "end": "2100-01-01"
+@@ -13521,6 +13520,118 @@
+       }
+     ]
+   },
++  {
++    "Input": "escrito en los años 90",
++    "Context": {
++      "ReferenceDateTime": "2019-05-23T00:00:00"
++    },
++    "NotSupported": "javascript, python, java",
++    "Results": [
++      {
++        "Text": "los años 90",
++        "Start": 11,
++        "End": 21,
++        "TypeName": "datetimeV2.daterange",
++        "Resolution": {
++          "values": [
++            {
++              "timex": "(XX90-01-01,XX00-01-01,P10Y)",
++              "type": "daterange",
++              "start": "1990-01-01",
++              "end": "2000-01-01"
++            },
++            {
++              "timex": "(XX90-01-01,XX00-01-01,P10Y)",
++              "type": "daterange",
++              "start": "2090-01-01",
++              "end": "2100-01-01"
++            }
++          ]
++        }
++      }
++    ]
++  },
++  {
++    "Input": "escrito en los anos 90",
++    "Context": {
++      "ReferenceDateTime": "2016-11-07T00:00:00"
++    },
++    "NotSupported": "javascript, python, java",
++    "Results": [
++      {
++        "Text": "los anos 90",
++        "Start": 11,
++        "End": 21,
++        "TypeName": "datetimeV2.daterange",
++        "Resolution": {
++          "values": [
++            {
++              "timex": "(XX90-01-01,XX00-01-01,P10Y)",
++              "type": "daterange",
++              "start": "1990-01-01",
++              "end": "2000-01-01"
++            },
++            {
++              "timex": "(XX90-01-01,XX00-01-01,P10Y)",
++              "type": "daterange",
++              "start": "2090-01-01",
++              "end": "2100-01-01"
++            }
++          ]
++        }
++      }
++    ]
++  },
++  {
++    "Input": "escritos en los ultimos 3 anos",
++    "Context": {
++      "ReferenceDateTime": "2016-11-07T00:00:00"
++    },
++    "NotSupported": "javascript, python, java",
++    "Results": [
++      {
++        "Text": "ultimos 3 anos",
++        "Start": 16,
++        "End": 29,
++        "TypeName": "datetimeV2.daterange",
++        "Resolution": {
++          "values": [
++            {
++              "timex": "(2013-11-07,2016-11-07,P3Y)",
++              "type": "daterange",
++              "start": "2013-11-07",
++              "end": "2016-11-07"
++            }
++          ]
++        }
++      }
++    ]
++  },
++  {
++    "Input": "¿Cuáles fueron los presidentes de Estados Unidos en la década de 1990?",
++    "Context": {
++      "ReferenceDateTime": "2019-05-23T00:00:00"
++    },
++    "NotSupported": "javascript, python, java",
++    "Results": [
++      {
++        "Text": "década de 1990",
++        "Start": 55,
++        "End": 68,
++        "TypeName": "datetimeV2.daterange",
++        "Resolution": {
++          "values": [
++            {
++              "timex": "(1990-01-01,2000-01-01,P10Y)",
++              "type": "daterange",
++              "start": "1990-01-01",
++              "end": "2000-01-01"
++            }
++          ]
++        }
++      }
++    ]
++  },
+   {
+     "Input": "Me quedaré en China después del año 2020.",
+     "Context": {
+@@ -15949,7 +16060,7 @@
+     "Context": {
+       "ReferenceDateTime": "2019-08-12T00:00:00"
+     },
+-	"Comment": "Expression not currently supported. Compelte resolution in spec.",
++    "Comment": "Expression not currently supported. Compelte resolution in spec.",
+     "NotSupported": "dotnet, javascript, python, java",
+     "Results": [
+       {
+@@ -19670,7 +19781,7 @@
+               "end": "2017-06-01"
+             }
+           ]
+-		}
++        }
+       }
+     ]
+   },
+diff --git a/Specs/NumberWithUnit/Spanish/AgeModel.json b/Specs/NumberWithUnit/Spanish/AgeModel.json
+index ba538111..ab9c1a79 100644
+--- a/Specs/NumberWithUnit/Spanish/AgeModel.json
++++ b/Specs/NumberWithUnit/Spanish/AgeModel.json
+@@ -104,6 +104,21 @@
+       }
+     ]
+   },
++  {
++    "Input": "Tengo diez anos.",
++    "Results": [
++      {
++        "Text": "diez anos",
++        "TypeName": "age",
++        "Resolution": {
++          "value": "10",
++          "unit": "Año"
++        },
++        "Start": 6,
++        "End": 14
++      }
++    ]
++  },
+   {
+     "Input": "¿Cuándo se va aplicar una presión seria para cumplir realmente esa promesa formulada hace un año?",
+     "Results": [

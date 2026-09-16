@@ -1,0 +1,74 @@
+{
+  "base_image": "rust:slim",
+  "build_backend": "buildah",
+  "dockerfile_path": "/artifacts/environment/Dockerfile.final",
+  "build_context_files": [
+    "setup_runtime.sh",
+    "repo_setup.sh"
+  ],
+  "system_packages": [
+    "git",
+    "curl",
+    "pkg-config",
+    "libssl-dev"
+  ],
+  "environment_variables": {
+    "RUSTUP_HOME": "/root/.rustup",
+    "CARGO_HOME": "/root/.cargo",
+    "PATH": "$CARGO_HOME/bin:$PATH"
+  },
+  "build_steps": [
+    {
+      "step": 1,
+      "action": "base_image",
+      "description": "Start from rust:slim base image"
+    },
+    {
+      "step": 2,
+      "action": "system_packages",
+      "description": "Install system dependencies via apt-get"
+    },
+    {
+      "step": 3,
+      "action": "environment_setup",
+      "description": "Set Rust environment variables"
+    },
+    {
+      "step": 4,
+      "action": "copy_scripts",
+      "description": "Copy setup_runtime.sh and repo_setup.sh to /opt/benchmark/"
+    },
+    {
+      "step": 5,
+      "action": "repo_materialization",
+      "description": "Execute repo_setup.sh to clone alloy-rs/core repository to /workspace"
+    },
+    {
+      "step": 6,
+      "action": "runtime_setup",
+      "description": "Execute setup_runtime.sh to configure Rust toolchain"
+    },
+    {
+      "step": 7,
+      "action": "workdir",
+      "description": "Set WORKDIR to /workspace"
+    }
+  ],
+  "runtime_mounts": {
+    "description": "Verifier assets mounted at runtime, not baked into image",
+    "assets": [
+      "/artifacts/evaluation/eval.sh",
+      "/artifacts/evaluation/test.patch",
+      "/artifacts/evaluation/tests/"
+    ],
+    "mount_target": "/opt/benchmark/"
+  },
+  "verification_command": "cargo test --package alloy-primitives --features serde -- test_v --nocapture",
+  "activation_command": "export RUSTUP_HOME=/root/.rustup && export CARGO_HOME=/root/.cargo && source /root/.cargo/env",
+  "ecosystem": "rust",
+  "package_manager": "cargo",
+  "output_artifacts": {
+    "oci_archive": "/artifacts/environment/openenv_validation_oci.tar"
+  },
+  "notes": "Image is built with Buildah. Verifier assets (eval.sh, tests/) are runtime-mounted, not baked into image. repo_setup.sh materializes /workspace from git during build."
+}

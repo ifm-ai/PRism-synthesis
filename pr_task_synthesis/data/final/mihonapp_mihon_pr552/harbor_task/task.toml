@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "mihonapp_mihon_pr552"
+description = "OpenEnv: mihonapp/mihon PR #552"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/mihonapp/mihon.git"
+git_pr_id = "552"
+git_base_commit = "ebee2751109daf7be86d93736806374d6255be7c"
+task_id = "mihonapp_mihon_pr552"
+repo_full_name = "mihonapp/mihon"
+domain = "MOBILE_EMBEDDED"
+primary_language = "Kotlin"
+runtime_family = "android"
+complexity = "easy"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

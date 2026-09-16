@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "alloy-rs_core_pr715"
+description = "OpenEnv: alloy-rs/core PR #715"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/alloy-rs/core.git"
+git_pr_id = "715"
+git_base_commit = "6cf4e81f1dcdf3f69a4dd8f52882a4a98d402bd0"
+task_id = "alloy-rs_core_pr715"
+repo_full_name = "alloy-rs/core"
+domain = "SECURITY_FORENSICS"
+primary_language = "Rust"
+runtime_family = "rust"
+complexity = "medium"
+star_category = "stars_501_1000"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

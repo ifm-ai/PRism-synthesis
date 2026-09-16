@@ -1,0 +1,37 @@
+The "poetry.dev-dependencies" section is deprecated and will be removed in a future version. Use "poetry.group.dev.dependencies" instead.
+>>>>> Start Test Output
+The "poetry.dev-dependencies" section is deprecated and will be removed in a future version. Use "poetry.group.dev.dependencies" instead.
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.1, pluggy-1.6.0 -- /home/agent_sandbox/.cache/pypoetry/virtualenvs/pytorch-ie-xS3fZVNL-py3.11/bin/python
+cachedir: .pytest_cache
+rootdir: /artifacts/evaluation/tests
+collecting ... collected 1 item
+
+../artifacts/evaluation/tests/test_annotation_sort.py::test_annotation_sort FAILED [100%]
+
+=================================== FAILURES ===================================
+_____________________________ test_annotation_sort _____________________________
+
+    def test_annotation_sort():
+        @dataclasses.dataclass(eq=True, frozen=True)
+        class Dummy(Annotation):
+            a: int
+            b: Optional[int] = None
+            c: int = 0
+    
+        dummy1 = Dummy(a=1, c=2)
+        dummy2 = Dummy(a=1, c=3)
+        dummy3 = Dummy(a=2, c=1)
+        dummy4 = Dummy(a=2, c=2)
+    
+>       assert sorted([dummy1, dummy2, dummy3, dummy4]) == [dummy1, dummy2, dummy3, dummy4]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: '<' not supported between instances of 'Dummy' and 'Dummy'
+
+/artifacts/evaluation/tests/test_annotation_sort.py:22: TypeError
+=========================== short test summary info ============================
+FAILED ../artifacts/evaluation/tests/test_annotation_sort.py::test_annotation_sort
+============================== 1 failed in 2.87s ===============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1
+EXIT_CODE=1

@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "pass",
+  "oracle_outcome": "fail",
+  "filter_label": "keep_verifier_repair",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": true,
+  "notes": "High-value RL trajectory: solver correctly solved the task with a valid alternative implementation. The oracle verifier failure is due to implementation pattern mismatch (exec-based source inspection) rather than behavioral incorrectness. Recommend verifier repair to accept behaviorally equivalent solutions."
+}

@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "official_verifier": {
+    "execution_mode": "real_execution",
+    "test_only_exit_code": 1,
+    "test_with_fix_exit_code": 0
+  },
+  "non_discriminating": false,
+  "notes": "Local preflight verification completed successfully. The verifier correctly discriminates between buggy and fixed workspaces: testOnly exits 1 (FAIL - policy missing), testWithFix exits 0 (PASS - policy present and working). Both outputs contain verbose test output with proper markers. No hacking detected. Verifier alignment is confirmed - tests directly cover the policy added by fix.patch."
+}

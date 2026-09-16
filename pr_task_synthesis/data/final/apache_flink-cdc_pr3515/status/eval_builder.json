@@ -1,0 +1,28 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "verification_command": "mvn -pl flink-cdc-runtime -B test -Dtest=PostTransformOperatorTest#testDataChangeEventTransformWithDuplicateColumns",
+  "activation_source": "environment_request.json",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "patch-based",
+  "copied_test_patch": true,
+  "supplemental_tests_created": false,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that the PostTransformOperator correctly handles transform expressions with duplicate column references in both projection and filter expressions.",
+  "fix_patch_grounding": "The fix.patch modifies ProjectionColumnProcessor and TransformFilterProcessor to use LinkedHashSet instead of List for column names, allowing duplicate column references in expressions.",
+  "issue_context_used": "The issue.md describes the expected behavior where transform rules can reference the same source column multiple times, such as 'col2 * col2 as square_col2' for projection and 'col2 < 3 OR col2 > 5' for filter.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": [
+    "mvn -pl flink-cdc-runtime -B test -Dtest=PostTransformOperatorTest#testDataChangeEventTransformWithDuplicateColumns"
+  ],
+  "required_verifier_files": [
+    "eval.sh",
+    "test.patch"
+  ],
+  "notes": "Updated eval.sh to apply test.patch at runtime before running Maven tests. The test.patch adds the testDataChangeEventTransformWithDuplicateColumns test method which verifies the fix for handling duplicate column references in transform expressions."
+}

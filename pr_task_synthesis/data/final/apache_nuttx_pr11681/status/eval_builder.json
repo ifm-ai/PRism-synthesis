@@ -1,0 +1,28 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "verification_command": "cd /workspace && PYTHONPATH=\"$TESTS_DIR\" python3 -m pytest \"$TESTS_DIR/test_fix_verification.py\" -v --tb=short",
+  "activation_source": "system",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "hidden_tests_local",
+  "copied_test_patch": false,
+  "supplemental_tests_created": true,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests verify the core bug fix (setbits = 0 initialization in stm32_adc.c), existence and structure of new driver files (ADC, GPIO, PWM, QEncoder, USB), pysim_cm7 configuration settings, Makefile updates, and board header definitions for the Nucleo-H745ZI board support package.",
+  "fix_patch_grounding": "The fix.patch adds driver implementations for ADC, GPIO, PWM, QEncoder, and USB subsystems, plus a critical bug fix initializing setbits = 0 in arch/arm/src/stm32h7/stm32_adc.c to prevent undefined behavior during ADC clock configuration.",
+  "issue_context_used": "The issue.md describes the need for complete hardware abstraction for Nucleo-H745ZI board including ADC, GPIO, PWM, QEncoder, and USB drivers, with emphasis on proper initialization to prevent undefined behavior.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": [
+    "python3 -m pytest $TESTS_DIR/test_fix_verification.py -v --tb=short"
+  ],
+  "required_verifier_files": [
+    "eval.sh",
+    "tests/test_fix_verification.py"
+  ],
+  "notes": "Hidden tests verify the fix by inspecting /workspace for the core bug fix (setbits = 0 initialization), new driver files (ADC, GPIO, PWM, QEncoder, USB), pysim_cm7 configuration, Makefile updates, and board header definitions. Tests pass when fix.patch is applied to /workspace and fail without the fix. Tests are deterministic and do not require actual hardware. The test suite uses pytest framework which is already installed in the runtime environment."
+}

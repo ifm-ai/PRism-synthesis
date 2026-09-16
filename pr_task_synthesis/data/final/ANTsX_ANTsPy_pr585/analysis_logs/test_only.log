@@ -1,0 +1,34 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.0, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /tmp
+collecting ... collected 2 items
+
+test_singleprecision.py::TestSinglePrecision::test_singleprecision_parameter_behavior PASSED [ 50%]
+test_singleprecision.py::TestSinglePrecision::test_singleprecision_parameter_exists FAILED [100%]
+
+=================================== FAILURES ===================================
+__________ TestSinglePrecision.test_singleprecision_parameter_exists ___________
+
+self = <test_singleprecision.TestSinglePrecision testMethod=test_singleprecision_parameter_exists>
+
+    def test_singleprecision_parameter_exists(self):
+        """
+        Test that apply_transforms has singleprecision as an explicit parameter.
+        This is the key behavioral change from the fix.
+        """
+        sig = inspect.signature(apply_transforms)
+        params = list(sig.parameters.keys())
+        # The fix adds 'singleprecision' as an explicit parameter before **kwargs
+>       self.assertIn('singleprecision', params,
+            "apply_transforms should have 'singleprecision' parameter")
+E       AssertionError: 'singleprecision' not found in ['fixed', 'moving', 'transformlist', 'interpolator', 'imagetype', 'whichtoinvert', 'compose', 'defaultvalue', 'verbose', 'kwargs'] : apply_transforms should have 'singleprecision' parameter
+
+test_singleprecision.py:24: AssertionError
+=========================== short test summary info ============================
+FAILED test_singleprecision.py::TestSinglePrecision::test_singleprecision_parameter_exists
+========================= 1 failed, 1 passed in 2.80s ==========================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1
+EXIT_CODE: 1

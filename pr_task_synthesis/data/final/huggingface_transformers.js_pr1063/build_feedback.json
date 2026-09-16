@@ -1,0 +1,14 @@
+{
+  "is_finish": true,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "failure_domain": "unknown",
+  "route_to": null,
+  "blocking_errors": [],
+  "warnings": [],
+  "next_actions": [
+    "Proceed to evaluation phase with the exported OCI archive"
+  ],
+  "notes": "Build completed successfully. Dockerfile.final was corrected to remove forbidden COPY instructions (eval.sh and tests/). Build context contained only repo_setup.sh and setup_runtime.sh. All build steps completed: base image pulled, system packages installed, scripts copied and made executable, repo cloned via git partial clone, npm dependencies installed with --ignore-scripts to avoid onnxruntime-node postinstall network issues. OCI archive exported to /artifacts/environment/openenv_validation_oci.tar."
+}

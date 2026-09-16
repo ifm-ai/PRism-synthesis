@@ -1,0 +1,18 @@
+{
+  "status": "complete",
+  "platform_constraint": "none",
+  "platform_constraint_evidence": [
+    "Rust project with cross-platform support",
+    "README.md states 'The Firezone Relay supports Linux only' but this is for runtime deployment, not build/test constraints",
+    "No Windows-only or macOS-only build targets in the touched files",
+    "Fix and test patches modify rust/relay/src/server.rs and rust/relay/tests/regression.rs which are standard Rust code",
+    "Cargo workspace builds on Linux x86-64 containers"
+  ],
+  "high_value_files": [
+    "/workspace/rust/relay/src/server.rs",
+    "/workspace/rust/relay/tests/regression.rs",
+    "/workspace/rust/relay/Cargo.toml",
+    "/workspace/rust/relay/README.md"
+  ],
+  "notes": "Repository exploration complete. The project is a Rust workspace using cargo. The fix adds IPv6 support to the relay component. Tests use proptest framework and require the 'proptest' feature flag. The repository is fully buildable and testable on Linux x86-64 containers."
+}

@@ -1,0 +1,61 @@
+{
+  "base_image_candidate": "golang:1.21",
+  "system_packages": [
+    "git",
+    "curl",
+    "ca-certificates"
+  ],
+  "base_setup_commands": [
+    "apt-get update && apt-get install -y git curl ca-certificates",
+    "curl -fsSL https://dl.google.com/go/go1.21.0.linux-amd64.tar.gz -o /tmp/go.tar.gz",
+    "tar -C /usr/local -xzf /tmp/go.tar.gz",
+    "rm /tmp/go.tar.gz"
+  ],
+  "setup_runtime_commands": [
+    "export PATH=/usr/local/go/bin:$PATH",
+    "export GOPATH=/root/go",
+    "export GOBIN=$GOPATH/bin",
+    "mkdir -p $GOPATH/bin",
+    "cd /workspace && go mod tidy",
+    "cd /workspace/auth && go mod tidy",
+    "cd /workspace && go mod download",
+    "cd /workspace/auth && go build ./..."
+  ],
+  "activation_commands": [
+    "export PATH=/usr/local/go/bin:$PATH",
+    "export GOPATH=/root/go",
+    "export GOBIN=$GOPATH/bin"
+  ],
+  "activation_command": "export PATH=/usr/local/go/bin:$PATH && export GOPATH=/root/go && export GOBIN=$GOPATH/bin",
+  "activation_type": "go",
+  "activation_validation_command": "bash -c 'export PATH=/usr/local/go/bin:$PATH && export GOPATH=/root/go && go version && echo ACTIVATION_OK'",
+  "detected_test_command": "cd /workspace/auth && go test ./grpctransport/...",
+  "runtime_smoke_command": "cd /workspace/auth && go test -v ./grpctransport/... -run TestGrpcCredentialsProvider_TokenType",
+  "runtime_profile": {
+    "ecosystem": "Go",
+    "package_manager": "go modules",
+    "env": {
+      "PATH": "/usr/local/go/bin:$PATH",
+      "GOPATH": "/root/go",
+      "GOBIN": "/root/go/bin"
+    },
+    "env_name": "go1.21",
+    "prepare_commands": [
+      "go mod tidy",
+      "go mod download"
+    ],
+    "activation_commands": [
+      "export PATH=/usr/local/go/bin:$PATH",
+      "export GOPATH=/root/go",
+      "export GOBIN=$GOPATH/bin"
+    ],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "go test automatically resolves dependencies from go.mod",
+    "cache_dirs": [
+      "/root/go/pkg/mod",
+      "/root/go/pkg/sumdb"
+    ],
+    "notes": "Go modules workspace with go.work file for multi-module development. The auth submodule contains the fix target."
+  },
+  "notes": "Go 1.21 base image recommended to match project's go.mod requirement (go 1.19+). Git and curl are included in system packages. The project uses Go modules with a go.work workspace file. Test target is in auth/grpctransport package with test TestGrpcCredentialsProvider_TokenType."
+}

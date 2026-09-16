@@ -1,0 +1,14 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "high_value_files": [
+    "app/controllers/schools/usage_controller.rb",
+    "Gemfile",
+    "spec/controllers/schools/usage_controller_spec.rb",
+    "spec/factories/schools_factory.rb",
+    ".github/workflows/rubyonrails.yml",
+    "config/database.yml"
+  ],
+  "notes": "Ruby on Rails 6.1 application with PostgreSQL. The fix adds input validation to Schools::UsageController#show for supply and period parameters. Test requires the new spec/controllers/schools/usage_controller_spec.rb file and the :with_fuel_configuration factory trait. Platform is Linux-compatible (CI runs on ubuntu-latest). No blocking issues for environment synthesis."
+}

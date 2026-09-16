@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "microsoft_Recognizers-Text_pr3154"
+description = "OpenEnv: microsoft/Recognizers-Text PR #3154"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/microsoft/Recognizers-Text.git"
+git_pr_id = "3154"
+git_base_commit = "1b88159e3523a1aa8fba6370a2d28a9b39a90030"
+task_id = "microsoft_Recognizers-Text_pr3154"
+repo_full_name = "microsoft/Recognizers-Text"
+domain = "TEXT_REGEX_EDITING"
+primary_language = "C#"
+runtime_family = "multi-language (.NET/C#, Python, JavaScript/TypeScript, Java)"
+complexity = "hard"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

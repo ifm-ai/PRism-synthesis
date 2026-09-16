@@ -1,0 +1,9 @@
+Fix detected in mlx/random.cpp - rebuilding MLX C++ extension...
+>>>>> Start Test Output
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+OK
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

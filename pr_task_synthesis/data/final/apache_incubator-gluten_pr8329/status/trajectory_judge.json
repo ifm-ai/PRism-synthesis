@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "High-quality trajectory: solver correctly localized and fixed the regex capture group issue in .idea/vcs.xml. Oracle verifier passed all 5 tests. The solver did not run local tests but the fix matches fix.patch exactly and the oracle confirms correctness."
+}

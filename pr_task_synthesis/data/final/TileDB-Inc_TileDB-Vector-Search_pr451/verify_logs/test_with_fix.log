@@ -1,0 +1,23 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-7.4.4, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /workspace/apis/python
+plugins: nbmake-1.5.5, zarr-3.1.5, xdist-3.8.0
+collecting ... collected 14 items / 9 deselected / 5 selected
+
+test/test_distance_metrics.py::test_ivf_flat_ingestion_cosine PASSED
+test/test_distance_metrics.py::test_ivf_flat_cosine_simple PASSED
+test/test_distance_metrics.py::test_ivf_flat_cosine_simple_normalized PASSED
+test/test_distance_metrics.py::test_cosine_distance PASSED
+test/test_distance_metrics.py::test_inner_product_distances PASSED
+
+=============================== warnings summary ===============================
+../../../opt/benchmark/venv/lib/python3.11/site-packages/tiledb/vector_search/ivf_pq_index.py:180
+  /opt/benchmark/venv/lib/python3.11/site-packages/tiledb/vector_search/ivf_pq_index.py:180: SyntaxWarning: "is not" with a literal. Did you mean "!="?
+    n_list=partitions if (partitions is not None and partitions is not -1) else 0,
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+============ 5 passed, 9 deselected, 1 warning in 85.34s (0:01:25) =============
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

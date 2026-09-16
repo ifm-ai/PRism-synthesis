@@ -1,0 +1,59 @@
+{
+  "container_build_plan": {
+    "base_image": "debian:bookworm-slim",
+    "build_context_files": [
+      "repo_setup.sh",
+      "setup_runtime.sh"
+    ],
+    "build_steps": [
+      {
+        "step": 1,
+        "action": "FROM",
+        "description": "Start from debian:bookworm-slim base image"
+      },
+      {
+        "step": 2,
+        "action": "RUN",
+        "description": "Install system packages: git, curl, python3, python3-pip, python3-venv, ca-certificates"
+      },
+      {
+        "step": 3,
+        "action": "COPY",
+        "source": "repo_setup.sh",
+        "destination": "/opt/benchmark/repo_setup.sh",
+        "description": "Copy repo_setup.sh to build context"
+      },
+      {
+        "step": 4,
+        "action": "RUN",
+        "description": "Execute repo_setup.sh to materialize /workspace from git repository"
+      },
+      {
+        "step": 5,
+        "action": "COPY",
+        "source": "setup_runtime.sh",
+        "destination": "/opt/benchmark/setup_runtime.sh",
+        "description": "Copy setup_runtime.sh to build context"
+      },
+      {
+        "step": 6,
+        "action": "RUN",
+        "description": "Execute setup_runtime.sh to install kubectl and poetry"
+      },
+      {
+        "step": 7,
+        "action": "WORKDIR",
+        "path": "/workspace",
+        "description": "Set working directory to /workspace"
+      }
+    ],
+    "runtime_artifacts": {
+      "workspace_materialization": "repo_setup.sh clones repository at build time",
+      "runtime_setup": "setup_runtime.sh installs kubectl v1.31.0 and poetry",
+      "verifier_assets": "eval.sh and tests/ are runtime-mounted, not baked into image"
+    },
+    "build_backend": "buildah",
+    "output_format": "oci",
+    "notes": "Dockerfile.final is the single authoritative packaging spec. Verifier assets (eval.sh, test.patch, tests/) are mounted at runtime, not baked into the image."
+  }
+}

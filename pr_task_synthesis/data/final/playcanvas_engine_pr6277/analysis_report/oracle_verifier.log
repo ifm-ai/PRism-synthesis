@@ -1,0 +1,60 @@
+>>>>> Start Test Output
+
+> playcanvas@1.71.0-dev test
+> mocha --recursive --require test/fixtures.mjs --require test/fixtures.mjs /tests/tests/test-shader-utils-duplicate-attrs.test.mjs /tests/tests/test-particle-shader-conditionals.test.mjs
+
+Server started at http://localhost:3000
+
+
+  ShaderUtils.collectAttributes - Duplicate Attribute Handling
+    duplicate attribute detection
+      ✔ should handle a single attribute correctly
+      ✔ should handle multiple unique attributes correctly
+      ✔ should handle duplicate attributes without adding them twice
+      ✔ should handle multiple duplicate occurrences of the same attribute
+      ✔ should handle duplicate custom attributes (non-semantic)
+      1) should not change mapping for duplicate custom attributes
+      ✔ should handle the particle shader duplicate attribute pattern
+
+  Particle Shader Conditional Sampler Uniforms
+    particle_cpu.js
+      ✔ should wrap internalTex0 in #ifdef PARTICLE_GPU
+      ✔ should wrap internalTex1 in #ifdef PARTICLE_GPU
+      ✔ should wrap internalTex2 in #ifdef PARTICLE_GPU
+      ✔ should not have unconditional internalTex0 declaration outside #ifdef block
+      ✔ should not have unconditional internalTex1 declaration outside #ifdef block
+      ✔ should not have unconditional internalTex2 declaration outside #ifdef block
+    particle_init.js
+      ✔ should wrap internalTex0 in #ifdef PARTICLE_GPU
+      ✔ should wrap internalTex1 in #ifdef PARTICLE_GPU
+      ✔ should wrap internalTex2 in #ifdef PARTICLE_GPU
+      ✔ should not have unconditional internalTex0 declaration outside #ifdef block
+      ✔ should not have unconditional internalTex1 declaration outside #ifdef block
+      ✔ should not have unconditional internalTex2 declaration outside #ifdef block
+
+
+  18 passing (7ms)
+  1 failing
+
+  1) ShaderUtils.collectAttributes - Duplicate Attribute Handling
+       duplicate attribute detection
+         should not change mapping for duplicate custom attributes:
+
+      AssertionError: expected 'ATTR1' to equal 'ATTR0'
+      + expected - actual
+
+      -ATTR1
+      +ATTR0
+      
+      at Context.<anonymous> (file:///tests/tests/test-shader-utils-duplicate-attrs.test.mjs:116:44)
+      at process.processImmediate (node:internal/timers:476:21)
+
+
+
+
+========================================
+TEST RESULT: FAILED
+One or more tests failed.
+========================================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

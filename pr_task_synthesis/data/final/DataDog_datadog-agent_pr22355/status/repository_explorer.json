@@ -1,0 +1,18 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": "Primary Dockerfile uses Ubuntu base image; network_linux.go in containerd collector; Windows has separate unittests workflow indicating cross-platform support; network_stub.go for non-Linux; platform-specific files in pkg/util/system (cpu_unix.go, cpu_windows.go, network_linux.go, network_windows.go); containerd is primarily a Linux container runtime",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "high_value_files": [
+    "go.mod",
+    "comp/core/workloadmeta/collectors/internal/containerd/image.go",
+    "comp/core/workloadmeta/collectors/internal/containerd/containerd.go",
+    "comp/core/workloadmeta/collectors/internal/containerd/event_builder.go",
+    "pkg/util/containerd/containerd_util.go",
+    "Dockerfiles/agent/Dockerfile",
+    ".github/workflows/windows-unittests.yml"
+  ],
+  "notes": "Repository is a Go project (datadog-agent) with cross-platform support. The fix/test path targets containerd workloadmeta collector which is Linux-focused but the code can be built and tested on Linux. Windows builds require separate tooling but the containerd collector itself is primarily for Linux container runtimes. No blocking infrastructure limits detected for Linux x86-64 container environment."
+}

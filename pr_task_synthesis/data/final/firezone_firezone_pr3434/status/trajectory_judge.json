@@ -1,0 +1,10 @@
+{
+  "status": "complete",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "filter_label": "keep_verifier_repair",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": true,
+  "notes": "Solver correctly implemented the IPv6 fix by modifying Allocation::can_relay_to() to check IP version compatibility. The oracle verifier passed (exit 0) but ran 0 tests because the test.patch adds a test named 'test_ipv6_allocation_can_bind_ipv6_peer' while the solver created tests with different names. This is a verifier coverage issue - the test entrypoint naming doesn't match solver's test naming convention. Verifier repair needed to ensure test entrypoints match or use pattern-based test selection."
+}

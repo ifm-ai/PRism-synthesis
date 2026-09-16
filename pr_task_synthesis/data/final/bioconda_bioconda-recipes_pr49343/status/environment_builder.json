@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "condaforge/mambaforge:latest",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Simplified conda-based bioconda environment using condaforge/mambaforge:latest. Removed bioconda-utils to resolve dependency conflicts. Uses conda-build directly with flexible channel priority for compatible package resolution. Setup executed successfully with exit code 0.",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "conda-build 26.5.0\nREACHABILITY_EXIT_CODE: 0",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "source /opt/conda/etc/profile.d/conda.sh && conda activate bioconda",
+  "notes": "Environment simplified and verified: (1) Removed bioconda-utils which requires conda-build 3.19.1.* - not available, (2) Removed mamba to reduce conflicts, (3) Using gcc/gxx from conda-forge instead of gcc_linux-64/gxx_linux-64, (4) Let conda choose compatible Python version (3.14), (5) Changed channel_priority to flexible for better resolution. setup_runtime.sh executed successfully with exit code 0. conda-build 26.5.0 is reachable and ready for building the cancerit-allelecount recipe."
+}

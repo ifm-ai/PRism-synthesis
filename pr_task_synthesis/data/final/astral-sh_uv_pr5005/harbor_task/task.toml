@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "astral-sh_uv_pr5005"
+description = "OpenEnv: astral-sh/uv PR #5005"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/astral-sh/uv.git"
+git_pr_id = "5005"
+git_base_commit = "23c6cd774b466924d02de23add7101bcaa7b7c3e"
+task_id = "astral-sh_uv_pr5005"
+repo_full_name = "astral-sh/uv"
+domain = "CLI_DEVELOPER_TOOLING"
+primary_language = "Rust"
+runtime_family = "Rust"
+complexity = "easy"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

@@ -1,0 +1,29 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "infrastructure_reason": null,
+  "verification_command": "python -m pytest /artifacts/evaluation/tests/test_bigdl_llm_kwargs.py -v",
+  "activation_source": "source /opt/benchmark/venv/bin/activate",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "hidden_tests",
+  "copied_test_patch": false,
+  "supplemental_tests_created": true,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that optimize_model and use_cache flags are correctly retrieved from bigdl_llm_kwargs instead of kwargs, ensuring user-provided False values are retained rather than being overwritten with default True.",
+  "fix_patch_grounding": "The fix.patch shows that lines 50-51 should use self.bigdl_llm_kwargs.get() instead of kwargs.get() to retrieve use_cache and optimize_model flags after they have been popped from kwargs into bigdl_llm_kwargs.",
+  "issue_context_used": "The issue.md describes that users cannot disable model optimizations because the optimize_model flag is lost during initialization; the tests verify that False values for both optimize_model and use_cache are correctly retained.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": [
+    "pytest /artifacts/evaluation/tests/test_bigdl_llm_kwargs.py -v"
+  ],
+  "required_verifier_files": [
+    "eval.sh",
+    "tests/test_bigdl_llm_kwargs.py"
+  ],
+  "notes": "Hidden tests execute the actual kwargs handling logic from the BigDLLM source file by reading the source and using exec() to run the assignment lines. Tests fail on buggy code (kwargs.get loses False values) and pass on fixed code (self.bigdl_llm_kwargs.get retains False values). No test.patch was provided; tests were synthesized from fix.patch analysis."
+}

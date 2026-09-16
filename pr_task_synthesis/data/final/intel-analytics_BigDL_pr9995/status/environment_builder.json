@@ -1,0 +1,17 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "python:3.11-slim-bookworm",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Python 3.11 venv at /opt/benchmark/venv with CPU-only torch (2.12.1+cpu), transformers==4.31.0, accelerate==0.21.0, lm_eval, pytest. BigDL-LLM package accessible via .pth file. Network-optimized build using CPU-only torch variant (~200MB vs >2.5GB CUDA).",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "pytest 9.1.1\npython/llm/test/convert/test_convert_model.py::TestConvertModel::test_convert_bloom\npython/llm/test/convert/test_convert_model.py::TestConvertModel::test_convert_gptneox\npython/llm/test/convert/test_convert_model.py::TestConvertModel::test_convert_llama\npython/llm/test/inference/test_optimize.py::TestOptimizeAPI::test_optimize_whisper",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "source /opt/benchmark/venv/bin/activate",
+  "network_optimization_strategy": "CPU-only torch variant (torch --index-url https://download.pytorch.org/whl/cpu) reduces download from >2.5GB CUDA variant to ~200MB. Critical for 500-900 kB/s bandwidth environments. Test does not require GPU inference - only kwargs handling logic verification.",
+  "notes": "NETWORK-OPTIMIZED BUILD SUCCESS: Setup script completed with exit code 0. CPU-only torch (2.12.1+cpu) installed successfully - 192MB download vs >2GB CUDA variant. All core dependencies installed: transformers==4.31.0, accelerate==0.21.0, lm_eval, pytest. BigDL-LLM Python package accessible via .pth file. Test runner (pytest) is callable and collects tests successfully. The test_optimize_model.py test verifies kwargs handling logic (optimize_model, use_cache flags from bigdl_llm_kwargs) without requiring actual model inference or GPU support."
+}

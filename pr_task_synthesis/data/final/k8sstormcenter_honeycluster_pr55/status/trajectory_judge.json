@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "pass",
+  "oracle_outcome": "fail",
+  "filter_label": "keep_instruction_update",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": true,
+  "needs_verifier_change": true,
+  "notes": "Solver correctly implemented the Service addition as instructed. Oracle verifier tests unrelated STIX bundle changes from fix.patch. Both instruction and verifier need alignment - either instruction should describe the bundle ID changes or verifier should test the Service addition."
+}

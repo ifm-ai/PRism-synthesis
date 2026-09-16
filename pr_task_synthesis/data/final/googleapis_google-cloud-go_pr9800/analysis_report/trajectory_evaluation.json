@@ -1,0 +1,47 @@
+{
+  "schema_version": "2.0",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "scores": {
+    "environment_readiness": 5,
+    "dependency_completeness": 5,
+    "verifier_integrity": 5,
+    "instruction_verifier_alignment": 5,
+    "trajectory_progress_value": 5
+  },
+  "struggle_patterns": [],
+  "phase_signals": {
+    "tests_executed": true,
+    "first_meaningful_edit_made": true,
+    "touched_relevant_files": true,
+    "solver_time_budget_exhausted": false,
+    "oracle_verifier_executed": true,
+    "oracle_verifier_passed": true
+  },
+  "signal_strength": {
+    "solver_signal": "strong",
+    "oracle_signal": "strong"
+  },
+  "verifier_diagnosis": {
+    "verifier_coverage_class": "behavioral",
+    "solver_approach_valid": true,
+    "repair_priority": "none"
+  },
+  "needs_verifier_change": false,
+  "needs_instruction_change": false,
+  "instruction_tuning_advice": {
+    "priority": "none",
+    "missing_spec_type": "none",
+    "tuning_context": "Instruction was clear and solver successfully implemented the fix",
+    "anti_contamination_constraints": []
+  },
+  "filter_label": "keep",
+  "summary": "Solver successfully identified and fixed the token Type defaulting issue in auth/grpctransport/grpctransport.go by adding logic to default empty Type to 'Bearer'. The solver added comprehensive tests verifying empty Type defaults to Bearer and explicit Types are preserved, ran local tests which passed, and the oracle verifier confirmed the fix works correctly with exit code 0.",
+  "evidence": [
+    "Solver edited auth/grpctransport/grpctransport.go lines 290-293 to add typ check and default to internal.TokenTypeBearer",
+    "Solver added TestGrpcCredentialsProvider_GetRequestMetadata with 3 test cases for empty Type, explicit Type, and Bearer Type",
+    "Local test execution showed all 3 sub-tests passing: 'empty Type defaults to Bearer', 'explicit Type is preserved', 'Bearer Type is preserved'",
+    "Oracle verifier ran TestGrpcCredentialsProvider_TokenType and reported PASS with OPENENV_EXIT_CODE=0",
+    "Solver touched both files in fix.patch: auth/grpctransport/grpctransport.go and auth/grpctransport/grpctransport_test.go"
+  ]
+}

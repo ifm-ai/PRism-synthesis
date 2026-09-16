@@ -1,0 +1,115 @@
+>>>>> Start Test Output
+[1m============================= test session starts ==============================[0m
+platform linux -- Python 3.11.15, pytest-9.1.0, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /workspace
+configfile: pyproject.toml
+plugins: cov-7.1.0, xdist-3.8.0
+[1mcollecting ... [0mcollected 1 item
+
+tests/test_commands.py::test_custom_ouputs [31mFAILED[0m[31m                        [100%][0m
+
+=================================== FAILURES ===================================
+[31m[1m______________________________ test_custom_ouputs ______________________________[0m
+Traceback (most recent call last):
+  File "/opt/benchmark/venv/lib/python3.11/site-packages/_pytest/runner.py", line 361, in from_call
+    result: TResult | None = func()
+                             ^^^^^^
+  File "/opt/benchmark/venv/lib/python3.11/site-packages/_pytest/runner.py", line 250, in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/benchmark/venv/lib/python3.11/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/benchmark/venv/lib/python3.11/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/benchmark/venv/lib/python3.11/site-packages/pluggy/_callers.py", line 167, in _multicall
+    raise exception
+  File "/opt/benchmark/venv/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/opt/benchmark/venv/lib/python3.11/site-packages/_pytest/logging.py", line 865, in pytest_runtest_call
+    yield
+  File "/opt/benchmark/venv/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/opt/benchmark/venv/lib/python3.11/site-packages/_pytest/capture.py", line 900, in pytest_runtest_call
+    return (yield)
+            ^^^^^
+  File "/opt/benchmark/venv/lib/python3.11/site-packages/pluggy/_callers.py", line 139, in _multicall
+    teardown.throw(exception)
+  File "/opt/benchmark/venv/lib/python3.11/site-packages/_pytest/skipping.py", line 268, in pytest_runtest_call
+    return (yield)
+            ^^^^^
+  File "/opt/benchmark/venv/lib/python3.11/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/benchmark/venv/lib/python3.11/site-packages/_pytest/runner.py", line 184, in pytest_runtest_call
+    item.runtest()
+  File "/opt/benchmark/venv/lib/python3.11/site-packages/_pytest/python.py", line 1707, in runtest
+    self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+  File "/opt/benchmark/venv/lib/python3.11/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/benchmark/venv/lib/python3.11/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/benchmark/venv/lib/python3.11/site-packages/pluggy/_callers.py", line 167, in _multicall
+    raise exception
+  File "/opt/benchmark/venv/lib/python3.11/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/benchmark/venv/lib/python3.11/site-packages/_pytest/python.py", line 167, in pytest_pyfunc_call
+    result = testfunction(**testargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/tests/test_commands.py", line 29, in test_custom_ouputs
+    assert (
+AssertionError: assert ':CustomOutput\n\n:EndCustomOutput' == ':CustomOutput         YEARLY AVERAGE PRECIP ENTIRE_WATERSHED'
+  
+  [0m[91m- :CustomOutput         YEARLY AVERAGE PRECIP ENTIRE_WATERSHED[39;49;00m[90m[39;49;00m
+  [92m+ :CustomOutput[39;49;00m[90m[39;49;00m
+  [92m+ [39;49;00m[90m[39;49;00m
+  [92m+ :EndCustomOutput[39;49;00m[90m[39;49;00m
+[33m=============================== warnings summary ===============================[0m
+ravenpy/config/base.py:7
+  /workspace/ravenpy/config/base.py:7: DeprecationWarning: 'pymbolic.primitives.Expression' is deprecated. Use 'ExpressionNode' instead. 'pymbolic.primitives.Expression' will continue to work until 2026.
+    from pymbolic.primitives import Expression, Variable
+
+../opt/benchmark/venv/lib/python3.11/site-packages/pydantic/dataclasses.py:313
+../opt/benchmark/venv/lib/python3.11/site-packages/pydantic/dataclasses.py:313
+../opt/benchmark/venv/lib/python3.11/site-packages/pydantic/dataclasses.py:313
+../opt/benchmark/venv/lib/python3.11/site-packages/pydantic/dataclasses.py:313
+  /opt/benchmark/venv/lib/python3.11/site-packages/pydantic/dataclasses.py:313: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    return create_dataclass if _cls is None else create_dataclass(_cls)
+
+ravenpy/config/emulators/gr4jcn.py:28
+  /workspace/ravenpy/config/emulators/gr4jcn.py:28: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @dataclass(config=SymConfig)
+
+ravenpy/config/emulators/hbvec.py:17
+  /workspace/ravenpy/config/emulators/hbvec.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @dataclass(config=SymConfig)
+
+ravenpy/config/emulators/hmets.py:16
+  /workspace/ravenpy/config/emulators/hmets.py:16: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @dataclass(config=SymConfig)
+
+ravenpy/config/emulators/mohyse.py:16
+  /workspace/ravenpy/config/emulators/mohyse.py:16: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @dataclass(config=SymConfig)
+
+tests/test_commands.py::test_custom_ouputs
+tests/test_commands.py::test_custom_ouputs
+  /workspace/ravenpy/config/base.py:147: PydanticDeprecatedSince211: Accessing the 'model_fields' attribute on the instance is deprecated. Instead, you should access this attribute from the model class. Deprecated in Pydantic V2.11 to be removed in V3.0.
+    for key, field in self.model_fields.items():
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+[36m[1m=========================== short test summary info ============================[0m
+[31mFAILED[0m tests/test_commands.py::[1mtest_custom_ouputs[0m - AssertionError: assert ':CustomOutput\n\n:EndCustomOutput' == ':CustomOutput         YEARLY AVERAGE PRECIP ENTIRE_WATERSHED'
+  
+  [0m[91m- :CustomOutput         YEARLY AVERAGE PRECIP ENTIRE_WATERSHED[39;49;00m[90m[39;49;00m
+  [92m+ :CustomOutput[39;49;00m[90m[39;49;00m
+  [92m+ [39;49;00m[90m[39;49;00m
+  [92m+ :EndCustomOutput[39;49;00m[90m[39;49;00m
+[31m======================== [31m[1m1 failed[0m, [33m11 warnings[0m[31m in 0.03s[0m[31m ========================[0m
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

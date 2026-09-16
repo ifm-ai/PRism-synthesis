@@ -1,0 +1,55 @@
+{
+  "base_image_candidate": "python:3.11-slim",
+  "system_packages": [
+    "git",
+    "curl",
+    "build-essential",
+    "python3-dev"
+  ],
+  "base_setup_commands": [
+    "apt-get update && apt-get install -y --no-install-recommends git curl build-essential python3-dev",
+    "pip install --break-system-packages poetry",
+    "export PATH=\"/root/.local/bin:$PATH\""
+  ],
+  "setup_runtime_commands": [
+    "cd /workspace && poetry env use python3.11",
+    "cd /workspace && poetry install --with dev --no-interaction"
+  ],
+  "activation_commands": [
+    "source $(poetry env info --path)/bin/activate"
+  ],
+  "activation_command": "source $(poetry env info --path)/bin/activate",
+  "activation_type": "poetry",
+  "activation_validation_command": "bash -c 'source $(poetry env info --path)/bin/activate && python --version'",
+  "detected_test_command": "poetry run pytest tests/core/test_document.py::test_annotation_sort",
+  "runtime_smoke_command": "poetry run python -c \"from pytorch_ie.core import Annotation; print('OK')\"",
+  "runtime_profile": {
+    "ecosystem": "python",
+    "package_manager": "poetry",
+    "env": "poetry-venv",
+    "env_name": "pytorch-ie-venv",
+    "prepare_commands": [
+      "poetry env use python3.11",
+      "poetry install --with dev --no-interaction"
+    ],
+    "activation_commands": [
+      "source $(poetry env info --path)/bin/activate"
+    ],
+    "base_deps_installed": [
+      "torch",
+      "pytorch-lightning",
+      "transformers",
+      "pandas",
+      "pytest",
+      "nox",
+      "nox-poetry"
+    ],
+    "test_only_install_strategy": "poetry run pytest",
+    "cache_dirs": [
+      "/root/.cache/pypoetry",
+      "/root/.local/share/pypoetry/virtualenvs"
+    ],
+    "notes": "Poetry-managed Python project requiring Python 3.9+. Virtual environment created in poetry's managed location. Dev dependencies installed for testing."
+  },
+  "notes": "Python 3.11 base image selected to support Python 3.9+ requirement. Poetry is installed via pip. Git and curl are included in system packages (already present in python:3.11-slim). The project uses poetry for dependency management and pytest for testing. No platform-specific constraints."
+}

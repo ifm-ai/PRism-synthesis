@@ -1,0 +1,39 @@
+>>>>> Start Test Output
+warning: parser/current is loading parser/ruby31, which recognizes 3.1.4-compliant syntax, but you are running 3.1.7.
+Please see https://github.com/whitequark/parser#compatibility-with-ruby-mri.
+Knapsack adapter is off!
+/opt/benchmark/vendor/bundle/ruby/3.1.0/gems/pg-1.5.4/lib/pg/text_decoder/timestamp.rb:9:in `initialize': PG::Coder.new(hash) is deprecated. Please use keyword arguments instead! Called from /opt/benchmark/vendor/bundle/ruby/3.1.0/gems/activerecord-6.1.7.6/lib/active_record/connection_adapters/postgresql_adapter.rb:883:in `new' (StructuredWarnings::StandardWarning)
+/opt/benchmark/vendor/bundle/ruby/3.1.0/gems/pg-1.5.4/lib/pg/text_decoder/timestamp.rb:9:in `initialize': PG::Coder.new(hash) is deprecated. Please use keyword arguments instead! Called from /opt/benchmark/vendor/bundle/ruby/3.1.0/gems/activerecord-6.1.7.6/lib/active_record/connection_adapters/postgresql_adapter.rb:883:in `new' (StructuredWarnings::StandardWarning)
+
+Randomized with seed 3213
+
+Schools::UsageController
+  GET #show
+    handles invalid parameters (FAILED - 1)
+    responds successfully
+
+Failures:
+
+  1) Schools::UsageController GET #show handles invalid parameters
+     Failure/Error: if @school.send("has_#{@supply}?")
+
+     NoMethodError:
+       undefined method `has_something?' for #<School id: 1, name: "test 1 school", school_type: "primary", address: "1 Station Road", postcode: "AB1 2CD", website: "http://Test 1 school.test", created_at: "2026-06-20 15:11:34.755236000 +0000", updated_at: "2026-06-20 15:11:34.755236000 +0000", urn: 1, level: 0, calendar_id: 1, slug: "test-1-school", temperature_area_id: nil, met_office_area_id: nil, number_of_pupils: 1, floor_area: 0.1234567e4, solar_pv_tuos_area_id: nil, school_group_id: nil, dark_sky_area_id: nil, indicated_has_solar_panels: false, has_swimming_pool: false, serves_dinners: false, cooks_dinners_onsite: false, cooks_dinners_for_other_schools: false, cooks_dinners_for_other_schools_count: nil, template_calendar_id: nil, validation_cache_key: "initial", visible: true, process_data: true, scoreboard_id: nil, indicated_has_storage_heaters: false, percentage_free_school_meals: nil, activation_date: nil, latitude: 0.5134062e2, longitude: -0.230142e1, weather_station_id: 1, public: true, active: true, removal_date: nil, enable_targets_feature: true, data_enabled: true, bill_requested: false, chart_preference: "default", country: "england", funding_status: "state_school", alternative_heating_oil: false, alternative_heating_oil_percent: 0, alternative_heating_oil_notes: nil, alternative_heating_lpg: false, alternative_heating_lpg_percent: 0, alternative_heating_lpg_notes: nil, alternative_heating_biomass: false, alternative_heating_biomass_percent: 0, alternative_heating_biomass_notes: nil, alternative_heating_district_heating: false, alternative_heating_district_heating_percent: 0, alternative_heating_district_heating_notes: nil, region: nil, local_authority_area_id: nil, bill_requested_at: nil, school_group_cluster_id: nil, funder_id: nil>
+       Did you mean?  has_changes_to_save?
+     # ./app/controllers/schools/usage_controller.rb:20:in `show'
+     # ./app/controllers/application_controller.rb:24:in `switch_locale'
+     # ./spec/controllers/schools/usage_controller_spec.rb:19:in `block (3 levels) in <top (required)>'
+
+Finished in 0.90049 seconds (files took 5.94 seconds to load)
+2 examples, 1 failure
+
+Failed examples:
+
+rspec ./spec/controllers/schools/usage_controller_spec.rb:18 # Schools::UsageController GET #show handles invalid parameters
+
+Randomized with seed 3213
+
+Coverage report generated for RSpec to /workspace/coverage. 1729 / 25463 LOC (6.79%) covered.
+/opt/benchmark/vendor/bundle/ruby/3.1.0/gems/simplecov-0.22.0/lib/simplecov.rb:224:in `exit_and_report_previous_error': Stopped processing SimpleCov as a previous error not related to SimpleCov has been detected (StructuredWarnings::StandardWarning)
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

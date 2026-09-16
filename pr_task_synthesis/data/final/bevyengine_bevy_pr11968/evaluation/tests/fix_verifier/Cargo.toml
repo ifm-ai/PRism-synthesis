@@ -1,0 +1,10 @@
+[package]
+name = "fix_verifier"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+
+[[test]]
+name = "verify_fix"
+path = "tests/verify_fix.rs"

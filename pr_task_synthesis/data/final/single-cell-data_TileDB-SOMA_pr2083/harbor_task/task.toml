@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "single-cell-data_TileDB-SOMA_pr2083"
+description = "OpenEnv: single-cell-data/TileDB-SOMA PR #2083"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/single-cell-data/TileDB-SOMA.git"
+git_pr_id = "2083"
+git_base_commit = "3f021c460929a3a1ac77b78582f9fe4cd1ff691d"
+task_id = "single-cell-data_TileDB-SOMA_pr2083"
+repo_full_name = "single-cell-data/TileDB-SOMA"
+domain = "DATA_ENGINEERING_ETL"
+primary_language = "R"
+runtime_family = "python"
+complexity = "medium"
+star_category = "stars_51_100"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

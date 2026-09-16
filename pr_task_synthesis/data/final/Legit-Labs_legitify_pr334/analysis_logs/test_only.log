@@ -1,0 +1,26 @@
+>>>>> Start Test Output
+=== RUN   TestGitlabRepositoryRestrictsOverrideVariables
+=== RUN   TestGitlabRepositoryRestrictsOverrideVariables/Restrict_Override_Of_Defined_Variables
+    helpers.go:40: 
+        	Error Trace:	/workspace/test/helpers.go:40
+        	            				/workspace/test/helpers.go:54
+        	Error:      	Received unexpected error:
+        	            	policy doesn't exists overriding_defined_variables_isnt_restricted
+        	Test:       	TestGitlabRepositoryRestrictsOverrideVariables/Restrict_Override_Of_Defined_Variables
+        	Messages:   	failed to find policy
+=== RUN   TestGitlabRepositoryRestrictsOverrideVariables/Restrict_Override_Of_Defined_Variables#01
+    helpers.go:40: 
+        	Error Trace:	/workspace/test/helpers.go:40
+        	            				/workspace/test/helpers.go:54
+        	Error:      	Received unexpected error:
+        	            	policy doesn't exists overriding_defined_variables_isnt_restricted
+        	Test:       	TestGitlabRepositoryRestrictsOverrideVariables/Restrict_Override_Of_Defined_Variables#01
+        	Messages:   	failed to find policy
+--- FAIL: TestGitlabRepositoryRestrictsOverrideVariables (0.04s)
+    --- FAIL: TestGitlabRepositoryRestrictsOverrideVariables/Restrict_Override_Of_Defined_Variables (0.01s)
+    --- FAIL: TestGitlabRepositoryRestrictsOverrideVariables/Restrict_Override_Of_Defined_Variables#01 (0.03s)
+FAIL
+FAIL	github.com/Legit-Labs/legitify/test	0.061s
+FAIL
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

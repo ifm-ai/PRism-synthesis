@@ -1,0 +1,16 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.10.12, pytest-6.2.5, py-1.10.0, pluggy-0.13.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /tests/tests
+collecting ... collected 5 items
+
+../tests/tests/test_vcs_regex.py::test_regex_captures_hash_format PASSED [ 20%]
+../tests/tests/test_vcs_regex.py::test_regex_captures_gluten_format PASSED [ 40%]
+../tests/tests/test_vcs_regex.py::test_buggy_regex_gluten_format PASSED  [ 60%]
+../tests/tests/test_vcs_regex.py::test_vcs_xml_has_fixed_regex PASSED    [ 80%]
+../tests/tests/test_vcs_regex.py::test_fixed_regex_both_formats_single_group PASSED [100%]
+
+============================== 5 passed in 0.00s ===============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

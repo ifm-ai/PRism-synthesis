@@ -1,0 +1,96 @@
+{
+  "pr_summary": "Implement a public API named ST_S2ToGeom that accepts S2 cell identifiers and returns polygon geometries. The function must be callable from Java (Functions.s2ToGeom(long[])), exposed as SQL function in Flink, Spark, and Python DataFrame API. Output must preserve input order, polygons must intersect source geometry (verified at indices 0, 20, 100), and results must be compatible with ST_Collect producing MULTIPOLYGON geometry type.",
+  "runtime_family": "Java/JVM",
+  "package_manager": "Maven",
+  "touched_files": [
+    "common/src/main/java/org/apache/sedona/common/Functions.java",
+    "flink/src/main/java/org/apache/sedona/flink/Catalog.java",
+    "flink/src/main/java/org/apache/sedona/flink/expressions/Functions.java",
+    "python/sedona/sql/st_functions.py",
+    "spark/common/src/main/scala/org/apache/sedona/sql/UDF/Catalog.scala",
+    "spark/common/src/main/scala/org/apache/spark/sql/sedona_sql/expressions/Functions.scala",
+    "spark/common/src/main/scala/org/apache/spark/sql/sedona_sql/expressions/st_functions.scala"
+  ],
+  "important_build_files": [
+    "pom.xml",
+    "common/pom.xml",
+    "spark/pom.xml",
+    "spark/common/pom.xml",
+    "flink/pom.xml",
+    "python/setup.py",
+    "python/Pipfile"
+  ],
+  "important_test_files": [
+    "common/src/test/java/org/apache/sedona/common/FunctionsTest.java",
+    "flink/src/test/java/org/apache/sedona/flink/FunctionTest.java",
+    "python/tests/sql/test_dataframe_api.py",
+    "python/tests/sql/test_function.py",
+    "spark/common/src/test/scala/org/apache/sedona/sql/dataFrameAPITestScala.scala",
+    "spark/common/src/test/scala/org/apache/sedona/sql/functions/STS2CellIDs.scala"
+  ],
+  "candidate_build_commands": [
+    "mvn clean install -DskipTests",
+    "mvn -q clean install -Dspark=3.0 -Dscala=2.12 -Dspark.version=3.3.0",
+    "mvn clean install -DskipTests -Dspark=3.0 -Dscala=2.12.15 -Dgeotools"
+  ],
+  "candidate_test_commands": [
+    "mvn test -pl common",
+    "mvn test -pl flink",
+    "mvn test -pl spark/common",
+    "cd python && pipenv run pytest tests"
+  ],
+  "candidate_smoke_commands": [
+    "java -version",
+    "mvn -version",
+    "python3 --version",
+    "cd python && python3 setup.py build_ext --inplace"
+  ],
+  "candidate_activation_checks": [
+    "which mvn",
+    "which java",
+    "which python3",
+    "python3 -c 'import pyspark'",
+    "python3 -c 'import shapely'"
+  ],
+  "environment_management": "Maven for Java/Scala modules, pipenv for Python module",
+  "special_system_dependencies": [
+    "Java JDK 8 or 11",
+    "Maven 3.x",
+    "Python 3.7+",
+    "GEOS library (for Python C extension)",
+    "apt packages: python3-pip, python-dev-is-python3"
+  ],
+  "high_value_files": [
+    "common/src/main/java/org/apache/sedona/common/Functions.java",
+    "common/src/main/java/org/apache/sedona/common/utils/S2Utils.java",
+    "flink/src/main/java/org/apache/sedona/flink/expressions/Functions.java",
+    "spark/common/src/main/scala/org/apache/spark/sql/sedona_sql/expressions/Functions.scala",
+    "python/sedona/sql/st_functions.py"
+  ],
+  "patch_file_cues": [
+    "Functions.java - adds s2ToGeom method using S2CellId and S2Utils.toJTSPolygon",
+    "Flink Catalog.java - registers ST_S2ToGeom function",
+    "Flink Functions.java - adds ST_S2ToGeom scalar function class",
+    "Python st_functions.py - adds ST_S2ToGeom function for DataFrame API",
+    "Spark Catalog.scala - registers ST_S2ToGeom function",
+    "Spark Functions.scala - adds ST_S2ToGeom case class",
+    "Spark st_functions.scala - adds DataFrame API methods"
+  ],
+  "test_file_cues": [
+    "FunctionsTest.java - testS2ToGeom tests polygon intersection at indices 0, 20, 100",
+    "FunctionTest.java (Flink) - tests SQL function with ST_S2CellIDs and intersection checks",
+    "test_dataframe_api.py - tests ST_S2ToGeom in DataFrame API with expected polygon output",
+    "test_function.py (Python) - test_st_s2_to_geom tests intersection via ST_Intersects",
+    "dataFrameAPITestScala.scala - tests ST_S2ToGeom with element_at for array access",
+    "STS2CellIDs.scala - tests intersection and ST_Collect producing MULTIPOLYGON"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    ".github/workflows/java.yml runs on ubuntu-22.04",
+    ".github/workflows/python.yml runs on ubuntu-22.04",
+    "pom.xml uses standard Maven build (cross-platform but CI is Linux)",
+    "No Windows-specific or macOS-specific build targets detected",
+    "Project is Apache Sedona - spatial computing engine for Spark/Flink which runs on Linux"
+  ],
+  "notes": "Apache Sedona is a spatial computing engine for Apache Spark and Apache Flink. The fix adds ST_S2ToGeom function that converts S2 cell IDs to polygon geometries. The project uses Maven for Java/Scala modules and pipenv for Python. Tests are run via Maven (JUnit/ScalaTest) for JVM modules and pytest for Python. The project is cross-platform but CI runs on Ubuntu 22.04. Required dependencies include Java JDK 8+, Maven, Python 3.7+, and GEOS library for Python C extension."
+}

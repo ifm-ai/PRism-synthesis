@@ -1,0 +1,23 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "verification_command": "cargo test --package uv --test help",
+  "activation_source": "source $HOME/.cargo/env",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "patch_based_with_manual_generation",
+  "copied_test_patch": true,
+  "supplemental_tests_created": false,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that the --isolated flag is visible in help output for all uv commands by verifying snapshot tests include the --isolated flag documentation.",
+  "fix_patch_grounding": "The fix.patch removes 'hide = true' from the --isolated flag argument definition in crates/uv-cli/src/lib.rs, making the flag visible in help output.",
+  "issue_context_used": "The issue describes that --isolated flag should be visible in help output, and the fix.patch implements this by removing the hide attribute.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": ["cargo test --package uv --test help"],
+  "required_verifier_files": ["eval.sh", "test.patch"],
+  "notes": "The test.patch was manually regenerated to match the exact formatting of the help.rs file, as the original patch had context mismatches. The patch adds --isolated flag expectations to 8 snapshot test locations in help.rs."
+}

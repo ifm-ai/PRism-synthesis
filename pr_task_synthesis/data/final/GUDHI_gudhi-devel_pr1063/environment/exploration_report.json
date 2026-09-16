@@ -1,0 +1,78 @@
+{
+  "pr_summary": "Remove deprecated `dynamic=True` argument from super().__init__() calls in TensorFlow layer classes. The fix affects 4 files in the gudhi/tensorflow module: cubical_layer.py, lower_star_simplex_tree_layer.py, rips_layer.py, and perslay.py (which contains 7 layer classes). This restores compatibility with newer TensorFlow versions while preserving existing functionality.",
+  "runtime_family": "Python",
+  "package_manager": "pip",
+  "touched_files": [
+    "src/python/gudhi/tensorflow/cubical_layer.py",
+    "src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py",
+    "src/python/gudhi/tensorflow/perslay.py",
+    "src/python/gudhi/tensorflow/rips_layer.py"
+  ],
+  "important_build_files": [
+    "CMakeLists.txt",
+    "src/python/CMakeLists.txt",
+    "src/python/pyproject.toml"
+  ],
+  "important_test_files": [
+    "src/python/test/test_diff.py",
+    "src/python/test/test_perslay.py"
+  ],
+  "candidate_build_commands": [
+    "cmake -DCMAKE_BUILD_TYPE=Release -DPYTHON_EXECUTABLE=$(which python3) ..",
+    "cd src/python && python3 -m build -n -w"
+  ],
+  "candidate_test_commands": [
+    "python3 -m pytest src/python/test/test_diff.py -v",
+    "python3 -m pytest src/python/test/test_perslay.py -v"
+  ],
+  "candidate_smoke_commands": [
+    "python3 -c \"import gudhi.tensorflow; print('TensorFlow layers imported successfully')\"",
+    "python3 -c \"from gudhi.tensorflow import CubicalLayer, RipsLayer, LowerStarSimplexTreeLayer; print('Layer classes imported')\""
+  ],
+  "candidate_activation_checks": [
+    "python3 -c \"import tensorflow as tf; print(f'TensorFlow version: {tf.__version__}')\"",
+    "python3 -c \"import numpy; print(f'NumPy version: {numpy.__version__}')\""
+  ],
+  "environment_management": "The project uses CMake for building the C++ core and Python extension modules. The Python package is built using setuptools via pyproject.toml. No dedicated environment manager (conda, poetry, uv) is required, but the CI uses a custom Docker container (gudhi/pip_for_gudhi).",
+  "special_system_dependencies": [
+    "CMake >= 3.8",
+    "C++17 compiler",
+    "pybind11",
+    "Cython >= 0.27",
+    "NumPy >= 1.15.0",
+    "TensorFlow (for tensorflow layers)",
+    "scikit-learn (for some tests)",
+    "pytest (for running tests)"
+  ],
+  "high_value_files": [
+    "src/python/gudhi/tensorflow/__init__.py",
+    "src/python/gudhi/tensorflow/cubical_layer.py",
+    "src/python/gudhi/tensorflow/rips_layer.py",
+    "src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py",
+    "src/python/gudhi/tensorflow/perslay.py",
+    "src/python/test/test_diff.py",
+    "src/python/test/test_perslay.py",
+    "src/python/CMakeLists.txt",
+    "src/python/pyproject.toml",
+    ".github/workflows/pip-build-linux.yml"
+  ],
+  "patch_file_cues": [
+    "All 4 touched files are in src/python/gudhi/tensorflow/",
+    "Each file contains tf.keras.layers.Layer subclasses",
+    "The fix removes dynamic=True from super().__init__() calls",
+    "perslay.py has 7 occurrences of the fix (7 different layer classes)"
+  ],
+  "test_file_cues": [
+    "test_diff.py tests gradient computation for RipsLayer, CubicalLayer, and LowerStarSimplexTreeLayer",
+    "test_perslay.py tests all Perslay-related layer classes (GridPerslayWeight, GaussianMixturePerslayWeight, PowerPerslayWeight, GaussianPerslayPhi, TentPerslayPhi, FlatPerslayPhi, Perslay)",
+    "Both test files import tensorflow and gudhi.tensorflow modules"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    ".github/workflows/pip-build-linux.yml uses ubuntu-latest runner",
+    "CI builds and tests on Linux container (gudhi/pip_for_gudhi:2023.12.01)",
+    "No Windows-specific or macOS-specific code in touched TensorFlow layer files",
+    "Pure Python TensorFlow code is cross-platform, runs on Linux"
+  ],
+  "notes": "The gudhi library is a C++ library with Python bindings for Topological Data Analysis (TDA). The TensorFlow layers module provides custom Keras layers for computing persistent homology. The fix is purely in Python code and affects TensorFlow layer initialization. The project builds with CMake and uses pip for Python packaging. Python 3.8+ is supported based on CI configuration. The tensorflow layers require TensorFlow to be installed separately. Test files test_diff.py and test_perslay.py are the primary tests for the affected code."
+}

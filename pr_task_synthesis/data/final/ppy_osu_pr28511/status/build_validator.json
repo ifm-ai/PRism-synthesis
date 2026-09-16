@@ -1,0 +1,9 @@
+{
+  "status": "success",
+  "blocks_outer_progress": false,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "route_to": null,
+  "notes": "Build completed successfully. OCI archive exported to /artifacts/environment/openenv_validation_oci.tar. Image ready for runtime validation."
+}

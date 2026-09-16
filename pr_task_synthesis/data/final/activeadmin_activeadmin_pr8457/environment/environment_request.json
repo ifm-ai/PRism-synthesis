@@ -1,0 +1,54 @@
+{
+  "base_image_candidate": "ruby:3.2",
+  "system_packages": [
+    "git",
+    "curl",
+    "build-essential",
+    "pkg-config",
+    "libsqlite3-dev",
+    "ruby-dev",
+    "libyaml-dev",
+    "zlib1g-dev"
+  ],
+  "base_setup_commands": [
+    "apt-get update",
+    "apt-get install -y git curl build-essential pkg-config libsqlite3-dev ruby-dev libyaml-dev zlib1g-dev"
+  ],
+  "setup_runtime_commands": [
+    "bundle config set --local path ''",
+    "bundle config set --local without 'development rubocop'",
+    "bundle config set --local suppress_suggestions true",
+    "cd /workspace && bundle install --jobs=4 --retry=3"
+  ],
+  "activation_commands": [
+    "cd /workspace"
+  ],
+  "activation_command": "cd /workspace",
+  "activation_type": "system",
+  "activation_validation_command": "cd /workspace && bundle exec rspec --version",
+  "detected_test_command": "bundle exec rspec",
+  "runtime_smoke_command": "bundle exec rspec --version",
+  "runtime_profile": {
+    "ecosystem": "ruby",
+    "package_manager": "bundler",
+    "env": "system",
+    "env_name": null,
+    "prepare_commands": [
+      "bundle config set --local path ''",
+      "bundle config set --local without 'development rubocop'",
+      "bundle config set --local suppress_suggestions true",
+      "bundle install --jobs=4 --retry=3"
+    ],
+    "activation_commands": [
+      "cd /workspace"
+    ],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "bundle install --without development rubocop",
+    "cache_dirs": [
+      "/var/lib/gems",
+      "/usr/local/bundle"
+    ],
+    "notes": "Ruby 3.2+ base image with Bundler for dependency management. Rails 7.2 project using RSpec for testing. System packages include development headers for native gem compilation."
+  },
+  "notes": "ActiveAdmin is a Ruby on Rails admin framework. Requires Ruby >= 3.0, Rails ~7.2.0. Uses Bundler for package management and RSpec for testing. System packages include git, curl, build-essential, pkg-config, libsqlite3-dev, ruby-dev, libyaml-dev, and zlib1g-dev for native gem compilation. Test app generation via 'rake setup' should be run before tests."
+}

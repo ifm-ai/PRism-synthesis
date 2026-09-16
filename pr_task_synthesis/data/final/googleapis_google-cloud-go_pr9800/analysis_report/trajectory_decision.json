@@ -1,0 +1,19 @@
+{
+  "schema_version": "v1",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "is_good_rl_example": true,
+  "overall_score": 5.0,
+  "primary_scores": {
+    "environment_readiness": 5,
+    "dependency_completeness": 5,
+    "verifier_integrity": 5,
+    "instruction_verifier_alignment": 5,
+    "trajectory_progress_value": 5
+  },
+  "dominant_struggle_patterns": [],
+  "needs_instruction_tuning": false,
+  "needs_verifier_repair": false,
+  "score_warnings": [],
+  "decision_source": "computed"
+}

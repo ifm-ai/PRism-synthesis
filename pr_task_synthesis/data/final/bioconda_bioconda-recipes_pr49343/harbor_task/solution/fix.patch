@@ -1,0 +1,48 @@
+diff --git a/recipes/cancerit-allelecount/build.sh b/recipes/cancerit-allelecount/build.sh
+index 5921b2bc83..2b179831fc 100644
+--- a/recipes/cancerit-allelecount/build.sh
++++ b/recipes/cancerit-allelecount/build.sh
+@@ -1,5 +1,5 @@
+ #!/bin/bash
+-set -eu
++set -xeu
+ export LIBRARY_PATH=${PREFIX}/lib
+ export INCPATH=${PREFIX}/include
+ #export HTSLIB_VERSION=1.7
+@@ -18,6 +18,6 @@ sed -i 's/$(CC) /$(compiler) /g' Makefile
+ #Force HTSLIb locations
+ sed -i 's#HTSLOC?=$(HTSLIB)#HTSLOC=${PREFIX}/lib#g' Makefile
+ sed -i 's#prefix=?/usr/local#prefix=${PREFIX}#g' Makefile
+-make OPTINC="-I$PREFIX/include -L$PREFIX/lib"
++make -j ${CPU_COUNT} OPTINC="-I$PREFIX/include -L$PREFIX/lib"
+ mkdir -p $PREFIX/bin
+ cp bin/* $PREFIX/bin
+diff --git a/recipes/cancerit-allelecount/meta.yaml b/recipes/cancerit-allelecount/meta.yaml
+index 3320289ef6..b86b40f7fa 100644
+--- a/recipes/cancerit-allelecount/meta.yaml
++++ b/recipes/cancerit-allelecount/meta.yaml
+@@ -9,8 +9,10 @@ source:
+   sha256: 5363ae12c2385c962728336a4498b1a29c9eaa3d4a24492d0debf897771cfd3c
+ 
+ build:
+-  number: 6
++  number: 7
+   skip: True # [osx]
++  run_exports:
++    - {{ pin_subpackage('cancerit-allelecount', max_pin='x') }}
+ 
+ requirements:
+   build:
+@@ -34,5 +36,11 @@ test:
+ 
+ about:
+   home: https://github.com/cancerit/alleleCount
+-  license: GPLv3
++  license: GPL-3.0-only
++  license_file: LICENCE
++  license_family: GPL3
+   summary: Support code for NGS copy number algorithms
++
++extra:
++  additional-platforms:
++    - linux-aarch64

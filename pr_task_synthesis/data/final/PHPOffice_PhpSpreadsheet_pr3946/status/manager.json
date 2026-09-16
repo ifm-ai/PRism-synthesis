@@ -1,0 +1,13 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_full_outer_turn": false,
+  "blocks_reason": null,
+  "repair_cycles_attempted": 0,
+  "workers_used": 2,
+  "iterations": 1,
+  "verifier_asset_mode": "test.patch",
+  "build_backend": "buildah",
+  "container_build_status": "success",
+  "notes": "Remediation completed successfully. Issue: test-analyst reported execution_mode=could_not_execute because PHP/Composer not available on host. Resolution: Container preflight verification completed using buildah containers. testOnly (buggy code) FAILED with exit code 2 (Error: Typed property Conditional::$text must not be accessed before initialization). testWithFix (fixed code) PASSED with exit code 0 (OK: 1 test, 1 assertion). Verifier correctly discriminates between buggy and fixed states. environment_builder.test_runner_reachable=true confirmed via actual test execution in container. All required artifacts in place including OCI archive at /artifacts/environment/openenv_validation_oci.tar."
+}

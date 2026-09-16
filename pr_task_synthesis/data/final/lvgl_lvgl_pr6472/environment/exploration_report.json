@@ -1,0 +1,88 @@
+{
+  "pr_summary": "Fix GIF image descriptor initialization in lv_gif.c/h - properly initialize image descriptor headers (magic, flags, color format, width, height, stride, data_size) when loading GIFs to prevent rendering artifacts or crashes. Change imgdsc type from lv_draw_buf_t to lv_image_dsc_t.",
+  "runtime_family": "C",
+  "package_manager": "none",
+  "touched_files": [
+    "src/libs/gif/lv_gif.c",
+    "src/libs/gif/lv_gif.h"
+  ],
+  "important_build_files": [
+    "CMakeLists.txt",
+    "CMakePresets.json",
+    "tests/CMakeLists.txt",
+    "env_support/cmake/custom.cmake"
+  ],
+  "important_test_files": [
+    "tests/main.py",
+    "tests/src/test_cases/libs/test_bin_decoder.c",
+    "tests/src/lv_test_conf.h"
+  ],
+  "candidate_build_commands": [
+    "cmake -S . -B build -GNinja",
+    "cmake --build build",
+    "cmake --build build --target lvgl"
+  ],
+  "candidate_test_commands": [
+    "./tests/main.py test",
+    "./tests/main.py build",
+    "./tests/main.py --clean --report build test"
+  ],
+  "candidate_smoke_commands": [
+    "cmake --build build --target lvgl"
+  ],
+  "candidate_activation_checks": [
+    "which cmake",
+    "which ninja",
+    "python3 --version"
+  ],
+  "environment_management": "none",
+  "special_system_dependencies": [
+    "cmake",
+    "ninja-build",
+    "gcc",
+    "gcc-multilib",
+    "g++-multilib",
+    "libpng-dev",
+    "libjpeg-turbo8-dev",
+    "libfreetype6-dev",
+    "libglew-dev",
+    "libglfw3-dev",
+    "libinput-dev",
+    "libxkbcommon-dev",
+    "libdrm-dev",
+    "pkg-config",
+    "python3",
+    "pypng",
+    "lz4",
+    "pngquant"
+  ],
+  "high_value_files": [
+    "src/libs/gif/lv_gif.c",
+    "src/libs/gif/lv_gif.h",
+    "src/libs/gif/gifdec.c",
+    "src/libs/gif/gifdec.h",
+    "CMakeLists.txt",
+    "tests/CMakeLists.txt",
+    "tests/main.py"
+  ],
+  "patch_file_cues": [
+    "lv_gif_set_src function modified to properly initialize imgdsc header fields",
+    "imgdsc type changed from lv_draw_buf_t to lv_image_dsc_t",
+    "Added magic number LV_IMAGE_HEADER_MAGIC initialization",
+    "Added flags LV_IMAGE_FLAGS_MODIFIABLE initialization",
+    "Added stride and data_size calculations"
+  ],
+  "test_file_cues": [
+    "tests/src/test_cases/libs/ contains library-specific tests",
+    "test_bin_decoder.c provides pattern for image decoder tests",
+    "No existing GIF-specific test file found - new test may be needed"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "CI workflows run on ubuntu-22.04",
+    "scripts/install-prerequisites.sh installs Linux packages via apt",
+    "CMake build system is cross-platform with no platform-specific restrictions for the touched GIF files",
+    "No Windows-only (MSVC, WinAPI) or macOS-only (Xcode, Metal) dependencies in the fix area"
+  ],
+  "notes": "LVGL is a cross-platform embedded graphics library. The fix modifies GIF object initialization to properly set image descriptor fields. The build uses CMake with optional Ninja generator. Tests are run via Python script main.py. Platform is Linux-compatible with no special platform constraints."
+}

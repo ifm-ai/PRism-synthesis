@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "timeout",
+  "oracle_outcome": "fail",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "High-value RL example: solver correctly localized the problem area and started valid implementation but timed out before completion. Oracle verifier provided actionable feedback about missing functions. No instruction or verifier changes needed."
+}

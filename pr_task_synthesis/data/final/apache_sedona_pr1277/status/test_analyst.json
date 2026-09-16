@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "official_verifier": {
+    "execution_mode": "real_execution",
+    "test_only_exit_code": 1,
+    "test_with_fix_exit_code": 0
+  },
+  "non_discriminating": false,
+  "notes": "Verifier correctly discriminates: fails on buggy state (ST_S2ToGeom missing), passes on fixed state. Tests directly cover the Python API module modified by fix.patch."
+}

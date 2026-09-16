@@ -1,0 +1,13 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_full_outer_turn": false,
+  "blocks_reason": null,
+  "repair_cycles_attempted": 2,
+  "workers_used": 6,
+  "iterations": 5,
+  "verifier_asset_mode": "test_patch_with_selective_tests",
+  "build_backend": "buildah",
+  "container_build_status": "success",
+  "notes": "Synthesis completed successfully. The verifier is discriminating correctly (testOnly exit code 1, testWithFix exit code 0). Two repair cycles were needed: (1) PYTHONPATH fix for namespace packages, (2) switched from editable install to file copying approach to override Python source while keeping compiled C++ extensions from PyPI. Container built successfully with Buildah and exported as OCI archive (802 MB). All required artifacts are in place."
+}

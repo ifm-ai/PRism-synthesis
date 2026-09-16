@@ -1,0 +1,1072 @@
+      create  
+      create  README.md
+      create  Rakefile
+      create  .ruby-version
+      create  config.ru
+      create  Gemfile
+      create  app
+      create  app/assets/config/manifest.js
+      create  app/assets/stylesheets/application.css
+      create  app/channels/application_cable/channel.rb
+      create  app/channels/application_cable/connection.rb
+      create  app/controllers/application_controller.rb
+      create  app/helpers/application_helper.rb
+      create  app/jobs/application_job.rb
+      create  app/mailers/application_mailer.rb
+      create  app/models/application_record.rb
+      create  app/views/layouts/application.html.erb
+      create  app/views/layouts/mailer.html.erb
+      create  app/views/layouts/mailer.text.erb
+      create  app/views/pwa/manifest.json.erb
+      create  app/views/pwa/service-worker.js
+      create  app/assets/images
+      create  app/assets/images/.keep
+      create  app/controllers/concerns/.keep
+      create  app/models/concerns/.keep
+      create  bin
+      create  bin/brakeman
+      create  bin/rails
+      create  bin/rake
+      create  bin/rubocop
+      create  bin/setup
+      create  .rubocop.yml
+      create  .github/workflows
+      create  .github/workflows/ci.yml
+      create  .github/dependabot.yml
+      create  config
+      create  config/routes.rb
+      create  config/application.rb
+      create  config/environment.rb
+      create  config/puma.rb
+      create  config/environments
+      create  config/environments/development.rb
+      create  config/environments/production.rb
+      create  config/environments/test.rb
+      create  config/initializers
+      create  config/initializers/assets.rb
+      create  config/initializers/content_security_policy.rb
+      create  config/initializers/cors.rb
+      create  config/initializers/filter_parameter_logging.rb
+      create  config/initializers/inflections.rb
+      create  config/initializers/new_framework_defaults_7_2.rb
+      create  config/initializers/permissions_policy.rb
+      create  config/locales
+      create  config/locales/en.yml
+      create  config/master.key
+      create  config/boot.rb
+      create  config/database.yml
+      create  db
+      create  db/seeds.rb
+      create  lib
+      create  lib/tasks
+      create  lib/tasks/.keep
+      create  lib/assets
+      create  lib/assets/.keep
+      create  log
+      create  log/.keep
+      create  public
+      create  public/404.html
+      create  public/406-unsupported-browser.html
+      create  public/422.html
+      create  public/500.html
+      create  public/icon.png
+      create  public/icon.svg
+      create  public/robots.txt
+      create  tmp
+      create  tmp/.keep
+      create  tmp/pids
+      create  tmp/pids/.keep
+      create  vendor
+      create  vendor/.keep
+      create  storage
+      create  storage/.keep
+      create  tmp/storage
+      create  tmp/storage/.keep
+      remove  app/javascript/channels
+      remove  app/channels
+      remove  test/channels
+      remove  config/initializers/cors.rb
+      remove  config/initializers/new_framework_defaults_7_2.rb
+       apply  /workspace/spec/support/rails_template.rb
+     gemfile    cssbundling-rails
+       rails    css:install:tailwind
+warning: parser/current is loading parser/ruby32, which recognizes 3.2.5-compliant syntax, but you are running 3.2.11.
+Please see https://github.com/whitequark/parser#compatibility-with-ruby-mri.
+warning: parser/current is loading parser/ruby32, which recognizes 3.2.5-compliant syntax, but you are running 3.2.11.
+Please see https://github.com/whitequark/parser#compatibility-with-ruby-mri.
+       apply  /ruby/3.2.0/gems/cssbundling-rails-1.4.1/lib/install/tailwind/install.rb
+       apply    /ruby/3.2.0/gems/cssbundling-rails-1.4.1/lib/install/install.rb
+    Build into app/assets/builds
+      create      app/assets/builds
+      create      app/assets/builds/.keep
+      append      app/assets/config/manifest.js
+    Stop linking stylesheets automatically
+        gsub      app/assets/config/manifest.js
+    Remove app/assets/stylesheets/application.css so build output can take over
+      remove      app/assets/stylesheets/application.css
+    Add stylesheet link tag in application layout
+   unchanged      app/views/layouts/application.html.erb
+    Add default package.json
+      create      package.json
+    Add default Procfile.dev
+      create      Procfile.dev
+    Ensure foreman is installed
+         run      gem install foreman from "."
+ERROR:  While executing gem ... (Net::HTTPClientException)
+    403 "Forbidden"
+	/usr/local/lib/ruby/3.2.0/net/http/response.rb:277:in `error!'
+	/usr/local/lib/ruby/3.2.0/net/http/response.rb:286:in `value'
+	/usr/local/lib/ruby/3.2.0/net/http.rb:1625:in `connect'
+	/usr/local/lib/ruby/3.2.0/net/http.rb:1580:in `do_start'
+	/usr/local/lib/ruby/3.2.0/net/http.rb:1575:in `start'
+	/usr/local/lib/ruby/3.2.0/rubygems/request/http_pool.rb:44:in `setup_connection'
+	/usr/local/lib/ruby/3.2.0/rubygems/request/https_pool.rb:8:in `setup_connection'
+	/usr/local/lib/ruby/3.2.0/rubygems/request/http_pool.rb:40:in `make_connection'
+	/usr/local/lib/ruby/3.2.0/rubygems/request/http_pool.rb:21:in `checkout'
+	/usr/local/lib/ruby/3.2.0/rubygems/request.rb:130:in `connection_for'
+	/usr/local/lib/ruby/3.2.0/rubygems/request.rb:189:in `perform_request'
+	/usr/local/lib/ruby/3.2.0/rubygems/request.rb:155:in `fetch'
+	/usr/local/lib/ruby/3.2.0/rubygems/remote_fetcher.rb:310:in `request'
+	/usr/local/lib/ruby/3.2.0/rubygems/remote_fetcher.rb:210:in `fetch_http'
+	/usr/local/lib/ruby/3.2.0/rubygems/remote_fetcher.rb:249:in `fetch_path'
+	/usr/local/lib/ruby/3.2.0/rubygems/source.rb:88:in `dependency_resolver_set'
+	/usr/local/lib/ruby/3.2.0/rubygems/resolver/best_set.rb:24:in `block in pick_sets'
+	/usr/local/lib/ruby/3.2.0/rubygems/source_list.rb:94:in `each'
+	/usr/local/lib/ruby/3.2.0/rubygems/source_list.rb:94:in `each_source'
+	/usr/local/lib/ruby/3.2.0/rubygems/resolver/best_set.rb:23:in `pick_sets'
+	/usr/local/lib/ruby/3.2.0/rubygems/resolver/best_set.rb:29:in `find_all'
+	/usr/local/lib/ruby/3.2.0/rubygems/resolver/installer_set.rb:173:in `find_all'
+	/usr/local/lib/ruby/3.2.0/rubygems/resolver/installer_set.rb:62:in `add_always_install'
+	/usr/local/lib/ruby/3.2.0/rubygems/dependency_installer.rb:323:in `resolve_dependencies'
+	/usr/local/lib/ruby/3.2.0/rubygems/commands/install_command.rb:206:in `install_gem'
+	/usr/local/lib/ruby/3.2.0/rubygems/commands/install_command.rb:231:in `block in install_gems'
+	/usr/local/lib/ruby/3.2.0/rubygems/commands/install_command.rb:224:in `each'
+	/usr/local/lib/ruby/3.2.0/rubygems/commands/install_command.rb:224:in `install_gems'
+	/usr/local/lib/ruby/3.2.0/rubygems/commands/install_command.rb:170:in `execute'
+	/usr/local/lib/ruby/3.2.0/rubygems/command.rb:328:in `invoke_with_build_args'
+	/usr/local/lib/ruby/3.2.0/rubygems/command_manager.rb:253:in `invoke_command'
+	/usr/local/lib/ruby/3.2.0/rubygems/command_manager.rb:193:in `process_args'
+	/usr/local/lib/ruby/3.2.0/rubygems/command_manager.rb:151:in `run'
+	/usr/local/lib/ruby/3.2.0/rubygems/gem_runner.rb:52:in `run'
+	/usr/local/bin/gem:10:in `<main>'
+    Add bin/dev to start foreman
+      create      bin/dev
+  Install Tailwind (+PostCSS w/ autoprefixer)
+      create    tailwind.config.js
+      create    app/assets/stylesheets/application.tailwind.css
+         run    yarn add tailwindcss@latest postcss@latest autoprefixer@latest from "."
+  Add build:css script
+bin/rails aborted!
+Rails::Generators::Error: The template [/ruby/3.2.0/gems/cssbundling-rails-1.4.1/lib/install/tailwind/install.rb] could not be loaded. Error: No such file or directory - npx (Rails::Generators::Error)
+
+
+Caused by:
+Errno::ENOENT: No such file or directory - npx (Errno::ENOENT)
+
+Tasks: TOP => app:template
+(See full trace by running task with --trace)
+       rails    importmap:install
+warning: parser/current is loading parser/ruby32, which recognizes 3.2.5-compliant syntax, but you are running 3.2.11.
+Please see https://github.com/whitequark/parser#compatibility-with-ruby-mri.
+warning: parser/current is loading parser/ruby32, which recognizes 3.2.5-compliant syntax, but you are running 3.2.11.
+Please see https://github.com/whitequark/parser#compatibility-with-ruby-mri.
+       apply  /ruby/3.2.0/gems/importmap-rails-2.0.1/lib/install/install.rb
+  Add Importmap include tags in application layout
+      insert    app/views/layouts/application.html.erb
+  Create application.js module as entrypoint
+      create    app/javascript/application.js
+  Use vendor/javascript for downloaded pins
+      create    vendor/javascript
+      create    vendor/javascript/.keep
+  Ensure JavaScript files are in the Sprocket manifest
+      append    app/assets/config/manifest.js
+  Configure importmap paths in config/importmap.rb
+      create    config/importmap.rb
+  Copying binstub
+      create    bin/importmap
+         run  bundle install --quiet
+      create    db/migrate/20260607002443_create_posts.rb
+      create    app/models/post.rb
+      create    app/models/post_decorator.rb
+      create    app/models/post_poro_decorator.rb
+      create    db/migrate/20260607002444_create_blog_posts.rb
+      create    app/models/blog/post.rb
+      create    db/migrate/20260607002445_create_profiles.rb
+      create    app/models/user.rb
+      create    db/migrate/20260607002446_create_users.rb
+      create    app/models/profile.rb
+      create    app/models/publisher.rb
+      create    db/migrate/20260607002447_create_categories.rb
+      create    app/models/category.rb
+      create    app/models/store.rb
+      create    db/migrate/20260607002448_create_stores.rb
+      create    db/migrate/20260607002449_create_tags.rb
+      create    app/models/tag.rb
+      create    db/migrate/20260607002450_create_taggings.rb
+      create    app/models/tagging.rb
+      create    app/helpers/time_helper.rb
+      insert    app/models/application_record.rb
+        gsub    config/environments/test.rb
+      insert    config/environments/test.rb
+        gsub    config/environments/test.rb
+      insert    config/environments/test.rb
+        gsub    config/boot.rb
+        gsub    config/database.yml
+    generate    active_admin:install
+       rails    generate active_admin:install 
+warning: parser/current is loading parser/ruby32, which recognizes 3.2.5-compliant syntax, but you are running 3.2.11.
+Please see https://github.com/whitequark/parser#compatibility-with-ruby-mri.
+      invoke  devise
+    generate    devise:install
+      create    config/initializers/devise.rb
+      create    config/locales/devise.en.yml
+  ===============================================================================
+
+Depending on your application's configuration some manual setup may be required:
+
+  1. Ensure you have defined default url options in your environments files. Here
+     is an example of default_url_options appropriate for a development environment
+     in config/environments/development.rb:
+
+       config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+     In production, :host should be set to the actual host of your application.
+
+     * Required for all applications. *
+
+  2. Ensure you have defined root_url to *something* in your config/routes.rb.
+     For example:
+
+       root to: "home#index"
+     
+     * Not required for API-only Applications *
+
+  3. Ensure you have flash messages in app/views/layouts/application.html.erb.
+     For example:
+
+       <p class="notice"><%= notice %></p>
+       <p class="alert"><%= alert %></p>
+
+     * Not required for API-only Applications *
+
+  4. You can copy Devise views (for customization) to your app by running:
+
+       rails g devise:views
+       
+     * Not required *
+
+===============================================================================
+      invoke    active_record
+      create      db/migrate/20260607002451_devise_create_admin_users.rb
+      create      app/models/admin_user.rb
+      invoke      rspec
+      create        spec/models/admin_user_spec.rb
+      insert      app/models/admin_user.rb
+       route    devise_for :admin_users
+        gsub    app/models/admin_user.rb
+        gsub    config/routes.rb
+      append    db/seeds.rb
+      create  config/initializers/active_admin.rb
+      create  app/admin
+      create  app/admin/dashboard.rb
+      create  app/admin/admin_users.rb
+      insert  config/routes.rb
+    generate  active_admin:assets
+       rails  generate active_admin:assets 
+warning: parser/current is loading parser/ruby32, which recognizes 3.2.5-compliant syntax, but you are running 3.2.11.
+Please see https://github.com/whitequark/parser#compatibility-with-ruby-mri.
+      remove  app/assets/stylesheets/active_admin.scss
+      remove  app/assets/javascripts/active_admin.js
+      create  app/assets/stylesheets/active_admin.css
+      create  tailwind-active_admin.config.js
+      create  db/migrate/20260607002452_create_active_admin_comments.rb
+        gsub    tailwind-active_admin.config.js
+        gsub    tailwind-active_admin.config.js
+      insert    config/application.rb
+      append    config/locales/en.yml
+       exist    app/admin
+      create    app/admin/stores.rb
+       exist    app/views
+      create    app/views/admin/posts/_starred_batch_action_form.html.erb
+      create    app/policies
+      create    app/policies/active_admin/comment_policy.rb
+      create    app/policies/active_admin/page_policy.rb
+      create    app/policies/admin_user_policy.rb
+      create    app/policies/application_policy.rb
+      create    app/policies/category_policy.rb
+      create    app/policies/post_policy.rb
+      create    app/policies/store_policy.rb
+      create    app/policies/tag_policy.rb
+      create    app/policies/user_policy.rb
+       rails    db:drop db:create
+warning: parser/current is loading parser/ruby32, which recognizes 3.2.5-compliant syntax, but you are running 3.2.11.
+Please see https://github.com/whitequark/parser#compatibility-with-ruby-mri.
+Dropped database 'db/test.sqlite3'
+Created database 'db/test.sqlite3'
+       rails    db:migrate
+warning: parser/current is loading parser/ruby32, which recognizes 3.2.5-compliant syntax, but you are running 3.2.11.
+Please see https://github.com/whitequark/parser#compatibility-with-ruby-mri.
+== 20260607002443 CreatePosts: migrating ======================================
+-- create_table(:posts)
+   -> 0.0005s
+== 20260607002443 CreatePosts: migrated (0.0005s) =============================
+
+== 20260607002444 CreateBlogPosts: migrating ==================================
+-- create_table(:blog_posts)
+   -> 0.0003s
+== 20260607002444 CreateBlogPosts: migrated (0.0003s) =========================
+
+== 20260607002445 CreateProfiles: migrating ===================================
+-- create_table(:profiles)
+   -> 0.0003s
+== 20260607002445 CreateProfiles: migrated (0.0003s) ==========================
+
+== 20260607002446 CreateUsers: migrating ======================================
+-- create_table(:users)
+   -> 0.0004s
+== 20260607002446 CreateUsers: migrated (0.0004s) =============================
+
+== 20260607002447 CreateCategories: migrating =================================
+-- create_table(:categories)
+   -> 0.0003s
+== 20260607002447 CreateCategories: migrated (0.0003s) ========================
+
+== 20260607002448 CreateStores: migrating =====================================
+-- create_table(:stores)
+   -> 0.0003s
+== 20260607002448 CreateStores: migrated (0.0003s) ============================
+
+== 20260607002449 CreateTags: migrating =======================================
+-- create_table(:tags)
+   -> 0.0002s
+== 20260607002449 CreateTags: migrated (0.0003s) ==============================
+
+== 20260607002450 CreateTaggings: migrating ===================================
+-- create_table(:taggings)
+   -> 0.0003s
+== 20260607002450 CreateTaggings: migrated (0.0003s) ==========================
+
+== 20260607002451 DeviseCreateAdminUsers: migrating ===========================
+-- create_table(:admin_users)
+   -> 0.0003s
+-- add_index(:admin_users, :email, {:unique=>true})
+   -> 0.0002s
+-- add_index(:admin_users, :reset_password_token, {:unique=>true})
+   -> 0.0001s
+== 20260607002451 DeviseCreateAdminUsers: migrated (0.0007s) ==================
+
+== 20260607002452 CreateActiveAdminComments: migrating ========================
+-- create_table(:active_admin_comments)
+   -> 0.0006s
+-- add_index(:active_admin_comments, [:namespace])
+   -> 0.0001s
+== 20260607002452 CreateActiveAdminComments: migrated (0.0008s) ===============
+
+      insert    config/database.yml
+      create    db/test.sqlite31
+      create    db/test.sqlite31-shm
+       chmod    db/test.sqlite31-shm
+      create    db/test.sqlite31-wal
+       chmod    db/test.sqlite31-wal
+      create    db/test.sqlite32
+      create    db/test.sqlite32-shm
+       chmod    db/test.sqlite32-shm
+      create    db/test.sqlite32-wal
+       chmod    db/test.sqlite32-wal
+      create    db/test.sqlite33
+      create    db/test.sqlite33-shm
+       chmod    db/test.sqlite33-shm
+      create    db/test.sqlite33-wal
+       chmod    db/test.sqlite33-wal
+      create    db/test.sqlite34
+      create    db/test.sqlite34-shm
+       chmod    db/test.sqlite34-shm
+      create    db/test.sqlite34-wal
+       chmod    db/test.sqlite34-wal
+      create    db/test.sqlite35
+      create    db/test.sqlite35-shm
+       chmod    db/test.sqlite35-shm
+      create    db/test.sqlite35-wal
+       chmod    db/test.sqlite35-wal
+      create    db/test.sqlite36
+      create    db/test.sqlite36-shm
+       chmod    db/test.sqlite36-shm
+      create    db/test.sqlite36-wal
+       chmod    db/test.sqlite36-wal
+      create    db/test.sqlite37
+      create    db/test.sqlite37-shm
+       chmod    db/test.sqlite37-shm
+      create    db/test.sqlite37-wal
+       chmod    db/test.sqlite37-wal
+      create    db/test.sqlite38
+      create    db/test.sqlite38-shm
+       chmod    db/test.sqlite38-shm
+      create    db/test.sqlite38-wal
+       chmod    db/test.sqlite38-wal
+      create    db/test.sqlite39
+      create    db/test.sqlite39-shm
+       chmod    db/test.sqlite39-shm
+      create    db/test.sqlite39-wal
+       chmod    db/test.sqlite39-wal
+      create    db/test.sqlite310
+      create    db/test.sqlite310-shm
+       chmod    db/test.sqlite310-shm
+      create    db/test.sqlite310-wal
+       chmod    db/test.sqlite310-wal
+      create    db/test.sqlite311
+      create    db/test.sqlite311-shm
+       chmod    db/test.sqlite311-shm
+      create    db/test.sqlite311-wal
+       chmod    db/test.sqlite311-wal
+      create    db/test.sqlite312
+      create    db/test.sqlite312-shm
+       chmod    db/test.sqlite312-shm
+      create    db/test.sqlite312-wal
+       chmod    db/test.sqlite312-wal
+      create    db/test.sqlite313
+      create    db/test.sqlite313-shm
+       chmod    db/test.sqlite313-shm
+      create    db/test.sqlite313-wal
+       chmod    db/test.sqlite313-wal
+      create    db/test.sqlite314
+      create    db/test.sqlite314-shm
+       chmod    db/test.sqlite314-shm
+      create    db/test.sqlite314-wal
+       chmod    db/test.sqlite314-wal
+      create    db/test.sqlite315
+      create    db/test.sqlite315-shm
+       chmod    db/test.sqlite315-shm
+      create    db/test.sqlite315-wal
+       chmod    db/test.sqlite315-wal
+      create    db/test.sqlite316
+      create    db/test.sqlite316-shm
+       chmod    db/test.sqlite316-shm
+      create    db/test.sqlite316-wal
+       chmod    db/test.sqlite316-wal
+      create    db/test.sqlite317
+      create    db/test.sqlite317-shm
+       chmod    db/test.sqlite317-shm
+      create    db/test.sqlite317-wal
+       chmod    db/test.sqlite317-wal
+      create    db/test.sqlite318
+      create    db/test.sqlite318-shm
+       chmod    db/test.sqlite318-shm
+      create    db/test.sqlite318-wal
+       chmod    db/test.sqlite318-wal
+      create    db/test.sqlite319
+      create    db/test.sqlite319-shm
+       chmod    db/test.sqlite319-shm
+      create    db/test.sqlite319-wal
+       chmod    db/test.sqlite319-wal
+      create    db/test.sqlite320
+      create    db/test.sqlite320-shm
+       chmod    db/test.sqlite320-shm
+      create    db/test.sqlite320-wal
+       chmod    db/test.sqlite320-wal
+      create    db/test.sqlite321
+      create    db/test.sqlite321-shm
+       chmod    db/test.sqlite321-shm
+      create    db/test.sqlite321-wal
+       chmod    db/test.sqlite321-wal
+      create    db/test.sqlite322
+      create    db/test.sqlite322-shm
+       chmod    db/test.sqlite322-shm
+      create    db/test.sqlite322-wal
+       chmod    db/test.sqlite322-wal
+      create    db/test.sqlite323
+      create    db/test.sqlite323-shm
+       chmod    db/test.sqlite323-shm
+      create    db/test.sqlite323-wal
+       chmod    db/test.sqlite323-wal
+      create    db/test.sqlite324
+      create    db/test.sqlite324-shm
+       chmod    db/test.sqlite324-shm
+      create    db/test.sqlite324-wal
+       chmod    db/test.sqlite324-wal
+      create    db/test.sqlite325
+      create    db/test.sqlite325-shm
+       chmod    db/test.sqlite325-shm
+      create    db/test.sqlite325-wal
+       chmod    db/test.sqlite325-wal
+      create    db/test.sqlite326
+      create    db/test.sqlite326-shm
+       chmod    db/test.sqlite326-shm
+      create    db/test.sqlite326-wal
+       chmod    db/test.sqlite326-wal
+      create    db/test.sqlite327
+      create    db/test.sqlite327-shm
+       chmod    db/test.sqlite327-shm
+      create    db/test.sqlite327-wal
+       chmod    db/test.sqlite327-wal
+      create    db/test.sqlite328
+      create    db/test.sqlite328-shm
+       chmod    db/test.sqlite328-shm
+      create    db/test.sqlite328-wal
+       chmod    db/test.sqlite328-wal
+      create    db/test.sqlite329
+      create    db/test.sqlite329-shm
+       chmod    db/test.sqlite329-shm
+      create    db/test.sqlite329-wal
+       chmod    db/test.sqlite329-wal
+      create    db/test.sqlite330
+      create    db/test.sqlite330-shm
+       chmod    db/test.sqlite330-shm
+      create    db/test.sqlite330-wal
+       chmod    db/test.sqlite330-wal
+      create    db/test.sqlite331
+      create    db/test.sqlite331-shm
+       chmod    db/test.sqlite331-shm
+      create    db/test.sqlite331-wal
+       chmod    db/test.sqlite331-wal
+      create    db/test.sqlite332
+      create    db/test.sqlite332-shm
+       chmod    db/test.sqlite332-shm
+      create    db/test.sqlite332-wal
+       chmod    db/test.sqlite332-wal
+      create    db/test.sqlite333
+      create    db/test.sqlite333-shm
+       chmod    db/test.sqlite333-shm
+      create    db/test.sqlite333-wal
+       chmod    db/test.sqlite333-wal
+      create    db/test.sqlite334
+      create    db/test.sqlite334-shm
+       chmod    db/test.sqlite334-shm
+      create    db/test.sqlite334-wal
+       chmod    db/test.sqlite334-wal
+      create    db/test.sqlite335
+      create    db/test.sqlite335-shm
+       chmod    db/test.sqlite335-shm
+      create    db/test.sqlite335-wal
+       chmod    db/test.sqlite335-wal
+      create    db/test.sqlite336
+      create    db/test.sqlite336-shm
+       chmod    db/test.sqlite336-shm
+      create    db/test.sqlite336-wal
+       chmod    db/test.sqlite336-wal
+      create    db/test.sqlite337
+      create    db/test.sqlite337-shm
+       chmod    db/test.sqlite337-shm
+      create    db/test.sqlite337-wal
+       chmod    db/test.sqlite337-wal
+      create    db/test.sqlite338
+      create    db/test.sqlite338-shm
+       chmod    db/test.sqlite338-shm
+      create    db/test.sqlite338-wal
+       chmod    db/test.sqlite338-wal
+      create    db/test.sqlite339
+      create    db/test.sqlite339-shm
+       chmod    db/test.sqlite339-shm
+      create    db/test.sqlite339-wal
+       chmod    db/test.sqlite339-wal
+      create    db/test.sqlite340
+      create    db/test.sqlite340-shm
+       chmod    db/test.sqlite340-shm
+      create    db/test.sqlite340-wal
+       chmod    db/test.sqlite340-wal
+      create    db/test.sqlite341
+      create    db/test.sqlite341-shm
+       chmod    db/test.sqlite341-shm
+      create    db/test.sqlite341-wal
+       chmod    db/test.sqlite341-wal
+      create    db/test.sqlite342
+      create    db/test.sqlite342-shm
+       chmod    db/test.sqlite342-shm
+      create    db/test.sqlite342-wal
+       chmod    db/test.sqlite342-wal
+      create    db/test.sqlite343
+      create    db/test.sqlite343-shm
+       chmod    db/test.sqlite343-shm
+      create    db/test.sqlite343-wal
+       chmod    db/test.sqlite343-wal
+      create    db/test.sqlite344
+      create    db/test.sqlite344-shm
+       chmod    db/test.sqlite344-shm
+      create    db/test.sqlite344-wal
+       chmod    db/test.sqlite344-wal
+      create    db/test.sqlite345
+      create    db/test.sqlite345-shm
+       chmod    db/test.sqlite345-shm
+      create    db/test.sqlite345-wal
+       chmod    db/test.sqlite345-wal
+      create    db/test.sqlite346
+      create    db/test.sqlite346-shm
+       chmod    db/test.sqlite346-shm
+      create    db/test.sqlite346-wal
+       chmod    db/test.sqlite346-wal
+      create    db/test.sqlite347
+      create    db/test.sqlite347-shm
+       chmod    db/test.sqlite347-shm
+      create    db/test.sqlite347-wal
+       chmod    db/test.sqlite347-wal
+      create    db/test.sqlite348
+      create    db/test.sqlite348-shm
+       chmod    db/test.sqlite348-shm
+      create    db/test.sqlite348-wal
+       chmod    db/test.sqlite348-wal
+      create    db/test.sqlite349
+      create    db/test.sqlite349-shm
+       chmod    db/test.sqlite349-shm
+      create    db/test.sqlite349-wal
+       chmod    db/test.sqlite349-wal
+      create    db/test.sqlite350
+      create    db/test.sqlite350-shm
+       chmod    db/test.sqlite350-shm
+      create    db/test.sqlite350-wal
+       chmod    db/test.sqlite350-wal
+      create    db/test.sqlite351
+      create    db/test.sqlite351-shm
+       chmod    db/test.sqlite351-shm
+      create    db/test.sqlite351-wal
+       chmod    db/test.sqlite351-wal
+      create    db/test.sqlite352
+      create    db/test.sqlite352-shm
+       chmod    db/test.sqlite352-shm
+      create    db/test.sqlite352-wal
+       chmod    db/test.sqlite352-wal
+      create    db/test.sqlite353
+      create    db/test.sqlite353-shm
+       chmod    db/test.sqlite353-shm
+      create    db/test.sqlite353-wal
+       chmod    db/test.sqlite353-wal
+      create    db/test.sqlite354
+      create    db/test.sqlite354-shm
+       chmod    db/test.sqlite354-shm
+      create    db/test.sqlite354-wal
+       chmod    db/test.sqlite354-wal
+      create    db/test.sqlite355
+      create    db/test.sqlite355-shm
+       chmod    db/test.sqlite355-shm
+      create    db/test.sqlite355-wal
+       chmod    db/test.sqlite355-wal
+      create    db/test.sqlite356
+      create    db/test.sqlite356-shm
+       chmod    db/test.sqlite356-shm
+      create    db/test.sqlite356-wal
+       chmod    db/test.sqlite356-wal
+      create    db/test.sqlite357
+      create    db/test.sqlite357-shm
+       chmod    db/test.sqlite357-shm
+      create    db/test.sqlite357-wal
+       chmod    db/test.sqlite357-wal
+      create    db/test.sqlite358
+      create    db/test.sqlite358-shm
+       chmod    db/test.sqlite358-shm
+      create    db/test.sqlite358-wal
+       chmod    db/test.sqlite358-wal
+      create    db/test.sqlite359
+      create    db/test.sqlite359-shm
+       chmod    db/test.sqlite359-shm
+      create    db/test.sqlite359-wal
+       chmod    db/test.sqlite359-wal
+      create    db/test.sqlite360
+      create    db/test.sqlite360-shm
+       chmod    db/test.sqlite360-shm
+      create    db/test.sqlite360-wal
+       chmod    db/test.sqlite360-wal
+      create    db/test.sqlite361
+      create    db/test.sqlite361-shm
+       chmod    db/test.sqlite361-shm
+      create    db/test.sqlite361-wal
+       chmod    db/test.sqlite361-wal
+      create    db/test.sqlite362
+      create    db/test.sqlite362-shm
+       chmod    db/test.sqlite362-shm
+      create    db/test.sqlite362-wal
+       chmod    db/test.sqlite362-wal
+      create    db/test.sqlite363
+      create    db/test.sqlite363-shm
+       chmod    db/test.sqlite363-shm
+      create    db/test.sqlite363-wal
+       chmod    db/test.sqlite363-wal
+      create    db/test.sqlite364
+      create    db/test.sqlite364-shm
+       chmod    db/test.sqlite364-shm
+      create    db/test.sqlite364-wal
+       chmod    db/test.sqlite364-wal
+      create    db/test.sqlite365
+      create    db/test.sqlite365-shm
+       chmod    db/test.sqlite365-shm
+      create    db/test.sqlite365-wal
+       chmod    db/test.sqlite365-wal
+      create    db/test.sqlite366
+      create    db/test.sqlite366-shm
+       chmod    db/test.sqlite366-shm
+      create    db/test.sqlite366-wal
+       chmod    db/test.sqlite366-wal
+      create    db/test.sqlite367
+      create    db/test.sqlite367-shm
+       chmod    db/test.sqlite367-shm
+      create    db/test.sqlite367-wal
+       chmod    db/test.sqlite367-wal
+      create    db/test.sqlite368
+      create    db/test.sqlite368-shm
+       chmod    db/test.sqlite368-shm
+      create    db/test.sqlite368-wal
+       chmod    db/test.sqlite368-wal
+      create    db/test.sqlite369
+      create    db/test.sqlite369-shm
+       chmod    db/test.sqlite369-shm
+      create    db/test.sqlite369-wal
+       chmod    db/test.sqlite369-wal
+      create    db/test.sqlite370
+      create    db/test.sqlite370-shm
+       chmod    db/test.sqlite370-shm
+      create    db/test.sqlite370-wal
+       chmod    db/test.sqlite370-wal
+      create    db/test.sqlite371
+      create    db/test.sqlite371-shm
+       chmod    db/test.sqlite371-shm
+      create    db/test.sqlite371-wal
+       chmod    db/test.sqlite371-wal
+      create    db/test.sqlite372
+      create    db/test.sqlite372-shm
+       chmod    db/test.sqlite372-shm
+      create    db/test.sqlite372-wal
+       chmod    db/test.sqlite372-wal
+      create    db/test.sqlite373
+      create    db/test.sqlite373-shm
+       chmod    db/test.sqlite373-shm
+      create    db/test.sqlite373-wal
+       chmod    db/test.sqlite373-wal
+      create    db/test.sqlite374
+      create    db/test.sqlite374-shm
+       chmod    db/test.sqlite374-shm
+      create    db/test.sqlite374-wal
+       chmod    db/test.sqlite374-wal
+      create    db/test.sqlite375
+      create    db/test.sqlite375-shm
+       chmod    db/test.sqlite375-shm
+      create    db/test.sqlite375-wal
+       chmod    db/test.sqlite375-wal
+      create    db/test.sqlite376
+      create    db/test.sqlite376-shm
+       chmod    db/test.sqlite376-shm
+      create    db/test.sqlite376-wal
+       chmod    db/test.sqlite376-wal
+      create    db/test.sqlite377
+      create    db/test.sqlite377-shm
+       chmod    db/test.sqlite377-shm
+      create    db/test.sqlite377-wal
+       chmod    db/test.sqlite377-wal
+      create    db/test.sqlite378
+      create    db/test.sqlite378-shm
+       chmod    db/test.sqlite378-shm
+      create    db/test.sqlite378-wal
+       chmod    db/test.sqlite378-wal
+      create    db/test.sqlite379
+      create    db/test.sqlite379-shm
+       chmod    db/test.sqlite379-shm
+      create    db/test.sqlite379-wal
+       chmod    db/test.sqlite379-wal
+      create    db/test.sqlite380
+      create    db/test.sqlite380-shm
+       chmod    db/test.sqlite380-shm
+      create    db/test.sqlite380-wal
+       chmod    db/test.sqlite380-wal
+      create    db/test.sqlite381
+      create    db/test.sqlite381-shm
+       chmod    db/test.sqlite381-shm
+      create    db/test.sqlite381-wal
+       chmod    db/test.sqlite381-wal
+      create    db/test.sqlite382
+      create    db/test.sqlite382-shm
+       chmod    db/test.sqlite382-shm
+      create    db/test.sqlite382-wal
+       chmod    db/test.sqlite382-wal
+      create    db/test.sqlite383
+      create    db/test.sqlite383-shm
+       chmod    db/test.sqlite383-shm
+      create    db/test.sqlite383-wal
+       chmod    db/test.sqlite383-wal
+      create    db/test.sqlite384
+      create    db/test.sqlite384-shm
+       chmod    db/test.sqlite384-shm
+      create    db/test.sqlite384-wal
+       chmod    db/test.sqlite384-wal
+      create    db/test.sqlite385
+      create    db/test.sqlite385-shm
+       chmod    db/test.sqlite385-shm
+      create    db/test.sqlite385-wal
+       chmod    db/test.sqlite385-wal
+      create    db/test.sqlite386
+      create    db/test.sqlite386-shm
+       chmod    db/test.sqlite386-shm
+      create    db/test.sqlite386-wal
+       chmod    db/test.sqlite386-wal
+      create    db/test.sqlite387
+      create    db/test.sqlite387-shm
+       chmod    db/test.sqlite387-shm
+      create    db/test.sqlite387-wal
+       chmod    db/test.sqlite387-wal
+      create    db/test.sqlite388
+      create    db/test.sqlite388-shm
+       chmod    db/test.sqlite388-shm
+      create    db/test.sqlite388-wal
+       chmod    db/test.sqlite388-wal
+      create    db/test.sqlite389
+      create    db/test.sqlite389-shm
+       chmod    db/test.sqlite389-shm
+      create    db/test.sqlite389-wal
+       chmod    db/test.sqlite389-wal
+      create    db/test.sqlite390
+      create    db/test.sqlite390-shm
+       chmod    db/test.sqlite390-shm
+      create    db/test.sqlite390-wal
+       chmod    db/test.sqlite390-wal
+      create    db/test.sqlite391
+      create    db/test.sqlite391-shm
+       chmod    db/test.sqlite391-shm
+      create    db/test.sqlite391-wal
+       chmod    db/test.sqlite391-wal
+      create    db/test.sqlite392
+      create    db/test.sqlite392-shm
+       chmod    db/test.sqlite392-shm
+      create    db/test.sqlite392-wal
+       chmod    db/test.sqlite392-wal
+      create    db/test.sqlite393
+      create    db/test.sqlite393-shm
+       chmod    db/test.sqlite393-shm
+      create    db/test.sqlite393-wal
+       chmod    db/test.sqlite393-wal
+      create    db/test.sqlite394
+      create    db/test.sqlite394-shm
+       chmod    db/test.sqlite394-shm
+      create    db/test.sqlite394-wal
+       chmod    db/test.sqlite394-wal
+      create    db/test.sqlite395
+      create    db/test.sqlite395-shm
+       chmod    db/test.sqlite395-shm
+      create    db/test.sqlite395-wal
+       chmod    db/test.sqlite395-wal
+      create    db/test.sqlite396
+      create    db/test.sqlite396-shm
+       chmod    db/test.sqlite396-shm
+      create    db/test.sqlite396-wal
+       chmod    db/test.sqlite396-wal
+      create    db/test.sqlite397
+      create    db/test.sqlite397-shm
+       chmod    db/test.sqlite397-shm
+      create    db/test.sqlite397-wal
+       chmod    db/test.sqlite397-wal
+      create    db/test.sqlite398
+      create    db/test.sqlite398-shm
+       chmod    db/test.sqlite398-shm
+      create    db/test.sqlite398-wal
+       chmod    db/test.sqlite398-wal
+      create    db/test.sqlite399
+      create    db/test.sqlite399-shm
+       chmod    db/test.sqlite399-shm
+      create    db/test.sqlite399-wal
+       chmod    db/test.sqlite399-wal
+      create    db/test.sqlite3100
+      create    db/test.sqlite3100-shm
+       chmod    db/test.sqlite3100-shm
+      create    db/test.sqlite3100-wal
+       chmod    db/test.sqlite3100-wal
+      create    db/test.sqlite3101
+      create    db/test.sqlite3101-shm
+       chmod    db/test.sqlite3101-shm
+      create    db/test.sqlite3101-wal
+       chmod    db/test.sqlite3101-wal
+      create    db/test.sqlite3102
+      create    db/test.sqlite3102-shm
+       chmod    db/test.sqlite3102-shm
+      create    db/test.sqlite3102-wal
+       chmod    db/test.sqlite3102-wal
+      create    db/test.sqlite3103
+      create    db/test.sqlite3103-shm
+       chmod    db/test.sqlite3103-shm
+      create    db/test.sqlite3103-wal
+       chmod    db/test.sqlite3103-wal
+      create    db/test.sqlite3104
+      create    db/test.sqlite3104-shm
+       chmod    db/test.sqlite3104-shm
+      create    db/test.sqlite3104-wal
+       chmod    db/test.sqlite3104-wal
+      create    db/test.sqlite3105
+      create    db/test.sqlite3105-shm
+       chmod    db/test.sqlite3105-shm
+      create    db/test.sqlite3105-wal
+       chmod    db/test.sqlite3105-wal
+      create    db/test.sqlite3106
+      create    db/test.sqlite3106-shm
+       chmod    db/test.sqlite3106-shm
+      create    db/test.sqlite3106-wal
+       chmod    db/test.sqlite3106-wal
+      create    db/test.sqlite3107
+      create    db/test.sqlite3107-shm
+       chmod    db/test.sqlite3107-shm
+      create    db/test.sqlite3107-wal
+       chmod    db/test.sqlite3107-wal
+      create    db/test.sqlite3108
+      create    db/test.sqlite3108-shm
+       chmod    db/test.sqlite3108-shm
+      create    db/test.sqlite3108-wal
+       chmod    db/test.sqlite3108-wal
+      create    db/test.sqlite3109
+      create    db/test.sqlite3109-shm
+       chmod    db/test.sqlite3109-shm
+      create    db/test.sqlite3109-wal
+       chmod    db/test.sqlite3109-wal
+      create    db/test.sqlite3110
+      create    db/test.sqlite3110-shm
+       chmod    db/test.sqlite3110-shm
+      create    db/test.sqlite3110-wal
+       chmod    db/test.sqlite3110-wal
+      create    db/test.sqlite3111
+      create    db/test.sqlite3111-shm
+       chmod    db/test.sqlite3111-shm
+      create    db/test.sqlite3111-wal
+       chmod    db/test.sqlite3111-wal
+      create    db/test.sqlite3112
+      create    db/test.sqlite3112-shm
+       chmod    db/test.sqlite3112-shm
+      create    db/test.sqlite3112-wal
+       chmod    db/test.sqlite3112-wal
+      create    db/test.sqlite3113
+      create    db/test.sqlite3113-shm
+       chmod    db/test.sqlite3113-shm
+      create    db/test.sqlite3113-wal
+       chmod    db/test.sqlite3113-wal
+      create    db/test.sqlite3114
+      create    db/test.sqlite3114-shm
+       chmod    db/test.sqlite3114-shm
+      create    db/test.sqlite3114-wal
+       chmod    db/test.sqlite3114-wal
+      create    db/test.sqlite3115
+      create    db/test.sqlite3115-shm
+       chmod    db/test.sqlite3115-shm
+      create    db/test.sqlite3115-wal
+       chmod    db/test.sqlite3115-wal
+      create    db/test.sqlite3116
+      create    db/test.sqlite3116-shm
+       chmod    db/test.sqlite3116-shm
+      create    db/test.sqlite3116-wal
+       chmod    db/test.sqlite3116-wal
+      create    db/test.sqlite3117
+      create    db/test.sqlite3117-shm
+       chmod    db/test.sqlite3117-shm
+      create    db/test.sqlite3117-wal
+       chmod    db/test.sqlite3117-wal
+      create    db/test.sqlite3118
+      create    db/test.sqlite3118-shm
+       chmod    db/test.sqlite3118-shm
+      create    db/test.sqlite3118-wal
+       chmod    db/test.sqlite3118-wal
+      create    db/test.sqlite3119
+      create    db/test.sqlite3119-shm
+       chmod    db/test.sqlite3119-shm
+      create    db/test.sqlite3119-wal
+       chmod    db/test.sqlite3119-wal
+      create    db/test.sqlite3120
+      create    db/test.sqlite3120-shm
+       chmod    db/test.sqlite3120-shm
+      create    db/test.sqlite3120-wal
+       chmod    db/test.sqlite3120-wal
+      create    db/test.sqlite3121
+      create    db/test.sqlite3121-shm
+       chmod    db/test.sqlite3121-shm
+      create    db/test.sqlite3121-wal
+       chmod    db/test.sqlite3121-wal
+      create    db/test.sqlite3122
+      create    db/test.sqlite3122-shm
+       chmod    db/test.sqlite3122-shm
+      create    db/test.sqlite3122-wal
+       chmod    db/test.sqlite3122-wal
+      create    db/test.sqlite3123
+      create    db/test.sqlite3123-shm
+       chmod    db/test.sqlite3123-shm
+      create    db/test.sqlite3123-wal
+       chmod    db/test.sqlite3123-wal
+      create    db/test.sqlite3124
+      create    db/test.sqlite3124-shm
+       chmod    db/test.sqlite3124-shm
+      create    db/test.sqlite3124-wal
+       chmod    db/test.sqlite3124-wal
+      create    db/test.sqlite3125
+      create    db/test.sqlite3125-shm
+       chmod    db/test.sqlite3125-shm
+      create    db/test.sqlite3125-wal
+       chmod    db/test.sqlite3125-wal
+      create    db/test.sqlite3126
+      create    db/test.sqlite3126-shm
+       chmod    db/test.sqlite3126-shm
+      create    db/test.sqlite3126-wal
+       chmod    db/test.sqlite3126-wal
+      create    db/test.sqlite3127
+      create    db/test.sqlite3127-shm
+       chmod    db/test.sqlite3127-shm
+      create    db/test.sqlite3127-wal
+       chmod    db/test.sqlite3127-wal
+      create    db/test.sqlite3128
+      create    db/test.sqlite3128-shm
+       chmod    db/test.sqlite3128-shm
+      create    db/test.sqlite3128-wal
+       chmod    db/test.sqlite3128-wal
+         run  bundle install --quiet
+         run  bundle lock --add-platform=x86_64-linux
+Writing lockfile to /workspace/Gemfile.lock
+         run  bundle binstubs bundler
+Skipped bundle since it already exists.
+If you want to overwrite skipped stubs, use --force.
+       rails  importmap:install
+warning: parser/current is loading parser/ruby32, which recognizes 3.2.5-compliant syntax, but you are running 3.2.11.
+Please see https://github.com/whitequark/parser#compatibility-with-ruby-mri.
+warning: parser/current is loading parser/ruby32, which recognizes 3.2.5-compliant syntax, but you are running 3.2.11.
+Please see https://github.com/whitequark/parser#compatibility-with-ruby-mri.
+       apply  /ruby/3.2.0/gems/importmap-rails-2.0.1/lib/install/install.rb
+  Add Importmap include tags in application layout
+   unchanged    app/views/layouts/application.html.erb
+  Create application.js module as entrypoint
+   identical    app/javascript/application.js
+  Use vendor/javascript for downloaded pins
+       exist    vendor/javascript
+   identical    vendor/javascript/.keep
+  Ensure JavaScript files are in the Sprocket manifest
+   unchanged    app/assets/config/manifest.js
+  Configure importmap paths in config/importmap.rb
+   identical    config/importmap.rb
+  Copying binstub
+   identical    bin/importmap
+         run  bundle install --quiet
+rake aborted!
+LoadError: cannot load such file -- yard
+<internal:/usr/local/lib/ruby/3.2.0/rubygems/core_ext/kernel_require.rb>:86:in `require'
+<internal:/usr/local/lib/ruby/3.2.0/rubygems/core_ext/kernel_require.rb>:86:in `require'
+/workspace/tasks/docs.rake:2:in `<top (required)>'
+(See full trace by running task with --trace)
+sh: 1: npm: not found
+>>>>> Start Test Output
+warning: parser/current is loading parser/ruby32, which recognizes 3.2.5-compliant syntax, but you are running 3.2.11.
+Please see https://github.com/whitequark/parser#compatibility-with-ruby-mri.
+Run options: include {:full_description=>/calls\ status_tag\ even\ when\ attribute\ is\ nil/}
+
+Randomized with seed 12396
+F
+
+Failures:
+
+  1) ActiveAdmin::DisplayHelper#format_attribute with non-database boolean attribute calls status_tag even when attribute is nil
+     Failure/Error: expect(value.to_s).to eq "<span class=\"status-tag\" data-status=\"unset\">Unknown</span>\n"
+
+       expected: #<Encoding:UTF-8> "<span class=\"status-tag\" data-status=\"unset\">Unknown</span>\n"
+            got: #<Encoding:US-ASCII> ""
+
+       (compared using ==)
+
+       Diff:
+       @@ -1,2 +1 @@
+       -<span class="status-tag" data-status="unset">Unknown</span>
+     # ./spec/helpers/display_helper_spec.rb:238:in `block (4 levels) in <top (required)>'
+
+Finished in 0.11111 seconds (files took 1.85 seconds to load)
+1 example, 1 failure
+
+Failed examples:
+
+rspec ./spec/helpers/display_helper_spec.rb:233 # ActiveAdmin::DisplayHelper#format_attribute with non-database boolean attribute calls status_tag even when attribute is nil
+
+Randomized with seed 12396
+
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

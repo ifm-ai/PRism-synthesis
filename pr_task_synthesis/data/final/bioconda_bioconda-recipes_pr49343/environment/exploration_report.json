@@ -1,0 +1,72 @@
+{
+  "pr_summary": "Add linux-aarch64 platform support to cancerit-allelecount recipe. The fix adds 'linux-aarch64' to the extra.additional-platforms list in meta.yaml, updates build number from 6 to 7, adds run_exports, improves license metadata, and modifies build.sh to use parallel make (-j ${CPU_COUNT}) and set -xeu for verbose error reporting.",
+  "runtime_family": "conda",
+  "package_manager": "conda",
+  "touched_files": [
+    "recipes/cancerit-allelecount/build.sh",
+    "recipes/cancerit-allelecount/meta.yaml"
+  ],
+  "important_build_files": [
+    "recipes/cancerit-allelecount/meta.yaml",
+    "recipes/cancerit-allelecount/build.sh",
+    "config.yml",
+    "azure-pipeline.yml"
+  ],
+  "important_test_files": [
+    "recipes/cancerit-allelecount/meta.yaml"
+  ],
+  "candidate_build_commands": [
+    "bioconda-utils build recipes config.yml --git-range <start> <end>",
+    "bioconda-utils build recipes config.yml --docker --mulled-test",
+    "conda-build recipes/cancerit-allelecount"
+  ],
+  "candidate_test_commands": [
+    "bioconda-utils build recipes config.yml --git-range <start> <end> --docker --mulled-test",
+    "alleleCounter -h"
+  ],
+  "candidate_smoke_commands": [
+    "alleleCounter -h",
+    "conda activate bioconda"
+  ],
+  "candidate_activation_checks": [
+    "conda activate bioconda",
+    "which bioconda-utils",
+    "which conda-build"
+  ],
+  "environment_management": "conda (mambaforge)",
+  "special_system_dependencies": [
+    "docker (for mulled testing)",
+    "make",
+    "C compiler ({{ compiler('c') }})",
+    "wget"
+  ],
+  "high_value_files": [
+    "recipes/cancerit-allelecount/meta.yaml",
+    "recipes/cancerit-allelecount/build.sh",
+    "config.yml",
+    "azure-pipeline.yml",
+    ".github/workflows/master.yml",
+    "scripts/check-for-additional-platforms.sh"
+  ],
+  "patch_file_cues": [
+    "meta.yaml: adds 'linux-aarch64' to extra.additional-platforms",
+    "meta.yaml: increments build number from 6 to 7",
+    "meta.yaml: adds run_exports with pin_subpackage",
+    "meta.yaml: improves license metadata (GPL-3.0-only, license_file, license_family)",
+    "build.sh: changes 'set -eu' to 'set -xeu' for verbose error output",
+    "build.sh: changes 'make' to 'make -j ${CPU_COUNT}' for parallel build"
+  ],
+  "test_file_cues": [
+    "meta.yaml test section contains: 'alleleCounter -h' command test",
+    "Test is a simple smoke test verifying binary execution"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "README.md states bioconda supports 'Linux and macOS, supporting both x86_64 and aarch64/arm64 architectures'",
+    "azure-pipeline.yml runs on ubuntu-latest for Linux builds",
+    "fix.patch adds 'linux-aarch64' to additional-platforms, indicating cross-platform support",
+    "scripts/check-for-additional-platforms.sh handles platform-specific builds",
+    "Recipe has 'skip: True # [osx]' indicating it builds on Linux"
+  ],
+  "notes": "Bioconda is a conda channel for bioinformatics packages. The repository uses bioconda-utils for building and testing recipes. The cancerit-allelecount recipe is a C-based tool that requires htslib, zlib, bzip2, and xz. The fix enables building on linux-aarch64 architecture by adding it to additional-platforms. The build system uses conda-build via bioconda-utils. Testing is done via mulled containers (Docker-based). The recipe currently skips macOS builds. The platform is fully compatible with Linux x86-64 containers for testing."
+}

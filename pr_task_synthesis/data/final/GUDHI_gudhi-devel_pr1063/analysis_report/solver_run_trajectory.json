@@ -1,0 +1,758 @@
+Exporting session: ses_1009f78b1ffeMxwJxekdd30FCa
+{
+  "info": {
+    "id": "ses_1009f78b1ffeMxwJxekdd30FCa",
+    "slug": "neon-rocket",
+    "projectID": "d78e583293d809b54a6152bf42a551773ef78ca6",
+    "directory": "/workspace",
+    "title": "New session - 2026-06-25T15:22:56.718Z",
+    "version": "1.4.6",
+    "summary": {
+      "additions": 10,
+      "deletions": 10,
+      "files": 4
+    },
+    "permission": [
+      {
+        "permission": "question",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_enter",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_exit",
+        "pattern": "*",
+        "action": "deny"
+      }
+    ],
+    "time": {
+      "created": 1782400976718,
+      "updated": 1782401000394
+    }
+  },
+  "messages": [
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1782400976771
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "vllm",
+          "modelID": "Qwen/Qwen3.5-397B-A17B-FP8"
+        },
+        "summary": {
+          "diffs": [
+            {
+              "file": "src/python/gudhi/tensorflow/cubical_layer.py",
+              "patch": "Index: src/python/gudhi/tensorflow/cubical_layer.py\n===================================================================\n--- src/python/gudhi/tensorflow/cubical_layer.py\t\n+++ src/python/gudhi/tensorflow/cubical_layer.py\t\n@@ -1,82 +1,82 @@\n import numpy               as np\n import tensorflow          as tf\n from ..cubical_complex  import CubicalComplex\n \n ######################\n # Cubical filtration #\n ######################\n \n # The parameters of the model are the pixel values.\n \n def _Cubical(Xflat, Xdim, dimensions, homology_coeff_field):\n     # Parameters: Xflat (flattened image),\n     #             Xdim (shape of non-flattened image)\n     #             dimensions (homology dimensions)\n \n     # Compute the persistence pairs with Gudhi\n     # We reverse the dimensions because CubicalComplex uses Fortran ordering\n     cc = CubicalComplex(dimensions=Xdim[::-1], top_dimensional_cells=Xflat)\n     cc.compute_persistence(homology_coeff_field=homology_coeff_field)\n \n     # Retrieve and output image indices/pixels corresponding to positive and negative simplices\n     cof_pp = cc.cofaces_of_persistence_pairs()\n     \n     L_cofs = []\n     for dim in dimensions:\n \n         try:\n             cof = cof_pp[0][dim]\n         except IndexError:\n             cof = np.array([])\n \n         L_cofs.append(np.array(cof, dtype=np.int32))\n \n     return L_cofs\n \n class CubicalLayer(tf.keras.layers.Layer):\n     \"\"\"\n     TensorFlow layer for computing the persistent homology of a cubical complex\n     \"\"\"\n     def __init__(self, homology_dimensions, min_persistence=None, homology_coeff_field=11, **kwargs):\n         \"\"\"\n         Constructor for the CubicalLayer class\n \n         Parameters:\n             homology_dimensions (List[int]): list of homology dimensions\n             min_persistence (List[float]): minimum distance-to-diagonal of the points in the output persistence diagrams (default None, in which case 0. is used for all dimensions)\n             homology_coeff_field (int): homology field coefficient. Must be a prime number. Default value is 11. Max is 46337.\n         \"\"\"\n-        super().__init__(dynamic=True, **kwargs)\n+        super().__init__(**kwargs)\n         self.dimensions = homology_dimensions\n         self.min_persistence = min_persistence if min_persistence is not None else [0.] * len(self.dimensions)\n         self.hcf = homology_coeff_field\n         assert len(self.min_persistence) == len(self.dimensions)\n \n     def call(self, X):\n         \"\"\"\n         Compute persistence diagram associated to a cubical complex filtered by some pixel values \n \n         Parameters:\n             X (TensorFlow variable): pixel values of the cubical complex\n \n         Returns:\n             List[Tuple[tf.Tensor,tf.Tensor]]: List of cubical persistence diagrams. The length of this list is the same than that of dimensions, i.e., there is one persistence diagram per homology dimension provided in the input list dimensions. Moreover, the finite and essential parts of the persistence diagrams are provided separately: each element of this list is a tuple of size two that contains the finite and essential parts of the corresponding persistence diagram, of shapes [num_finite_points, 2] and [num_essential_points, 1] respectively. Note that the essential part is always empty in cubical persistence diagrams, except in homology dimension zero, where the essential part always contains a single point, with abscissa equal to the smallest value in the complex, and infinite ordinate\n         \"\"\"\n         # Compute pixels associated to positive and negative simplices \n         # Don't compute gradient for this operation\n         Xflat = tf.reshape(X, [-1])\n         Xdim, Xflat_numpy = X.shape, Xflat.numpy()\n         indices_list = _Cubical(Xflat_numpy, Xdim, self.dimensions, self.hcf)\n         index_essential = np.argmin(Xflat_numpy) # index of minimum pixel value for essential persistence diagram\n         # Get persistence diagram by simply picking the corresponding entries in the image\n         self.dgms = []\n         for idx_dim, dimension in enumerate(self.dimensions):\n             finite_dgm = tf.reshape(tf.gather(Xflat, indices_list[idx_dim]), [-1,2])\n             essential_dgm = tf.reshape(tf.gather(Xflat, index_essential), [-1,1]) if dimension == 0 else tf.zeros([0, 1])\n             min_pers = self.min_persistence[idx_dim]\n             if min_pers >= 0:\n                 persistent_indices = tf.where(tf.math.abs(finite_dgm[:,1]-finite_dgm[:,0]) > min_pers)\n                 self.dgms.append((tf.reshape(tf.gather(finite_dgm, indices=persistent_indices), [-1,2]), essential_dgm))\n             else:\n                 self.dgms.append((finite_dgm, essential_dgm))\n         return self.dgms\n",
+              "additions": 1,
+              "deletions": 1,
+              "status": "modified"
+            },
+            {
+              "file": "src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py",
+              "patch": "Index: src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py\n===================================================================\n--- src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py\t\n+++ src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py\t\n@@ -1,89 +1,89 @@\n import numpy               as np\n import tensorflow          as tf\n \n #########################################\n # Lower star filtration on simplex tree #\n #########################################\n \n # The parameters of the model are the vertex function values of the simplex tree.\n \n def _LowerStarSimplexTree(simplextree, filtration, dimensions, homology_coeff_field, persistence_dim_max):\n     # Parameters: simplextree (simplex tree on which to compute persistence)\n     #             filtration (function values on the vertices of st),\n     #             dimensions (homology dimensions),\n     #             homology_coeff_field (homology field coefficient)\n     \n     simplextree.reset_filtration(-np.inf, 0)\n \n     # Assign new filtration values\n     for i in range(simplextree.num_vertices()):\n         simplextree.assign_filtration([i], filtration[i])\n     simplextree.make_filtration_non_decreasing()\n     \n     # Compute persistence diagram\n     simplextree.compute_persistence(homology_coeff_field=homology_coeff_field, persistence_dim_max=persistence_dim_max)\n     \n     # Get vertex pairs for optimization. First, get all simplex pairs\n     pairs = simplextree.lower_star_persistence_generators()\n     \n     L_indices = []\n     for dimension in dimensions:\n     \n         finite_pairs = pairs[0][dimension] if len(pairs[0]) >= dimension+1 else np.empty(shape=[0,2])\n         essential_pairs = pairs[1][dimension] if len(pairs[1]) >= dimension+1 else np.empty(shape=[0,1])\n         \n         finite_indices = np.array(finite_pairs.flatten(), dtype=np.int32)\n         essential_indices = np.array(essential_pairs.flatten(), dtype=np.int32)\n \n         L_indices.append((finite_indices, essential_indices))\n \n     return L_indices\n \n class LowerStarSimplexTreeLayer(tf.keras.layers.Layer):\n     \"\"\"\n     TensorFlow layer for computing lower-star persistence out of a simplex tree\n     \"\"\"\n     def __init__(self, simplextree, homology_dimensions, min_persistence=None, homology_coeff_field=11, persistence_dim_max=False, **kwargs):\n         \"\"\"\n         Constructor for the LowerStarSimplexTreeLayer class\n   \n         Parameters:\n             simplextree (gudhi.SimplexTree): underlying simplex tree. Its vertices MUST be named with integers from 0 to n-1, where n is its number of vertices. Note that its filtration values are modified in each call of the class.\n             homology_dimensions (List[int]): list of homology dimensions\n             min_persistence (List[float]): minimum distance-to-diagonal of the points in the output persistence diagrams (default None, in which case 0. is used for all dimensions)\n             homology_coeff_field (int): homology field coefficient. Must be a prime number. Default value is 11. Max is 46337.\n             persistence_dim_max (bool): if true, the persistent homology for the maximal dimension in the simplex tree is computed. If false, it is ignored. Default is false.\n         \"\"\"\n-        super().__init__(dynamic=True, **kwargs)\n+        super().__init__(**kwargs)\n         self.dimensions  = homology_dimensions\n         self.simplextree = simplextree\n         self.min_persistence = min_persistence if min_persistence is not None else [0. for _ in range(len(self.dimensions))]\n         self.hcf = homology_coeff_field\n         self.pdm = persistence_dim_max\n         assert len(self.min_persistence) == len(self.dimensions)\n \n     def call(self, filtration):\n         \"\"\"\n         Compute lower-star persistence diagram associated to a function defined on the vertices of the simplex tree\n \n         Parameters:\n             F (TensorFlow variable): filter function values over the vertices of the simplex tree. The ith entry of F corresponds to vertex i in self.simplextree\n \n         Returns:\n             List[Tuple[tf.Tensor,tf.Tensor]]: List of lower-star persistence diagrams. The length of this list is the same than that of dimensions, i.e., there is one persistence diagram per homology dimension provided in the input list dimensions. Moreover, the finite and essential parts of the persistence diagrams are provided separately: each element of this list is a tuple of size two that contains the finite and essential parts of the corresponding persistence diagram, of shapes [num_finite_points, 2] and [num_essential_points, 1] respectively\n         \"\"\"\n         # Don't try to compute gradients for the vertex pairs\n         indices = _LowerStarSimplexTree(self.simplextree, filtration.numpy(), self.dimensions, self.hcf, self.pdm)\n         # Get persistence diagrams\n         self.dgms = []\n         for idx_dim, dimension in enumerate(self.dimensions):\n             finite_dgm = tf.reshape(tf.gather(filtration, indices[idx_dim][0]), [-1,2])\n             essential_dgm = tf.reshape(tf.gather(filtration, indices[idx_dim][1]), [-1,1])\n             min_pers = self.min_persistence[idx_dim]\n             if min_pers >= 0:\n                 persistent_indices = tf.where(tf.math.abs(finite_dgm[:,1]-finite_dgm[:,0]) > min_pers)\n                 self.dgms.append((tf.reshape(tf.gather(finite_dgm, indices=persistent_indices),[-1,2]), essential_dgm))\n             else:\n                 self.dgms.append((finite_dgm, essential_dgm))\n         return self.dgms\n \n",
+              "additions": 1,
+              "deletions": 1,
+              "status": "modified"
+            },
+            {
+              "file": "src/python/gudhi/tensorflow/perslay.py",
+              "patch": "Index: src/python/gudhi/tensorflow/perslay.py\n===================================================================\n--- src/python/gudhi/tensorflow/perslay.py\t\n+++ src/python/gudhi/tensorflow/perslay.py\t\n@@ -1,284 +1,284 @@\n # This file is part of the Gudhi Library - https://gudhi.inria.fr/ - which is released under MIT.\n # See file LICENSE or go to https://gudhi.inria.fr/licensing/ for full license details.\n # Author(s):       Mathieu Carrière\n #\n # Copyright (C) 2021 Inria\n #\n # Modification(s):\n #   - YYYY/MM Author: Description of the modification\n \n import tensorflow as tf\n import math\n \n class GridPerslayWeight(tf.keras.layers.Layer):\n     \"\"\"\n     This is a class for computing a differentiable weight function for persistence diagram points. This function is defined from an array that contains its values on a 2D grid.\n     \"\"\"\n     def __init__(self, grid, grid_bnds, **kwargs):\n         \"\"\"\n         Constructor for the GridPerslayWeight class.\n   \n         Parameters:\n             grid (n x n numpy array): grid of values.\n             grid_bnds (2 x 2 numpy array): boundaries of the grid, of the form [[min_x, max_x], [min_y, max_y]].\n         \"\"\"\n-        super().__init__(dynamic=True, **kwargs)\n+        super().__init__(**kwargs)\n         self.grid = tf.Variable(initial_value=grid, trainable=True)\n         self.grid_bnds = grid_bnds\n     \n     def build(self, input_shape):\n         return self\n \n     def call(self, diagrams):\n         \"\"\"\n         Apply GridPerslayWeight on a ragged tensor containing a list of persistence diagrams.\n \n         Parameters:\n             diagrams (n x None x 2): ragged tensor containing n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n \n         Returns:\n             weight (n x None): ragged tensor containing the weights of the points in the n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n         \"\"\"\n         grid_shape = self.grid.shape\n         indices = []\n         for dim in range(2):\n             [m,M] = self.grid_bnds[dim]\n             coords = tf.expand_dims(diagrams[:,:,dim],-1)\n             ids = grid_shape[dim]*(coords-m)/(M-m)\n             indices.append(tf.cast(ids, tf.int32))\n         weight = tf.gather_nd(params=self.grid, indices=tf.concat(indices, axis=2))\n         return weight\n     \n class GaussianMixturePerslayWeight(tf.keras.layers.Layer):\n     \"\"\"\n     This is a class for computing a differentiable weight function for persistence diagram points. This function is defined from a mixture of Gaussian functions.\n     \"\"\"\n     def __init__(self, gaussians, **kwargs):\n         \"\"\"\n         Constructor for the GridPerslayWeight class.\n   \n         Parameters:\n             gaussians (4 x n numpy array): parameters of the n Gaussian functions, of the form transpose([[mu_x^1, mu_y^1, sigma_x^1, sigma_y^1], ..., [mu_x^n, mu_y^n, sigma_x^n, sigma_y^n]]). \n         \"\"\"\n-        super().__init__(dynamic=True, **kwargs)\n+        super().__init__(**kwargs)\n         self.W = tf.Variable(initial_value=gaussians, trainable=True)\n \n     def build(self, input_shape):\n         return self\n         \n     def call(self, diagrams):\n         \"\"\"\n         Apply GaussianMixturePerslayWeight on a ragged tensor containing a list of persistence diagrams.\n \n         Parameters:\n             diagrams (n x None x 2): ragged tensor containing n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n \n         Returns:\n             weight (n x None): ragged tensor containing the weights of the points in the n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n         \"\"\"\n         means     = tf.expand_dims(tf.expand_dims(self.W[:2,:],0),0)\n         variances = tf.expand_dims(tf.expand_dims(self.W[2:,:],0),0)\n         diagrams  = tf.expand_dims(diagrams, -1)\n         dists     = tf.math.multiply(tf.math.square(diagrams-means), 1/tf.math.square(variances))\n         weight    = tf.math.reduce_sum(tf.math.exp(tf.math.reduce_sum(-dists, axis=2)), axis=2)\n         return weight\n     \n class PowerPerslayWeight(tf.keras.layers.Layer):\n     \"\"\"\n     This is a class for computing a differentiable weight function for persistence diagram points. This function is defined as a constant multiplied by the distance to the diagonal of the persistence diagram point raised to some power.\n     \"\"\"\n     def __init__(self, constant, power, **kwargs):\n         \"\"\"\n         Constructor for the PowerPerslayWeight class.\n   \n         Parameters:\n             constant (float): constant value.\n             power (float): power applied to the distance to the diagonal. \n         \"\"\"\n-        super().__init__(dynamic=True, **kwargs)\n+        super().__init__(**kwargs)\n         self.constant = tf.Variable(initial_value=constant, trainable=True)\n         self.power = power\n         \n     def build(self, input_shape):\n         return self\n     \n     def call(self, diagrams):\n         \"\"\"\n         Apply PowerPerslayWeight on a ragged tensor containing a list of persistence diagrams.\n \n         Parameters:\n             diagrams (n x None x 2): ragged tensor containing n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n \n         Returns:\n             weight (n x None): ragged tensor containing the weights of the points in the n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n         \"\"\"\n         weight = self.constant * tf.math.pow(tf.math.abs(diagrams[:,:,1]-diagrams[:,:,0]), self.power)\n         return weight\n     \n \n class GaussianPerslayPhi(tf.keras.layers.Layer):\n     \"\"\"\n     This is a class for computing a transformation function for persistence diagram points. This function turns persistence diagram points into 2D Gaussian functions centered on the points, that are then evaluated on a regular 2D grid.\n     \"\"\"\n     def __init__(self, image_size, image_bnds, variance, **kwargs):\n         \"\"\"\n         Constructor for the GaussianPerslayPhi class.\n   \n         Parameters:\n             image_size (int numpy array): number of grid elements on each grid axis, of the form [n_x, n_y].\n             image_bnds (2 x 2 numpy array): boundaries of the grid, of the form [[min_x, max_x], [min_y, max_y]].\n             variance (float): variance of the Gaussian functions. \n         \"\"\"\n-        super().__init__(dynamic=True, **kwargs)\n+        super().__init__(**kwargs)\n         self.image_size = image_size\n         self.image_bnds = image_bnds\n         self.variance   = tf.Variable(initial_value=variance, trainable=True)\n         \n     def build(self, input_shape):\n         return self\n         \n     def call(self, diagrams):\n         \"\"\"\n         Apply GaussianPerslayPhi on a ragged tensor containing a list of persistence diagrams.\n \n         Parameters:\n             diagrams (n x None x 2): ragged tensor containing n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n \n         Returns:\n             output (n x None x image_size x image_size x 1): ragged tensor containing the evaluations on the 2D grid of the 2D Gaussian functions corresponding to the persistence diagram points, in the form of a 2D image with 1 channel that can be processed with, e.g., convolutional layers. The second dimension is ragged since persistence diagrams can have different numbers of points.\n             output_shape (int numpy array): shape of the output tensor.\n         \"\"\"\n         diagrams_d = tf.concat([diagrams[:,:,0:1], diagrams[:,:,1:2]-diagrams[:,:,0:1]], axis=2)\n         step = [(self.image_bnds[i][1]-self.image_bnds[i][0])/self.image_size[i] for i in range(2)]\n         coords = [tf.range(self.image_bnds[i][0], self.image_bnds[i][1], step[i]) for i in range(2)]\n         M = tf.meshgrid(*coords)\n         mu = tf.concat([tf.expand_dims(tens, 0) for tens in M], axis=0)\n         for _ in range(2):\n             diagrams_d = tf.expand_dims(diagrams_d,-1)\n         dists = tf.math.square(diagrams_d-mu) / (2*tf.math.square(self.variance))\n         gauss = tf.math.exp(tf.math.reduce_sum(-dists, axis=2)) / (2*math.pi*tf.math.square(self.variance))\n         output = tf.expand_dims(gauss,-1)\n         output_shape = M[0].shape + tuple([1])\n         return output, output_shape\n      \n class TentPerslayPhi(tf.keras.layers.Layer):\n     \"\"\"\n     This is a class for computing a transformation function for persistence diagram points. This function turns persistence diagram points into 1D tent functions (linearly increasing on the first half of the bar corresponding to the point from zero to half of the bar length, linearly decreasing on the second half and zero elsewhere) centered on the points, that are then evaluated on a regular 1D grid.\n     \"\"\"\n     def __init__(self, samples, **kwargs):\n         \"\"\"\n         Constructor for the GaussianPerslayPhi class.\n   \n         Parameters:\n             samples (float numpy array): grid elements on which to evaluate the tent functions, of the form [x_1, ..., x_n].\n         \"\"\"\n-        super().__init__(dynamic=True, **kwargs)\n+        super().__init__(**kwargs)\n         self.samples   = tf.Variable(initial_value=samples, trainable=True)\n         \n     def build(self, input_shape):\n         return self\n         \n     def call(self, diagrams):\n         \"\"\"\n         Apply TentPerslayPhi on a ragged tensor containing a list of persistence diagrams.\n \n         Parameters:\n             diagrams (n x None x 2): ragged tensor containing n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n \n         Returns:\n             output (n x None x num_samples): ragged tensor containing the evaluations on the 1D grid of the 1D tent functions corresponding to the persistence diagram points. The second dimension is ragged since persistence diagrams can have different numbers of points.\n             output_shape (int numpy array): shape of the output tensor.\n         \"\"\"\n         samples_d = tf.expand_dims(tf.expand_dims(self.samples,0),0)\n         xs, ys = diagrams[:,:,0:1], diagrams[:,:,1:2]\n         output = tf.math.maximum(.5*(ys-xs) - tf.math.abs(samples_d-.5*(ys+xs)), tf.constant([0.]))\n         output_shape = self.samples.shape\n         return output, output_shape\n     \n class FlatPerslayPhi(tf.keras.layers.Layer):\n     \"\"\"\n     This is a class for computing a transformation function for persistence diagram points. This function turns persistence diagram points into 1D constant functions (that evaluate to half of the bar length on the bar corresponding to the point and zero elsewhere), that are then evaluated on a regular 1D grid.\n     \"\"\"\n     def __init__(self, samples, theta, **kwargs):\n         \"\"\"\n         Constructor for the FlatPerslayPhi class.\n   \n         Parameters:\n             samples (float numpy array): grid elements on which to evaluate the constant functions, of the form [x_1, ..., x_n].\n             theta (float): sigmoid parameter used to approximate the constant function with a differentiable sigmoid function. The bigger the theta, the closer to a constant function the output will be. \n         \"\"\"\n-        super().__init__(dynamic=True, **kwargs)\n+        super().__init__(**kwargs)\n         self.samples = tf.Variable(initial_value=samples, trainable=True)\n         self.theta   = tf.Variable(initial_value=theta,   trainable=True)\n         \n     def build(self, input_shape):\n         return self\n         \n     def call(self, diagrams):\n         \"\"\"\n         Apply FlatPerslayPhi on a ragged tensor containing a list of persistence diagrams.\n \n         Parameters:\n             diagrams (n x None x 2): ragged tensor containing n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n \n         Returns:\n             output (n x None x num_samples): ragged tensor containing the evaluations on the 1D grid of the 1D constant functions corresponding to the persistence diagram points. The second dimension is ragged since persistence diagrams can have different numbers of points.\n             output_shape (int numpy array): shape of the output tensor.\n         \"\"\"\n         samples_d = tf.expand_dims(tf.expand_dims(self.samples,0),0)\n         xs, ys = diagrams[:,:,0:1], diagrams[:,:,1:2]\n         output = 1./(1.+tf.math.exp(-self.theta*(.5*(ys-xs)-tf.math.abs(samples_d-.5*(ys+xs)))))\n         output_shape = self.samples.shape\n         return output, output_shape\n \n class Perslay(tf.keras.layers.Layer):\n     \"\"\"\n     This is a TensorFlow layer for vectorizing persistence diagrams in a differentiable way within a neural network. This function implements the PersLay equation, see `the corresponding article <http://proceedings.mlr.press/v108/carriere20a.html>`_.\n     \"\"\"\n     def __init__(self, weight, phi, perm_op, rho, **kwargs):\n         \"\"\"\n         Constructor for the Perslay class.\n \n         Parameters:\n             weight (function): weight function for the persistence diagram points. Can be either :class:`~gudhi.tensorflow.perslay.GridPerslayWeight`, :class:`~gudhi.tensorflow.perslay.GaussianMixturePerslayWeight`, :class:`~gudhi.tensorflow.perslay.PowerPerslayWeight`, or a custom TensorFlow function that takes persistence diagrams as argument (represented as an (n x None x 2) ragged tensor, where n is the number of diagrams).\n             phi (function): transformation function for the persistence diagram points. Can be either :class:`~gudhi.tensorflow.perslay.GaussianPerslayPhi`, :class:`~gudhi.tensorflow.perslay.TentPerslayPhi`, :class:`~gudhi.tensorflow.perslay.FlatPerslayPhi`, or a custom TensorFlow class (that can have trainable parameters) with a method `call` that takes persistence diagrams as argument (represented as an (n x None x 2) ragged tensor, where n is the number of diagrams).\n             perm_op (function): permutation invariant function, such as `tf.math.reduce_sum`, `tf.math.reduce_mean`, `tf.math.reduce_max`, `tf.math.reduce_min`, or a custom TensorFlow function that takes two arguments: a tensor and an axis on which to apply the permutation invariant operation. If perm_op is the string \"topk\" (where k is a number), this function will be computed as `tf.math.top_k` with parameter `int(k)`.\n             rho (function): postprocessing function that is applied after the permutation invariant operation. Can be any TensorFlow layer.\n         \"\"\"\n-        super().__init__(dynamic=True, **kwargs)\n+        super().__init__(**kwargs)\n         self.weight  = weight\n         self.phi     = phi\n         self.perm_op = perm_op  \n         self.rho     = rho\n \n     def build(self, input_shape):\n         return self\n \n     def call(self, diagrams):\n         \"\"\"\n         Apply Perslay on a ragged tensor containing a list of persistence diagrams.\n \n         Parameters:\n             diagrams (n x None x 2): ragged tensor containing n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n \n         Returns:\n             vector (n x output_shape): tensor containing the vectorizations of the persistence diagrams.\n         \"\"\"\n         vector, dim = self.phi(diagrams)\n         weight = self.weight(diagrams)\n         for _ in range(len(dim)):\n             weight = tf.expand_dims(weight, -1)\n         vector = tf.math.multiply(vector, weight)\n           \n         permop = self.perm_op\n         if type(permop) == str and permop[:3] == 'top':\n             k = int(permop[3:])\n             vector = vector.to_tensor(default_value=-1e10)\n             vector = tf.math.top_k(tf.transpose(vector, perm=[0, 2, 1]), k=k).values\n             vector = tf.reshape(vector, [-1,k*dim[0]])\n         else:\n             vector = permop(vector, axis=1)\n \n         vector = self.rho(vector)\n             \n         return vector\n",
+              "additions": 7,
+              "deletions": 7,
+              "status": "modified"
+            },
+            {
+              "file": "src/python/gudhi/tensorflow/rips_layer.py",
+              "patch": "Index: src/python/gudhi/tensorflow/rips_layer.py\n===================================================================\n--- src/python/gudhi/tensorflow/rips_layer.py\t\n+++ src/python/gudhi/tensorflow/rips_layer.py\t\n@@ -1,93 +1,93 @@\n import numpy               as np\n import tensorflow          as tf\n from ..rips_complex     import RipsComplex\n \n ############################\n # Vietoris-Rips filtration #\n ############################\n \n # The parameters of the model are the point coordinates.\n \n def _Rips(DX, max_edge, dimensions, homology_coeff_field):\n     # Parameters: DX (distance matrix), \n     #             max_edge (maximum edge length for Rips filtration), \n     #             dimensions (homology dimensions)\n \n     # Compute the persistence pairs with Gudhi\n     rc = RipsComplex(distance_matrix=DX, max_edge_length=max_edge)\n     st = rc.create_simplex_tree(max_dimension=max(dimensions)+1)\n     st.compute_persistence(homology_coeff_field=homology_coeff_field)\n     pairs = st.flag_persistence_generators()\n \n     L_indices = []\n     for dimension in dimensions:\n \n         if dimension == 0:\n             finite_pairs = pairs[0]\n             essential_pairs = pairs[2]\n         else:\n             finite_pairs = pairs[1][dimension-1] if len(pairs[1]) >= dimension else np.empty(shape=[0,4])\n             essential_pairs = pairs[3][dimension-1] if len(pairs[3]) >= dimension else np.empty(shape=[0,2])\n         \n         finite_indices = np.array(finite_pairs.flatten(), dtype=np.int32)\n         essential_indices = np.array(essential_pairs.flatten(), dtype=np.int32)\n \n         L_indices.append((finite_indices, essential_indices))\n \n     return L_indices\n \n class RipsLayer(tf.keras.layers.Layer):\n     \"\"\"\n     TensorFlow layer for computing Rips persistence out of a point cloud\n     \"\"\"\n     def __init__(self, homology_dimensions, maximum_edge_length=np.inf, min_persistence=None, homology_coeff_field=11, **kwargs):\n         \"\"\"\n         Constructor for the RipsLayer class\n \n         Parameters:\n             maximum_edge_length (float): maximum edge length for the Rips complex \n             homology_dimensions (List[int]): list of homology dimensions\n             min_persistence (List[float]): minimum distance-to-diagonal of the points in the output persistence diagrams (default None, in which case 0. is used for all dimensions)\n             homology_coeff_field (int): homology field coefficient. Must be a prime number. Default value is 11. Max is 46337.\n         \"\"\"\n-        super().__init__(dynamic=True, **kwargs)\n+        super().__init__(**kwargs)\n         self.max_edge = maximum_edge_length\n         self.dimensions = homology_dimensions\n         self.min_persistence = min_persistence if min_persistence is not None else [0. for _ in range(len(self.dimensions))]\n         self.hcf = homology_coeff_field\n         assert len(self.min_persistence) == len(self.dimensions)\n         \n     def call(self, X):\n         \"\"\"\n         Compute Rips persistence diagram associated to a point cloud\n \n         Parameters:   \n             X (TensorFlow variable): point cloud of shape [number of points, number of dimensions]\n \n         Returns:\n             List[Tuple[tf.Tensor,tf.Tensor]]: List of Rips persistence diagrams. The length of this list is the same than that of dimensions, i.e., there is one persistence diagram per homology dimension provided in the input list dimensions. Moreover, the finite and essential parts of the persistence diagrams are provided separately: each element of this list is a tuple of size two that contains the finite and essential parts of the corresponding persistence diagram, of shapes [num_finite_points, 2] and [num_essential_points, 1] respectively\n         \"\"\"    \n         # Compute distance matrix\n         DX = tf.norm(tf.expand_dims(X, 1)-tf.expand_dims(X, 0), axis=2)\n         # Compute vertices associated to positive and negative simplices \n         # Don't compute gradient for this operation\n         indices = _Rips(DX.numpy(), self.max_edge, self.dimensions, self.hcf)\n         # Get persistence diagrams by simply picking the corresponding entries in the distance matrix\n         self.dgms = []\n         for idx_dim, dimension in enumerate(self.dimensions):\n             cur_idx = indices[idx_dim]\n             if dimension > 0:\n                 finite_dgm = tf.reshape(tf.gather_nd(DX, tf.reshape(cur_idx[0], [-1,2])), [-1,2])\n                 essential_dgm = tf.reshape(tf.gather_nd(DX, tf.reshape(cur_idx[1], [-1,2])), [-1,1])\n             else:\n                 reshaped_cur_idx = tf.reshape(cur_idx[0], [-1,3])\n                 finite_dgm = tf.concat([tf.zeros([reshaped_cur_idx.shape[0],1]), tf.reshape(tf.gather_nd(DX, reshaped_cur_idx[:,1:]), [-1,1])], axis=1)\n                 essential_dgm = tf.zeros([cur_idx[1].shape[0],1])\n             min_pers = self.min_persistence[idx_dim]\n             if min_pers >= 0:\n                 persistent_indices = tf.where(tf.math.abs(finite_dgm[:,1]-finite_dgm[:,0]) > min_pers)\n                 self.dgms.append((tf.reshape(tf.gather(finite_dgm, indices=persistent_indices),[-1,2]), essential_dgm))\n             else:\n                 self.dgms.append((finite_dgm, essential_dgm))\n         return self.dgms\n \n",
+              "additions": 1,
+              "deletions": 1,
+              "status": "modified"
+            }
+          ]
+        },
+        "id": "msg_eff608783001CTGaaFVhj34284",
+        "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "\"The library provides several custom TensorFlow layers that compute persistent homology for different filtrations (cubical, lower‑star simplex tree, Vietoris‑Rips, and various perslay weight and phi layers). These layers were originally instantiated by calling the base Keras Layer constructor with a `dynamic=True` argument. In recent TensorFlow releases this argument is no longer accepted, causing the construction of the layers to raise an exception and preventing any downstream model from being built. The required behavior is that a user can create any of these layers without error on both old and new TensorFlow versions, and that the layers continue to produce the same persistence diagrams and weight calculations as before.\n\nImplement the change by adjusting the constructors of all public TensorFlow layer classes so that they call the superclass initializer without specifying the `dynamic` flag. The default behavior of the base class should be used, which is compatible with all supported TensorFlow versions. No other functional changes are needed; the layers must still accept the same parameters, store them, and compute persistence diagrams, weight functions, and permutation‑invariant reductions exactly as they did previously. After the modification, creating an instance of any of these layers should succeed, and invoking the layer on appropriate input tensors should yield the same output shapes and values as before the fix.\n\nThe solution should be applied uniformly across all affected layer classes, ensuring that the library’s public API remains unchanged apart from the removal of the deprecated argument. This will restore compatibility with newer TensorFlow releases while preserving existing functionality for users performing topological data analysis within TensorFlow models.\"\n",
+          "id": "prt_eff608784001JKLpNTshDTYHnK",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff608783001CTGaaFVhj34284"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_eff608783001CTGaaFVhj34284",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 10715,
+          "input": 10582,
+          "output": 133,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1782400976928,
+          "completed": 1782400983982
+        },
+        "finish": "tool-calls",
+        "id": "msg_eff608820001ID5sbYpufN8tIt",
+        "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa"
+      },
+      "parts": [
+        {
+          "snapshot": "fa9db59e1a4c1e40b6d40bccf68ceaea796607c9",
+          "type": "step-start",
+          "id": "prt_eff60a1de001ju5sjo6jo0coNB",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff608820001ID5sbYpufN8tIt"
+        },
+        {
+          "type": "reasoning",
+          "text": "The user is asking me to fix a compatibility issue with TensorFlow layers in a library. The issue is that the `dynamic=True` argument is no longer accepted in recent TensorFlow releases when calling the base Keras Layer constructor.\n\nLet me first explore the codebase to find all the TensorFlow layer classes that need to be modified.\n",
+          "time": {
+            "start": 1782400983519,
+            "end": 1782400983537
+          },
+          "id": "prt_eff60a1df001Rx6YlEd1DOhSmM",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff608820001ID5sbYpufN8tIt"
+        },
+        {
+          "type": "text",
+          "text": "\n\nI'll help you fix the TensorFlow compatibility issue by removing the `dynamic=True` argument from the layer constructors. Let me first explore the codebase to find all affected layer classes.\n\n",
+          "time": {
+            "start": 1782400983538,
+            "end": 1782400983554
+          },
+          "id": "prt_eff60a1f2002UgnKuTNXC7EOhR",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff608820001ID5sbYpufN8tIt"
+        },
+        {
+          "type": "tool",
+          "tool": "glob",
+          "callID": "call_10c2bc9cf9074d0c8c0dc584",
+          "state": {
+            "status": "completed",
+            "input": {
+              "pattern": "**/*.py"
+            },
+            "output": "/workspace/src/python/gudhi/point_cloud/dtm.py\n/workspace/src/python/gudhi/point_cloud/timedelay.py\n/workspace/src/python/gudhi/point_cloud/__init__.py\n/workspace/src/python/gudhi/point_cloud/knn.py\n/workspace/src/python/gudhi/flag_filtration/edge_collapse.py\n/workspace/src/python/gudhi/flag_filtration/__init__.py\n/workspace/src/python/gudhi/sklearn/cubical_persistence.py\n/workspace/src/python/gudhi/sklearn/rips_persistence.py\n/workspace/src/python/gudhi/sklearn/__init__.py\n/workspace/src/python/gudhi/persistence_graphical_tools.py\n/workspace/src/python/gudhi/datasets/generators/__init__.py\n/workspace/src/python/gudhi/datasets/generators/points.py\n/workspace/src/python/gudhi/datasets/__init__.py\n/workspace/src/python/gudhi/datasets/remote.py\n/workspace/src/python/gudhi/weighted_rips_complex.py\n/workspace/src/python/gudhi/cover_complex.py\n/workspace/src/python/gudhi/dtm_rips_complex.py\n/workspace/src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py\n/workspace/src/python/gudhi/tensorflow/rips_layer.py\n/workspace/src/python/gudhi/tensorflow/__init__.py\n/workspace/src/python/gudhi/tensorflow/cubical_layer.py\n/workspace/src/python/gudhi/tensorflow/perslay.py\n/workspace/src/python/gudhi/wasserstein/wasserstein.py\n/workspace/src/python/gudhi/wasserstein/barycenter.py\n/workspace/src/python/gudhi/wasserstein/__init__.py\n/workspace/src/python/gudhi/representations/kernel_methods.py\n/workspace/src/python/gudhi/representations/metrics.py\n/workspace/src/python/gudhi/representations/vector_methods.py\n/workspace/src/python/gudhi/representations/preprocessing.py\n/workspace/src/python/gudhi/representations/__init__.py\n/workspace/src/python/gudhi/__init__.py\n/workspace/src/python/gudhi/clustering/tomato.py\n/workspace/src/python/gudhi/clustering/__init__.py\n/workspace/src/python/gudhi/_kepler_mapper.py\n/workspace/src/python/gudhi/hera/__init__.py\n/workspace/src/python/test/test_collapse_edges.py\n/workspace/src/python/test/test_knn.py\n/workspace/src/python/test/test_simplex_generators.py\n/workspace/src/python/test/test_cubical_complex.py\n/workspace/src/python/test/test_sklearn_cubical_persistence.py\n/workspace/src/python/test/test_dtm_rips_complex.py\n/workspace/src/python/test/test_wasserstein_with_tensors.py\n/workspace/src/python/test/test_wasserstein_distance.py\n/workspace/src/python/test/test_euclidean_witness_complex.py\n/workspace/src/python/test/test_wasserstein_barycenter.py\n/workspace/src/python/test/test_dtm.py\n/workspace/src/python/test/test_subsampling.py\n/workspace/src/python/test/test_betti_curve_representations.py\n/workspace/src/python/test/test_alpha_complex.py\n/workspace/src/python/test/test_perslay.py\n/workspace/src/python/test/test_representations_preprocessing.py\n/workspace/src/python/test/test_diff.py\n/workspace/src/python/test/test_bottleneck_distance.py\n/workspace/src/python/test/test_cover_complex.py\n/workspace/src/python/test/test_rips_complex.py\n/workspace/src/python/test/test_simplex_tree.py\n/workspace/src/python/test/test_datasets_generators.py\n/workspace/src/python/test/test_tangential_complex.py\n/workspace/src/python/test/test_simplex_tree_serialization.py\n/workspace/src/python/test/test_weighted_rips_complex.py\n/workspace/src/python/test/test_tomato.py\n/workspace/src/python/test/test_reader_utils.py\n/workspace/src/python/test/test_persistence_graphical_tools.py\n/workspace/src/python/test/test_off.py\n/workspace/src/python/test/test_witness_complex.py\n/workspace/src/python/test/test_remote_datasets.py\n/workspace/src/python/test/test_representations.py\n/workspace/src/python/test/test_sklearn_rips_persistence.py\n/workspace/src/python/test/test_time_delay.py\n/workspace/src/python/example/simplex_tree_example.py\n/workspace/src/python/example/witness_complex_from_nearest_landmark_table.py\n/workspace/src/python/example/diagram_vectorizations_distances_kernels.py\n/workspace/src/python/example/plot_alpha_complex.py\n/workspace/src/python/example/random_cubical_complex_persistence_example.py\n/workspace/src/python/example/plot_simplex_tree_dim012.py\n/workspace/src/python/example/euclidean_strong_witness_complex_diagram_persistence_from_off_file_example.py\n/workspace/src/python/example/plot_rips_complex.py\n/workspace/src/python/example/rips_persistence_diagram.py\n/workspace/src/python/example/alpha_complex_diagram_persistence_from_off_file_example.py\n/workspace/src/python/example/rips_complex_diagram_persistence_from_distance_matrix_file_example.py\n/workspace/src/python/example/rips_complex_diagram_persistence_from_off_file_example.py\n/workspace/src/python/example/alpha_complex_from_generated_points_on_sphere_example.py\n/workspace/src/python/example/euclidean_witness_complex_diagram_persistence_from_off_file_example.py\n/workspace/src/python/example/rips_complex_sklearn_itf.py\n/workspace/src/python/example/bottleneck_basic_example.py\n/workspace/src/python/example/coordinate_graph_induced_complex.py\n/workspace/src/python/example/voronoi_graph_induced_complex.py\n/workspace/src/python/example/rips_complex_from_points_example.py\n/workspace/src/python/example/periodic_cubical_complex_barcode_persistence_from_perseus_file_example.py\n/workspace/src/python/example/nerve_of_a_covering.py\n/workspace/src/python/example/tangential_complex_plain_homology_from_off_file_example.py\n/workspace/src/python/example/alpha_rips_persistence_bottleneck_distance.py\n/workspace/src/python/example/sparse_rips_persistence_diagram.py\n/workspace/src/python/example/gudhi_graphical_tools_example.py\n/workspace/src/python/example/alpha_complex_from_points_example.py\n/workspace/src/python/example/rips_complex_edge_collapse_example.py\n/workspace/src/python/example/rips_complex_diagram_persistence_from_correlation_matrix_file_example.py\n/workspace/src/python/example/cubical_complex_sklearn_itf.py\n/workspace/src/python/example/functional_graph_induced_complex.py\n/workspace/src/python/doc/conf.py\n\n(Results are truncated: showing first 100 results. Consider using a more specific path or pattern.)",
+            "metadata": {
+              "count": 100,
+              "truncated": true
+            },
+            "title": "",
+            "time": {
+              "start": 1782400983552,
+              "end": 1782400983881
+            }
+          },
+          "id": "prt_eff60a1fb001HjXFv2gQno2G8j",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff608820001ID5sbYpufN8tIt"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "fa9db59e1a4c1e40b6d40bccf68ceaea796607c9",
+          "type": "step-finish",
+          "tokens": {
+            "total": 10715,
+            "input": 10582,
+            "output": 133,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_eff60a34b001eLRgdBahCb1Wsl",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff608820001ID5sbYpufN8tIt"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_eff608783001CTGaaFVhj34284",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 12140,
+          "input": 11974,
+          "output": 166,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1782400983984,
+          "completed": 1782400988206
+        },
+        "finish": "tool-calls",
+        "id": "msg_eff60a3b00016SUNHSK507SnHN",
+        "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa"
+      },
+      "parts": [
+        {
+          "snapshot": "fa9db59e1a4c1e40b6d40bccf68ceaea796607c9",
+          "type": "step-start",
+          "id": "prt_eff60b3a5001OIkMx4f6BZ5AJ2",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60a3b00016SUNHSK507SnHN"
+        },
+        {
+          "type": "text",
+          "text": "\n\nLet me look at the TensorFlow layer files specifically:\n\n",
+          "time": {
+            "start": 1782400988071,
+            "end": 1782400988085
+          },
+          "id": "prt_eff60b3a70010zxrQDXR2hvKEO",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60a3b00016SUNHSK507SnHN"
+        },
+        {
+          "type": "tool",
+          "tool": "read",
+          "callID": "call_07d7fbde2d584d3aa9dd45e5",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/workspace/src/python/gudhi/tensorflow/cubical_layer.py"
+            },
+            "output": "<path>/workspace/src/python/gudhi/tensorflow/cubical_layer.py</path>\n<type>file</type>\n<content>\n1: import numpy               as np\n2: import tensorflow          as tf\n3: from ..cubical_complex  import CubicalComplex\n4: \n5: ######################\n6: # Cubical filtration #\n7: ######################\n8: \n9: # The parameters of the model are the pixel values.\n10: \n11: def _Cubical(Xflat, Xdim, dimensions, homology_coeff_field):\n12:     # Parameters: Xflat (flattened image),\n13:     #             Xdim (shape of non-flattened image)\n14:     #             dimensions (homology dimensions)\n15: \n16:     # Compute the persistence pairs with Gudhi\n17:     # We reverse the dimensions because CubicalComplex uses Fortran ordering\n18:     cc = CubicalComplex(dimensions=Xdim[::-1], top_dimensional_cells=Xflat)\n19:     cc.compute_persistence(homology_coeff_field=homology_coeff_field)\n20: \n21:     # Retrieve and output image indices/pixels corresponding to positive and negative simplices\n22:     cof_pp = cc.cofaces_of_persistence_pairs()\n23:     \n24:     L_cofs = []\n25:     for dim in dimensions:\n26: \n27:         try:\n28:             cof = cof_pp[0][dim]\n29:         except IndexError:\n30:             cof = np.array([])\n31: \n32:         L_cofs.append(np.array(cof, dtype=np.int32))\n33: \n34:     return L_cofs\n35: \n36: class CubicalLayer(tf.keras.layers.Layer):\n37:     \"\"\"\n38:     TensorFlow layer for computing the persistent homology of a cubical complex\n39:     \"\"\"\n40:     def __init__(self, homology_dimensions, min_persistence=None, homology_coeff_field=11, **kwargs):\n41:         \"\"\"\n42:         Constructor for the CubicalLayer class\n43: \n44:         Parameters:\n45:             homology_dimensions (List[int]): list of homology dimensions\n46:             min_persistence (List[float]): minimum distance-to-diagonal of the points in the output persistence diagrams (default None, in which case 0. is used for all dimensions)\n47:             homology_coeff_field (int): homology field coefficient. Must be a prime number. Default value is 11. Max is 46337.\n48:         \"\"\"\n49:         super().__init__(dynamic=True, **kwargs)\n50:         self.dimensions = homology_dimensions\n51:         self.min_persistence = min_persistence if min_persistence is not None else [0.] * len(self.dimensions)\n52:         self.hcf = homology_coeff_field\n53:         assert len(self.min_persistence) == len(self.dimensions)\n54: \n55:     def call(self, X):\n56:         \"\"\"\n57:         Compute persistence diagram associated to a cubical complex filtered by some pixel values \n58: \n59:         Parameters:\n60:             X (TensorFlow variable): pixel values of the cubical complex\n61: \n62:         Returns:\n63:             List[Tuple[tf.Tensor,tf.Tensor]]: List of cubical persistence diagrams. The length of this list is the same than that of dimensions, i.e., there is one persistence diagram per homology dimension provided in the input list dimensions. Moreover, the finite and essential parts of the persistence diagrams are provided separately: each element of this list is a tuple of size two that contains the finite and essential parts of the corresponding persistence diagram, of shapes [num_finite_points, 2] and [num_essential_points, 1] respectively. Note that the essential part is always empty in cubical persistence diagrams, except in homology dimension zero, where the essential part always contains a single point, with abscissa equal to the smallest value in the complex, and infinite ordinate\n64:         \"\"\"\n65:         # Compute pixels associated to positive and negative simplices \n66:         # Don't compute gradient for this operation\n67:         Xflat = tf.reshape(X, [-1])\n68:         Xdim, Xflat_numpy = X.shape, Xflat.numpy()\n69:         indices_list = _Cubical(Xflat_numpy, Xdim, self.dimensions, self.hcf)\n70:         index_essential = np.argmin(Xflat_numpy) # index of minimum pixel value for essential persistence diagram\n71:         # Get persistence diagram by simply picking the corresponding entries in the image\n72:         self.dgms = []\n73:         for idx_dim, dimension in enumerate(self.dimensions):\n74:             finite_dgm = tf.reshape(tf.gather(Xflat, indices_list[idx_dim]), [-1,2])\n75:             essential_dgm = tf.reshape(tf.gather(Xflat, index_essential), [-1,1]) if dimension == 0 else tf.zeros([0, 1])\n76:             min_pers = self.min_persistence[idx_dim]\n77:             if min_pers >= 0:\n78:                 persistent_indices = tf.where(tf.math.abs(finite_dgm[:,1]-finite_dgm[:,0]) > min_pers)\n79:                 self.dgms.append((tf.reshape(tf.gather(finite_dgm, indices=persistent_indices), [-1,2]), essential_dgm))\n80:             else:\n81:                 self.dgms.append((finite_dgm, essential_dgm))\n82:         return self.dgms\n\n(End of file - total 82 lines)\n</content>",
+            "metadata": {
+              "preview": "import numpy               as np\nimport tensorflow          as tf\nfrom ..cubical_complex  import CubicalComplex\n\n######################\n# Cubical filtration #\n######################\n\n# The parameters of the model are the pixel values.\n\ndef _Cubical(Xflat, Xdim, dimensions, homology_coeff_field):\n    # Parameters: Xflat (flattened image),\n    #             Xdim (shape of non-flattened image)\n    #             dimensions (homology dimensions)\n\n    # Compute the persistence pairs with Gudhi\n    # We reverse the dimensions because CubicalComplex uses Fortran ordering\n    cc = CubicalComplex(dimensions=Xdim[::-1], top_dimensional_cells=Xflat)\n    cc.compute_persistence(homology_coeff_field=homology_coeff_field)\n",
+              "truncated": false,
+              "loaded": []
+            },
+            "title": "src/python/gudhi/tensorflow/cubical_layer.py",
+            "time": {
+              "start": 1782400988077,
+              "end": 1782400988096
+            }
+          },
+          "id": "prt_eff60b3aa001RSCJkK36914AOZ",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60a3b00016SUNHSK507SnHN"
+        },
+        {
+          "type": "tool",
+          "tool": "read",
+          "callID": "call_734dcf2162fc4b4284505ae5",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/workspace/src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py"
+            },
+            "output": "<path>/workspace/src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py</path>\n<type>file</type>\n<content>\n1: import numpy               as np\n2: import tensorflow          as tf\n3: \n4: #########################################\n5: # Lower star filtration on simplex tree #\n6: #########################################\n7: \n8: # The parameters of the model are the vertex function values of the simplex tree.\n9: \n10: def _LowerStarSimplexTree(simplextree, filtration, dimensions, homology_coeff_field, persistence_dim_max):\n11:     # Parameters: simplextree (simplex tree on which to compute persistence)\n12:     #             filtration (function values on the vertices of st),\n13:     #             dimensions (homology dimensions),\n14:     #             homology_coeff_field (homology field coefficient)\n15:     \n16:     simplextree.reset_filtration(-np.inf, 0)\n17: \n18:     # Assign new filtration values\n19:     for i in range(simplextree.num_vertices()):\n20:         simplextree.assign_filtration([i], filtration[i])\n21:     simplextree.make_filtration_non_decreasing()\n22:     \n23:     # Compute persistence diagram\n24:     simplextree.compute_persistence(homology_coeff_field=homology_coeff_field, persistence_dim_max=persistence_dim_max)\n25:     \n26:     # Get vertex pairs for optimization. First, get all simplex pairs\n27:     pairs = simplextree.lower_star_persistence_generators()\n28:     \n29:     L_indices = []\n30:     for dimension in dimensions:\n31:     \n32:         finite_pairs = pairs[0][dimension] if len(pairs[0]) >= dimension+1 else np.empty(shape=[0,2])\n33:         essential_pairs = pairs[1][dimension] if len(pairs[1]) >= dimension+1 else np.empty(shape=[0,1])\n34:         \n35:         finite_indices = np.array(finite_pairs.flatten(), dtype=np.int32)\n36:         essential_indices = np.array(essential_pairs.flatten(), dtype=np.int32)\n37: \n38:         L_indices.append((finite_indices, essential_indices))\n39: \n40:     return L_indices\n41: \n42: class LowerStarSimplexTreeLayer(tf.keras.layers.Layer):\n43:     \"\"\"\n44:     TensorFlow layer for computing lower-star persistence out of a simplex tree\n45:     \"\"\"\n46:     def __init__(self, simplextree, homology_dimensions, min_persistence=None, homology_coeff_field=11, persistence_dim_max=False, **kwargs):\n47:         \"\"\"\n48:         Constructor for the LowerStarSimplexTreeLayer class\n49:   \n50:         Parameters:\n51:             simplextree (gudhi.SimplexTree): underlying simplex tree. Its vertices MUST be named with integers from 0 to n-1, where n is its number of vertices. Note that its filtration values are modified in each call of the class.\n52:             homology_dimensions (List[int]): list of homology dimensions\n53:             min_persistence (List[float]): minimum distance-to-diagonal of the points in the output persistence diagrams (default None, in which case 0. is used for all dimensions)\n54:             homology_coeff_field (int): homology field coefficient. Must be a prime number. Default value is 11. Max is 46337.\n55:             persistence_dim_max (bool): if true, the persistent homology for the maximal dimension in the simplex tree is computed. If false, it is ignored. Default is false.\n56:         \"\"\"\n57:         super().__init__(dynamic=True, **kwargs)\n58:         self.dimensions  = homology_dimensions\n59:         self.simplextree = simplextree\n60:         self.min_persistence = min_persistence if min_persistence is not None else [0. for _ in range(len(self.dimensions))]\n61:         self.hcf = homology_coeff_field\n62:         self.pdm = persistence_dim_max\n63:         assert len(self.min_persistence) == len(self.dimensions)\n64: \n65:     def call(self, filtration):\n66:         \"\"\"\n67:         Compute lower-star persistence diagram associated to a function defined on the vertices of the simplex tree\n68: \n69:         Parameters:\n70:             F (TensorFlow variable): filter function values over the vertices of the simplex tree. The ith entry of F corresponds to vertex i in self.simplextree\n71: \n72:         Returns:\n73:             List[Tuple[tf.Tensor,tf.Tensor]]: List of lower-star persistence diagrams. The length of this list is the same than that of dimensions, i.e., there is one persistence diagram per homology dimension provided in the input list dimensions. Moreover, the finite and essential parts of the persistence diagrams are provided separately: each element of this list is a tuple of size two that contains the finite and essential parts of the corresponding persistence diagram, of shapes [num_finite_points, 2] and [num_essential_points, 1] respectively\n74:         \"\"\"\n75:         # Don't try to compute gradients for the vertex pairs\n76:         indices = _LowerStarSimplexTree(self.simplextree, filtration.numpy(), self.dimensions, self.hcf, self.pdm)\n77:         # Get persistence diagrams\n78:         self.dgms = []\n79:         for idx_dim, dimension in enumerate(self.dimensions):\n80:             finite_dgm = tf.reshape(tf.gather(filtration, indices[idx_dim][0]), [-1,2])\n81:             essential_dgm = tf.reshape(tf.gather(filtration, indices[idx_dim][1]), [-1,1])\n82:             min_pers = self.min_persistence[idx_dim]\n83:             if min_pers >= 0:\n84:                 persistent_indices = tf.where(tf.math.abs(finite_dgm[:,1]-finite_dgm[:,0]) > min_pers)\n85:                 self.dgms.append((tf.reshape(tf.gather(finite_dgm, indices=persistent_indices),[-1,2]), essential_dgm))\n86:             else:\n87:                 self.dgms.append((finite_dgm, essential_dgm))\n88:         return self.dgms\n89: \n\n(End of file - total 89 lines)\n</content>",
+            "metadata": {
+              "preview": "import numpy               as np\nimport tensorflow          as tf\n\n#########################################\n# Lower star filtration on simplex tree #\n#########################################\n\n# The parameters of the model are the vertex function values of the simplex tree.\n\ndef _LowerStarSimplexTree(simplextree, filtration, dimensions, homology_coeff_field, persistence_dim_max):\n    # Parameters: simplextree (simplex tree on which to compute persistence)\n    #             filtration (function values on the vertices of st),\n    #             dimensions (homology dimensions),\n    #             homology_coeff_field (homology field coefficient)\n    \n    simplextree.reset_filtration(-np.inf, 0)\n\n    # Assign new filtration values\n    for i in range(simplextree.num_vertices()):\n        simplextree.assign_filtration([i], filtration[i])",
+              "truncated": false,
+              "loaded": []
+            },
+            "title": "src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py",
+            "time": {
+              "start": 1782400988079,
+              "end": 1782400988097
+            }
+          },
+          "id": "prt_eff60b3ae001xgnmmwKeWhonEB",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60a3b00016SUNHSK507SnHN"
+        },
+        {
+          "type": "tool",
+          "tool": "read",
+          "callID": "call_c9e337a823204852ac920337",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/workspace/src/python/gudhi/tensorflow/rips_layer.py"
+            },
+            "output": "<path>/workspace/src/python/gudhi/tensorflow/rips_layer.py</path>\n<type>file</type>\n<content>\n1: import numpy               as np\n2: import tensorflow          as tf\n3: from ..rips_complex     import RipsComplex\n4: \n5: ############################\n6: # Vietoris-Rips filtration #\n7: ############################\n8: \n9: # The parameters of the model are the point coordinates.\n10: \n11: def _Rips(DX, max_edge, dimensions, homology_coeff_field):\n12:     # Parameters: DX (distance matrix), \n13:     #             max_edge (maximum edge length for Rips filtration), \n14:     #             dimensions (homology dimensions)\n15: \n16:     # Compute the persistence pairs with Gudhi\n17:     rc = RipsComplex(distance_matrix=DX, max_edge_length=max_edge)\n18:     st = rc.create_simplex_tree(max_dimension=max(dimensions)+1)\n19:     st.compute_persistence(homology_coeff_field=homology_coeff_field)\n20:     pairs = st.flag_persistence_generators()\n21: \n22:     L_indices = []\n23:     for dimension in dimensions:\n24: \n25:         if dimension == 0:\n26:             finite_pairs = pairs[0]\n27:             essential_pairs = pairs[2]\n28:         else:\n29:             finite_pairs = pairs[1][dimension-1] if len(pairs[1]) >= dimension else np.empty(shape=[0,4])\n30:             essential_pairs = pairs[3][dimension-1] if len(pairs[3]) >= dimension else np.empty(shape=[0,2])\n31:         \n32:         finite_indices = np.array(finite_pairs.flatten(), dtype=np.int32)\n33:         essential_indices = np.array(essential_pairs.flatten(), dtype=np.int32)\n34: \n35:         L_indices.append((finite_indices, essential_indices))\n36: \n37:     return L_indices\n38: \n39: class RipsLayer(tf.keras.layers.Layer):\n40:     \"\"\"\n41:     TensorFlow layer for computing Rips persistence out of a point cloud\n42:     \"\"\"\n43:     def __init__(self, homology_dimensions, maximum_edge_length=np.inf, min_persistence=None, homology_coeff_field=11, **kwargs):\n44:         \"\"\"\n45:         Constructor for the RipsLayer class\n46: \n47:         Parameters:\n48:             maximum_edge_length (float): maximum edge length for the Rips complex \n49:             homology_dimensions (List[int]): list of homology dimensions\n50:             min_persistence (List[float]): minimum distance-to-diagonal of the points in the output persistence diagrams (default None, in which case 0. is used for all dimensions)\n51:             homology_coeff_field (int): homology field coefficient. Must be a prime number. Default value is 11. Max is 46337.\n52:         \"\"\"\n53:         super().__init__(dynamic=True, **kwargs)\n54:         self.max_edge = maximum_edge_length\n55:         self.dimensions = homology_dimensions\n56:         self.min_persistence = min_persistence if min_persistence is not None else [0. for _ in range(len(self.dimensions))]\n57:         self.hcf = homology_coeff_field\n58:         assert len(self.min_persistence) == len(self.dimensions)\n59:         \n60:     def call(self, X):\n61:         \"\"\"\n62:         Compute Rips persistence diagram associated to a point cloud\n63: \n64:         Parameters:   \n65:             X (TensorFlow variable): point cloud of shape [number of points, number of dimensions]\n66: \n67:         Returns:\n68:             List[Tuple[tf.Tensor,tf.Tensor]]: List of Rips persistence diagrams. The length of this list is the same than that of dimensions, i.e., there is one persistence diagram per homology dimension provided in the input list dimensions. Moreover, the finite and essential parts of the persistence diagrams are provided separately: each element of this list is a tuple of size two that contains the finite and essential parts of the corresponding persistence diagram, of shapes [num_finite_points, 2] and [num_essential_points, 1] respectively\n69:         \"\"\"    \n70:         # Compute distance matrix\n71:         DX = tf.norm(tf.expand_dims(X, 1)-tf.expand_dims(X, 0), axis=2)\n72:         # Compute vertices associated to positive and negative simplices \n73:         # Don't compute gradient for this operation\n74:         indices = _Rips(DX.numpy(), self.max_edge, self.dimensions, self.hcf)\n75:         # Get persistence diagrams by simply picking the corresponding entries in the distance matrix\n76:         self.dgms = []\n77:         for idx_dim, dimension in enumerate(self.dimensions):\n78:             cur_idx = indices[idx_dim]\n79:             if dimension > 0:\n80:                 finite_dgm = tf.reshape(tf.gather_nd(DX, tf.reshape(cur_idx[0], [-1,2])), [-1,2])\n81:                 essential_dgm = tf.reshape(tf.gather_nd(DX, tf.reshape(cur_idx[1], [-1,2])), [-1,1])\n82:             else:\n83:                 reshaped_cur_idx = tf.reshape(cur_idx[0], [-1,3])\n84:                 finite_dgm = tf.concat([tf.zeros([reshaped_cur_idx.shape[0],1]), tf.reshape(tf.gather_nd(DX, reshaped_cur_idx[:,1:]), [-1,1])], axis=1)\n85:                 essential_dgm = tf.zeros([cur_idx[1].shape[0],1])\n86:             min_pers = self.min_persistence[idx_dim]\n87:             if min_pers >= 0:\n88:                 persistent_indices = tf.where(tf.math.abs(finite_dgm[:,1]-finite_dgm[:,0]) > min_pers)\n89:                 self.dgms.append((tf.reshape(tf.gather(finite_dgm, indices=persistent_indices),[-1,2]), essential_dgm))\n90:             else:\n91:                 self.dgms.append((finite_dgm, essential_dgm))\n92:         return self.dgms\n93: \n\n(End of file - total 93 lines)\n</content>",
+            "metadata": {
+              "preview": "import numpy               as np\nimport tensorflow          as tf\nfrom ..rips_complex     import RipsComplex\n\n############################\n# Vietoris-Rips filtration #\n############################\n\n# The parameters of the model are the point coordinates.\n\ndef _Rips(DX, max_edge, dimensions, homology_coeff_field):\n    # Parameters: DX (distance matrix), \n    #             max_edge (maximum edge length for Rips filtration), \n    #             dimensions (homology dimensions)\n\n    # Compute the persistence pairs with Gudhi\n    rc = RipsComplex(distance_matrix=DX, max_edge_length=max_edge)\n    st = rc.create_simplex_tree(max_dimension=max(dimensions)+1)\n    st.compute_persistence(homology_coeff_field=homology_coeff_field)\n    pairs = st.flag_persistence_generators()",
+              "truncated": false,
+              "loaded": []
+            },
+            "title": "src/python/gudhi/tensorflow/rips_layer.py",
+            "time": {
+              "start": 1782400988082,
+              "end": 1782400988098
+            }
+          },
+          "id": "prt_eff60b3b00025QqSJRXpL9nRyI",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60a3b00016SUNHSK507SnHN"
+        },
+        {
+          "type": "tool",
+          "tool": "read",
+          "callID": "call_31fa603f797145e2ab895d9e",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/workspace/src/python/gudhi/tensorflow/perslay.py"
+            },
+            "output": "<path>/workspace/src/python/gudhi/tensorflow/perslay.py</path>\n<type>file</type>\n<content>\n1: # This file is part of the Gudhi Library - https://gudhi.inria.fr/ - which is released under MIT.\n2: # See file LICENSE or go to https://gudhi.inria.fr/licensing/ for full license details.\n3: # Author(s):       Mathieu Carrière\n4: #\n5: # Copyright (C) 2021 Inria\n6: #\n7: # Modification(s):\n8: #   - YYYY/MM Author: Description of the modification\n9: \n10: import tensorflow as tf\n11: import math\n12: \n13: class GridPerslayWeight(tf.keras.layers.Layer):\n14:     \"\"\"\n15:     This is a class for computing a differentiable weight function for persistence diagram points. This function is defined from an array that contains its values on a 2D grid.\n16:     \"\"\"\n17:     def __init__(self, grid, grid_bnds, **kwargs):\n18:         \"\"\"\n19:         Constructor for the GridPerslayWeight class.\n20:   \n21:         Parameters:\n22:             grid (n x n numpy array): grid of values.\n23:             grid_bnds (2 x 2 numpy array): boundaries of the grid, of the form [[min_x, max_x], [min_y, max_y]].\n24:         \"\"\"\n25:         super().__init__(dynamic=True, **kwargs)\n26:         self.grid = tf.Variable(initial_value=grid, trainable=True)\n27:         self.grid_bnds = grid_bnds\n28:     \n29:     def build(self, input_shape):\n30:         return self\n31: \n32:     def call(self, diagrams):\n33:         \"\"\"\n34:         Apply GridPerslayWeight on a ragged tensor containing a list of persistence diagrams.\n35: \n36:         Parameters:\n37:             diagrams (n x None x 2): ragged tensor containing n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n38: \n39:         Returns:\n40:             weight (n x None): ragged tensor containing the weights of the points in the n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n41:         \"\"\"\n42:         grid_shape = self.grid.shape\n43:         indices = []\n44:         for dim in range(2):\n45:             [m,M] = self.grid_bnds[dim]\n46:             coords = tf.expand_dims(diagrams[:,:,dim],-1)\n47:             ids = grid_shape[dim]*(coords-m)/(M-m)\n48:             indices.append(tf.cast(ids, tf.int32))\n49:         weight = tf.gather_nd(params=self.grid, indices=tf.concat(indices, axis=2))\n50:         return weight\n51:     \n52: class GaussianMixturePerslayWeight(tf.keras.layers.Layer):\n53:     \"\"\"\n54:     This is a class for computing a differentiable weight function for persistence diagram points. This function is defined from a mixture of Gaussian functions.\n55:     \"\"\"\n56:     def __init__(self, gaussians, **kwargs):\n57:         \"\"\"\n58:         Constructor for the GridPerslayWeight class.\n59:   \n60:         Parameters:\n61:             gaussians (4 x n numpy array): parameters of the n Gaussian functions, of the form transpose([[mu_x^1, mu_y^1, sigma_x^1, sigma_y^1], ..., [mu_x^n, mu_y^n, sigma_x^n, sigma_y^n]]). \n62:         \"\"\"\n63:         super().__init__(dynamic=True, **kwargs)\n64:         self.W = tf.Variable(initial_value=gaussians, trainable=True)\n65: \n66:     def build(self, input_shape):\n67:         return self\n68:         \n69:     def call(self, diagrams):\n70:         \"\"\"\n71:         Apply GaussianMixturePerslayWeight on a ragged tensor containing a list of persistence diagrams.\n72: \n73:         Parameters:\n74:             diagrams (n x None x 2): ragged tensor containing n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n75: \n76:         Returns:\n77:             weight (n x None): ragged tensor containing the weights of the points in the n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n78:         \"\"\"\n79:         means     = tf.expand_dims(tf.expand_dims(self.W[:2,:],0),0)\n80:         variances = tf.expand_dims(tf.expand_dims(self.W[2:,:],0),0)\n81:         diagrams  = tf.expand_dims(diagrams, -1)\n82:         dists     = tf.math.multiply(tf.math.square(diagrams-means), 1/tf.math.square(variances))\n83:         weight    = tf.math.reduce_sum(tf.math.exp(tf.math.reduce_sum(-dists, axis=2)), axis=2)\n84:         return weight\n85:     \n86: class PowerPerslayWeight(tf.keras.layers.Layer):\n87:     \"\"\"\n88:     This is a class for computing a differentiable weight function for persistence diagram points. This function is defined as a constant multiplied by the distance to the diagonal of the persistence diagram point raised to some power.\n89:     \"\"\"\n90:     def __init__(self, constant, power, **kwargs):\n91:         \"\"\"\n92:         Constructor for the PowerPerslayWeight class.\n93:   \n94:         Parameters:\n95:             constant (float): constant value.\n96:             power (float): power applied to the distance to the diagonal. \n97:         \"\"\"\n98:         super().__init__(dynamic=True, **kwargs)\n99:         self.constant = tf.Variable(initial_value=constant, trainable=True)\n100:         self.power = power\n101:         \n102:     def build(self, input_shape):\n103:         return self\n104:     \n105:     def call(self, diagrams):\n106:         \"\"\"\n107:         Apply PowerPerslayWeight on a ragged tensor containing a list of persistence diagrams.\n108: \n109:         Parameters:\n110:             diagrams (n x None x 2): ragged tensor containing n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n111: \n112:         Returns:\n113:             weight (n x None): ragged tensor containing the weights of the points in the n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n114:         \"\"\"\n115:         weight = self.constant * tf.math.pow(tf.math.abs(diagrams[:,:,1]-diagrams[:,:,0]), self.power)\n116:         return weight\n117:     \n118: \n119: class GaussianPerslayPhi(tf.keras.layers.Layer):\n120:     \"\"\"\n121:     This is a class for computing a transformation function for persistence diagram points. This function turns persistence diagram points into 2D Gaussian functions centered on the points, that are then evaluated on a regular 2D grid.\n122:     \"\"\"\n123:     def __init__(self, image_size, image_bnds, variance, **kwargs):\n124:         \"\"\"\n125:         Constructor for the GaussianPerslayPhi class.\n126:   \n127:         Parameters:\n128:             image_size (int numpy array): number of grid elements on each grid axis, of the form [n_x, n_y].\n129:             image_bnds (2 x 2 numpy array): boundaries of the grid, of the form [[min_x, max_x], [min_y, max_y]].\n130:             variance (float): variance of the Gaussian functions. \n131:         \"\"\"\n132:         super().__init__(dynamic=True, **kwargs)\n133:         self.image_size = image_size\n134:         self.image_bnds = image_bnds\n135:         self.variance   = tf.Variable(initial_value=variance, trainable=True)\n136:         \n137:     def build(self, input_shape):\n138:         return self\n139:         \n140:     def call(self, diagrams):\n141:         \"\"\"\n142:         Apply GaussianPerslayPhi on a ragged tensor containing a list of persistence diagrams.\n143: \n144:         Parameters:\n145:             diagrams (n x None x 2): ragged tensor containing n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n146: \n147:         Returns:\n148:             output (n x None x image_size x image_size x 1): ragged tensor containing the evaluations on the 2D grid of the 2D Gaussian functions corresponding to the persistence diagram points, in the form of a 2D image with 1 channel that can be processed with, e.g., convolutional layers. The second dimension is ragged since persistence diagrams can have different numbers of points.\n149:             output_shape (int numpy array): shape of the output tensor.\n150:         \"\"\"\n151:         diagrams_d = tf.concat([diagrams[:,:,0:1], diagrams[:,:,1:2]-diagrams[:,:,0:1]], axis=2)\n152:         step = [(self.image_bnds[i][1]-self.image_bnds[i][0])/self.image_size[i] for i in range(2)]\n153:         coords = [tf.range(self.image_bnds[i][0], self.image_bnds[i][1], step[i]) for i in range(2)]\n154:         M = tf.meshgrid(*coords)\n155:         mu = tf.concat([tf.expand_dims(tens, 0) for tens in M], axis=0)\n156:         for _ in range(2):\n157:             diagrams_d = tf.expand_dims(diagrams_d,-1)\n158:         dists = tf.math.square(diagrams_d-mu) / (2*tf.math.square(self.variance))\n159:         gauss = tf.math.exp(tf.math.reduce_sum(-dists, axis=2)) / (2*math.pi*tf.math.square(self.variance))\n160:         output = tf.expand_dims(gauss,-1)\n161:         output_shape = M[0].shape + tuple([1])\n162:         return output, output_shape\n163:      \n164: class TentPerslayPhi(tf.keras.layers.Layer):\n165:     \"\"\"\n166:     This is a class for computing a transformation function for persistence diagram points. This function turns persistence diagram points into 1D tent functions (linearly increasing on the first half of the bar corresponding to the point from zero to half of the bar length, linearly decreasing on the second half and zero elsewhere) centered on the points, that are then evaluated on a regular 1D grid.\n167:     \"\"\"\n168:     def __init__(self, samples, **kwargs):\n169:         \"\"\"\n170:         Constructor for the GaussianPerslayPhi class.\n171:   \n172:         Parameters:\n173:             samples (float numpy array): grid elements on which to evaluate the tent functions, of the form [x_1, ..., x_n].\n174:         \"\"\"\n175:         super().__init__(dynamic=True, **kwargs)\n176:         self.samples   = tf.Variable(initial_value=samples, trainable=True)\n177:         \n178:     def build(self, input_shape):\n179:         return self\n180:         \n181:     def call(self, diagrams):\n182:         \"\"\"\n183:         Apply TentPerslayPhi on a ragged tensor containing a list of persistence diagrams.\n184: \n185:         Parameters:\n186:             diagrams (n x None x 2): ragged tensor containing n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n187: \n188:         Returns:\n189:             output (n x None x num_samples): ragged tensor containing the evaluations on the 1D grid of the 1D tent functions corresponding to the persistence diagram points. The second dimension is ragged since persistence diagrams can have different numbers of points.\n190:             output_shape (int numpy array): shape of the output tensor.\n191:         \"\"\"\n192:         samples_d = tf.expand_dims(tf.expand_dims(self.samples,0),0)\n193:         xs, ys = diagrams[:,:,0:1], diagrams[:,:,1:2]\n194:         output = tf.math.maximum(.5*(ys-xs) - tf.math.abs(samples_d-.5*(ys+xs)), tf.constant([0.]))\n195:         output_shape = self.samples.shape\n196:         return output, output_shape\n197:     \n198: class FlatPerslayPhi(tf.keras.layers.Layer):\n199:     \"\"\"\n200:     This is a class for computing a transformation function for persistence diagram points. This function turns persistence diagram points into 1D constant functions (that evaluate to half of the bar length on the bar corresponding to the point and zero elsewhere), that are then evaluated on a regular 1D grid.\n201:     \"\"\"\n202:     def __init__(self, samples, theta, **kwargs):\n203:         \"\"\"\n204:         Constructor for the FlatPerslayPhi class.\n205:   \n206:         Parameters:\n207:             samples (float numpy array): grid elements on which to evaluate the constant functions, of the form [x_1, ..., x_n].\n208:             theta (float): sigmoid parameter used to approximate the constant function with a differentiable sigmoid function. The bigger the theta, the closer to a constant function the output will be. \n209:         \"\"\"\n210:         super().__init__(dynamic=True, **kwargs)\n211:         self.samples = tf.Variable(initial_value=samples, trainable=True)\n212:         self.theta   = tf.Variable(initial_value=theta,   trainable=True)\n213:         \n214:     def build(self, input_shape):\n215:         return self\n216:         \n217:     def call(self, diagrams):\n218:         \"\"\"\n219:         Apply FlatPerslayPhi on a ragged tensor containing a list of persistence diagrams.\n220: \n221:         Parameters:\n222:             diagrams (n x None x 2): ragged tensor containing n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n223: \n224:         Returns:\n225:             output (n x None x num_samples): ragged tensor containing the evaluations on the 1D grid of the 1D constant functions corresponding to the persistence diagram points. The second dimension is ragged since persistence diagrams can have different numbers of points.\n226:             output_shape (int numpy array): shape of the output tensor.\n227:         \"\"\"\n228:         samples_d = tf.expand_dims(tf.expand_dims(self.samples,0),0)\n229:         xs, ys = diagrams[:,:,0:1], diagrams[:,:,1:2]\n230:         output = 1./(1.+tf.math.exp(-self.theta*(.5*(ys-xs)-tf.math.abs(samples_d-.5*(ys+xs)))))\n231:         output_shape = self.samples.shape\n232:         return output, output_shape\n233: \n234: class Perslay(tf.keras.layers.Layer):\n235:     \"\"\"\n236:     This is a TensorFlow layer for vectorizing persistence diagrams in a differentiable way within a neural network. This function implements the PersLay equation, see `the corresponding article <http://proceedings.mlr.press/v108/carriere20a.html>`_.\n237:     \"\"\"\n238:     def __init__(self, weight, phi, perm_op, rho, **kwargs):\n239:         \"\"\"\n240:         Constructor for the Perslay class.\n241: \n242:         Parameters:\n243:             weight (function): weight function for the persistence diagram points. Can be either :class:`~gudhi.tensorflow.perslay.GridPerslayWeight`, :class:`~gudhi.tensorflow.perslay.GaussianMixturePerslayWeight`, :class:`~gudhi.tensorflow.perslay.PowerPerslayWeight`, or a custom TensorFlow function that takes persistence diagrams as argument (represented as an (n x None x 2) ragged tensor, where n is the number of diagrams).\n244:             phi (function): transformation function for the persistence diagram points. Can be either :class:`~gudhi.tensorflow.perslay.GaussianPerslayPhi`, :class:`~gudhi.tensorflow.perslay.TentPerslayPhi`, :class:`~gudhi.tensorflow.perslay.FlatPerslayPhi`, or a custom TensorFlow class (that can have trainable parameters) with a method `call` that takes persistence diagrams as argument (represented as an (n x None x 2) ragged tensor, where n is the number of diagrams).\n245:             perm_op (function): permutation invariant function, such as `tf.math.reduce_sum`, `tf.math.reduce_mean`, `tf.math.reduce_max`, `tf.math.reduce_min`, or a custom TensorFlow function that takes two arguments: a tensor and an axis on which to apply the permutation invariant operation. If perm_op is the string \"topk\" (where k is a number), this function will be computed as `tf.math.top_k` with parameter `int(k)`.\n246:             rho (function): postprocessing function that is applied after the permutation invariant operation. Can be any TensorFlow layer.\n247:         \"\"\"\n248:         super().__init__(dynamic=True, **kwargs)\n249:         self.weight  = weight\n250:         self.phi     = phi\n251:         self.perm_op = perm_op  \n252:         self.rho     = rho\n253: \n254:     def build(self, input_shape):\n255:         return self\n256: \n257:     def call(self, diagrams):\n258:         \"\"\"\n259:         Apply Perslay on a ragged tensor containing a list of persistence diagrams.\n260: \n261:         Parameters:\n262:             diagrams (n x None x 2): ragged tensor containing n persistence diagrams. The second dimension is ragged since persistence diagrams can have different numbers of points.\n263: \n264:         Returns:\n265:             vector (n x output_shape): tensor containing the vectorizations of the persistence diagrams.\n266:         \"\"\"\n267:         vector, dim = self.phi(diagrams)\n268:         weight = self.weight(diagrams)\n269:         for _ in range(len(dim)):\n270:             weight = tf.expand_dims(weight, -1)\n271:         vector = tf.math.multiply(vector, weight)\n272:           \n273:         permop = self.perm_op\n274:         if type(permop) == str and permop[:3] == 'top':\n275:             k = int(permop[3:])\n276:             vector = vector.to_tensor(default_value=-1e10)\n277:             vector = tf.math.top_k(tf.transpose(vector, perm=[0, 2, 1]), k=k).values\n278:             vector = tf.reshape(vector, [-1,k*dim[0]])\n279:         else:\n280:             vector = permop(vector, axis=1)\n281: \n282:         vector = self.rho(vector)\n283:             \n284:         return vector\n\n(End of file - total 284 lines)\n</content>",
+            "metadata": {
+              "preview": "# This file is part of the Gudhi Library - https://gudhi.inria.fr/ - which is released under MIT.\n# See file LICENSE or go to https://gudhi.inria.fr/licensing/ for full license details.\n# Author(s):       Mathieu Carrière\n#\n# Copyright (C) 2021 Inria\n#\n# Modification(s):\n#   - YYYY/MM Author: Description of the modification\n\nimport tensorflow as tf\nimport math\n\nclass GridPerslayWeight(tf.keras.layers.Layer):\n    \"\"\"\n    This is a class for computing a differentiable weight function for persistence diagram points. This function is defined from an array that contains its values on a 2D grid.\n    \"\"\"\n    def __init__(self, grid, grid_bnds, **kwargs):\n        \"\"\"\n        Constructor for the GridPerslayWeight class.\n  ",
+              "truncated": false,
+              "loaded": []
+            },
+            "title": "src/python/gudhi/tensorflow/perslay.py",
+            "time": {
+              "start": 1782400988084,
+              "end": 1782400988099
+            }
+          },
+          "id": "prt_eff60b3b3001fjUuUOPZnQkbGz",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60a3b00016SUNHSK507SnHN"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "fa9db59e1a4c1e40b6d40bccf68ceaea796607c9",
+          "type": "step-finish",
+          "tokens": {
+            "total": 12140,
+            "input": 11974,
+            "output": 166,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_eff60b3c4001t5M49PrBoeBKbW",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60a3b00016SUNHSK507SnHN"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_eff608783001CTGaaFVhj34284",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 21732,
+          "input": 21163,
+          "output": 569,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1782400988208,
+          "completed": 1782400997191
+        },
+        "finish": "tool-calls",
+        "id": "msg_eff60b430001UMg1RGGBKEoP97",
+        "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa"
+      },
+      "parts": [
+        {
+          "snapshot": "fa9db59e1a4c1e40b6d40bccf68ceaea796607c9",
+          "type": "step-start",
+          "id": "prt_eff60d6970011vlf1Y1RA2G1uV",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60b430001UMg1RGGBKEoP97"
+        },
+        {
+          "type": "text",
+          "text": "\n\nNow I can see all the TensorFlow layer classes that use `dynamic=True`. I found the following classes that need to be fixed:\n\n1. **cubical_layer.py**: `CubicalLayer` (line 49)\n2. **lower_star_simplex_tree_layer.py**: `LowerStarSimplexTreeLayer` (line 57)\n3. **rips_layer.py**: `RipsLayer` (line 53)\n4. **perslay.py**: \n   - `GridPerslayWeight` (line 25)\n   - `GaussianMixturePerslayWeight` (line 64)\n   - `PowerPerslayWeight` (line 98)\n   - `GaussianPerslayPhi` (line 132)\n   - `TentPerslayPhi` (line 178)\n   - `FlatPerslayPhi` (line 210)\n   - `Perslay` (line 248)\n\nLet me fix all these files by removing the `dynamic=True` argument:\n\n",
+          "time": {
+            "start": 1782400997016,
+            "end": 1782400997070
+          },
+          "id": "prt_eff60d698001vjTi3RMqAbYLON",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60b430001UMg1RGGBKEoP97"
+        },
+        {
+          "type": "tool",
+          "tool": "edit",
+          "callID": "call_4f18a67468274651bbf4cd87",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/workspace/src/python/gudhi/tensorflow/cubical_layer.py",
+              "oldString": "        super().__init__(dynamic=True, **kwargs)",
+              "newString": "        super().__init__(**kwargs)"
+            },
+            "output": "Edit applied successfully.",
+            "metadata": {
+              "diagnostics": {},
+              "diff": "Index: /workspace/src/python/gudhi/tensorflow/cubical_layer.py\n===================================================================\n--- /workspace/src/python/gudhi/tensorflow/cubical_layer.py\n+++ /workspace/src/python/gudhi/tensorflow/cubical_layer.py\n@@ -45,9 +45,9 @@\n     homology_dimensions (List[int]): list of homology dimensions\n     min_persistence (List[float]): minimum distance-to-diagonal of the points in the output persistence diagrams (default None, in which case 0. is used for all dimensions)\n     homology_coeff_field (int): homology field coefficient. Must be a prime number. Default value is 11. Max is 46337.\n \"\"\"\n-super().__init__(dynamic=True, **kwargs)\n+super().__init__(**kwargs)\n self.dimensions = homology_dimensions\n self.min_persistence = min_persistence if min_persistence is not None else [0.] * len(self.dimensions)\n self.hcf = homology_coeff_field\n assert len(self.min_persistence) == len(self.dimensions)\n",
+              "filediff": {
+                "file": "/workspace/src/python/gudhi/tensorflow/cubical_layer.py",
+                "patch": "Index: /workspace/src/python/gudhi/tensorflow/cubical_layer.py\n===================================================================\n--- /workspace/src/python/gudhi/tensorflow/cubical_layer.py\n+++ /workspace/src/python/gudhi/tensorflow/cubical_layer.py\n@@ -45,9 +45,9 @@\n     homology_dimensions (List[int]): list of homology dimensions\n     min_persistence (List[float]): minimum distance-to-diagonal of the points in the output persistence diagrams (default None, in which case 0. is used for all dimensions)\n     homology_coeff_field (int): homology field coefficient. Must be a prime number. Default value is 11. Max is 46337.\n \"\"\"\n-super().__init__(dynamic=True, **kwargs)\n+super().__init__(**kwargs)\n self.dimensions = homology_dimensions\n self.min_persistence = min_persistence if min_persistence is not None else [0.] * len(self.dimensions)\n self.hcf = homology_coeff_field\n assert len(self.min_persistence) == len(self.dimensions)\n",
+                "additions": 1,
+                "deletions": 1
+              },
+              "truncated": false
+            },
+            "title": "src/python/gudhi/tensorflow/cubical_layer.py",
+            "time": {
+              "start": 1782400997082,
+              "end": 1782400997083
+            }
+          },
+          "id": "prt_eff60d6bf001MxDLYeDVeS3Uu4",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60b430001UMg1RGGBKEoP97"
+        },
+        {
+          "type": "tool",
+          "tool": "edit",
+          "callID": "call_2ce2dfbd1e904cc0b9f74ce8",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/workspace/src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py",
+              "oldString": "        super().__init__(dynamic=True, **kwargs)",
+              "newString": "        super().__init__(**kwargs)"
+            },
+            "output": "Edit applied successfully.",
+            "metadata": {
+              "diagnostics": {},
+              "diff": "Index: /workspace/src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py\n===================================================================\n--- /workspace/src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py\n+++ /workspace/src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py\n@@ -53,9 +53,9 @@\n     min_persistence (List[float]): minimum distance-to-diagonal of the points in the output persistence diagrams (default None, in which case 0. is used for all dimensions)\n     homology_coeff_field (int): homology field coefficient. Must be a prime number. Default value is 11. Max is 46337.\n     persistence_dim_max (bool): if true, the persistent homology for the maximal dimension in the simplex tree is computed. If false, it is ignored. Default is false.\n \"\"\"\n-super().__init__(dynamic=True, **kwargs)\n+super().__init__(**kwargs)\n self.dimensions  = homology_dimensions\n self.simplextree = simplextree\n self.min_persistence = min_persistence if min_persistence is not None else [0. for _ in range(len(self.dimensions))]\n self.hcf = homology_coeff_field\n",
+              "filediff": {
+                "file": "/workspace/src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py",
+                "patch": "Index: /workspace/src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py\n===================================================================\n--- /workspace/src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py\n+++ /workspace/src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py\n@@ -53,9 +53,9 @@\n     min_persistence (List[float]): minimum distance-to-diagonal of the points in the output persistence diagrams (default None, in which case 0. is used for all dimensions)\n     homology_coeff_field (int): homology field coefficient. Must be a prime number. Default value is 11. Max is 46337.\n     persistence_dim_max (bool): if true, the persistent homology for the maximal dimension in the simplex tree is computed. If false, it is ignored. Default is false.\n \"\"\"\n-super().__init__(dynamic=True, **kwargs)\n+super().__init__(**kwargs)\n self.dimensions  = homology_dimensions\n self.simplextree = simplextree\n self.min_persistence = min_persistence if min_persistence is not None else [0. for _ in range(len(self.dimensions))]\n self.hcf = homology_coeff_field\n",
+                "additions": 1,
+                "deletions": 1
+              },
+              "truncated": false
+            },
+            "title": "src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py",
+            "time": {
+              "start": 1782400997079,
+              "end": 1782400997081
+            }
+          },
+          "id": "prt_eff60d6c3001pMZD5G9fA5atOL",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60b430001UMg1RGGBKEoP97"
+        },
+        {
+          "type": "tool",
+          "tool": "edit",
+          "callID": "call_dcc008d2ea0f4beaa4815735",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/workspace/src/python/gudhi/tensorflow/rips_layer.py",
+              "oldString": "        super().__init__(dynamic=True, **kwargs)",
+              "newString": "        super().__init__(**kwargs)"
+            },
+            "output": "Edit applied successfully.",
+            "metadata": {
+              "diagnostics": {},
+              "diff": "Index: /workspace/src/python/gudhi/tensorflow/rips_layer.py\n===================================================================\n--- /workspace/src/python/gudhi/tensorflow/rips_layer.py\n+++ /workspace/src/python/gudhi/tensorflow/rips_layer.py\n@@ -49,9 +49,9 @@\n     homology_dimensions (List[int]): list of homology dimensions\n     min_persistence (List[float]): minimum distance-to-diagonal of the points in the output persistence diagrams (default None, in which case 0. is used for all dimensions)\n     homology_coeff_field (int): homology field coefficient. Must be a prime number. Default value is 11. Max is 46337.\n \"\"\"\n-super().__init__(dynamic=True, **kwargs)\n+super().__init__(**kwargs)\n self.max_edge = maximum_edge_length\n self.dimensions = homology_dimensions\n self.min_persistence = min_persistence if min_persistence is not None else [0. for _ in range(len(self.dimensions))]\n self.hcf = homology_coeff_field\n",
+              "filediff": {
+                "file": "/workspace/src/python/gudhi/tensorflow/rips_layer.py",
+                "patch": "Index: /workspace/src/python/gudhi/tensorflow/rips_layer.py\n===================================================================\n--- /workspace/src/python/gudhi/tensorflow/rips_layer.py\n+++ /workspace/src/python/gudhi/tensorflow/rips_layer.py\n@@ -49,9 +49,9 @@\n     homology_dimensions (List[int]): list of homology dimensions\n     min_persistence (List[float]): minimum distance-to-diagonal of the points in the output persistence diagrams (default None, in which case 0. is used for all dimensions)\n     homology_coeff_field (int): homology field coefficient. Must be a prime number. Default value is 11. Max is 46337.\n \"\"\"\n-super().__init__(dynamic=True, **kwargs)\n+super().__init__(**kwargs)\n self.max_edge = maximum_edge_length\n self.dimensions = homology_dimensions\n self.min_persistence = min_persistence if min_persistence is not None else [0. for _ in range(len(self.dimensions))]\n self.hcf = homology_coeff_field\n",
+                "additions": 1,
+                "deletions": 1
+              },
+              "truncated": false
+            },
+            "title": "src/python/gudhi/tensorflow/rips_layer.py",
+            "time": {
+              "start": 1782400997086,
+              "end": 1782400997087
+            }
+          },
+          "id": "prt_eff60d6c5002SmXwRBZDVKnlwg",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60b430001UMg1RGGBKEoP97"
+        },
+        {
+          "type": "tool",
+          "tool": "edit",
+          "callID": "call_aaee9deb83fe4cc68ad22391",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/workspace/src/python/gudhi/tensorflow/perslay.py",
+              "oldString": "        super().__init__(dynamic=True, **kwargs)",
+              "newString": "        super().__init__(**kwargs)",
+              "replaceAll": true
+            },
+            "output": "Edit applied successfully.",
+            "metadata": {
+              "diagnostics": {},
+              "diff": "Index: /workspace/src/python/gudhi/tensorflow/perslay.py\n===================================================================\n--- /workspace/src/python/gudhi/tensorflow/perslay.py\n+++ /workspace/src/python/gudhi/tensorflow/perslay.py\n@@ -21,9 +21,9 @@\n     Parameters:\n         grid (n x n numpy array): grid of values.\n         grid_bnds (2 x 2 numpy array): boundaries of the grid, of the form [[min_x, max_x], [min_y, max_y]].\n     \"\"\"\n-    super().__init__(dynamic=True, **kwargs)\n+    super().__init__(**kwargs)\n     self.grid = tf.Variable(initial_value=grid, trainable=True)\n     self.grid_bnds = grid_bnds\n \n def build(self, input_shape):\n@@ -59,9 +59,9 @@\n \n     Parameters:\n         gaussians (4 x n numpy array): parameters of the n Gaussian functions, of the form transpose([[mu_x^1, mu_y^1, sigma_x^1, sigma_y^1], ..., [mu_x^n, mu_y^n, sigma_x^n, sigma_y^n]]). \n     \"\"\"\n-    super().__init__(dynamic=True, **kwargs)\n+    super().__init__(**kwargs)\n     self.W = tf.Variable(initial_value=gaussians, trainable=True)\n \n def build(self, input_shape):\n     return self\n@@ -94,9 +94,9 @@\n     Parameters:\n         constant (float): constant value.\n         power (float): power applied to the distance to the diagonal. \n     \"\"\"\n-    super().__init__(dynamic=True, **kwargs)\n+    super().__init__(**kwargs)\n     self.constant = tf.Variable(initial_value=constant, trainable=True)\n     self.power = power\n     \n def build(self, input_shape):\n@@ -128,9 +128,9 @@\n         image_size (int numpy array): number of grid elements on each grid axis, of the form [n_x, n_y].\n         image_bnds (2 x 2 numpy array): boundaries of the grid, of the form [[min_x, max_x], [min_y, max_y]].\n         variance (float): variance of the Gaussian functions. \n     \"\"\"\n-    super().__init__(dynamic=True, **kwargs)\n+    super().__init__(**kwargs)\n     self.image_size = image_size\n     self.image_bnds = image_bnds\n     self.variance   = tf.Variable(initial_value=variance, trainable=True)\n     \n@@ -171,9 +171,9 @@\n \n     Parameters:\n         samples (float numpy array): grid elements on which to evaluate the tent functions, of the form [x_1, ..., x_n].\n     \"\"\"\n-    super().__init__(dynamic=True, **kwargs)\n+    super().__init__(**kwargs)\n     self.samples   = tf.Variable(initial_value=samples, trainable=True)\n     \n def build(self, input_shape):\n     return self\n@@ -206,9 +206,9 @@\n     Parameters:\n         samples (float numpy array): grid elements on which to evaluate the constant functions, of the form [x_1, ..., x_n].\n         theta (float): sigmoid parameter used to approximate the constant function with a differentiable sigmoid function. The bigger the theta, the closer to a constant function the output will be. \n     \"\"\"\n-    super().__init__(dynamic=True, **kwargs)\n+    super().__init__(**kwargs)\n     self.samples = tf.Variable(initial_value=samples, trainable=True)\n     self.theta   = tf.Variable(initial_value=theta,   trainable=True)\n     \n def build(self, input_shape):\n@@ -244,9 +244,9 @@\n         phi (function): transformation function for the persistence diagram points. Can be either :class:`~gudhi.tensorflow.perslay.GaussianPerslayPhi`, :class:`~gudhi.tensorflow.perslay.TentPerslayPhi`, :class:`~gudhi.tensorflow.perslay.FlatPerslayPhi`, or a custom TensorFlow class (that can have trainable parameters) with a method `call` that takes persistence diagrams as argument (represented as an (n x None x 2) ragged tensor, where n is the number of diagrams).\n         perm_op (function): permutation invariant function, such as `tf.math.reduce_sum`, `tf.math.reduce_mean`, `tf.math.reduce_max`, `tf.math.reduce_min`, or a custom TensorFlow function that takes two arguments: a tensor and an axis on which to apply the permutation invariant operation. If perm_op is the string \"topk\" (where k is a number), this function will be computed as `tf.math.top_k` with parameter `int(k)`.\n         rho (function): postprocessing function that is applied after the permutation invariant operation. Can be any TensorFlow layer.\n     \"\"\"\n-    super().__init__(dynamic=True, **kwargs)\n+    super().__init__(**kwargs)\n     self.weight  = weight\n     self.phi     = phi\n     self.perm_op = perm_op  \n     self.rho     = rho\n",
+              "filediff": {
+                "file": "/workspace/src/python/gudhi/tensorflow/perslay.py",
+                "patch": "Index: /workspace/src/python/gudhi/tensorflow/perslay.py\n===================================================================\n--- /workspace/src/python/gudhi/tensorflow/perslay.py\n+++ /workspace/src/python/gudhi/tensorflow/perslay.py\n@@ -21,9 +21,9 @@\n     Parameters:\n         grid (n x n numpy array): grid of values.\n         grid_bnds (2 x 2 numpy array): boundaries of the grid, of the form [[min_x, max_x], [min_y, max_y]].\n     \"\"\"\n-    super().__init__(dynamic=True, **kwargs)\n+    super().__init__(**kwargs)\n     self.grid = tf.Variable(initial_value=grid, trainable=True)\n     self.grid_bnds = grid_bnds\n \n def build(self, input_shape):\n@@ -59,9 +59,9 @@\n \n     Parameters:\n         gaussians (4 x n numpy array): parameters of the n Gaussian functions, of the form transpose([[mu_x^1, mu_y^1, sigma_x^1, sigma_y^1], ..., [mu_x^n, mu_y^n, sigma_x^n, sigma_y^n]]). \n     \"\"\"\n-    super().__init__(dynamic=True, **kwargs)\n+    super().__init__(**kwargs)\n     self.W = tf.Variable(initial_value=gaussians, trainable=True)\n \n def build(self, input_shape):\n     return self\n@@ -94,9 +94,9 @@\n     Parameters:\n         constant (float): constant value.\n         power (float): power applied to the distance to the diagonal. \n     \"\"\"\n-    super().__init__(dynamic=True, **kwargs)\n+    super().__init__(**kwargs)\n     self.constant = tf.Variable(initial_value=constant, trainable=True)\n     self.power = power\n     \n def build(self, input_shape):\n@@ -128,9 +128,9 @@\n         image_size (int numpy array): number of grid elements on each grid axis, of the form [n_x, n_y].\n         image_bnds (2 x 2 numpy array): boundaries of the grid, of the form [[min_x, max_x], [min_y, max_y]].\n         variance (float): variance of the Gaussian functions. \n     \"\"\"\n-    super().__init__(dynamic=True, **kwargs)\n+    super().__init__(**kwargs)\n     self.image_size = image_size\n     self.image_bnds = image_bnds\n     self.variance   = tf.Variable(initial_value=variance, trainable=True)\n     \n@@ -171,9 +171,9 @@\n \n     Parameters:\n         samples (float numpy array): grid elements on which to evaluate the tent functions, of the form [x_1, ..., x_n].\n     \"\"\"\n-    super().__init__(dynamic=True, **kwargs)\n+    super().__init__(**kwargs)\n     self.samples   = tf.Variable(initial_value=samples, trainable=True)\n     \n def build(self, input_shape):\n     return self\n@@ -206,9 +206,9 @@\n     Parameters:\n         samples (float numpy array): grid elements on which to evaluate the constant functions, of the form [x_1, ..., x_n].\n         theta (float): sigmoid parameter used to approximate the constant function with a differentiable sigmoid function. The bigger the theta, the closer to a constant function the output will be. \n     \"\"\"\n-    super().__init__(dynamic=True, **kwargs)\n+    super().__init__(**kwargs)\n     self.samples = tf.Variable(initial_value=samples, trainable=True)\n     self.theta   = tf.Variable(initial_value=theta,   trainable=True)\n     \n def build(self, input_shape):\n@@ -244,9 +244,9 @@\n         phi (function): transformation function for the persistence diagram points. Can be either :class:`~gudhi.tensorflow.perslay.GaussianPerslayPhi`, :class:`~gudhi.tensorflow.perslay.TentPerslayPhi`, :class:`~gudhi.tensorflow.perslay.FlatPerslayPhi`, or a custom TensorFlow class (that can have trainable parameters) with a method `call` that takes persistence diagrams as argument (represented as an (n x None x 2) ragged tensor, where n is the number of diagrams).\n         perm_op (function): permutation invariant function, such as `tf.math.reduce_sum`, `tf.math.reduce_mean`, `tf.math.reduce_max`, `tf.math.reduce_min`, or a custom TensorFlow function that takes two arguments: a tensor and an axis on which to apply the permutation invariant operation. If perm_op is the string \"topk\" (where k is a number), this function will be computed as `tf.math.top_k` with parameter `int(k)`.\n         rho (function): postprocessing function that is applied after the permutation invariant operation. Can be any TensorFlow layer.\n     \"\"\"\n-    super().__init__(dynamic=True, **kwargs)\n+    super().__init__(**kwargs)\n     self.weight  = weight\n     self.phi     = phi\n     self.perm_op = perm_op  \n     self.rho     = rho\n",
+                "additions": 7,
+                "deletions": 7
+              },
+              "truncated": false
+            },
+            "title": "src/python/gudhi/tensorflow/perslay.py",
+            "time": {
+              "start": 1782400997084,
+              "end": 1782400997085
+            }
+          },
+          "id": "prt_eff60d6c8001w9gEZ31k15Oep0",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60b430001UMg1RGGBKEoP97"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "26e7c167294a11f469fb561731d57f3299f76daa",
+          "type": "step-finish",
+          "tokens": {
+            "total": 21732,
+            "input": 21163,
+            "output": 569,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_eff60d6e0001yHusHDcofieu8g",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60b430001UMg1RGGBKEoP97"
+        },
+        {
+          "type": "patch",
+          "hash": "fa9db59e1a4c1e40b6d40bccf68ceaea796607c9",
+          "files": [
+            "/workspace/src/python/gudhi/tensorflow/cubical_layer.py",
+            "/workspace/src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py",
+            "/workspace/src/python/gudhi/tensorflow/perslay.py",
+            "/workspace/src/python/gudhi/tensorflow/rips_layer.py"
+          ],
+          "id": "prt_eff60d7450012Xsyg9dX7A0JIt",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60b430001UMg1RGGBKEoP97"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_eff608783001CTGaaFVhj34284",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 21872,
+          "input": 21778,
+          "output": 94,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1782400997192,
+          "completed": 1782401000293
+        },
+        "finish": "tool-calls",
+        "id": "msg_eff60d748001bJXUlZpEyjXfup",
+        "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa"
+      },
+      "parts": [
+        {
+          "snapshot": "26e7c167294a11f469fb561731d57f3299f76daa",
+          "type": "step-start",
+          "id": "prt_eff60e2570016hZ0kJ6BhkJC24",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60d748001bJXUlZpEyjXfup"
+        },
+        {
+          "type": "text",
+          "text": "\n\nPerfect! I've successfully removed the `dynamic=True` argument from all TensorFlow layer constructors. Let me verify the changes:\n\n",
+          "time": {
+            "start": 1782401000024,
+            "end": 1782401000046
+          },
+          "id": "prt_eff60e258001DeYFPjCRPQeHFq",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60d748001bJXUlZpEyjXfup"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_7eb1080687524e3aa0128880",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "grep -n \"super().__init__\" /workspace/src/python/gudhi/tensorflow/*.py",
+              "description": "Verify all super().__init__ calls in tensorflow layers"
+            },
+            "output": "/workspace/src/python/gudhi/tensorflow/cubical_layer.py:49:        super().__init__(**kwargs)\n/workspace/src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py:57:        super().__init__(**kwargs)\n/workspace/src/python/gudhi/tensorflow/perslay.py:25:        super().__init__(**kwargs)\n/workspace/src/python/gudhi/tensorflow/perslay.py:63:        super().__init__(**kwargs)\n/workspace/src/python/gudhi/tensorflow/perslay.py:98:        super().__init__(**kwargs)\n/workspace/src/python/gudhi/tensorflow/perslay.py:132:        super().__init__(**kwargs)\n/workspace/src/python/gudhi/tensorflow/perslay.py:175:        super().__init__(**kwargs)\n/workspace/src/python/gudhi/tensorflow/perslay.py:210:        super().__init__(**kwargs)\n/workspace/src/python/gudhi/tensorflow/perslay.py:248:        super().__init__(**kwargs)\n/workspace/src/python/gudhi/tensorflow/rips_layer.py:53:        super().__init__(**kwargs)\n",
+            "metadata": {
+              "output": "/workspace/src/python/gudhi/tensorflow/cubical_layer.py:49:        super().__init__(**kwargs)\n/workspace/src/python/gudhi/tensorflow/lower_star_simplex_tree_layer.py:57:        super().__init__(**kwargs)\n/workspace/src/python/gudhi/tensorflow/perslay.py:25:        super().__init__(**kwargs)\n/workspace/src/python/gudhi/tensorflow/perslay.py:63:        super().__init__(**kwargs)\n/workspace/src/python/gudhi/tensorflow/perslay.py:98:        super().__init__(**kwargs)\n/workspace/src/python/gudhi/tensorflow/perslay.py:132:        super().__init__(**kwargs)\n/workspace/src/python/gudhi/tensorflow/perslay.py:175:        super().__init__(**kwargs)\n/workspace/src/python/gudhi/tensorflow/perslay.py:210:        super().__init__(**kwargs)\n/workspace/src/python/gudhi/tensorflow/perslay.py:248:        super().__init__(**kwargs)\n/workspace/src/python/gudhi/tensorflow/rips_layer.py:53:        super().__init__(**kwargs)\n",
+              "exit": 0,
+              "description": "Verify all super().__init__ calls in tensorflow layers",
+              "truncated": false
+            },
+            "title": "Verify all super().__init__ calls in tensorflow layers",
+            "time": {
+              "start": 1782401000079,
+              "end": 1782401000081
+            }
+          },
+          "id": "prt_eff60e25d001Uhqglysp5oMi1a",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60d748001bJXUlZpEyjXfup"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "26e7c167294a11f469fb561731d57f3299f76daa",
+          "type": "step-finish",
+          "tokens": {
+            "total": 21872,
+            "input": 21778,
+            "output": 94,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_eff60e292001utrqbsiJhG4jRX",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60d748001bJXUlZpEyjXfup"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_eff608783001CTGaaFVhj34284",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 22406,
+          "input": 22155,
+          "output": 251,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1782401000296,
+          "completed": 1782401005399
+        },
+        "finish": "stop",
+        "id": "msg_eff60e368001ZSiZ1acu1GZvg7",
+        "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa"
+      },
+      "parts": [
+        {
+          "snapshot": "26e7c167294a11f469fb561731d57f3299f76daa",
+          "type": "step-start",
+          "id": "prt_eff60f701001KZxIHk0S06mRh3",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60e368001ZSiZ1acu1GZvg7"
+        },
+        {
+          "type": "text",
+          "text": "\n\nExcellent! All 10 layer constructors have been updated successfully. The changes are:\n\n**Fixed layer classes:**\n1. `CubicalLayer` in `cubical_layer.py:49`\n2. `LowerStarSimplexTreeLayer` in `lower_star_simplex_tree_layer.py:57`\n3. `RipsLayer` in `rips_layer.py:53`\n4. `GridPerslayWeight` in `perslay.py:25`\n5. `GaussianMixturePerslayWeight` in `perslay.py:63`\n6. `PowerPerslayWeight` in `perslay.py:98`\n7. `GaussianPerslayPhi` in `perslay.py:132`\n8. `TentPerslayPhi` in `perslay.py:175`\n9. `FlatPerslayPhi` in `perslay.py:210`\n10. `Perslay` in `perslay.py:248`\n\nAll layer constructors now call the superclass initializer without the deprecated `dynamic` flag, which restores compatibility with newer TensorFlow releases while preserving all existing functionality.",
+          "time": {
+            "start": 1782401005314,
+            "end": 1782401005355
+          },
+          "id": "prt_eff60f702001kL2Hmg50XIEfzT",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60e368001ZSiZ1acu1GZvg7"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "26e7c167294a11f469fb561731d57f3299f76daa",
+          "type": "step-finish",
+          "tokens": {
+            "total": 22406,
+            "input": 22155,
+            "output": 251,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_eff60f72d001M7AcWRI34FwuiZ",
+          "sessionID": "ses_1009f78b1ffeMxwJxekdd30FCa",
+          "messageID": "msg_eff60e368001ZSiZ1acu1GZvg7"
+        }
+      ]
+    }
+  ]
+}

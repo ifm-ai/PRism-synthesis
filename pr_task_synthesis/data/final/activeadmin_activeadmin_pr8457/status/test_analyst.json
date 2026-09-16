@@ -1,0 +1,19 @@
+{
+  "status": "complete",
+  "official_verifier": {
+    "test_only_exit_code": 1,
+    "test_with_fix_exit_code": 0,
+    "is_success": true
+  },
+  "local_preflight": {
+    "test_only_exit_code": 1,
+    "test_with_fix_exit_code": 0,
+    "passed": true
+  },
+  "execution_mode": "real_execution",
+  "hacking_detected": false,
+  "blocks_outer_progress": false,
+  "blocks_target": null,
+  "verifier_asset_mode": "test_patch_applied",
+  "notes": "Local preflight passed. testOnly fails with exit code 1 (buggy code uses columns_hash which doesn't work for virtual attributes). testWithFix passes with exit code 0 (fixed code uses attribute_types which correctly handles virtual boolean attributes). The yard gem issue was resolved by including the docs group in bundle install."
+}

@@ -1,0 +1,10 @@
+{
+  "status": "complete",
+  "solver_outcome": "partial",
+  "oracle_outcome": "pass",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "High-value RL trajectory: solver correctly localized the problem, made a meaningful behavioral edit, and oracle passed. Solver used a different but valid approach (clipping) compared to fix.patch (above_minus_one helper). Time budget exhausted before final verification but oracle confirms fix works."
+}

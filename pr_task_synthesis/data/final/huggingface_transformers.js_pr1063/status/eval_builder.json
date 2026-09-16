@@ -1,0 +1,23 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "verification_command": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPatterns=\".openenv_hidden/batch_size_fix\" --verbose --no-coverage",
+  "activation_source": "system",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "hidden_tests",
+  "copied_test_patch": false,
+  "supplemental_tests_created": true,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that batch_size calculation in addPastKeyValues handles missing dims property by falling back to batch_size=1 instead of throwing TypeError.",
+  "fix_patch_grounding": "The fix adds optional chaining after the ?? expression on line 1760, changing (decoderFeeds[this.main_input_name] ?? decoderFeeds.attention_mask).dims?.[0] to (decoderFeeds[this.main_input_name] ?? decoderFeeds.attention_mask)?.dims?.[0], which safely handles cases where both decoder inputs are undefined.",
+  "issue_context_used": "The issue describes that batch size calculation should safely handle absence of dims array and default to 1, which guided the test design to verify the fallback behavior when decoder inputs lack dims property.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": ["node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathPatterns=\".openenv_hidden/batch_size_fix\" --verbose --no-coverage"],
+  "required_verifier_files": ["eval.sh", "tests/batch_size_fix.test.js"],
+  "notes": "Hidden tests verify the batch_size calculation fix in PreTrainedModel.addPastKeyValues. The test suite includes 5 tests: 4 behavioral tests that pass with both buggy and fixed code (because they provide valid inputs), and 1 critical test that fails with buggy code (empty decoderFeeds triggers the bug) and passes with fixed code. The verifier uses Jest test framework with ESM module support."
+}

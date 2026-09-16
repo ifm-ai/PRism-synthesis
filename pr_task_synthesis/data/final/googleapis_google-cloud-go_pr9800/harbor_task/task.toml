@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "googleapis_google-cloud-go_pr9800"
+description = "OpenEnv: googleapis/google-cloud-go PR #9800"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/googleapis/google-cloud-go.git"
+git_pr_id = "9800"
+git_base_commit = "da245fac5ee335e86c63bfa5f165b0ab84960847"
+task_id = "googleapis_google-cloud-go_pr9800"
+repo_full_name = "googleapis/google-cloud-go"
+domain = "BACKEND_API_SERVICES"
+primary_language = "Go"
+runtime_family = "Go"
+complexity = "easy"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

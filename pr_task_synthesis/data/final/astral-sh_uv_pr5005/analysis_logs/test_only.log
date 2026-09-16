@@ -1,0 +1,256 @@
+>>>>> Start Test Output
+   Compiling uv v0.2.24 (/workspace/crates/uv)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.77s
+     Running tests/help.rs (target/debug/deps/help-3218f163d8a1f673)
+
+running 12 tests
+test help ... FAILED
+test help_flag ... FAILED
+test help_flag_subcommand ... FAILED
+test help_flag_subsubcommand ... FAILED
+test help_short_flag ... FAILED
+test help_subcommand ... FAILED
+test help_subsubcommand ... FAILED
+test help_unknown_subcommand ... ok
+test help_unknown_subsubcommand ... ok
+test help_with_global_option ... FAILED
+test help_with_help ... ok
+test help_with_version ... ok
+
+failures:
+
+---- help stdout ----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Snapshot Summary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Snapshot: help
+Source: crates/uv/tests/help.rs:10
+────────────────────────────────────────────────────────────────────────────────
+Expression: snapshot
+────────────────────────────────────────────────────────────────────────────────
+-old snapshot
++new results
+────────────┬───────────────────────────────────────────────────────────────────
+   30    30 │           installed, managed, system, only-system]
+   31    31 │       --python-fetch <PYTHON_FETCH>
+   32    32 │           Whether to automatically download Python when required [possible values: automatic,
+   33    33 │           manual]
+   34       │-      --isolated
+   35       │-          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
+   36       │-          parent directories
+   37    34 │   -n, --no-cache
+   38    35 │           Avoid reading from or writing to the cache [env: UV_NO_CACHE=]
+   39    36 │       --cache-dir [CACHE_DIR]
+   40    37 │           Path to the cache directory [env: UV_CACHE_DIR=]
+────────────┴───────────────────────────────────────────────────────────────────
+To update snapshots run `cargo insta review`
+Stopped on the first failure. Run `cargo insta test` to run all snapshots.
+thread 'help' panicked at /home/agent_sandbox/.cargo/registry/src/index.crates.io-6f17d22bba15001f/insta-1.39.0/src/runtime.rs:562:9:
+snapshot assertion for 'help' failed in line 10
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- help_flag stdout ----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Snapshot Summary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Snapshot: help_flag
+Source: crates/uv/tests/help.rs:69
+────────────────────────────────────────────────────────────────────────────────
+Expression: snapshot
+────────────────────────────────────────────────────────────────────────────────
+-old snapshot
++new results
+────────────┬───────────────────────────────────────────────────────────────────
+   30    30 │           installed, managed, system, only-system]
+   31    31 │       --python-fetch <PYTHON_FETCH>
+   32    32 │           Whether to automatically download Python when required [possible values: automatic,
+   33    33 │           manual]
+   34       │-      --isolated
+   35       │-          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
+   36       │-          parent directories
+   37    34 │   -n, --no-cache
+   38    35 │           Avoid reading from or writing to the cache [env: UV_NO_CACHE=]
+   39    36 │       --cache-dir [CACHE_DIR]
+   40    37 │           Path to the cache directory [env: UV_CACHE_DIR=]
+────────────┴───────────────────────────────────────────────────────────────────
+To update snapshots run `cargo insta review`
+Stopped on the first failure. Run `cargo insta test` to run all snapshots.
+thread 'help_flag' panicked at /home/agent_sandbox/.cargo/registry/src/index.crates.io-6f17d22bba15001f/insta-1.39.0/src/runtime.rs:562:9:
+snapshot assertion for 'help_flag' failed in line 69
+
+---- help_flag_subcommand stdout ----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Snapshot Summary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Snapshot: help_flag_subcommand
+Source: crates/uv/tests/help.rs:415
+────────────────────────────────────────────────────────────────────────────────
+Expression: snapshot
+────────────────────────────────────────────────────────────────────────────────
+-old snapshot
++new results
+────────────┬───────────────────────────────────────────────────────────────────
+   29    29 │           installed, managed, system, only-system]
+   30    30 │       --python-fetch <PYTHON_FETCH>
+   31    31 │           Whether to automatically download Python when required [possible values: automatic,
+   32    32 │           manual]
+   33       │-      --isolated
+   34       │-          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
+   35       │-          parent directories
+   36    33 │   -n, --no-cache
+   37    34 │           Avoid reading from or writing to the cache [env: UV_NO_CACHE=]
+   38    35 │       --cache-dir [CACHE_DIR]
+   39    36 │           Path to the cache directory [env: UV_CACHE_DIR=]
+────────────┴───────────────────────────────────────────────────────────────────
+To update snapshots run `cargo insta review`
+Stopped on the first failure. Run `cargo insta test` to run all snapshots.
+thread 'help_flag_subcommand' panicked at /home/agent_sandbox/.cargo/registry/src/index.crates.io-6f17d22bba15001f/insta-1.39.0/src/runtime.rs:562:9:
+snapshot assertion for 'help_flag_subcommand' failed in line 415
+
+---- help_flag_subsubcommand stdout ----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Snapshot Summary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Snapshot: help_flag_subsubcommand
+Source: crates/uv/tests/help.rs:473
+────────────────────────────────────────────────────────────────────────────────
+Expression: snapshot
+────────────────────────────────────────────────────────────────────────────────
+-old snapshot
++new results
+────────────┬───────────────────────────────────────────────────────────────────
+   26    26 │           installed, managed, system, only-system]
+   27    27 │       --python-fetch <PYTHON_FETCH>
+   28    28 │           Whether to automatically download Python when required [possible values: automatic,
+   29    29 │           manual]
+   30       │-      --isolated
+   31       │-          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
+   32       │-          parent directories
+   33    30 │   -n, --no-cache
+   34    31 │           Avoid reading from or writing to the cache [env: UV_NO_CACHE=]
+   35    32 │       --cache-dir [CACHE_DIR]
+   36    33 │           Path to the cache directory [env: UV_CACHE_DIR=]
+────────────┴───────────────────────────────────────────────────────────────────
+To update snapshots run `cargo insta review`
+Stopped on the first failure. Run `cargo insta test` to run all snapshots.
+thread 'help_flag_subsubcommand' panicked at /home/agent_sandbox/.cargo/registry/src/index.crates.io-6f17d22bba15001f/insta-1.39.0/src/runtime.rs:562:9:
+snapshot assertion for 'help_flag_subsubcommand' failed in line 473
+
+---- help_short_flag stdout ----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Snapshot Summary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Snapshot: help_short_flag
+Source: crates/uv/tests/help.rs:127
+────────────────────────────────────────────────────────────────────────────────
+Expression: snapshot
+────────────────────────────────────────────────────────────────────────────────
+-old snapshot
++new results
+────────────┬───────────────────────────────────────────────────────────────────
+   30    30 │           installed, managed, system, only-system]
+   31    31 │       --python-fetch <PYTHON_FETCH>
+   32    32 │           Whether to automatically download Python when required [possible values: automatic,
+   33    33 │           manual]
+   34       │-      --isolated
+   35       │-          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
+   36       │-          parent directories
+   37    34 │   -n, --no-cache
+   38    35 │           Avoid reading from or writing to the cache [env: UV_NO_CACHE=]
+   39    36 │       --cache-dir [CACHE_DIR]
+   40    37 │           Path to the cache directory [env: UV_CACHE_DIR=]
+────────────┴───────────────────────────────────────────────────────────────────
+To update snapshots run `cargo insta review`
+Stopped on the first failure. Run `cargo insta test` to run all snapshots.
+thread 'help_short_flag' panicked at /home/agent_sandbox/.cargo/registry/src/index.crates.io-6f17d22bba15001f/insta-1.39.0/src/runtime.rs:562:9:
+snapshot assertion for 'help_short_flag' failed in line 127
+
+---- help_subcommand stdout ----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Snapshot Summary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Snapshot: help_subcommand
+Source: crates/uv/tests/help.rs:186
+────────────────────────────────────────────────────────────────────────────────
+Expression: snapshot
+────────────────────────────────────────────────────────────────────────────────
+-old snapshot
++new results
+────────────┬───────────────────────────────────────────────────────────────────
+   70    70 │           - automatic: Automatically fetch managed Python installations when needed
+   71    71 │           - manual:    Do not automatically fetch managed Python installations; require explicit
+   72    72 │             installation
+   73    73 │ 
+   74       │-      --isolated
+   75       │-          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
+   76       │-          parent directories
+   77       │-
+   78    74 │   -n, --no-cache
+   79    75 │           Avoid reading from or writing to the cache
+   80    76 │           
+   81    77 │           [env: UV_NO_CACHE=]
+────────────┴───────────────────────────────────────────────────────────────────
+To update snapshots run `cargo insta review`
+Stopped on the first failure. Run `cargo insta test` to run all snapshots.
+thread 'help_subcommand' panicked at /home/agent_sandbox/.cargo/registry/src/index.crates.io-6f17d22bba15001f/insta-1.39.0/src/runtime.rs:562:9:
+snapshot assertion for 'help_subcommand' failed in line 186
+
+---- help_subsubcommand stdout ----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Snapshot Summary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Snapshot: help_subsubcommand
+Source: crates/uv/tests/help.rs:300
+────────────────────────────────────────────────────────────────────────────────
+Expression: snapshot
+────────────────────────────────────────────────────────────────────────────────
+-old snapshot
++new results
+────────────┬───────────────────────────────────────────────────────────────────
+   73    73 │           - automatic: Automatically fetch managed Python installations when needed
+   74    74 │           - manual:    Do not automatically fetch managed Python installations; require explicit
+   75    75 │             installation
+   76    76 │ 
+   77       │-      --isolated
+   78       │-          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
+   79       │-          parent directories
+   80       │-
+   81    77 │   -n, --no-cache
+   82    78 │           Avoid reading from or writing to the cache
+   83    79 │           
+   84    80 │           [env: UV_NO_CACHE=]
+────────────┴───────────────────────────────────────────────────────────────────
+To update snapshots run `cargo insta review`
+Stopped on the first failure. Run `cargo insta test` to run all snapshots.
+thread 'help_subsubcommand' panicked at /home/agent_sandbox/.cargo/registry/src/index.crates.io-6f17d22bba15001f/insta-1.39.0/src/runtime.rs:562:9:
+snapshot assertion for 'help_subsubcommand' failed in line 300
+
+---- help_with_global_option stdout ----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Snapshot Summary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Snapshot: help_with_global_option
+Source: crates/uv/tests/help.rs:581
+────────────────────────────────────────────────────────────────────────────────
+Expression: snapshot
+────────────────────────────────────────────────────────────────────────────────
+-old snapshot
++new results
+────────────┬───────────────────────────────────────────────────────────────────
+   30    30 │           installed, managed, system, only-system]
+   31    31 │       --python-fetch <PYTHON_FETCH>
+   32    32 │           Whether to automatically download Python when required [possible values: automatic,
+   33    33 │           manual]
+   34       │-      --isolated
+   35       │-          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
+   36       │-          parent directories
+   37    34 │   -n, --no-cache
+   38    35 │           Avoid reading from or writing to the cache [env: UV_NO_CACHE=]
+   39    36 │       --cache-dir [CACHE_DIR]
+   40    37 │           Path to the cache directory [env: UV_CACHE_DIR=]
+────────────┴───────────────────────────────────────────────────────────────────
+To update snapshots run `cargo insta review`
+Stopped on the first failure. Run `cargo insta test` to run all snapshots.
+thread 'help_with_global_option' panicked at /home/agent_sandbox/.cargo/registry/src/index.crates.io-6f17d22bba15001f/insta-1.39.0/src/runtime.rs:562:9:
+snapshot assertion for 'help_with_global_option' failed in line 581
+
+
+failures:
+    help
+    help_flag
+    help_flag_subcommand
+    help_flag_subsubcommand
+    help_short_flag
+    help_subcommand
+    help_subsubcommand
+    help_with_global_option
+
+test result: FAILED. 4 passed; 8 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.73s
+
+error: test failed, to rerun pass `-p uv --test help`
+>>>>> End Test Output
+OPENENV_EXIT_CODE=101

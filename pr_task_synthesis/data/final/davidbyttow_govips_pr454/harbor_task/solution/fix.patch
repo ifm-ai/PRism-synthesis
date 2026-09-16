@@ -1,0 +1,41 @@
+diff --git a/vips/foreign.go b/vips/foreign.go
+index 711baaa..e291faa 100644
+--- a/vips/foreign.go
++++ b/vips/foreign.go
+@@ -414,6 +414,10 @@ func vipsSaveTIFFToBuffer(in *C.VipsImage, params TiffExportParams) ([]byte, err
+ 	p.stripMetadata = C.int(boolToInt(params.StripMetadata))
+ 	p.quality = C.int(params.Quality)
+ 	p.tiffCompression = C.VipsForeignTiffCompression(params.Compression)
++	p.tiffPyramid = C.int(boolToInt(params.Pyramid))
++	p.tiffTile = C.int(boolToInt(params.Tile))
++	p.tiffTileHeight = C.int(params.TileHeight)
++	p.tiffTileWidth = C.int(params.TileWidth)
+ 
+ 	return vipsSaveToBuffer(p)
+ }
+diff --git a/vips/image.go b/vips/image.go
+index 24ff6cf..1da6855 100644
+--- a/vips/image.go
++++ b/vips/image.go
+@@ -306,6 +306,10 @@ type TiffExportParams struct {
+ 	Quality       int
+ 	Compression   TiffCompression
+ 	Predictor     TiffPredictor
++	Pyramid       bool
++	Tile          bool
++	TileHeight    int
++	TileWidth     int
+ }
+ 
+ // NewTiffExportParams creates default values for an export of a TIFF image.
+@@ -314,6 +318,10 @@ func NewTiffExportParams() *TiffExportParams {
+ 		Quality:     80,
+ 		Compression: TiffCompressionLzw,
+ 		Predictor:   TiffPredictorHorizontal,
++		Pyramid:     false,
++		Tile:        false,
++		TileHeight:  256,
++		TileWidth:   256,
+ 	}
+ }
+ 

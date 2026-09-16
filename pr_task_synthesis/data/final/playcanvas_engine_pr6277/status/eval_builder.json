@@ -1,0 +1,30 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "verification_command": "npm test -- tests/test-shader-utils-duplicate-attrs.test.mjs tests/test-particle-shader-conditionals.test.mjs",
+  "activation_source": "export CHROME_BIN=/usr/bin/google-chrome-stable",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "local",
+  "copied_test_patch": false,
+  "supplemental_tests_created": true,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests verify duplicate attribute handling in shader-utils.js emits warnings instead of errors, and that particle_cpu.js and particle_init.js wrap internalTex0/1/2 sampler uniforms in #ifdef PARTICLE_GPU blocks to prevent undefined-uniform errors on WebGPU CPU particle paths.",
+  "fix_patch_grounding": "The fix adds duplicate attribute detection with a warning in shader-utils.js collectAttributes method, and wraps internalTex0/1/2 sampler uniforms in #ifdef PARTICLE_GPU blocks in particle_cpu.js and particle_init.js to conditionally include them only for GPU particle simulations.",
+  "issue_context_used": "The issue describes CPU particle simulations failing on WebGPU due to duplicate attribute extraction causing warnings/errors and unused sampler uniforms causing undefined-uniform errors; tests verify both fixes are in place.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": [
+    "tests/test-shader-utils-duplicate-attrs.test.mjs",
+    "tests/test-particle-shader-conditionals.test.mjs"
+  ],
+  "required_verifier_files": [
+    "eval.sh",
+    "tests/test-shader-utils-duplicate-attrs.test.mjs",
+    "tests/test-particle-shader-conditionals.test.mjs"
+  ],
+  "notes": "Created two hidden test files: (1) test-shader-utils-duplicate-attrs.test.mjs tests the duplicate attribute handling in ShaderUtils.collectAttributes using Mocha/Chai framework consistent with existing project tests; (2) test-particle-shader-conditionals.test.mjs verifies the conditional #ifdef PARTICLE_GPU blocks around sampler uniforms in particle_cpu.js and particle_init.js. Tests run from /workspace using npm test command with external test paths. Updated eval.sh to emit explicit 'TEST RESULT: PASSED' or 'TEST RESULT: FAILED' summary lines between the Start/End Test Output markers to ensure verifier can recognize test-runner signals."
+}

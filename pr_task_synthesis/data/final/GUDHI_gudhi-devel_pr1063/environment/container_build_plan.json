@@ -1,0 +1,26 @@
+{
+  "base_image": "python:3.11-slim",
+  "build_context_files": [
+    "/artifacts/environment/setup_runtime.sh",
+    "/artifacts/environment/repo_setup.sh"
+  ],
+  "build_commands": [
+    "FROM python:3.11-slim",
+    "WORKDIR /workspace",
+    "RUN apt-get update -qq && apt-get install -y -qq cmake build-essential pkg-config python3.11-venv git curl && rm -rf /var/lib/apt/lists/*",
+    "COPY setup_runtime.sh /opt/benchmark/setup_runtime.sh",
+    "COPY repo_setup.sh /opt/benchmark/repo_setup.sh",
+    "RUN chmod +x /opt/benchmark/setup_runtime.sh /opt/benchmark/repo_setup.sh",
+    "RUN /opt/benchmark/repo_setup.sh",
+    "RUN /opt/benchmark/setup_runtime.sh",
+    "WORKDIR /workspace"
+  ],
+  "packaging_notes": {
+    "repo_materialization": "repo_setup.sh clones gudhi-devel repository at specific commit d78e583293d809b54a6152bf42a551773ef78ca6",
+    "python_environment": "venv at /opt/benchmark/gudhi_env with tensorflow, numpy, cython, pybind11, pytest, scikit-learn",
+    "eval_sh_handling": "eval.sh is runtime-mounted, not baked into image",
+    "test_patch_handling": "No test.patch file present; hidden tests are in /artifacts/evaluation/tests/",
+    "build_backend": "Buildah",
+    "output_format": "OCI archive (openenv_validation_oci.tar)"
+  }
+}

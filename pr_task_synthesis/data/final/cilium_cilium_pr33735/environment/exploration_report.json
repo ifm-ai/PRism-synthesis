@@ -1,0 +1,79 @@
+{
+  "pr_summary": "Fix a race condition causing deadlock in clustermesh subsystem when stopping remote cluster config fetching. The fix adds a buffer of 1 to the channel (cfgch) in pkg/clustermesh/common/remote_cluster.go to prevent blocking send operations when the receiver has already exited during shutdown.",
+  "runtime_family": "go",
+  "package_manager": "go_modules",
+  "touched_files": [
+    "pkg/clustermesh/common/remote_cluster.go"
+  ],
+  "important_build_files": [
+    "Makefile",
+    "Makefile.defs",
+    "go.mod",
+    "go.sum",
+    "daemon/Makefile",
+    "operator/Makefile",
+    "clustermesh-apiserver/Makefile"
+  ],
+  "important_test_files": [
+    "pkg/clustermesh/common/remote_cluster_test.go",
+    "pkg/clustermesh/common/clustermesh_test.go",
+    "pkg/clustermesh/common/config_test.go",
+    "pkg/clustermesh/common/services_test.go",
+    "pkg/clustermesh/clustermesh_test.go",
+    "pkg/clustermesh/remote_cluster_test.go"
+  ],
+  "candidate_build_commands": [
+    "make build",
+    "make build-container",
+    "go build ./...",
+    "go build ./pkg/clustermesh/..."
+  ],
+  "candidate_test_commands": [
+    "go test -timeout 600s ./pkg/clustermesh/...",
+    "go test -timeout 600s ./pkg/clustermesh/common/...",
+    "make integration-tests",
+    "INTEGRATION_TESTS=true go test -timeout 600s ./pkg/clustermesh/..."
+  ],
+  "candidate_smoke_commands": [
+    "go version",
+    "go build ./pkg/clustermesh/common/...",
+    "go test -run TestRemoteClusterWatchdog ./pkg/clustermesh/common/..."
+  ],
+  "candidate_activation_checks": [
+    "go version",
+    "which go",
+    "go env GOOS GOARCH"
+  ],
+  "environment_management": "go_modules",
+  "special_system_dependencies": [
+    "Go 1.22.0 or later",
+    "Linux kernel with eBPF support (for full functionality)",
+    "Docker (for container builds and integration tests with kvstores)",
+    "etcd container image (for integration tests)",
+    "consul container image (for integration tests)"
+  ],
+  "high_value_files": [
+    "pkg/clustermesh/common/remote_cluster.go",
+    "pkg/clustermesh/common/remote_cluster_test.go",
+    "pkg/clustermesh/utils/clustercfg_test.go",
+    "Makefile",
+    "go.mod"
+  ],
+  "patch_file_cues": [
+    "pkg/clustermesh/common/remote_cluster.go - line 270: change from 'make(chan types.CiliumClusterConfig)' to 'make(chan types.CiliumClusterConfig, 1)' to add buffer and prevent deadlock"
+  ],
+  "test_file_cues": [
+    "pkg/clustermesh/common/remote_cluster_test.go - TestRemoteClusterWatchdog tests the remote cluster connection and reconnection logic",
+    "Integration tests require etcd and consul containers via 'make start-kvstores'"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "Makefile.defs: CGO_CC uses x86_64-linux-gnu-gcc and aarch64-linux-gnu-gcc",
+    "Makefile.kind: GOOS=linux for all builds",
+    "Makefile.docker: DOCKER_PLATFORMS := linux/arm64,linux/amd64",
+    "README.rst: 'A new Linux kernel technology called eBPF is at the foundation of Cilium'",
+    "No Windows or macOS specific build constraints in pkg/clustermesh/",
+    "CI workflows target Linux containers"
+  ],
+  "notes": "The fix is a simple one-line change adding a buffer to a channel to prevent deadlock. The repository is a Go project using Go modules. Tests can be run with 'go test ./pkg/clustermesh/common/...' or with integration tests requiring Docker containers for etcd and consul. The project targets Linux (AMD64 and ARM64 architectures) as it relies on eBPF which is Linux-specific. Platform constraint is 'linux' because Cilium is fundamentally a Linux networking/security solution built on eBPF, though the specific fix itself is pure Go code that could theoretically run on other platforms."
+}

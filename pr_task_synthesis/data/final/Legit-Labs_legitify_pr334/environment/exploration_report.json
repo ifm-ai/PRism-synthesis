@@ -1,0 +1,84 @@
+{
+  "pr_summary": "Legitify is a Go-based security policy enforcement tool for GitHub and GitLab SCM platforms. It uses Rego policies (Open Policy Agent) to detect misconfigurations, security issues, and compliance violations across organizations, repositories, members, and CI/CD actions. The project structure includes policy bundles under policies/github and policies/gitlab, a data collection layer (internal/collected), collectors (internal/collectors), and analyzers that run policies against collected data.",
+  "runtime_family": "go",
+  "package_manager": "go_modules",
+  "touched_files": [],
+  "important_build_files": [
+    "go.mod",
+    "go.sum",
+    "Makefile",
+    ".github/workflows/build_and_test.yaml"
+  ],
+  "important_test_files": [
+    "test/repository_test.go",
+    "test/organization_test.go",
+    "test/member_test.go",
+    "test/actions_test.go",
+    "test/runner_group_test.go",
+    "test/helpers.go",
+    "e2e/e2e_test.go",
+    "e2e/gitlab.go",
+    "e2e/github_organization.go",
+    "e2e/github_repository.go",
+    "policies/bundle_test.go"
+  ],
+  "candidate_build_commands": [
+    "go mod tidy",
+    "go mod verify",
+    "go build -o legitify main.go",
+    "make build",
+    "make build_and_install_deps"
+  ],
+  "candidate_test_commands": [
+    "go test -count=1 -short -timeout=5m ./...",
+    "go test -count=1 -shuffle=on -timeout=10m -race $(go list ./... | grep -vE '^github.com/Legit-Labs/legitify/e2e')",
+    "make test",
+    "opa check --strict policies/github",
+    "opa check --strict policies/gitlab",
+    "regal lint --format=github policies"
+  ],
+  "candidate_smoke_commands": [
+    "go run main.go --help",
+    "go build -o legitify main.go && ./legitify --help"
+  ],
+  "candidate_activation_checks": [
+    "go version",
+    "which go",
+    "go env GOPATH"
+  ],
+  "environment_management": "Standard Go modules (go mod). No conda/poetry/uv/npm required. Go 1.19+ as specified in go.mod, CI uses Go 1.20.",
+  "special_system_dependencies": [
+    "Go 1.19+ (CI uses 1.20)",
+    "OPA (Open Policy Agent) for policy checking",
+    "Regal for Rego linting",
+    "mockgen for mock generation (github.com/golang/mock)",
+    "wire for dependency injection (github.com/google/wire)"
+  ],
+  "high_value_files": [
+    "go.mod",
+    "Makefile",
+    "policies/gitlab/repository.rego",
+    "policies/gitlab/organization.rego",
+    "policies/gitlab/member.rego",
+    "policies/gitlab/enterprise.rego",
+    "internal/collected/gitlab_collected/repository.go",
+    "internal/opa/opa_engine/engine.go",
+    "test/helpers.go",
+    "e2e/gitlab.go"
+  ],
+  "patch_file_cues": [],
+  "test_file_cues": [
+    "test/repository_test.go - Contains GitLab repository policy tests using gitlabcollected.Repository struct",
+    "test/helpers.go - PolicyTestTemplate helper for running policy tests against mock data",
+    "e2e/gitlab.go - E2E test cases for GitLab policies",
+    "policies/bundle_test.go - Validates embedded policy bundle file count"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    ".github/workflows/build_and_test.yaml - CI runs on ubuntu-latest, macos-latest, windows-latest (cross-platform)",
+    "go.mod - Pure Go module with no platform-specific dependencies",
+    "Makefile - Standard Unix Makefile but Go is cross-platform",
+    "Dockerfile - Uses standard Linux container"
+  ],
+  "notes": "The project is a cross-platform Go application. Key components: (1) Policies in Rego under policies/gitlab/ for GitLab-specific security checks. (2) Data collection layer in internal/collected/gitlab_collected/ defines Go structs that map GitLab API responses to policy inputs. (3) Test framework uses Go's testing package with testify for assertions. Unit tests in test/ directory mock collected data and verify policy evaluation via opa.Load() and engine.Query(). (4) E2E tests in e2e/ run legitify against real GitLab instances and validate JSON output. (5) The OPA engine (internal/opa/opa_engine/) loads Rego policies and evaluates them against collected data. (6) Build requires Go 1.19+, make, and optionally OPA/Regal for policy validation. No Linux-specific constraints - the project builds and runs on Linux, macOS, and Windows."
+}

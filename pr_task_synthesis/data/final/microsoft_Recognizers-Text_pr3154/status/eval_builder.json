@@ -1,0 +1,23 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "verification_command": "python -m pytest \"$TESTS_DIR/test_spanish_datetime_age_fix.py\" -v --tb=short",
+  "activation_source": "source /opt/benchmark/venv/bin/activate",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "external_tests",
+  "copied_test_patch": false,
+  "supplemental_tests_created": true,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that Spanish datetime and age recognition correctly handles both accented (año/años) and unaccented (ano/anos) forms for decade expressions and age units.",
+  "fix_patch_grounding": "The fix.patch modifies Spanish-DateTime.yaml and Spanish-NumbersWithUnit.yaml to add unaccented 'ano'/'anos' forms to regex patterns (DateUnitRegex, RangeUnitRegex, UnitRegex, SpecialYearTermsRegex, YearTerms, YearTypeRegex) and dictionary mappings (UnitMap, UnitValueMap, AgeSuffixList, AmbiguousAgeUnitList, LengthSuffixList), plus updates to C# definition files and test specs.",
+  "issue_context_used": "The issue describes that unaccented 'anos' forms were not being recognized for Spanish datetime and age expressions, requiring pattern updates to accept both accented and unaccented variants.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": ["python -m pytest \"$TESTS_DIR/test_spanish_datetime_age_fix.py\" -v --tb=short"],
+  "required_verifier_files": ["eval.sh", "tests/test_spanish_datetime_age_fix.py"],
+  "notes": "The eval.sh script was updated to regenerate Python resources from YAML pattern files before running tests. This is necessary because the fix.patch modifies the YAML source files (Spanish-DateTime.yaml and Spanish-NumbersWithUnit.yaml), and the Python packages use generated resource files. The resource generator is run for both recognizers-date-time and recognizers-number-with-unit packages, then packages are reinstalled in editable mode to ensure the regenerated resources are picked up. Additionally, all hardcoded /workspace paths have been replaced with ${WORKSPACE:-/workspace} to support configurable workspace paths for testOnly (WORKSPACE=/workspace) and testWithFix (WORKSPACE=/workspace_fixed) modes."
+}

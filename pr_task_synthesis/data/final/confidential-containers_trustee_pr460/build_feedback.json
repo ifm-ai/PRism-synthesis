@@ -1,0 +1,12 @@
+{
+  "is_finish": true,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "failure_domain": "unknown",
+  "route_to": null,
+  "blocking_errors": [],
+  "warnings": [],
+  "next_actions": [],
+  "notes": "Build completed successfully. Dockerfile.final built without errors using buildah. All system packages installed, repository cloned at specified commit, and Rust toolchain installed via rustup. OCI archive exported to /artifacts/environment/openenv_validation_oci.tar."
+}

@@ -1,0 +1,162 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.10.12, pytest-9.1.0, pluggy-1.6.0 -- /opt/benchmark/dali_venv/bin/python
+cachedir: .pytest_cache
+rootdir: /tmp/tmp.Ahz1kws9WW
+collecting ... collected 29 items
+
+../tmp/tmp.Ahz1kws9WW/test_string_view_api.py::TestStringViewAPI::test_input_feed_count_exists SKIPPED [  3%]
+../tmp/tmp.Ahz1kws9WW/test_string_view_api.py::TestStringViewAPI::test_input_feed_count_with_string_literal SKIPPED [  6%]
+../tmp/tmp.Ahz1kws9WW/test_string_view_api.py::TestStringViewAPI::test_input_feed_count_with_string_variable SKIPPED [ 10%]
+../tmp/tmp.Ahz1kws9WW/test_string_view_api.py::TestStringViewAPI::test_input_feed_count_nonexistent_input SKIPPED [ 13%]
+../tmp/tmp.Ahz1kws9WW/test_string_view_api.py::TestStringViewAPI::test_get_operator_node_exists SKIPPED [ 17%]
+../tmp/tmp.Ahz1kws9WW/test_string_view_api.py::TestStringViewAPI::test_pipeline_with_multiple_inputs SKIPPED [ 20%]
+../tmp/tmp.Ahz1kws9WW/test_string_view_api.py::TestStringViewAPI::test_string_substring_compatibility SKIPPED [ 24%]
+../tmp/tmp.Ahz1kws9WW/test_string_view_api.py::TestDALINotAvailable::test_dali_not_available PASSED [ 27%]
+../tmp/tmp.Ahz1kws9WW/test_string_view_api.py::test_string_view_api_grounding PASSED [ 31%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestExecutorAPIChanges::test_executor_h_has_string_view_inputfeedcount FAILED [ 34%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestExecutorAPIChanges::test_executor_h_has_get_operator_method FAILED [ 37%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestExecutorAPIChanges::test_executor_impl_has_get_operator_implementation FAILED [ 41%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestExecutorAPIChanges::test_executor_impl_inputfeedcount_uses_string_view FAILED [ 44%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_has_nodeptr_method FAILED [ 48%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_has_nodeid_method FAILED [ 51%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_tensorid_returns_optional FAILED [ 55%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_has_tensorptr_method FAILED [ 58%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_uses_less_comparator FAILED [ 62%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_addop_returns_reference FAILED [ 65%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_inputfeedcount_uses_string_view FAILED [ 68%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getoperatornode_uses_string_view FAILED [ 72%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getinputoperatornode_uses_string_view FAILED [ 75%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getreadermeta_uses_string_view FAILED [ 79%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getinputlayout_uses_string_view FAILED [ 82%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getinputndim_uses_string_view FAILED [ 86%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getinputdtype_uses_string_view FAILED [ 89%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_input_operators_uses_less_comparator FAILED [ 93%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestImplementationChanges::test_pipeline_cc_getoperatornode_implementation FAILED [ 96%]
+../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestImplementationChanges::test_pipeline_cc_getreadermeta_uses_executor_getoperator FAILED [100%]
+
+=================================== FAILURES ===================================
+____ TestExecutorAPIChanges.test_executor_h_has_string_view_inputfeedcount _____
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:64: in test_executor_h_has_string_view_inputfeedcount
+    assert has_string_view is not None, \
+E   AssertionError: executor.h should have InputFeedCount(std::string_view) signature
+E   assert None is not None
+________ TestExecutorAPIChanges.test_executor_h_has_get_operator_method ________
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:77: in test_executor_h_has_get_operator_method
+    assert has_get_operator is not None, \
+E   AssertionError: executor.h should declare GetOperator(std::string_view) method
+E   assert None is not None
+__ TestExecutorAPIChanges.test_executor_impl_has_get_operator_implementation ___
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:90: in test_executor_impl_has_get_operator_implementation
+    assert has_implementation, \
+E   AssertionError: executor_impl.cc should implement GetOperator method
+E   assert False
+__ TestExecutorAPIChanges.test_executor_impl_inputfeedcount_uses_string_view ___
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:102: in test_executor_impl_inputfeedcount_uses_string_view
+    assert has_string_view is not None, \
+E   AssertionError: executor_impl.cc should have InputFeedCount(std::string_view) implementation
+E   assert None is not None
+_________ TestOpGraphAPIChanges.test_lowered_graph_has_nodeptr_method __________
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:116: in test_lowered_graph_has_nodeptr_method
+    assert has_nodeptr is not None, \
+E   AssertionError: lowered_graph.h should declare NodePtr(std::string_view) method
+E   assert None is not None
+__________ TestOpGraphAPIChanges.test_lowered_graph_has_nodeid_method __________
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:126: in test_lowered_graph_has_nodeid_method
+    assert has_nodeid is not None, \
+E   AssertionError: lowered_graph.h should declare NodeId(std::string_view) method
+E   assert None is not None
+______ TestOpGraphAPIChanges.test_lowered_graph_tensorid_returns_optional ______
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:136: in test_lowered_graph_tensorid_returns_optional
+    assert has_optional is not None, \
+E   AssertionError: lowered_graph.h should have TensorId returning std::optional<TensorNodeId>
+E   assert None is not None
+________ TestOpGraphAPIChanges.test_lowered_graph_has_tensorptr_method _________
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:146: in test_lowered_graph_has_tensorptr_method
+    assert has_tensorptr is not None, \
+E   AssertionError: lowered_graph.h should declare TensorPtr(std::string_view) method
+E   assert None is not None
+________ TestOpGraphAPIChanges.test_lowered_graph_uses_less_comparator _________
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:162: in test_lowered_graph_uses_less_comparator
+    assert has_heterogeneous_map is not None, \
+E   AssertionError: lowered_graph.h should use std::less<> for heterogeneous map lookup
+E   assert None is not None
+_______ TestOpGraphAPIChanges.test_lowered_graph_addop_returns_reference _______
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:172: in test_lowered_graph_addop_returns_reference
+    assert has_return_ref is not None, \
+E   AssertionError: lowered_graph.h should have AddOp returning OpNode&
+E   assert None is not None
+____ TestPipelineAPIChanges.test_pipeline_h_inputfeedcount_uses_string_view ____
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:188: in test_pipeline_h_inputfeedcount_uses_string_view
+    assert has_string_view is not None, \
+E   AssertionError: pipeline.h should have InputFeedCount(std::string_view)
+E   assert None is not None
+___ TestPipelineAPIChanges.test_pipeline_h_getoperatornode_uses_string_view ____
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:200: in test_pipeline_h_getoperatornode_uses_string_view
+    assert has_string_view is not None, \
+E   AssertionError: pipeline.h should have GetOperatorNode(std::string_view)
+E   assert None is not None
+_ TestPipelineAPIChanges.test_pipeline_h_getinputoperatornode_uses_string_view _
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:212: in test_pipeline_h_getinputoperatornode_uses_string_view
+    assert has_string_view is not None, \
+E   AssertionError: pipeline.h should have GetInputOperatorNode(std::string_view)
+E   assert None is not None
+____ TestPipelineAPIChanges.test_pipeline_h_getreadermeta_uses_string_view _____
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:224: in test_pipeline_h_getreadermeta_uses_string_view
+    assert has_string_view is not None, \
+E   AssertionError: pipeline.h should have GetReaderMeta(std::string_view)
+E   assert None is not None
+____ TestPipelineAPIChanges.test_pipeline_h_getinputlayout_uses_string_view ____
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:236: in test_pipeline_h_getinputlayout_uses_string_view
+    assert has_string_view is not None, \
+E   AssertionError: pipeline.h should have GetInputLayout(std::string_view)
+E   assert None is not None
+_____ TestPipelineAPIChanges.test_pipeline_h_getinputndim_uses_string_view _____
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:248: in test_pipeline_h_getinputndim_uses_string_view
+    assert has_string_view is not None, \
+E   AssertionError: pipeline.h should have GetInputNdim(std::string_view)
+E   assert None is not None
+____ TestPipelineAPIChanges.test_pipeline_h_getinputdtype_uses_string_view _____
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:260: in test_pipeline_h_getinputdtype_uses_string_view
+    assert has_string_view is not None, \
+E   AssertionError: pipeline.h should have GetInputDtype(std::string_view)
+E   assert None is not None
+_ TestPipelineAPIChanges.test_pipeline_h_input_operators_uses_less_comparator __
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:276: in test_pipeline_h_input_operators_uses_less_comparator
+    assert has_heterogeneous_map is not None, \
+E   AssertionError: pipeline.h should use std::less<> for input_operators_ map
+E   assert None is not None
+__ TestImplementationChanges.test_pipeline_cc_getoperatornode_implementation ___
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:292: in test_pipeline_cc_getoperatornode_implementation
+    assert has_string_view is not None, \
+E   AssertionError: pipeline.cc should implement GetOperatorNode with std::string_view
+E   assert None is not None
+_ TestImplementationChanges.test_pipeline_cc_getreadermeta_uses_executor_getoperator _
+/tmp/tmp.Ahz1kws9WW/test_fix_verification.py:304: in test_pipeline_cc_getreadermeta_uses_executor_getoperator
+    assert has_executor_getop, \
+E   AssertionError: pipeline.cc GetReaderMeta should use executor_->GetOperator()
+E   assert False
+=========================== short test summary info ============================
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestExecutorAPIChanges::test_executor_h_has_string_view_inputfeedcount
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestExecutorAPIChanges::test_executor_h_has_get_operator_method
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestExecutorAPIChanges::test_executor_impl_has_get_operator_implementation
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestExecutorAPIChanges::test_executor_impl_inputfeedcount_uses_string_view
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_has_nodeptr_method
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_has_nodeid_method
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_tensorid_returns_optional
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_has_tensorptr_method
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_uses_less_comparator
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_addop_returns_reference
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_inputfeedcount_uses_string_view
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getoperatornode_uses_string_view
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getinputoperatornode_uses_string_view
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getreadermeta_uses_string_view
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getinputlayout_uses_string_view
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getinputndim_uses_string_view
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getinputdtype_uses_string_view
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_input_operators_uses_less_comparator
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestImplementationChanges::test_pipeline_cc_getoperatornode_implementation
+FAILED ../tmp/tmp.Ahz1kws9WW/test_fix_verification.py::TestImplementationChanges::test_pipeline_cc_getreadermeta_uses_executor_getoperator
+=================== 20 failed, 2 passed, 7 skipped in 0.08s ====================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

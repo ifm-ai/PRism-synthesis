@@ -1,0 +1,28 @@
+Hidden tests directory: /tests/tests
+total 28
+drwxr-xr-x 4 root root 4096 Jun 25 15:23 .
+drwxr-xr-x 3 root root 4096 Jun 25 15:23 ..
+drwxr-xr-x 3 root root 4096 Jun 25 15:23 .pytest_cache
+drwxr-xr-x 2 root root 4096 Jun 25 15:23 __pycache__
+-rw-r--r-- 1 root root 8537 Jun 25 15:23 test_tensorflow_layers_instantiation.py
+=== Running hidden verifier tests ===
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- /opt/benchmark/gudhi_env/bin/python
+cachedir: .pytest_cache
+rootdir: /tests/tests
+collecting ... collected 9 items
+
+../tests/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_grid_perslay_weight_instantiation PASSED [ 11%]
+../tests/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_gaussian_mixture_perslay_weight_instantiation PASSED [ 22%]
+../tests/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_power_perslay_weight_instantiation PASSED [ 33%]
+../tests/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_gaussian_perslay_phi_instantiation PASSED [ 44%]
+../tests/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_tent_perslay_phi_instantiation PASSED [ 55%]
+../tests/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_flat_perslay_phi_instantiation PASSED [ 66%]
+../tests/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_perslay_instantiation PASSED [ 77%]
+../tests/tests/test_tensorflow_layers_instantiation.py::TestTensorFlowLayerDynamicArgument::test_layer_instantiation_no_dynamic_error PASSED [ 88%]
+../tests/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerBehavior::test_power_perslay_weight_call PASSED [100%]
+
+============================== 9 passed in 3.09s ===============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

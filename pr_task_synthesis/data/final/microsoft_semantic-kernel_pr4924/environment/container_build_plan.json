@@ -1,0 +1,57 @@
+{
+  "base_image": "python:3.10-slim",
+  "build_context": "/artifacts/environment",
+  "dockerfile": "Dockerfile.final",
+  "system_packages": [
+    "git",
+    "curl",
+    "python3-pip",
+    "python3-venv"
+  ],
+  "build_steps": [
+    {
+      "step": 1,
+      "type": "base_image",
+      "description": "Start from python:3.10-slim base image"
+    },
+    {
+      "step": 2,
+      "type": "system_packages",
+      "description": "Install required system packages",
+      "packages": ["git", "curl", "python3-pip", "python3-venv"]
+    },
+    {
+      "step": 3,
+      "type": "script_copy",
+      "description": "Copy setup scripts to /opt/benchmark",
+      "scripts": [
+        {"source": "setup_runtime.sh", "dest": "/opt/benchmark/setup_runtime.sh"},
+        {"source": "repo_setup.sh", "dest": "/opt/benchmark/repo_setup.sh"}
+      ]
+    },
+    {
+      "step": 4,
+      "type": "repo_materialization",
+      "description": "Execute repo_setup.sh to clone semantic-kernel repository",
+      "script": "/opt/benchmark/repo_setup.sh",
+      "target": "/workspace"
+    },
+    {
+      "step": 5,
+      "type": "runtime_setup",
+      "description": "Execute setup_runtime.sh to create Python venv with poetry",
+      "script": "/opt/benchmark/setup_runtime.sh"
+    }
+  ],
+  "workdir": "/workspace",
+  "runtime_profile": {
+    "ecosystem": "python",
+    "package_manager": "poetry",
+    "venv_path": "/workspace/python/.venv",
+    "activation_command": "source /workspace/python/.venv/bin/activate"
+  },
+  "build_backend": "buildah",
+  "export_format": "oci",
+  "export_path": "/artifacts/environment/openenv_validation_oci.tar",
+  "notes": "Evaluation assets (eval.sh, tests/) are runtime-mounted, not baked into the image"
+}

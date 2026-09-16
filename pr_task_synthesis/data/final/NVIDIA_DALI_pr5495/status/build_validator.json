@@ -1,0 +1,11 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "build_successful": true,
+  "oci_archive_exported": true,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "route_to": null,
+  "notes": "Buildah build of Dockerfile.final completed successfully. All build steps executed without errors: base image pulled, scripts copied and made executable, setup_runtime.sh installed system packages (cmake, build-essential, git, curl, python3, etc.) and created Python venv, repo_setup.sh cloned NVIDIA DALI repository to /workspace. OCI archive exported to /artifacts/environment/openenv_validation_oci.tar (4.5GB). Container is ready for verifier testing."
+}

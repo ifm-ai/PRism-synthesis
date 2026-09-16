@@ -1,0 +1,92 @@
+{
+ "version": "v2",
+ "total_duration": 16931.216,
+ "total_turns": 3,
+ "outcome": "success",
+ "success_turn": 3,
+ "setup": {
+  "root_agent_setup": 0.0
+ },
+ "preflight_check": {
+  "preflight_check_environment": 0.05
+ },
+ "turns": [
+  {
+   "turn": 1,
+   "operations": {
+    "snapshot_sessions": 1.16,
+    "agent_turn_run": 7993.72,
+    "collect_turn_trajectories": 9.03,
+    "audit_artifacts": 0.4,
+    "quality_gate_checks": 0.09,
+    "audit_image_build": 1331.05,
+    "image_build_breakdown": {
+     "buildah_bud": 996.05,
+     "apptainer_build": 321.08,
+     "workspace_check": 0.13
+    },
+    "eval_verification": 181.51
+   },
+   "outcome": "eval_verification_failed",
+   "duration": 9516
+  },
+  {
+   "turn": 2,
+   "operations": {
+    "snapshot_sessions": 1.12,
+    "agent_turn_run": 2301.34,
+    "collect_turn_trajectories": 6.02,
+    "audit_artifacts": 0.45,
+    "quality_gate_checks": 0.09,
+    "audit_image_build": 1025.41,
+    "image_build_breakdown": {
+     "buildah_bud": 705.46,
+     "apptainer_build": 307.21,
+     "workspace_check": 0.12
+    },
+    "eval_verification": 182.78
+   },
+   "outcome": "eval_verification_failed",
+   "duration": 3517
+  },
+  {
+   "turn": 3,
+   "operations": {
+    "snapshot_sessions": 1.12,
+    "agent_turn_run": 861.4,
+    "collect_turn_trajectories": 7.03,
+    "audit_artifacts": 0.46,
+    "quality_gate_checks": 0.1,
+    "audit_image_build": 960.71,
+    "image_build_breakdown": {
+     "buildah_bud": 639.5,
+     "apptainer_build": 308.8,
+     "workspace_check": 0.12
+    },
+    "eval_verification": 218.89
+   },
+   "outcome": "success",
+   "duration": 2049
+  }
+ ],
+ "analyzer_builder": {
+  "opencode_install": 1.1,
+  "solver_run": 609.78,
+  "trajectory_snapshot_sessions": 1.12,
+  "trajectory_judge": 106.11,
+  "collect_turn_trajectories": 2.98,
+  "trajectory_decision": 0.06,
+  "instruction_tuning": 0.02,
+  "analyzer_builder": 767.0
+ },
+ "harbor_export": {
+  "ecr_push": 1080.0,
+  "export_harbor_task": 1080.24
+ },
+ "manager_block_streak": 0,
+ "manager_block_last_reason": "",
+ "quality_gate_failures": 0,
+ "extra_attr": {
+  "run_retry": 3
+ }
+}

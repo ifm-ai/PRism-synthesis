@@ -1,0 +1,10 @@
+{
+  "status": "complete",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "High-quality trajectory: solver correctly localized and fixed the Annotation class in src/pytorch_ie/core/document.py, ran comprehensive local tests, and the oracle verifier passed. Both solver and oracle signals are strong. No instruction or verifier changes needed."
+}

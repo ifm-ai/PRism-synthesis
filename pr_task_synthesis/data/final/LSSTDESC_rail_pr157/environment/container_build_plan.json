@@ -1,0 +1,78 @@
+{
+  "container_spec": {
+    "base_image": "python:3.11-slim",
+    "platform": "linux/amd64",
+    "build_context": "/artifacts/environment",
+    "dockerfile": "Dockerfile.final"
+  },
+  "build_steps": [
+    {
+      "step": 1,
+      "instruction": "FROM",
+      "details": "Base image python:3.11-slim"
+    },
+    {
+      "step": 2,
+      "instruction": "RUN",
+      "details": "Install system packages: git, curl, openmpi-bin, libopenmpi-dev, hdf5-tools, libhdf5-openmpi-dev"
+    },
+    {
+      "step": 3,
+      "instruction": "COPY",
+      "details": "Copy setup_runtime.sh from build context to /opt/benchmark/setup_runtime.sh"
+    },
+    {
+      "step": 4,
+      "instruction": "COPY",
+      "details": "Copy repo_setup.sh from build context to /opt/benchmark/repo_setup.sh"
+    },
+    {
+      "step": 5,
+      "instruction": "RUN",
+      "details": "Make scripts executable"
+    },
+    {
+      "step": 6,
+      "instruction": "RUN",
+      "details": "Execute repo_setup.sh to materialize /workspace from git repository"
+    },
+    {
+      "step": 7,
+      "instruction": "RUN",
+      "details": "Execute setup_runtime.sh to create venv and install Python dependencies"
+    },
+    {
+      "step": 8,
+      "instruction": "WORKDIR",
+      "details": "Set working directory to /workspace"
+    }
+  ],
+  "copied_artifacts": [
+    {
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh",
+      "purpose": "Build-time runtime environment creation script"
+    },
+    {
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh",
+      "purpose": "Repository materialization script for /workspace"
+    }
+  ],
+  "excluded_from_image": [
+    "/artifacts/evaluation/eval.sh",
+    "/artifacts/evaluation/test.patch",
+    "/artifacts/evaluation/tests/",
+    "/workspace (not copied, materialized by repo_setup.sh)"
+  ],
+  "runtime_environment": {
+    "type": "venv",
+    "path": "/opt/benchmark/venv",
+    "activation": "source /opt/benchmark/venv/bin/activate",
+    "python_version": "3.11"
+  },
+  "build_backend": "buildah",
+  "output_format": "oci",
+  "output_archive": "/artifacts/environment/openenv_validation_oci.tar",
+  "notes": "Image built from structured environment artifacts. Verifier assets (eval.sh, test.patch, tests/) are runtime-mounted, not baked into the image."
+}

@@ -1,0 +1,56 @@
+{
+  "base_image_candidate": "debian:bookworm",
+  "system_packages": [
+    "git",
+    "curl",
+    "make",
+    "golang-go"
+  ],
+  "base_setup_commands": [
+    "apt-get update -qq && apt-get install -y -qq git curl make golang-go"
+  ],
+  "setup_runtime_commands": [
+    "export GOPATH=/root/go",
+    "export PATH=${GOPATH}/bin:${PATH}",
+    "mkdir -p ${GOPATH}/src ${GOPATH}/bin ${GOPATH}/pkg",
+    "curl -sSL https://github.com/open-policy-agent/opa/releases/download/v0.55.0/opa_linux_amd64_static -o /usr/local/bin/opa && chmod 755 /usr/local/bin/opa",
+    "curl -sSL https://github.com/StyraInc/regal/releases/download/v0.11.0/regal_Linux_x86_64 -o /usr/local/bin/regal && chmod 755 /usr/local/bin/regal",
+    "cd /workspace && go mod verify && go mod download",
+    "go install github.com/golang/mock/mockgen@v1.6.0",
+    "go install github.com/google/wire/cmd/wire@latest"
+  ],
+  "activation_commands": [
+    "export GOPATH=/root/go",
+    "export PATH=/usr/local/go/bin:${GOPATH}/bin:${PATH}"
+  ],
+  "activation_command": "export GOPATH=/root/go && export PATH=/usr/local/go/bin:${GOPATH}/bin:${PATH}",
+  "activation_type": "system",
+  "activation_validation_command": "bash -c 'export GOPATH=/root/go && export PATH=/usr/local/go/bin:${GOPATH}/bin:${PATH} && go version && echo ACTIVATION_OK'",
+  "detected_test_command": "go test -count=1 -shuffle=on -timeout=10m -race $(go list ./... | grep -vE '^github.com/Legit-Labs/legitify/e2e')",
+  "runtime_smoke_command": "go run main.go --help",
+  "runtime_profile": {
+    "ecosystem": "go",
+    "package_manager": "go_modules",
+    "env": {
+      "GOPATH": "/root/go",
+      "PATH": "/usr/local/go/bin:${GOPATH}/bin:${PATH}"
+    },
+    "env_name": "system",
+    "prepare_commands": [
+      "mkdir -p /root/go/src /root/go/bin /root/go/pkg",
+      "go mod download"
+    ],
+    "activation_commands": [
+      "export GOPATH=/root/go",
+      "export PATH=/usr/local/go/bin:${GOPATH}/bin:${PATH}"
+    ],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "go test automatically resolves and downloads test dependencies",
+    "cache_dirs": [
+      "/root/go/pkg/mod",
+      "/root/go/src"
+    ],
+    "notes": "Go 1.19.8 installed via apt (Debian bookworm). Project requires Go 1.19+ and CI uses 1.20. OPA v0.55.0 and Regal v0.11.0 installed for policy validation. Git, curl, and make installed as system dependencies."
+  },
+  "notes": "Base image: debian:bookworm. System packages git, curl, make, and golang-go are installed via apt. Go 1.19.8 is used (project requires 1.19+, CI uses 1.20). OPA and Regal are installed from GitHub releases for policy validation. The go mod download command caches all dependencies. GOPATH is set to /root/go. No special activation needed beyond setting GOPATH and PATH environment variables."
+}

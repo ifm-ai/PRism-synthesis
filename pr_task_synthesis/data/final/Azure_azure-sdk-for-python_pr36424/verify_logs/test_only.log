@@ -1,0 +1,129 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /workspace
+configfile: setup.cfg
+plugins: mock-3.15.1, timeout-2.4.0, xdist-3.8.0, asyncio-1.4.0, cov-7.1.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 2 items
+
+tests/finetuning_job/unittests/test_azure_openai_finetuning_job_schema.py::TestAzureOpenAIFineTuningJobSchema::test_azure_openai_finetuning_job_full FAILED [ 50%]
+tests/finetuning_job/unittests/test_custom_model_finetuning_job_schema.py::TestCustomModelFineTuningJobSchema::test_custom_model_finetuning_job_full FAILED [100%]
+
+=================================== FAILURES ===================================
+___ TestAzureOpenAIFineTuningJobSchema.test_azure_openai_finetuning_job_full ___
+
+self = <test_azure_openai_finetuning_job_schema.TestAzureOpenAIFineTuningJobSchema object at 0x7feae1a52050>
+expected_azure_openai_finetuning_job_full = <azure.ai.ml._restclient.v2024_01_01_preview.models._models_py3.JobBase object at 0x7feae1824390>
+loaded_azure_openai_model_finetuning_job_full = AzureOpenAIFineTuningJob({'hyperparameters': <azure.ai.ml.entities._job.finetuning.azure_openai_hyperparameters.AzureO...y_name': 'gpt4-display-name-1234', 'experiment_name': 'gpt4-finetuning-experiment', 'compute': None, 'services': None})
+
+    def test_azure_openai_finetuning_job_full(
+        self, expected_azure_openai_finetuning_job_full, loaded_azure_openai_model_finetuning_job_full
+    ):
+        self._validate_finetuning_job(loaded_azure_openai_model_finetuning_job_full)
+    
+>       assert (
+            loaded_azure_openai_model_finetuning_job_full._to_rest_object().as_dict()
+            == expected_azure_openai_finetuning_job_full.as_dict()
+        )
+E       AssertionError: assert {'name': 'sim...riment', ...}} == {'name': 'sim...riment', ...}}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'properties': {'properties': {'my_property': 'my_value'}, 'tags': {'foo_tag': 'bar'}, 'display_name': 'gpt4-display-name-1234', 'experiment_name': 'gpt4-finetuning-experiment', ...}} != {'properties': {'properties': {'my_property': 'my_value'}, 'tags': {'foo_tag': 'bar'}, 'display_name': 'gpt4-display-name-1234', 'experiment_name': 'gpt4-finetuning-experiment', ...}}
+E         
+E         Full diff:
+E           {...
+E         
+E         ...Full output truncated (44 lines hidden), use '-vv' to show
+
+tests/finetuning_job/unittests/test_azure_openai_finetuning_job_schema.py:83: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Class AzureOpenAIHyperparameters: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+Class AzureOpenAIFineTuningJob: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+Class FineTuningVertical: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+Class FineTuningJob: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+Class AzureOpenAIHyperparametersSchema: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+Class AzureOpenAIFineTuningSchema: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+Class FineTuningVerticalSchema: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+Class FineTuningJobSchema: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+------------------------------ Captured log setup ------------------------------
+WARNING  azure.ai.ml._utils._experimental:_experimental.py:66 Class AzureOpenAIHyperparameters: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+WARNING  azure.ai.ml._utils._experimental:_experimental.py:66 Class AzureOpenAIFineTuningJob: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+WARNING  azure.ai.ml._utils._experimental:_experimental.py:66 Class FineTuningVertical: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+WARNING  azure.ai.ml._utils._experimental:_experimental.py:66 Class FineTuningJob: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+WARNING  azure.ai.ml._utils._experimental:_experimental.py:66 Class AzureOpenAIHyperparametersSchema: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+WARNING  azure.ai.ml._utils._experimental:_experimental.py:66 Class AzureOpenAIFineTuningSchema: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+WARNING  azure.ai.ml._utils._experimental:_experimental.py:66 Class FineTuningVerticalSchema: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+WARNING  azure.ai.ml._utils._experimental:_experimental.py:66 Class FineTuningJobSchema: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+___ TestCustomModelFineTuningJobSchema.test_custom_model_finetuning_job_full ___
+
+self = <test_custom_model_finetuning_job_schema.TestCustomModelFineTuningJobSchema object at 0x7feae17f8890>
+expected_custom_model_finetuning_job_full = <azure.ai.ml._restclient.v2024_01_01_preview.models._models_py3.JobBase object at 0x7feae172a910>
+loaded_custom_model_finetuning_job_full = CustomModelFineTuningJob({'hyperparameters': {'num_train_epochs': '1', 'per_device_train_batch_size': '1', 'learning_r...name': 'llama-display-name-1234', 'experiment_name': 'llama-finetuning-experiment', 'compute': None, 'services': None})
+
+    def test_custom_model_finetuning_job_full(
+        self, expected_custom_model_finetuning_job_full, loaded_custom_model_finetuning_job_full
+    ):
+        self._validate_finetuning_job(loaded_custom_model_finetuning_job_full)
+    
+>       assert (
+            loaded_custom_model_finetuning_job_full._to_rest_object().as_dict()
+            == expected_custom_model_finetuning_job_full.as_dict()
+        )
+E       AssertionError: assert {'name': 'sim...riment', ...}} == {'name': 'sim...riment', ...}}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'properties': {'properties': {'my_property': 'my_value'}, 'tags': {'foo_tag': 'bar'}, 'display_name': 'llama-display-name-1234', 'experiment_name': 'llama-finetuning-experiment', ...}} != {'properties': {'properties': {'my_property': 'my_value'}, 'tags': {'foo_tag': 'bar'}, 'display_name': 'llama-display-name-1234', 'experiment_name': 'llama-finetuning-experiment', ...}}
+E         
+E         Full diff:
+E           {...
+E         
+E         ...Full output truncated (45 lines hidden), use '-vv' to show
+
+tests/finetuning_job/unittests/test_custom_model_finetuning_job_schema.py:78: AssertionError
+---------------------------- Captured stderr setup -----------------------------
+Class CustomModelFineTuningJob: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+Class CustomModelFineTuningSchema: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+------------------------------ Captured log setup ------------------------------
+WARNING  azure.ai.ml._utils._experimental:_experimental.py:66 Class CustomModelFineTuningJob: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+WARNING  azure.ai.ml._utils._experimental:_experimental.py:66 Class CustomModelFineTuningSchema: This is an experimental class, and may change at any time. Please see https://aka.ms/azuremlexperimental for more information.
+=============================== warnings summary ===============================
+azure/ai/ml/_restclient/v2023_10_01/models/_azure_machine_learning_services_enums.py:208
+  /workspace/sdk/ml/azure-ai-ml/azure/ai/ml/_restclient/v2023_10_01/models/_azure_machine_learning_services_enums.py:208: DeprecationWarning: invalid escape sequence '\ '
+    """Random forest is a supervised learning algorithm.
+
+azure/ai/ml/_restclient/v2023_10_01/models/_azure_machine_learning_services_enums.py:1327
+  /workspace/sdk/ml/azure-ai-ml/azure/ai/ml/_restclient/v2023_10_01/models/_azure_machine_learning_services_enums.py:1327: DeprecationWarning: invalid escape sequence '\ '
+    """Random forest is a supervised learning algorithm.
+
+../../../../opt/benchmark/venv/lib/python3.11/site-packages/opencensus/ext/azure/common/utils.py:30
+  /opt/benchmark/venv/lib/python3.11/site-packages/opencensus/ext/azure/common/utils.py:30: DeprecationWarning: 'locale.getdefaultlocale' is deprecated and slated for removal in Python 3.15. Use setlocale(), getencoding() and getlocale() instead.
+    'ai.device.locale': locale.getdefaultlocale()[0],
+
+azure/ai/ml/_schema/core/fields.py:434
+azure/ai/ml/_schema/core/fields.py:434
+  /workspace/sdk/ml/azure-ai-ml/azure/ai/ml/_schema/core/fields.py:434: RemovedInMarshmallow4Warning: Passing field metadata as keyword arguments is deprecated. Use the explicit `metadata=...` argument instead. Additional metadata: {'unknown': 'include'}
+    super().__init__(**kwargs)
+
+azure/ai/ml/_vendor/azure_resources/operations/_resources_operations.py:65
+  /workspace/sdk/ml/azure-ai-ml/azure/ai/ml/_vendor/azure_resources/operations/_resources_operations.py:65: DeprecationWarning: invalid escape sequence '\ '
+    """Get all the resources for a resource group.
+
+azure/ai/ml/_vendor/azure_resources/operations/_resources_operations.py:413
+  /workspace/sdk/ml/azure-ai-ml/azure/ai/ml/_vendor/azure_resources/operations/_resources_operations.py:413: DeprecationWarning: invalid escape sequence '\ '
+    """Get all the resources in a subscription.
+
+azure/ai/ml/_schema/monitoring/compute.py:12
+  /workspace/sdk/ml/azure-ai-ml/azure/ai/ml/_schema/monitoring/compute.py:12: RemovedInMarshmallow4Warning: Passing field metadata as keyword arguments is deprecated. Use the explicit `metadata=...` argument instead. Additional metadata: {'allowed_values': ['ServerlessSpark']}
+    compute_type = fields.Str(allowed_values=["ServerlessSpark"])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/finetuning_job/unittests/test_azure_openai_finetuning_job_schema.py::TestAzureOpenAIFineTuningJobSchema::test_azure_openai_finetuning_job_full
+FAILED tests/finetuning_job/unittests/test_custom_model_finetuning_job_schema.py::TestCustomModelFineTuningJobSchema::test_custom_model_finetuning_job_full
+======================== 2 failed, 8 warnings in 0.23s =========================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

@@ -1,0 +1,18 @@
+[package]
+name = "se-skip-certs-tests"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+default = ["se-verifier"]
+se-verifier = []
+
+[dependencies]
+
+[dev-dependencies]
+rstest = "0.18"
+
+[[test]]
+name = "test_se_skip_certs"
+path = "test_se_skip_certs.rs"
+required-features = ["se-verifier"]

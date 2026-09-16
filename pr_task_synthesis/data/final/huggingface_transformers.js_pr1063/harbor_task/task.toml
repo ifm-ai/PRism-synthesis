@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "huggingface_transformers.js_pr1063"
+description = "OpenEnv: huggingface/transformers.js PR #1063"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/huggingface/transformers.js.git"
+git_pr_id = "1063"
+git_base_commit = "958426347a9012b26a314d9b4b0ab7685dfd94eb"
+task_id = "huggingface_transformers.js_pr1063"
+repo_full_name = "huggingface/transformers.js"
+domain = "ML_DEEP_LEARNING"
+primary_language = "JavaScript"
+runtime_family = "JavaScript/Node.js"
+complexity = "easy"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

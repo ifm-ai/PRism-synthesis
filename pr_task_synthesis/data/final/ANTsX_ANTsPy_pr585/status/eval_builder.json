@@ -1,0 +1,28 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "infrastructure_reason": null,
+  "verification_command": "python -m pytest /tmp/test_singleprecision.py -v",
+  "activation_source": "source /opt/benchmark/venv/bin/activate",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "inline_test",
+  "copied_test_patch": false,
+  "supplemental_tests_created": true,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that apply_transforms accepts the singleprecision parameter and uses it for float32 computation while preserving output pixeltype.",
+  "fix_patch_grounding": "The fix.patch adds a 'singleprecision' boolean parameter to apply_transforms() that controls whether the underlying transformation uses float32 (singleprecision=True) or double (singleprecision=False) precision, while always returning an image with the original pixeltype.",
+  "issue_context_used": "The issue describes implementing a singleprecision parameter for large 4D datasets to reduce memory usage while maintaining output image type consistency.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": [
+    "python -m pytest /tmp/test_singleprecision.py -v"
+  ],
+  "required_verifier_files": [
+    "eval.sh"
+  ],
+  "notes": "The eval.sh dynamically patches the installed antspyx package based on workspace state. If workspace has 'singleprecision' in apply_transforms.py, the fixed version is installed; otherwise the buggy version (without singleprecision param) is installed. The test verifies both that the parameter exists (via inspect.signature) and that it works correctly."
+}

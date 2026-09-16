@@ -1,0 +1,41 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "test_only_exit_code": 1,
+  "test_with_fix_exit_code": 0,
+  "test_only_passed": false,
+  "test_with_fix_passed": true,
+  "test_only_results": {
+    "passed": 2,
+    "failed": 14,
+    "total": 16
+  },
+  "test_with_fix_results": {
+    "passed": 16,
+    "failed": 0,
+    "total": 16
+  },
+  "hacking_detected": false,
+  "hacking_evidence": null,
+  "verifier_alignment": {
+    "blocks_outer_progress": false,
+    "target_overlap": "high",
+    "patch_touched_files": [
+      "auto_gptq/modeling/_base.py",
+      "auto_gptq/modeling/_utils.py",
+      "auto_gptq/nn_modules/qlinear/qlinear_marlin.py",
+      "auto_gptq/utils/marlin_utils.py"
+    ],
+    "required_files_audit": {
+      "suggested_required_verifier_files": [
+        "eval.sh",
+        "test.patch",
+        "tests/test_marlin_utils.py"
+      ],
+      "audit_passed": true
+    },
+    "status": "aligned",
+    "notes": "Tests correctly distinguish between buggy and fixed states. Buggy code fails with ModuleNotFoundError for marlin_utils and AttributeError for is_marlin_format field. Fixed code passes all tests."
+  },
+  "notes": "Local preflight verification complete. testOnly correctly fails (14/16 tests fail) on buggy code. testWithFix correctly passes (16/16 tests pass) on fixed code. No hacking detected - tests properly verify the fix by checking for the existence of marlin_utils module and is_marlin_format field."
+}

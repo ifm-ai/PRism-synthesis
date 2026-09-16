@@ -1,0 +1,19 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.10.20, pytest-9.1.0, pluggy-1.6.0 -- /opt/conda/envs/bioconda/bin/python
+cachedir: .pytest_cache
+rootdir: /artifacts/evaluation/tests
+collecting ... collected 8 items
+
+../artifacts/evaluation/tests/test_fix_verification.py::TestMetaYaml::test_additional_platforms_linux_aarch64 PASSED [ 12%]
+../artifacts/evaluation/tests/test_fix_verification.py::TestMetaYaml::test_build_number_is_7 PASSED [ 25%]
+../artifacts/evaluation/tests/test_fix_verification.py::TestMetaYaml::test_run_exports_present PASSED [ 37%]
+../artifacts/evaluation/tests/test_fix_verification.py::TestMetaYaml::test_license_is_gpl3_only PASSED [ 50%]
+../artifacts/evaluation/tests/test_fix_verification.py::TestMetaYaml::test_license_file_present PASSED [ 62%]
+../artifacts/evaluation/tests/test_fix_verification.py::TestMetaYaml::test_license_family_present PASSED [ 75%]
+../artifacts/evaluation/tests/test_fix_verification.py::TestBuildSh::test_set_xeu_not_set_eu PASSED [ 87%]
+../artifacts/evaluation/tests/test_fix_verification.py::TestBuildSh::test_parallel_make_with_cpu_count PASSED [100%]
+
+============================== 8 passed in 0.01s ===============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

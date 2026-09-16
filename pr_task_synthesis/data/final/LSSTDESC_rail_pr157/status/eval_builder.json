@@ -1,0 +1,23 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "verification_command": "python -m pytest $TESTS_DIR/test_import_path_fix.py -v",
+  "activation_source": "source /opt/benchmark/venv/bin/activate",
+  "eval_template_version": "1.0.0",
+  "verifier_asset_mode": "external_hidden_tests",
+  "copied_test_patch": false,
+  "supplemental_tests_created": true,
+  "extra_test_dependencies_installed": true,
+  "extra_test_dependency_commands": ["pip install --quiet PyYAML"],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that example notebooks and YAML configuration files use the new import path (rail.creation.degraders.photometric_errors) instead of the old path (rail.creation.degraders.lsst_error_model) for LSSTErrorModel class.",
+  "fix_patch_grounding": "The fix.patch changes import statements in 7 example files (5 notebooks and 2 YAML files) from rail.creation.degraders.lsst_error_model to rail.creation.degraders.photometric_errors.",
+  "issue_context_used": "The issue describes that the LSST error model class was relocated and all public examples must be updated to use the new module path.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": ["python -m pytest $TESTS_DIR/test_import_path_fix.py -v"],
+  "required_verifier_files": ["eval.sh", "tests/test_import_path_fix.py"],
+  "notes": "Hidden tests verify that all example files (notebooks and YAML configs) have been updated to use the correct import path for LSSTErrorModel. Tests will fail on buggy /workspace and pass on fixed version."
+}

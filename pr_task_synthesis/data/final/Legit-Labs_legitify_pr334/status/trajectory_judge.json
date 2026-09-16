@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "fail",
+  "oracle_outcome": "fail",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "High-value RL trajectory: solver correctly localized the problem, touched relevant files (policies/gitlab/repository.rego, test/repository_test.go), made meaningful edits, and ran tests. The failure was due to inverted policy logic (a common pattern error), not a localization or instruction comprehension issue. The oracle verifier correctly identified the behavioral failure. This is a good training example for learning to debug policy logic errors."
+}

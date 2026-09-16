@@ -1,0 +1,67 @@
+{
+  "base_image_candidate": "python:3.11-slim",
+  "system_packages": [
+    "git",
+    "curl",
+    "python3-venv",
+    "python3-dev",
+    "libgdal-dev",
+    "gdal-bin",
+    "libnetcdf-dev",
+    "libhdf5-dev",
+    "libproj-dev",
+    "libgeos-dev",
+    "build-essential",
+    "pkg-config"
+  ],
+  "base_setup_commands": [
+    "apt-get update",
+    "apt-get install -y git curl python3-venv python3-dev libgdal-dev gdal-bin libnetcdf-dev libhdf5-dev libproj-dev libgeos-dev build-essential pkg-config",
+    "export CPLUS_INCLUDE_PATH=/usr/include/gdal",
+    "export C_INCLUDE_PATH=/usr/include/gdal"
+  ],
+  "setup_runtime_commands": [
+    "python3 -m venv /opt/benchmark/venv",
+    "source /opt/benchmark/venv/bin/activate",
+    "pip install --upgrade pip setuptools wheel",
+    "pip install GDAL",
+    "pip install flit",
+    "pip install \"raven-hydro>=0.2.4,<1.0\"",
+    "cd /workspace && pip install -e \".[dev]\""
+  ],
+  "activation_commands": [
+    "source /opt/benchmark/venv/bin/activate"
+  ],
+  "activation_command": "source /opt/benchmark/venv/bin/activate",
+  "activation_type": "venv",
+  "activation_validation_command": "bash -c 'source /opt/benchmark/venv/bin/activate && python -c \"import ravenpy; print(ravenpy.__version__)\"'",
+  "detected_test_command": "pytest",
+  "runtime_smoke_command": "python -c 'from ravenpy.config.commands import CustomOutput; c = CustomOutput(time_per=\"YEARLY\", stat=\"AVERAGE\", variable=\"PRECIP\", space_agg=\"ENTIRE_WATERSHED\"); print(c.to_rv())'",
+  "runtime_profile": {
+    "ecosystem": "Python",
+    "package_manager": "pip",
+    "env": "/opt/benchmark/venv",
+    "env_name": "ravenpy",
+    "prepare_commands": [
+      "python3 -m venv /opt/benchmark/venv",
+      "source /opt/benchmark/venv/bin/activate",
+      "pip install --upgrade pip setuptools wheel"
+    ],
+    "activation_commands": [
+      "source /opt/benchmark/venv/bin/activate"
+    ],
+    "base_deps_installed": [
+      "GDAL",
+      "flit",
+      "raven-hydro",
+      "ravenpy[dev]"
+    ],
+    "test_only_install_strategy": "Use the activated venv; pytest is included in dev dependencies",
+    "cache_dirs": [
+      "/opt/benchmark/venv",
+      "/root/.cache/pip"
+    ],
+    "notes": "RavenPy requires GDAL and raven-hydro as special dependencies. The environment uses a system-wide venv at /opt/benchmark/venv. Project is installed in editable mode with dev dependencies including pytest."
+  },
+  "notes": "RavenPy is a Python package for hydrological modeling. The base image python:3.11-slim provides a clean Python 3.11 environment. git and curl are explicitly included as baseline system packages. GDAL requires libgdal-dev, gdal-bin, and python3-dev for the Python GDAL bindings. raven-hydro is the Raven hydrological framework dependency. The project uses flit as the build backend. Dev dependencies include pytest, pytest-xdist for parallel testing, and other development tools. Optional GIS dependencies (geopandas, rasterio, etc.) are not included by default but can be installed via pip install ravenpy[gis] if needed."
+}

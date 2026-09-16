@@ -1,0 +1,32 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "base_image": "python:3.11-slim-bookworm",
+  "copied_artifacts": [
+    "setup_runtime.sh",
+    "repo_setup.sh"
+  ],
+  "uses_repo_setup_script": true,
+  "repo_materialization_mode": "git_clone_via_script",
+  "container_build_plan_written": true,
+  "build_backend_target": "buildah",
+  "buildability_assessment": "buildable",
+  "blocking_risks": [],
+  "warnings": [
+    "ANTsPy repository clone may require significant bandwidth and time",
+    "Python venv with scientific packages will add ~800MB to image size"
+  ],
+  "recommended_fixes": [],
+  "notes": "Dockerfile.final is ready for Buildah validation. The image uses pre-built antspyx wheel from PyPI (version 0.6.3) to avoid complex C++ compilation. The eval.sh and test assets are intentionally excluded from the image as runtime-mounted verifier assets. The /workspace directory is materialized by repo_setup.sh during build, not copied from build context.",
+  "dockerfile_path": "/artifacts/environment/Dockerfile.final",
+  "container_build_plan_path": "/artifacts/environment/container_build_plan.json",
+  "build_context_files": [
+    "setup_runtime.sh",
+    "repo_setup.sh"
+  ],
+  "excluded_from_image": [
+    "/artifacts/evaluation/eval.sh",
+    "/artifacts/evaluation/test.patch",
+    "/artifacts/evaluation/tests/"
+  ]
+}

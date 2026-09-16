@@ -1,0 +1,21 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": "setup.py explicitly handles Linux platform with linux_binarys list and platform detection; CI workflows run on Linux; README shows Linux installation; no Windows/macOS-only API in touched file",
+  "primary_language": "Python",
+  "build_system": "setuptools (setup.py)",
+  "test_framework": "pytest",
+  "base_commit": "00c57c8bd8f6b9bb191c5a3400d4521659ca14e4",
+  "modified_files": [
+    "python/llm/dev/benchmark/harness/bigdl_llm.py"
+  ],
+  "high_value_files": [
+    "python/llm/dev/benchmark/harness/bigdl_llm.py",
+    "python/llm/dev/benchmark/harness/run_llb.py",
+    "python/llm/dev/benchmark/harness/README.md",
+    "python/llm/setup.py",
+    "python/llm/README.md"
+  ],
+  "notes": "Repository is a Python-based BigDL-LLM project. The fix addresses a bug in BigDLLM class initialization where use_cache and optimize_model flags were incorrectly retrieved from kwargs instead of bigdl_llm_kwargs. Tests use pytest and require external model paths via environment variables. Platform is Linux-compatible (no Windows/macOS blocking constraints)."
+}

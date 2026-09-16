@@ -1,0 +1,27 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "base_image": "node:18-bookworm",
+  "copied_artifacts": [
+    {
+      "source": "/artifacts/environment/repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh"
+    },
+    {
+      "source": "/artifacts/environment/setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh"
+    }
+  ],
+  "uses_repo_setup_script": true,
+  "repo_materialization_mode": "git-clone-during-build",
+  "container_build_plan_written": true,
+  "build_backend_target": "buildah",
+  "buildability_assessment": "probably_buildable",
+  "blocking_risks": [],
+  "warnings": [
+    "Chrome installation may increase image size significantly",
+    "eval.sh and tests/ are runtime-mounted by orchestrator, not baked into image"
+  ],
+  "recommended_fixes": [],
+  "notes": "Dockerfile.final created for PlayCanvas engine benchmark environment. Verifier assets (eval.sh, tests/) have been removed from the image per contract requirements. Static review passed: valid syntax, all COPY sources present, apt-get compatible with node:18-bookworm base, workspace contract respected (no /workspace snapshotting), scripts properly copied and executed. Ready for Buildah validation by openenv-build-validator."
+}

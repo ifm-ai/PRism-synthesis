@@ -1,0 +1,73 @@
+{
+  "pr_summary": "Fix token Type defaulting in gRPC transport. When a Token's Type field is empty, the authorization header should default to 'Bearer' instead of producing a malformed header. The fix adds a setAuthMetadata helper that checks if Type is empty and substitutes 'Bearer' before constructing the authorization metadata.",
+  "runtime_family": "Go",
+  "package_manager": "go modules",
+  "touched_files": [
+    "auth/grpctransport/dial_socketopt_test.go",
+    "auth/grpctransport/grpctransport.go",
+    "auth/grpctransport/grpctransport_test.go"
+  ],
+  "important_build_files": [
+    "go.mod",
+    "go.sum",
+    "go.work",
+    "auth/go.mod",
+    "auth/go.sum"
+  ],
+  "important_test_files": [
+    "auth/grpctransport/grpctransport_test.go",
+    "auth/grpctransport/dial_socketopt_test.go",
+    "auth/auth_test.go"
+  ],
+  "candidate_build_commands": [
+    "go build ./...",
+    "go mod tidy",
+    "cd auth && go mod tidy"
+  ],
+  "candidate_test_commands": [
+    "go test ./auth/grpctransport/...",
+    "cd auth && go test ./grpctransport/..."
+  ],
+  "candidate_smoke_commands": [
+    "go version",
+    "go build ./auth/...",
+    "cd auth && go test -v ./grpctransport/... -run TestGrpcCredentialsProvider_TokenType"
+  ],
+  "candidate_activation_checks": [
+    "go version",
+    "go env GOPATH",
+    "go env GOBIN"
+  ],
+  "environment_management": "Standard Go modules with go.mod/go.sum files. The repo uses a go.work workspace file for multi-module development.",
+  "special_system_dependencies": [
+    "Go 1.19 or later (supported: 1.19, 1.20, 1.21, 1.22)",
+    "golint",
+    "goimports",
+    "staticcheck (for CI linting)"
+  ],
+  "high_value_files": [
+    "auth/grpctransport/grpctransport.go",
+    "auth/grpctransport/grpctransport_test.go",
+    "auth/internal/internal.go",
+    "auth/auth.go",
+    "CONTRIBUTING.md",
+    "testing.md"
+  ],
+  "patch_file_cues": [
+    "auth/grpctransport/grpctransport.go - modified GetRequestMetadata to use new setAuthMetadata helper",
+    "auth/grpctransport/grpctransport.go - added setAuthMetadata function that defaults empty Type to 'Bearer'",
+    "auth/grpctransport/dial_socketopt_test.go - test fix for staticTP struct change",
+    "auth/grpctransport/grpctransport_test.go - added TestGrpcCredentialsProvider_TokenType test"
+  ],
+  "test_file_cues": [
+    "auth/grpctransport/grpctransport_test.go - new test TestGrpcCredentialsProvider_TokenType verifies both 'Basic' and default 'Bearer' token types",
+    "auth/grpctransport/grpctransport_test.go - staticTP struct changed from string to struct with tok field"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "CI workflows (.github/workflows/vet.yml, conformance.yaml) use ubuntu-latest runner",
+    "Go is cross-platform and the code has no Windows/macOS specific dependencies",
+    "No platform-specific build targets or OS-specific code in touched files"
+  ],
+  "notes": "This is the Google Cloud Client Libraries for Go repository. The fix is in the auth/grpctransport package which handles gRPC transport and authentication. The issue is that when Token.Type is empty, the authorization header was malformed. The fix adds a setAuthMetadata helper that checks if Type is empty and defaults to 'Bearer' using internal.TokenTypeBearer constant. The test file was updated to include a new test case TestGrpcCredentialsProvider_TokenType that verifies both explicit type ('Basic') and default type ('Bearer') behavior. The repository uses Go modules with go 1.19 minimum version."
+}

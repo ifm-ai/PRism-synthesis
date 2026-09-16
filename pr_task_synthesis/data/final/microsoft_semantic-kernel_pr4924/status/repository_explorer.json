@@ -1,0 +1,12 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "high_value_files": [
+    "python/pyproject.toml",
+    "python/semantic_kernel/connectors/ai/open_ai/services/open_ai_chat_completion_base.py",
+    "python/tests/unit/ai/open_ai/services/test_openai_chat_completion.py",
+    "python/tests/unit/ai/open_ai/services/test_azure_chat_completion.py"
+  ],
+  "notes": "Repository exploration completed successfully. This is a cross-platform Python project (Semantic Kernel SDK) using Poetry for dependency management. The fix targets a bug where Azure OpenAI responses without logprobs field cause AttributeError. The project is fully runnable in a Linux x86-64 container with Python 3.8+ and Poetry installed."
+}

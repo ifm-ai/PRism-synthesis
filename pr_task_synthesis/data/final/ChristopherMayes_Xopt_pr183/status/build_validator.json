@@ -1,0 +1,9 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "build_successful": true,
+  "oci_archive_exported": true,
+  "oci_archive_path": "/artifacts/environment/openenv_validation_oci.tar",
+  "build_backend": "buildah",
+  "notes": "Buildah build completed successfully. Image tagged as localhost/openenv-validation:latest (6.62 GB). OCI archive exported to /artifacts/environment/openenv_validation_oci.tar (2.6 GB). All build steps completed: base image pull, system package installation, Miniforge installation, script copying, repo materialization via git, conda environment creation, and xopt installation in editable mode."
+}

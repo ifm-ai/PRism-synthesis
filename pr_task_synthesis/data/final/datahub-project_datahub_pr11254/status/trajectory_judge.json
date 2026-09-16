@@ -1,0 +1,10 @@
+{
+  "status": "complete",
+  "solver_outcome": "pass",
+  "oracle_outcome": "fail",
+  "filter_label": "keep_verifier_repair",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": true,
+  "notes": "Solver correctly implemented the CLUSTERING_KEY fix matching fix.patch. Oracle verifier uses implementation pattern checking ('custom_properties = {}' string match) rather than behavioral validation. test_clustering_key_behavior passed confirming the fix works. Verifier repair needed to focus on behavioral outcomes."
+}

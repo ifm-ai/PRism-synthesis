@@ -1,0 +1,10 @@
+{
+  "status": "complete",
+  "solver_outcome": "partial",
+  "oracle_outcome": "fail",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "Solver made meaningful progress by touching the correct files and implementing 5 of 8 required changes. The partial implementation provides valuable training signal for understanding what changes are容易被 missed (build number increment, license_family, set -xeu). Oracle verifier is well-aligned with fix.patch and provides actionable feedback."
+}

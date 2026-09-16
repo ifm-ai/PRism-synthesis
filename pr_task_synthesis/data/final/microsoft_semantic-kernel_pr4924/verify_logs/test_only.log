@@ -1,0 +1,93 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.10.20, pytest-7.4.3, pluggy-1.6.0 -- /workspace/python/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /tests/tests
+plugins: asyncio-0.23.2, anyio-4.14.0
+asyncio: mode=strict
+collecting ... collected 5 items
+
+../../tests/tests/test_logprobs_attribute_safety.py::TestLogprobsAttributeSafety::test_get_metadata_with_logprobs_present PASSED [ 20%]
+../../tests/tests/test_logprobs_attribute_safety.py::TestLogprobsAttributeSafety::test_get_metadata_without_logprobs_attribute FAILED [ 40%]
+../../tests/tests/test_logprobs_attribute_safety.py::TestLogprobsAttributeSafety::test_get_metadata_with_logprobs_none PASSED [ 60%]
+../../tests/tests/test_logprobs_attribute_safety.py::TestLogprobsAttributeSafety::test_get_metadata_chunk_choice_with_logprobs PASSED [ 80%]
+../../tests/tests/test_logprobs_attribute_safety.py::TestLogprobsAttributeSafety::test_get_metadata_chunk_choice_without_logprobs FAILED [100%]
+
+=================================== FAILURES ===================================
+___ TestLogprobsAttributeSafety.test_get_metadata_without_logprobs_attribute ___
+
+self = <test_logprobs_attribute_safety.TestLogprobsAttributeSafety object at 0x7f4d526b46d0>
+chat_completion_base = OpenAIChatCompletion(ai_model_id='test_model', client=<MagicMock spec='AsyncOpenAI' id='139967366879200'>, ai_model_type=<OpenAIModelTypes.CHAT: 'chat'>, prompt_tokens=0, completion_tokens=0, total_tokens=0)
+
+    def test_get_metadata_without_logprobs_attribute(self, chat_completion_base):
+        """
+        Test metadata extraction when logprobs attribute is NOT present.
+    
+        This is the key test for the Azure OpenAI bug fix. Azure OpenAI
+        responses may not include the logprobs field, and the code should
+        return None instead of raising AttributeError.
+        """
+        # Create a mock choice object WITHOUT logprobs attribute
+        mock_choice = MagicMock(spec=[])  # Empty spec means no attributes
+    
+>       result = chat_completion_base._get_metadata_from_chat_choice(mock_choice)
+
+/tests/tests/test_logprobs_attribute_safety.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+semantic_kernel/connectors/ai/open_ai/services/open_ai_chat_completion_base.py:201: in _get_metadata_from_chat_choice
+    "logprobs": choice.logprobs,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <MagicMock id='139967366879488'>, name = 'logprobs'
+
+    def __getattr__(self, name):
+        if name in {'_mock_methods', '_mock_unsafe'}:
+            raise AttributeError(name)
+        elif self._mock_methods is not None:
+            if name not in self._mock_methods or name in _all_magics:
+>               raise AttributeError("Mock object has no attribute %r" % name)
+E               AttributeError: Mock object has no attribute 'logprobs'
+
+/usr/local/lib/python3.10/unittest/mock.py:643: AttributeError
+_ TestLogprobsAttributeSafety.test_get_metadata_chunk_choice_without_logprobs __
+
+self = <test_logprobs_attribute_safety.TestLogprobsAttributeSafety object at 0x7f4d526b4b20>
+chat_completion_base = OpenAIChatCompletion(ai_model_id='test_model', client=<MagicMock spec='AsyncOpenAI' id='139967368330112'>, ai_model_type=<OpenAIModelTypes.CHAT: 'chat'>, prompt_tokens=0, completion_tokens=0, total_tokens=0)
+
+    def test_get_metadata_chunk_choice_without_logprobs(self, chat_completion_base):
+        """
+        Test metadata extraction for ChunkChoice without logprobs attribute.
+    
+        This tests the streaming scenario where Azure OpenAI may not include
+        logprobs in chunk choices.
+        """
+        # Create a mock chunk choice WITHOUT logprobs attribute
+        mock_chunk_choice = MagicMock(spec=[])  # Empty spec means no attributes
+    
+>       result = chat_completion_base._get_metadata_from_chat_choice(
+            mock_chunk_choice
+        )
+
+/tests/tests/test_logprobs_attribute_safety.py:99: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+semantic_kernel/connectors/ai/open_ai/services/open_ai_chat_completion_base.py:201: in _get_metadata_from_chat_choice
+    "logprobs": choice.logprobs,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <MagicMock id='139967368316096'>, name = 'logprobs'
+
+    def __getattr__(self, name):
+        if name in {'_mock_methods', '_mock_unsafe'}:
+            raise AttributeError(name)
+        elif self._mock_methods is not None:
+            if name not in self._mock_methods or name in _all_magics:
+>               raise AttributeError("Mock object has no attribute %r" % name)
+E               AttributeError: Mock object has no attribute 'logprobs'
+
+/usr/local/lib/python3.10/unittest/mock.py:643: AttributeError
+=========================== short test summary info ============================
+FAILED ../../tests/tests/test_logprobs_attribute_safety.py::TestLogprobsAttributeSafety::test_get_metadata_without_logprobs_attribute
+FAILED ../../tests/tests/test_logprobs_attribute_safety.py::TestLogprobsAttributeSafety::test_get_metadata_chunk_choice_without_logprobs
+========================= 2 failed, 3 passed in 0.89s ==========================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

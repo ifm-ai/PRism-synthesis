@@ -1,0 +1,13 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-9.1.0, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /tmp
+collecting ... collected 2 items
+
+test_singleprecision.py::TestSinglePrecision::test_singleprecision_parameter_behavior PASSED [ 50%]
+test_singleprecision.py::TestSinglePrecision::test_singleprecision_parameter_exists PASSED [100%]
+
+============================== 2 passed in 3.10s ===============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0",
+  "evaluation_mode": "offline",
+  "task_id": "activeadmin-format-attribute-boolean",
+  "rollout_id": "ses_16086804dffePItYCH7gF4R61J",
+  "environment_version": "rails_72",
+  "instruction_version": "1.0",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "final_outcome": "pass",
+  "scores": {
+    "environment_readiness": 4,
+    "dependency_completeness": 4,
+    "instruction_quality": 5,
+    "problem_localizability": 5,
+    "verifier_integrity": 5,
+    "feedback_quality": 4,
+    "agent_progress": 5,
+    "recovery_quality": 4,
+    "training_value": 5
+  },
+  "overall_score": 4.6,
+  "root_cause": "agent_strategy",
+  "struggle_patterns": [
+    "timeout_before_meaningful_fix"
+  ],
+  "action_bucket": "keep",
+  "keep_for_rl": "keep",
+  "is_good_rl_example": true,
+  "confidence": 0.9,
+  "summary": "The solver successfully implemented the correct fix for ActiveAdmin's boolean attribute detection, changing from columns_hash to attribute_types. The fix matches the reference solution exactly. All existing tests passed (61 examples, 0 failures). The oracle verifier also passed. The solver went beyond the core fix by adding tests for virtual boolean attributes, which encountered a Rails 7.2-specific issue with how virtual attributes are assigned. This is a high-quality trajectory showing correct problem understanding, correct implementation, and successful verification.",
+  "evidence": [
+    "Solver correctly identified app/helpers/active_admin/display_helper.rb as the target file",
+    "Solver implemented the exact fix: changed from columns_hash to attribute_types for boolean detection",
+    "The fix matches the reference patch exactly (lines 108-113 of fix.patch)",
+    "All 61 existing display_helper tests passed after the fix",
+    "Oracle verifier passed: '1 example, 0 failures' for nil boolean attribute test",
+    "Solver added virtual boolean attributes (active, verified) to User model for testing",
+    "Solver encountered Rails 7.2 compatibility issue with virtual attribute assignment (tangential to main fix)"
+  ],
+  "recommended_actions": [
+    {
+      "owner": "trajectory_filter",
+      "priority": "low",
+      "action": "This is an excellent positive training example showing correct fix implementation and verification"
+    },
+    {
+      "owner": "environment_builder",
+      "priority": "low",
+      "action": "Consider documenting Rails 7.2 behavior differences for virtual attributes to help future agents"
+    }
+  ],
+  "phase_signals": {
+    "bootstrap_failures_before_first_edit": 0,
+    "repeated_error_loops": 0,
+    "tests_executed": true,
+    "first_meaningful_edit_made": true,
+    "touched_relevant_files": true,
+    "solver_local_verification_succeeded": true,
+    "solver_time_budget_exhausted": true,
+    "oracle_verifier_executed": true,
+    "oracle_verifier_passed": true,
+    "oracle_failure_actionable": false,
+    "instruction_oracle_mismatch_suspected": false
+  },
+  "signal_strength": {
+    "solver_signal": "strong",
+    "oracle_signal": "strong"
+  },
+  "alignment_assessment": {
+    "instruction_vs_oracle_alignment": "aligned",
+    "solver_vs_oracle_alignment": "aligned",
+    "needs_instruction_change": false,
+    "needs_verifier_change": false
+  }
+}

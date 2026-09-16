@@ -1,0 +1,40 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.0, pluggy-1.6.0 -- /opt/benchmark/dali_venv/bin/python
+cachedir: .pytest_cache
+rootdir: /tmp/tmp.8swBrKzcou
+collecting ... collected 29 items
+
+../tmp/tmp.8swBrKzcou/test_string_view_api.py::TestStringViewAPI::test_input_feed_count_exists SKIPPED [  3%]
+../tmp/tmp.8swBrKzcou/test_string_view_api.py::TestStringViewAPI::test_input_feed_count_with_string_literal SKIPPED [  6%]
+../tmp/tmp.8swBrKzcou/test_string_view_api.py::TestStringViewAPI::test_input_feed_count_with_string_variable SKIPPED [ 10%]
+../tmp/tmp.8swBrKzcou/test_string_view_api.py::TestStringViewAPI::test_input_feed_count_nonexistent_input SKIPPED [ 13%]
+../tmp/tmp.8swBrKzcou/test_string_view_api.py::TestStringViewAPI::test_get_operator_node_exists SKIPPED [ 17%]
+../tmp/tmp.8swBrKzcou/test_string_view_api.py::TestStringViewAPI::test_pipeline_with_multiple_inputs SKIPPED [ 20%]
+../tmp/tmp.8swBrKzcou/test_string_view_api.py::TestStringViewAPI::test_string_substring_compatibility SKIPPED [ 24%]
+../tmp/tmp.8swBrKzcou/test_string_view_api.py::TestDALINotAvailable::test_dali_not_available PASSED [ 27%]
+../tmp/tmp.8swBrKzcou/test_string_view_api.py::test_string_view_api_grounding PASSED [ 31%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestExecutorAPIChanges::test_executor_h_has_string_view_inputfeedcount PASSED [ 34%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestExecutorAPIChanges::test_executor_h_has_get_operator_method PASSED [ 37%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestExecutorAPIChanges::test_executor_impl_has_get_operator_implementation PASSED [ 41%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestExecutorAPIChanges::test_executor_impl_inputfeedcount_uses_string_view PASSED [ 44%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_has_nodeptr_method PASSED [ 48%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_has_nodeid_method PASSED [ 51%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_tensorid_returns_optional PASSED [ 55%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_has_tensorptr_method PASSED [ 58%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_uses_less_comparator PASSED [ 62%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_addop_returns_reference PASSED [ 65%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_inputfeedcount_uses_string_view PASSED [ 68%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getoperatornode_uses_string_view PASSED [ 72%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getinputoperatornode_uses_string_view PASSED [ 75%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getreadermeta_uses_string_view PASSED [ 79%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getinputlayout_uses_string_view PASSED [ 82%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getinputndim_uses_string_view PASSED [ 86%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getinputdtype_uses_string_view PASSED [ 89%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_input_operators_uses_less_comparator PASSED [ 93%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestImplementationChanges::test_pipeline_cc_getoperatornode_implementation PASSED [ 96%]
+../tmp/tmp.8swBrKzcou/test_fix_verification.py::TestImplementationChanges::test_pipeline_cc_getreadermeta_uses_executor_getoperator PASSED [100%]
+
+======================== 22 passed, 7 skipped in 0.05s =========================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

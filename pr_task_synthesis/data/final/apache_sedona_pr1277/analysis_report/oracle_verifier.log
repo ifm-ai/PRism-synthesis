@@ -1,0 +1,57 @@
+Looking in indexes: http://mirror.proxy.hpc:8081/repository/pypi-proxy/simple/
+Collecting pyspark
+  Downloading pyspark-4.1.2.tar.gz (455.4 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 455.4/455.4 MB 163.2 MB/s  0:00:02
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting py4j<0.10.9.10,>=0.10.9.7 (from pyspark)
+  Downloading py4j-0.10.9.9-py2.py3-none-any.whl (203 kB)
+Building wheels for collected packages: pyspark
+  Building wheel for pyspark (pyproject.toml): started
+  Building wheel for pyspark (pyproject.toml): finished with status 'done'
+  Created wheel for pyspark: filename=pyspark-4.1.2-py2.py3-none-any.whl size=456079515 sha256=03bd3a237b0122bd3f581722bdc0eb9b6db435ab6a336e07cc5963feb4c0d024
+  Stored in directory: /root/.cache/pip/wheels/e5/f2/55/c9abc382eb90dd1b5b2abbb7e3dbbcc6af520508ee7d342150
+Successfully built pyspark
+Installing collected packages: py4j, pyspark
+
+Successfully installed py4j-0.10.9.9 pyspark-4.1.2
+Looking in indexes: http://mirror.proxy.hpc:8081/repository/pypi-proxy/simple/
+Obtaining file:///workspace/python
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: apache-sedona
+  Building editable for apache-sedona (pyproject.toml): started
+  Building editable for apache-sedona (pyproject.toml): finished with status 'done'
+  Created wheel for apache-sedona: filename=apache_sedona-1.5.1-0.editable-cp311-cp311-linux_x86_64.whl size=3478 sha256=9a2c984b4292758ab2d2a937bfcf1ea7786f139da3de5020d446e42d6866d973
+  Stored in directory: /tmp/pip-ephem-wheel-cache-ot_o2_m1/wheels/3d/23/b0/6aa2e6700286497d1d65222efb6505e8b4d33282d4b2346fd0
+Successfully built apache-sedona
+Installing collected packages: apache-sedona
+  Attempting uninstall: apache-sedona
+    Found existing installation: apache-sedona 1.5.1
+    Uninstalling apache-sedona-1.5.1:
+      Successfully uninstalled apache-sedona-1.5.1
+Successfully installed apache-sedona-1.5.1
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.0, pluggy-1.6.0 -- /workspace/python/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /tests/tests
+collecting ... collected 3 items
+
+../tests/tests/test_st_s2_to_geom_quick.py::test_st_s2_to_geom_import PASSED [ 33%]
+../tests/tests/test_st_s2_to_geom_quick.py::test_st_s2_to_geom_in_exports PASSED [ 66%]
+../tests/tests/test_st_s2_to_geom_quick.py::test_st_s2_to_geom_signature PASSED [100%]
+
+============================== 3 passed in 0.48s ===============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

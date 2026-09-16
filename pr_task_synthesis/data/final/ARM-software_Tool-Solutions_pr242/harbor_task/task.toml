@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "ARM-software_Tool-Solutions_pr242"
+description = "OpenEnv: ARM-software/Tool-Solutions PR #242"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/ARM-software/Tool-Solutions.git"
+git_pr_id = "242"
+git_base_commit = "3df8a0f36294500027cc0097d244623d239ce810"
+task_id = "ARM-software_Tool-Solutions_pr242"
+repo_full_name = "ARM-software/Tool-Solutions"
+domain = "ML_DEEP_LEARNING"
+primary_language = "C"
+runtime_family = "Python"
+complexity = "medium"
+star_category = "stars_101_500"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

@@ -1,0 +1,112 @@
+diff --git a/.github/workflows/rubyonrails.yml b/.github/workflows/rubyonrails.yml
+index ab8bf716d..1cc3ae560 100644
+--- a/.github/workflows/rubyonrails.yml
++++ b/.github/workflows/rubyonrails.yml
+@@ -52,3 +52,5 @@ jobs:
+           GIT_AUTHOR_NAME: Over Commit
+           GIT_AUTHOR_EMAIL: overcommit@localhost
+           SKIP: ForbiddenBranches # this fails when triggered by master push
++      - run: bundle exec brakeman . --no-progress --no-exit-on-warn -o /dev/stdout -o tmp/brakeman.txt
++      - run: "grep 'Security Warnings: 20' tmp/brakeman.txt"
+diff --git a/.overcommit_gems.rb b/.overcommit_gems.rb
+index c6a2690c9..7728e7ab6 100644
+--- a/.overcommit_gems.rb
++++ b/.overcommit_gems.rb
+@@ -1,5 +1,8 @@
++# frozen_string_literal: true
++
+ source 'https://rubygems.org'
+ 
++gem 'brakeman'
+ gem 'bundler-audit'
+ gem 'fasterer'
+ gem 'i18n-tasks', '~> 1.0.10'
+diff --git a/.overcommit_gems.rb.lock b/.overcommit_gems.rb.lock
+index 08ff92264..82c52e600 100644
+--- a/.overcommit_gems.rb.lock
++++ b/.overcommit_gems.rb.lock
+@@ -37,6 +37,8 @@ GEM
+       parser (>= 2.4)
+       smart_properties
+     bigdecimal (3.1.5)
++    brakeman (6.1.1)
++      racc
+     builder (3.2.4)
+     bundler-audit (0.9.1)
+       bundler (>= 1.2.0, < 3)
+@@ -175,6 +177,7 @@ PLATFORMS
+   x86_64-linux
+ 
+ DEPENDENCIES
++  brakeman
+   bundler-audit
+   fasterer
+   i18n-tasks (~> 1.0.10)
+diff --git a/app/controllers/schools/usage_controller.rb b/app/controllers/schools/usage_controller.rb
+index 39c03912b..e39723d1d 100644
+--- a/app/controllers/schools/usage_controller.rb
++++ b/app/controllers/schools/usage_controller.rb
+@@ -12,12 +12,12 @@ module Schools
+       set_measurement_options
+       @measurement = measurement_unit(params[:measurement])
+ 
+-      @supply = params.require(:supply).to_sym
+-      @period = get_period
++      @supply = validate_supply
++      @period = validate_period
+       @split_meters = params[:split_meters].present?
+       @show_measurements = @period == :weekly
+ 
+-      if @school.send("has_#{@supply}?")
++      if @supply && @period && @school.send(:"has_#{@supply}?")
+         @meters = setup_meters(@school, @supply)
+         @chart_config = setup_chart_config(@supply)
+         @title_key = title_key(@supply, @period, @split_meters)
+@@ -34,15 +34,15 @@ module Schools
+         {
+           weekly: :calendar_picker_electricity_week_example_comparison_chart,
+           daily: :calendar_picker_electricity_day_example_comparison_chart,
+-          earliest_reading:  aggregate_school.aggregate_meter(:electricity).amr_data.start_date,
+-          last_reading:  aggregate_school.aggregate_meter(:electricity).amr_data.end_date,
++          earliest_reading: aggregate_school.aggregate_meter(:electricity).amr_data.start_date,
++          last_reading: aggregate_school.aggregate_meter(:electricity).amr_data.end_date
+         }
+       elsif supply == :gas
+         {
+           weekly: :calendar_picker_gas_week_example_comparison_chart,
+           daily: :calendar_picker_gas_day_example_comparison_chart,
+-          earliest_reading:  aggregate_school.aggregate_meter(:gas).amr_data.start_date,
+-          last_reading:  aggregate_school.aggregate_meter(:gas).amr_data.end_date,
++          earliest_reading: aggregate_school.aggregate_meter(:gas).amr_data.start_date,
++          last_reading: aggregate_school.aggregate_meter(:gas).amr_data.end_date
+         }
+       end
+     end
+@@ -59,10 +59,24 @@ module Schools
+       "charts.usage.titles.#{supply}.#{period}.#{split_meters ? 'split' : 'not_split'}"
+     end
+ 
+-    def get_period
++    def validate_period
+       period = params.require(:period).to_sym
+-      raise ActionController::RoutingError, "Period #{period} not valid" unless [:weekly, :daily].include?(period)
+-      period
++      if %i[weekly daily].include?(period)
++        period
++      else
++        Rails.logger.error("Period #{period} not valid")
++        nil
++      end
++    end
++
++    def validate_supply
++      supply = params.require(:supply).to_sym
++      if %i[electricity gas].include?(supply)
++        supply
++      else
++        Rails.logger.error("Supply #{supply} not valid")
++        nil
++      end
+     end
+   end
+ end

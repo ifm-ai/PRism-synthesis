@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "mcr.microsoft.com/dotnet/sdk:8.0",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": ".NET 8.0 SDK environment for building and testing .NET 6.0 / .NET Standard 2.0 projects using MSTest",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "Description:\n  .NET Test Driver\n\nUsage:\n  dotnet test [options] [[--] <additional arguments>...]]",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "",
+  "notes": "The .NET SDK 8.0 is installed and callable. Network access to nuget.org may be restricted in the current environment, but the base image mcr.microsoft.com/dotnet/sdk:8.0 will have full network access during image build. The setup_runtime.sh script will restore NuGet packages at build time. No activation command is needed since .NET SDK is a system-level install."
+}

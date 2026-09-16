@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "confidential-containers_trustee_pr460"
+description = "OpenEnv: confidential-containers/trustee PR #460"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/confidential-containers/trustee.git"
+git_pr_id = "460"
+git_base_commit = "79722e7525dfd2fe7700d29d8bcdddb9437cfa70"
+task_id = "confidential-containers_trustee_pr460"
+repo_full_name = "confidential-containers/trustee"
+domain = "SECURITY_FORENSICS"
+primary_language = "Rust"
+runtime_family = "rust"
+complexity = "medium"
+star_category = "stars_51_100"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

@@ -1,0 +1,18 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "base_image": "ubuntu:22.04",
+  "base_image_candidate": "ubuntu:22.04",
+  "runtime_type": "conda",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Python conda environment 'xopt-dev' on ubuntu:22.04 with numpy, torch, botorch, gpytorch, pandas, pydantic, deap, scipy, mpi4py, and development tools",
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "============================= test session starts ==============================\nplatform linux -- Python 3.13.14, pytest-9.1.0, pluggy-1.6.0\nrootdir: /workspace\nconfigfile: setup.cfg\nplugins: cov-7.1.0, anyio-4.14.0, jaxtyping-0.3.7\ncollected 1 item",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "source /opt/conda/etc/profile.d/conda.sh && conda activate xopt-dev",
+  "notes": "Base image changed from condaforge/mambaforge:latest to ubuntu:22.04 to fix apt-get failure due to empty /etc/apt/sources.list. Miniforge is installed manually via wget. System packages git, curl, build-essential, libopenmpi-dev, openmpi-bin, libhdf5-dev are installed via apt-get. The conda environment 'xopt-dev' is created from environment.yml and the xopt package is installed in editable mode. All key dependencies (torch, botorch, gpytorch, deap, mpi4py, scipy, pandas, pydantic) are installed and importable. Test runner (pytest) is reachable."
+}

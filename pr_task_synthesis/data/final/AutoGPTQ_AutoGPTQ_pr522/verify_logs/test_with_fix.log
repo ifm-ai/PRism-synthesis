@@ -1,0 +1,28 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /tests/tests
+plugins: anyio-4.14.0
+collecting ... collected 16 items
+
+../tests/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_convert_to_marlin_exists PASSED [  6%]
+../tests/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_get_cached_marlin_save_name_local_path PASSED [ 12%]
+../tests/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_get_cached_marlin_save_name_returns_assets_path PASSED [ 18%]
+../tests/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_marlin_utils_module_exists PASSED [ 25%]
+../tests/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_prepare_model_for_marlin_load_exists PASSED [ 31%]
+../tests/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_validate_marlin_compatibility_asymmetric PASSED [ 37%]
+../tests/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_validate_marlin_compatibility_desc_act PASSED [ 43%]
+../tests/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_validate_marlin_compatibility_invalid_bits PASSED [ 50%]
+../tests/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_validate_marlin_compatibility_invalid_group_size PASSED [ 56%]
+../tests/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_validate_marlin_compatibility_valid_config PASSED [ 62%]
+../tests/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_validate_marlin_device_support_exists PASSED [ 68%]
+../tests/tests/test_marlin_utils.py::TestBaseQuantizeConfigMarlinField::test_is_marlin_format_can_be_set PASSED [ 75%]
+../tests/tests/test_marlin_utils.py::TestBaseQuantizeConfigMarlinField::test_is_marlin_format_default_value PASSED [ 81%]
+../tests/tests/test_marlin_utils.py::TestBaseQuantizeConfigMarlinField::test_is_marlin_format_field_exists PASSED [ 87%]
+../tests/tests/test_marlin_utils.py::TestBaseQuantizeConfigMarlinField::test_to_dict_includes_is_marlin_format PASSED [ 93%]
+../tests/tests/test_marlin_utils.py::TestMarlinImportInBase::test_marlin_imports_in_base PASSED [100%]
+
+============================== 16 passed in 2.89s ==============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

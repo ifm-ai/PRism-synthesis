@@ -1,0 +1,66 @@
+>>>>> Start Test Output
+
+running 5 tests
+test_logging_init::test_cli_logging_initialization --- FAILED
+test_logging_init::test_rpc_logging_initialization --- FAILED
+test_logging_init::test_rpc_socket_dir_creation_evidence --- FAILED
+test_rpc_socket_dir::test_rpc_creates_csi_directory_when_enabled --- FAILED
+test_rpc_socket_dir::test_rpc_creates_socket_directory --- FAILED
+
+failures:
+
+---- test_logging_init::test_cli_logging_initialization stdout ----
+
+thread 'test_logging_init::test_cli_logging_initialization' (35109) panicked at test_logging_init.rs:38:5:
+CLI should output 'Log using env_logger' debug message when RUST_LOG=debug is set. This message is only printed if env_logger::try_init() is called in main() BEFORE clap parsing. Buggy code shows help without logging init. stderr: Usage: bpfman <COMMAND>
+
+Commands:
+  load    Load an eBPF program on the system
+  unload  Unload an eBPF program using the Program Id
+  list    List all eBPF programs loaded via bpfman
+  get     Get an eBPF program using the Program Id
+  image   eBPF Bytecode Image related commands
+  help    Print this message or the help of the given subcommand(s)
+
+Options:
+  -h, --help  Print help (see more with '--help')
+, stdout: 
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- test_logging_init::test_rpc_logging_initialization stdout ----
+
+thread 'test_logging_init::test_rpc_logging_initialization' (35112) panicked at test_logging_init.rs:95:5:
+RPC should not fail with 'No such file or directory'. initialize_rpc() creates the directory before serve() tries to bind. stderr: Error: No such file or directory (os error 2)
+
+
+---- test_logging_init::test_rpc_socket_dir_creation_evidence stdout ----
+
+thread 'test_logging_init::test_rpc_socket_dir_creation_evidence' (35115) panicked at test_logging_init.rs:156:5:
+RPC server should still be running after 500ms. Buggy code exits immediately due to socket bind failure. stderr: Error: No such file or directory (os error 2)
+
+
+---- test_rpc_socket_dir::test_rpc_creates_csi_directory_when_enabled stdout ----
+
+thread 'test_rpc_socket_dir::test_rpc_creates_csi_directory_when_enabled' (35118) panicked at test_rpc_socket_dir.rs:126:5:
+RPC with --csi-support should not fail with 'No such file or directory'. initialize_rpc() creates required directories. stderr: Error: No such file or directory (os error 2)
+
+
+---- test_rpc_socket_dir::test_rpc_creates_socket_directory stdout ----
+
+thread 'test_rpc_socket_dir::test_rpc_creates_socket_directory' (35121) panicked at test_rpc_socket_dir.rs:78:5:
+RPC should not fail with 'No such file or directory'. initialize_rpc() creates /run/bpfman-sock before serve() tries to bind. Buggy code calls serve() directly without directory creation. stderr: Error: No such file or directory (os error 2)
+, stdout: 
+
+
+failures:
+    test_logging_init::test_cli_logging_initialization
+    test_logging_init::test_rpc_logging_initialization
+    test_logging_init::test_rpc_socket_dir_creation_evidence
+    test_rpc_socket_dir::test_rpc_creates_csi_directory_when_enabled
+    test_rpc_socket_dir::test_rpc_creates_socket_directory
+
+test result: FAILED. 0 passed; 5 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.41s
+
+error: test failed, to rerun pass `--test verifier_tests`
+>>>>> End Test Output
+OPENENV_EXIT_CODE=101

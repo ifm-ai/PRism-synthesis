@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "official_verifier": {
+    "execution_mode": "real_execution",
+    "test_only_exit_code": 1,
+    "test_with_fix_exit_code": 0
+  },
+  "non_discriminating": false,
+  "notes": "Two-run verifier preflight successful. Tests correctly discriminate between buggy and fixed workspaces: 8 tests FAIL on buggy workspace (exit code 1), 8 tests PASS on fixed workspace (exit code 0). Tests verify fix.patch changes to recipes/cancerit-allelecount/meta.yaml (additional-platforms with linux-aarch64, build number 7, run_exports, GPL-3.0-only license fields) and build.sh (set -xeu, parallel make with -j ${CPU_COUNT}). No hacking signals detected. Verifier alignment is direct - test targets match patch files exactly."
+}

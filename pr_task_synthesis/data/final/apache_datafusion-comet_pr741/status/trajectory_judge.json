@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "Strong trajectory: solver correctly localized the problem to planner.rs and scalar_funcs.rs, made meaningful edits matching fix.patch, and oracle verifier passed. The behavioral test properly validates that low-precision Decimal128 operations avoid unnecessary Decimal256 promotion. No instruction or verifier changes needed."
+}

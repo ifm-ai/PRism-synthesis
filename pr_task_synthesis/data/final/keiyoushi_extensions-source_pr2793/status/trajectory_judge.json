@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "Clean successful trajectory. Solver correctly localized files, made all required edits matching fix.patch, and oracle verifier passed all 5 behavioral tests. No struggle patterns detected. High-value RL example of correct problem-solving behavior."
+}

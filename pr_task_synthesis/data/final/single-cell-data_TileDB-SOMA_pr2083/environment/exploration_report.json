@@ -1,0 +1,89 @@
+{
+  "repo_url": "https://github.com/single-cell-data/TileDB-SOMA",
+  "base_commit": "3f021c4",
+  "project_type": "python",
+  "package_manager": "pip",
+  "test_framework": "pytest",
+  "source_dir": "/workspace/apis/python/src/tiledbsoma",
+  "test_dir": "/workspace/apis/python/tests",
+  "build_system": {
+    "type": "setuptools",
+    "build_backend": "setuptools.build_meta",
+    "requires": ["pybind11[global]>=2.10.0", "setuptools>=65.5.1", "wheel>=0.37.1", "cmake>=3.21"],
+    "pybind11_extension": true,
+    "native_lib_dependency": "libtiledbsoma"
+  },
+  "python_version": ">=3.7",
+  "key_dependencies": [
+    "anndata",
+    "pandas",
+    "pyarrow>=9.0.0",
+    "numpy",
+    "scipy",
+    "scanpy>=1.9.2",
+    "tiledb~=0.25.0",
+    "somacore==1.0.7",
+    "numba~=0.58.0",
+    "typing-extensions",
+    "pyarrow_hotfix"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "CI workflows run on ubuntu-22.04 and macos-12",
+    "setup.py classifiers include 'Operating System :: POSIX :: Linux'",
+    "Native library build supports Linux with libtiledbsoma.so",
+    "No Windows-only or macOS-only restrictions in fix/test patches"
+  ],
+  "pr_summary": "Fix df_to_arrow function in _arrow_types.py to properly handle all-null columns with dtype 'object' or 'category' by casting them to appropriate pandas extension dtypes (StringDtype for object, CategoricalDtype for category) before Arrow conversion, ensuring TileDB attributes are correctly marked as nullable.",
+  "runtime_family": "python",
+  "touched_files": [
+    "apis/python/src/tiledbsoma/_arrow_types.py"
+  ],
+  "important_build_files": [
+    "/workspace/apis/python/setup.py",
+    "/workspace/apis/python/pyproject.toml",
+    "/workspace/apis/python/requirements_dev.txt"
+  ],
+  "important_test_files": [
+    "/workspace/apis/python/tests/test_basic_anndata_io.py"
+  ],
+  "candidate_build_commands": [
+    "cd /workspace/apis/python && pip install .",
+    "cd /workspace/apis/python && pip install -e ."
+  ],
+  "candidate_test_commands": [
+    "cd /workspace/apis/python && python -m pytest tests/test_basic_anndata_io.py::test_null_obs -v"
+  ],
+  "candidate_smoke_commands": [
+    "python -c 'import tiledbsoma; print(tiledbsoma.__version__)'",
+    "python -c 'import pandas; import pyarrow; print(\"Dependencies OK\")'"
+  ],
+  "candidate_activation_checks": [
+    "python -c 'import tiledbsoma'",
+    "python -c 'import pyarrow; import pandas'"
+  ],
+  "environment_management": "pip with setup.py; native library libtiledbsoma required",
+  "special_system_dependencies": [
+    "libtiledbsoma (native C++ library)",
+    "tiledb (native library)",
+    "cmake>=3.21 (for building native extensions)",
+    "pybind11 (for Python/C++ bindings)"
+  ],
+  "high_value_files": [
+    "/workspace/apis/python/src/tiledbsoma/_arrow_types.py",
+    "/workspace/apis/python/tests/test_basic_anndata_io.py",
+    "/workspace/apis/python/setup.py",
+    "/workspace/apis/python/src/tiledbsoma/io/"
+  ],
+  "patch_file_cues": [
+    "_arrow_types.py: df_to_arrow function modified to handle all-null object and categorical columns",
+    "Casting to pd.StringDtype() for object dtype all-null columns",
+    "Casting to pd.CategoricalDtype() for category dtype all-null columns"
+  ],
+  "test_file_cues": [
+    "test_basic_anndata_io.py: test_null_obs function modified",
+    "Test columns: empty_categorical_all, empty_categorical_partial, empty_extension_all, empty_extension_partial",
+    "Assertions check obs.attr(...).isnullable for all four column types"
+  ],
+  "notes": "This is a Python package (TileDB-SOMA) for single-cell data storage. The fix addresses handling of all-null columns in pandas DataFrames during Arrow conversion. The project requires native libraries (libtiledbsoma, tiledb) which must be pre-installed or built from source. Tests use pytest and require anndata test data files. The platform is Linux-compatible; CI runs on Ubuntu and macOS."
+}

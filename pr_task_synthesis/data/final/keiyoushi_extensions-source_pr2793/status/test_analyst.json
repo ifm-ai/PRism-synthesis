@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "official_verifier": {
+    "execution_mode": "real_execution",
+    "test_only_exit_code": 1,
+    "test_with_fix_exit_code": 0
+  },
+  "non_discriminating": false,
+  "notes": "Local two-run preflight verification completed successfully. eval.sh correctly discriminates between buggy state (exit 1) and fixed state (exit 0). Tests verify all three fix.patch changes: HTTPS URL migration (http://voyce.me -> https://www.voyce.me), extVersionCode increment (3 -> 4), and isNsfw=false metadata flag. No hacking detected. Verifier alignment is direct - test targets match patch files."
+}

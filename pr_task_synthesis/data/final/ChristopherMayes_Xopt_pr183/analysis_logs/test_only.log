@@ -1,0 +1,70 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.13.14, pytest-9.1.0, pluggy-1.6.0 -- /opt/conda/envs/xopt-dev/bin/python
+cachedir: .pytest_cache
+rootdir: /workspace
+configfile: setup.cfg
+plugins: cov-7.1.0, anyio-4.14.0, jaxtyping-0.3.7
+collecting ... collected 1 item
+
+tests/generators/ga/test_cnsga.py::test_cnsga_baddf FAILED               [100%]
+
+=================================== FAILURES ===================================
+_______________________________ test_cnsga_baddf _______________________________
+
+    def test_cnsga_baddf():
+        # Test that bad dataframes are handled ok
+    
+        def eval_f(x):
+            return {"y1": random(), "y2": random(), "c1": random(), "c2": random()}
+    
+        X = Xopt(
+            generator=CNSGAGenerator(vocs=tnk_vocs, population_size=32),
+            evaluator=Evaluator(function=eval_f),
+            vocs=tnk_vocs,
+            strict=False,
+        )
+    
+        X.random_evaluate(12)
+    
+        for i in range(100):
+            new_samples = X.generator.generate(1)
+            X.evaluate_data(new_samples)
+    
+        assert len(X.generator.population) == 32
+    
+        for i in range(100):
+            new_samples = X.generator.generate(12)
+            X.evaluate_data(new_samples[0:2])
+            X.evaluate_data(new_samples[2:4])
+            X.evaluate_data(new_samples[4:12])
+    
+        assert len(X.generator.population) == 32
+    
+        for i in range(10):
+            X.generator.generate(20)
+            bad_df = X.data.iloc[np.random.randint(0, 200, 20), :].copy()
+            bad_df.index = np.ones(20, dtype=int)
+            X.generator.add_data(bad_df)
+    
+        for i in range(20):
+            X.step()
+    
+>       assert len(X.generator.population) == 32
+E       assert 16656 == 32
+E        +  where 16656 = len(            x1        x2               a  ...        c2  xopt_runtime  xopt_error\n167   2.997120  0.768752  dummy_constant  ...  0.016631  2.700835e-07       False\n1     0.598785  3.133317  dummy_constant  ...  0.194305  2.603047e-07       False\n1     1.780838  0.219025  dummy_constant  ...  0.808425  1.159962e-06       False\n1     2.334370  2.606512  dummy_constant  ...  0.121600  5.001202e-07       False\n1     2.987714  0.419980  dummy_constant  ...  0.236761  1.470093e-06       False\n...        ...       ...             ...  ...       ...           ...         ...\n816   2.226754  1.225917  dummy_constant  ...  0.394442  3.497116e-07       False\n1113  2.007189  0.006663  dummy_constant  ...  0.492090  4.996546e-07       False\n1085  1.326495  1.721623  dummy_constant  ...  0.428461  5.001202e-07       False\n1238  1.299994  0.025091  dummy_constant  ...  0.015151  4.102476e-07       False\n727   2.565175  0.025091  dummy_constant  ...  0.266721  4.698522e-07       False\n\n[16656 rows x 9 columns])
+E        +    where             x1        x2               a  ...        c2  xopt_runtime  xopt_error\n167   2.997120  0.768752  dummy_constant  ...  0.016631  2.700835e-07       False\n1     0.598785  3.133317  dummy_constant  ...  0.194305  2.603047e-07       False\n1     1.780838  0.219025  dummy_constant  ...  0.808425  1.159962e-06       False\n1     2.334370  2.606512  dummy_constant  ...  0.121600  5.001202e-07       False\n1     2.987714  0.419980  dummy_constant  ...  0.236761  1.470093e-06       False\n...        ...       ...             ...  ...       ...           ...         ...\n816   2.226754  1.225917  dummy_constant  ...  0.394442  3.497116e-07       False\n1113  2.007189  0.006663  dummy_constant  ...  0.492090  4.996546e-07       False\n1085  1.326495  1.721623  dummy_constant  ...  0.428461  5.001202e-07       False\n1238  1.299994  0.025091  dummy_constant  ...  0.015151  4.102476e-07       False\n727   2.565175  0.025091  dummy_constant  ...  0.266721  4.698522e-07       False\n\n[16656 rows x 9 columns] = CNSGAGenerator(supports_batch_generation=False, supports_multi_objective=True, vocs=VOCS(variables={'x1': [0.0, 3.14159], 'x2': [0.0, 3.14159]}, constraints={'c1': ['GREATER_THAN', 0.0], 'c2': ['LESS_THAN', 0.5]}, objectives={'y1': 'MINIMIZE', 'y2': 'MINIMIZE'}, constants={'a': 'dummy_constant'}, observables=[]), data=None, population_size=32, crossover_probability=0.9, mutation_probability=1.0, population_file=None, output_path=None, population=            x1        x2               a  ...        c2  xopt_runtime  xopt_error\n167   2.997120  0.768752  dummy_constant  ...  0.016631  2.700835e-07       False\n1     0.598785  3.133317  dummy_constant  ...  0.194305  2.603047e-07       False\n1     1.780838  0.219025  dummy_constant  ...  0.808425  1.159962e-06       False\n1     2.334370  2.606512  dummy_constant  ...  0.121600  5.001202e-07       False\n1     2.987714  0.419980  dummy_constant  ...  0.236761  1.470093e-06       False\n...        ...       ...             ...  ...       ...           ...         ...\n816   2.226754  1.225917  dummy_constant  ...  0.394442  3.497116e-07       False\n1113  2.007189  0.006663  dummy_constant  ...  0.492090  4.996546e-07       False\n1085  1.326495  1.721623  dummy_constant  ...  0.428461  5.001202e-07       False\n1238  1.299994  0.025091  dummy_constant  ...  0.015151  4.102476e-07       False\n727   2.565175  0.025091  dummy_constant  ...  0.266721  4.698522e-07       False\n\n[16656 rows x 9 columns], _loaded_population=None, _toolbox=<deap.base.Toolbox object at 0x7f1994d46660>).population
+E        +      where CNSGAGenerator(supports_batch_generation=False, supports_multi_objective=True, vocs=VOCS(variables={'x1': [0.0, 3.14159], 'x2': [0.0, 3.14159]}, constraints={'c1': ['GREATER_THAN', 0.0], 'c2': ['LESS_THAN', 0.5]}, objectives={'y1': 'MINIMIZE', 'y2': 'MINIMIZE'}, constants={'a': 'dummy_constant'}, observables=[]), data=None, population_size=32, crossover_probability=0.9, mutation_probability=1.0, population_file=None, output_path=None, population=            x1        x2               a  ...        c2  xopt_runtime  xopt_error\n167   2.997120  0.768752  dummy_constant  ...  0.016631  2.700835e-07       False\n1     0.598785  3.133317  dummy_constant  ...  0.194305  2.603047e-07       False\n1     1.780838  0.219025  dummy_constant  ...  0.808425  1.159962e-06       False\n1     2.334370  2.606512  dummy_constant  ...  0.121600  5.001202e-07       False\n1     2.987714  0.419980  dummy_constant  ...  0.236761  1.470093e-06       False\n...        ...       ...             ...  ...       ...           ...         ...\n816   2.226754  1.225917  dummy_constant  ...  0.394442  3.497116e-07       False\n1113  2.007189  0.006663  dummy_constant  ...  0.492090  4.996546e-07       False\n1085  1.326495  1.721623  dummy_constant  ...  0.428461  5.001202e-07       False\n1238  1.299994  0.025091  dummy_constant  ...  0.015151  4.102476e-07       False\n727   2.565175  0.025091  dummy_constant  ...  0.266721  4.698522e-07       False\n\n[16656 rows x 9 columns], _loaded_population=None, _toolbox=<deap.base.Toolbox object at 0x7f1994d46660>) = <[ValueError("DataFrame index must be unique for orient='columns'.") raised in repr()] Xopt object at 0x7f196f31ef30>.generator
+
+tests/generators/ga/test_cnsga.py:59: AssertionError
+=============================== warnings summary ===============================
+xopt/pydantic.py:434
+  /workspace/xopt/pydantic.py:434: PydanticDeprecatedSince212: Using `@model_validator` with mode='after' on a classmethod is deprecated. Instead, use an instance method. See the documentation at https://docs.pydantic.dev/2.13/concepts/validators/#model-after-validator. Deprecated in Pydantic V2.12 to be removed in V3.0.
+    @model_validator(mode="after")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/generators/ga/test_cnsga.py::test_cnsga_baddf - assert 16656 == 32
+========================= 1 failed, 1 warning in 2.31s =========================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

@@ -1,0 +1,29 @@
+WARNING: Skipping mount /etc/localtime [binds]: /etc/localtime doesn't exist in container
+>>>>> Start Test Output
+
+Running VoyceMe extension fix verification...
+
+===== VoyceMe Extension Fix Verification =====
+
+Test 1: Checking baseUrl uses HTTPS...
+  FAIL: baseUrl is NOT set to https://www.voyce.me
+        Found:     override val baseUrl = "http://voyce.me"
+Test 2: Checking extVersionCode is 4...
+  FAIL: extVersionCode is NOT set to 4
+        Found:     extVersionCode = 3
+Test 3: Checking isNsfw flag is set to false...
+  FAIL: isNsfw is NOT set to false
+        Found: not found
+Test 4: Checking no insecure http://voyce.me URL remains...
+  FAIL: Insecure http://voyce.me URL still present
+        Found:     override val baseUrl = "http://voyce.me"
+Test 5: Checking build.gradle syntax...
+  PASS: build.gradle has valid ext block structure
+
+===== Verification Summary =====
+Errors: 4
+
+Tests FAILED - Fix is NOT correctly applied
+
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

@@ -1,0 +1,9 @@
+{
+  "status": "success",
+  "blocks_outer_progress": false,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "route_to": null,
+  "notes": "Container build completed successfully. OCI archive exported to /artifacts/environment/openenv_validation_oci.tar. The image includes debian:bookworm base with Go 1.19, libvips 8.14.1, and all required transitive dependencies. The govips repository is cloned at /workspace and ready for evaluation."
+}

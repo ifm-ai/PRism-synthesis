@@ -1,0 +1,14 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "high_value_files": [
+    "/workspace/pom.xml",
+    "/workspace/flink-cdc-runtime/pom.xml",
+    "/workspace/flink-cdc-runtime/src/main/java/org/apache/flink/cdc/runtime/operators/transform/ProjectionColumnProcessor.java",
+    "/workspace/flink-cdc-runtime/src/main/java/org/apache/flink/cdc/runtime/operators/transform/TransformFilterProcessor.java",
+    "/workspace/flink-cdc-runtime/src/test/java/org/apache/flink/cdc/runtime/operators/transform/PostTransformOperatorTest.java",
+    "/workspace/.github/workflows/flink_cdc.yml"
+  ],
+  "notes": "Apache Flink CDC project. Java 8 + Maven build. Fix targets transform operators handling duplicate column references. Platform is Linux (CI uses ubuntu-latest, testcontainers require Docker). No blocking issues - project builds and tests on Linux."
+}

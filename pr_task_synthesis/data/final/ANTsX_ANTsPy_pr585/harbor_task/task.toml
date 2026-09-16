@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "ANTsX_ANTsPy_pr585"
+description = "OpenEnv: ANTsX/ANTsPy PR #585"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/ANTsX/ANTsPy.git"
+git_pr_id = "585"
+git_base_commit = "1e363730d033500a91264e4ab6509f093dd609ae"
+task_id = "ANTsX_ANTsPy_pr585"
+repo_full_name = "ANTsX/ANTsPy"
+domain = "SCIENTIFIC_COMPUTING_MATH"
+primary_language = "Python"
+runtime_family = "Python"
+complexity = "medium"
+star_category = "stars_501_1000"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

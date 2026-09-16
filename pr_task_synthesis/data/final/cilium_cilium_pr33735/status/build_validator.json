@@ -1,0 +1,11 @@
+{
+  "status": "success",
+  "blocks_outer_progress": false,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": null,
+  "route_to": null,
+  "oci_archive_exported": true,
+  "oci_archive_path": "/artifacts/environment/openenv_validation_oci.tar",
+  "notes": "Buildah build validation successful. All 17 steps completed. OCI archive exported (723 MB). Dockerfile.final is valid and ready for outer build."
+}

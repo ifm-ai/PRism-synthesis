@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "official_verifier": {
+    "execution_mode": "real_execution",
+    "test_only_exit_code": 1,
+    "test_with_fix_exit_code": 0
+  },
+  "non_discriminating": false,
+  "notes": "Two-run preflight verification completed successfully. testOnly (buggy state) returns exit code 1 because invalid supply params cause NoMethodError when calling has_something?. testWithFix (fixed state) returns exit code 0 because validate_supply returns nil for invalid values, causing a redirect. The eval.sh script is correctly structured with RC=$?, proper start/end markers, and invokes real rspec test runner. Tests properly target the Schools::UsageController#show action modified by fix.patch."
+}

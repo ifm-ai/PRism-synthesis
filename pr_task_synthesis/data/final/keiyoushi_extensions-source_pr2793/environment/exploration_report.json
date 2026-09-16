@@ -1,0 +1,58 @@
+{
+  "pr_summary": "Update Voyce.Me extension to use HTTPS (https://www.voyce.me) instead of HTTP (http://voyce.me), increment version code from 3 to 4, and explicitly set isNsfw = false in build configuration.",
+  "runtime_family": "JVM",
+  "package_manager": "gradle",
+  "touched_files": [
+    "src/en/voyceme/build.gradle",
+    "src/en/voyceme/src/eu/kanade/tachiyomi/extension/en/voyceme/VoyceMe.kt"
+  ],
+  "important_build_files": [
+    "build.gradle.kts",
+    "settings.gradle.kts",
+    "common.gradle",
+    "gradle.properties",
+    "gradle/wrapper/gradle-wrapper.properties",
+    "src/en/voyceme/build.gradle"
+  ],
+  "important_test_files": [],
+  "candidate_build_commands": [
+    "./gradlew assembleRelease",
+    "./gradlew -p src assembleRelease",
+    "./gradlew :src:en:voyceme:assembleRelease"
+  ],
+  "candidate_test_commands": [],
+  "candidate_smoke_commands": [
+    "./gradlew tasks",
+    "./gradlew projects"
+  ],
+  "candidate_activation_checks": [
+    "./gradlew --version",
+    "java -version"
+  ],
+  "environment_management": "gradle",
+  "special_system_dependencies": [
+    "JDK 17 (Temurin)",
+    "Android SDK (for Android extension development)"
+  ],
+  "high_value_files": [
+    "CONTRIBUTING.md",
+    "README.md",
+    "common.gradle",
+    "src/en/voyceme/build.gradle",
+    "src/en/voyceme/src/eu/kanade/tachiyomi/extension/en/voyceme/VoyceMe.kt",
+    ".github/workflows/build_push.yml"
+  ],
+  "patch_file_cues": [
+    "src/en/voyceme/build.gradle - extVersionCode incremented from 3 to 4, isNsfw = false added",
+    "src/en/voyceme/src/eu/kanade/tachiyomi/extension/en/voyceme/VoyceMe.kt - baseUrl changed from http://voyce.me to https://www.voyce.me"
+  ],
+  "test_file_cues": [],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "CI workflow (.github/workflows/build_push.yml) runs on ubuntu-latest",
+    "Gradle build system is cross-platform and works on Linux",
+    "No Windows-only or macOS-only build targets or dependencies detected",
+    "Repository is for Android extensions but builds in Linux CI environment"
+  ],
+  "notes": "This is a Tachiyomi/Keiyoushi extensions-source repository for building manga reader extensions. The project uses Gradle as the build system with JDK 17. The fix updates the Voyce.Me extension to use HTTPS and updates metadata. The repository builds successfully in Linux CI (GitHub Actions with ubuntu-latest). No test framework is apparent - testing is done by building APKs and testing on Android devices/emulators."
+}

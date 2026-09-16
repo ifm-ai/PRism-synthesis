@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "official_verifier": {
+    "execution_mode": "real_execution",
+    "test_only_exit_code": 1,
+    "test_with_fix_exit_code": 0
+  },
+  "non_discriminating": false,
+  "notes": "Verifier is properly aligned with fix.patch. Test fails on buggy workspace (CustomOutput inherits from FlatCommand, produces multi-line output ':CustomOutput\\n\\n:EndCustomOutput') and passes on fixed workspace (CustomOutput inherits from LineCommand, produces correct single-line output ':CustomOutput         YEARLY AVERAGE PRECIP ENTIRE_WATERSHED'). All hacking checks pass. Target overlap is direct - test_custom_ouputs directly tests the CustomOutput class modified by fix.patch. Note: eval.sh is hardcoded to /workspace as expected for harness-managed workspace swapping; test_with_fix_exit_code=0 was verified by manually running pytest against /workspace_fixed."
+}

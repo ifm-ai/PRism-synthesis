@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "ChristopherMayes_Xopt_pr183"
+description = "OpenEnv: ChristopherMayes/Xopt PR #183"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/ChristopherMayes/Xopt.git"
+git_pr_id = "183"
+git_base_commit = "f2b20dd8d2b54aa0aa17db5423be6d909d616c4e"
+task_id = "ChristopherMayes_Xopt_pr183"
+repo_full_name = "ChristopherMayes/Xopt"
+domain = "SCIENTIFIC_COMPUTING_MATH"
+primary_language = "Python"
+runtime_family = "Python"
+complexity = "medium"
+star_category = "stars_6_50"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

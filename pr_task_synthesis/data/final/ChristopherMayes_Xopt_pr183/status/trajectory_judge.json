@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "High-value RL example: solver correctly localized and fixed the bug (changed .loc to .iloc in cnsga_select), but struggled with environment setup and custom test verification. Oracle passed, confirming fix validity. The trajectory shows valid problem-solving approach despite bootstrap challenges."
+}

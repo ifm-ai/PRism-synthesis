@@ -1,0 +1,54 @@
+{
+  "schema_version": "2.0",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "scores": {
+    "environment_readiness": 4,
+    "dependency_completeness": 4,
+    "verifier_integrity": 4,
+    "instruction_verifier_alignment": 4,
+    "trajectory_progress_value": 4
+  },
+  "struggle_patterns": [
+    {
+      "pattern": "none",
+      "phase": "edit",
+      "evidence": "The solver successfully implemented camelCase to snake_case task conversion and all oracle tests passed.",
+      "score_impacts": []
+    }
+  ],
+  "phase_signals": {
+    "tests_executed": false,
+    "first_meaningful_edit_made": true,
+    "touched_relevant_files": true,
+    "solver_time_budget_exhausted": false,
+    "oracle_verifier_executed": true,
+    "oracle_verifier_passed": true
+  },
+  "signal_strength": {
+    "solver_signal": "strong",
+    "oracle_signal": "strong"
+  },
+  "verifier_diagnosis": {
+    "verifier_coverage_class": "behavioral",
+    "solver_approach_valid": true,
+    "repair_priority": "none"
+  },
+  "needs_verifier_change": false,
+  "needs_instruction_change": false,
+  "instruction_tuning_advice": {
+    "priority": "none",
+    "missing_spec_type": "none",
+    "tuning_context": "The instruction clearly described the behavioral requirement and the solver implemented a valid solution.",
+    "anti_contamination_constraints": []
+  },
+  "filter_label": "keep",
+  "summary": "The solver successfully implemented camelCase to snake_case task conversion for fine-tuning jobs by adding SUPPORTED_TASKS mapping and validation logic in the entity layer. The oracle verifier executed 2 schema tests which both passed with exit code 0, confirming the implementation is correct. The solver's approach differs from fix.patch (entity layer vs schema layer) but achieves the same behavioral outcome.",
+  "evidence": [
+    "Solver added SUPPORTED_TASKS dictionary in constants/_job/finetuning.py with 11 task type mappings",
+    "Solver added _validate_and_convert_task() method in entities/_job/finetuning/finetuning_vertical.py",
+    "Oracle ran pytest on test_azure_openai_finetuning_job_schema.py and test_custom_model_finetuning_job_schema.py",
+    "Oracle log shows '2 passed' with exit code 0",
+    "Solver ran local test (test_e2e_demo.py) which showed all task conversions working correctly"
+  ]
+}

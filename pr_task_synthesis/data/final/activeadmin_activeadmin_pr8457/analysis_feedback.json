@@ -1,0 +1,24 @@
+{
+  "is_finish": true,
+  "route_to": null,
+  "hacking_detected": false,
+  "hacking_checklist": {
+    "H1_git_diff_in_oracle": false,
+    "H2_git_status_in_oracle": false,
+    "H3_grep_as_oracle": false,
+    "H4_file_existence_as_sole_oracle": false,
+    "H5_RC_capture_correct": true,
+    "H5a_exit_code_from_test": true,
+    "H5b_no_premature_exit": true,
+    "H5c_RC_used_not_e": true,
+    "H6_real_test_invoked": true,
+    "H7_test_output_present": true,
+    "H8_patch_inspection_as_oracle": false,
+    "H9_source_inspection_as_oracle": false,
+    "H10_static_analysis_as_oracle": false
+  },
+  "local_test_only_exit_code": 1,
+  "local_test_with_fix_exit_code": 0,
+  "workers_invoked": ["openenv-eval-builder"],
+  "observations": "The yard gem exclusion issue was fixed by openenv-eval-builder. The docs group is now included in bundle install, allowing rake to load all tasks including docs.rake. The local preflight confirms testOnly fails (exit code 1) and testWithFix passes (exit code 0). The verifier is working correctly."
+}

@@ -1,0 +1,118 @@
+diff --git a/examples/core_examples/Build_Save_Load_Run_Pipeline.ipynb b/examples/core_examples/Build_Save_Load_Run_Pipeline.ipynb
+index d57b19c..f5265f9 100644
+--- a/examples/core_examples/Build_Save_Load_Run_Pipeline.ipynb
++++ b/examples/core_examples/Build_Save_Load_Run_Pipeline.ipynb
+@@ -39,7 +39,7 @@
+     "from rail.core.stage import RailStage\n",
+     "from rail.creation.degraders.spectroscopic_degraders import LineConfusion\n",
+     "from rail.creation.degraders.quantityCut import QuantityCut\n",
+-    "from rail.creation.degraders.lsst_error_model import LSSTErrorModel\n",
++    "from rail.creation.degraders.photometric_errors import LSSTErrorModel\n",
+     "from rail.creation.engines.flowEngine import FlowCreator, FlowPosterior\n",
+     "from rail.core.data import TableHandle\n",
+     "from rail.core.stage import RailStage\n",
+diff --git a/examples/core_examples/pipe_example.yml b/examples/core_examples/pipe_example.yml
+index 7bc5ce8..6ddd18a 100644
+--- a/examples/core_examples/pipe_example.yml
++++ b/examples/core_examples/pipe_example.yml
+@@ -15,7 +15,7 @@ stages:
+   aliases:
+     output: output_flow_engine_test
+ - classname: LSSTErrorModel
+-  module_name: rail.creation.degraders.lsst_error_model
++  module_name: rail.creation.degraders.photometric_errors
+   name: lsst_error_model_test
+   nprocess: 1
+   aliases:
+diff --git a/examples/creation_examples/degradation-demo.ipynb b/examples/creation_examples/degradation-demo.ipynb
+index d8dfa2b..5ac40bf 100644
+--- a/examples/creation_examples/degradation-demo.ipynb
++++ b/examples/creation_examples/degradation-demo.ipynb
+@@ -44,7 +44,7 @@
+     "    InvRedshiftIncompleteness,\n",
+     "    LineConfusion,\n",
+     ")\n",
+-    "from rail.creation.degraders.lsst_error_model import LSSTErrorModel\n",
++    "from rail.creation.degraders.photometric_errors import LSSTErrorModel\n",
+     "from rail.creation.degraders.quantityCut import QuantityCut\n",
+     "from rail.core.stage import RailStage\n"
+    ]
+@@ -523,7 +523,7 @@
+    "name": "python",
+    "nbconvert_exporter": "python",
+    "pygments_lexer": "ipython3",
+-   "version": "3.11.4"
++   "version": "3.10.0"
+   },
+   "vscode": {
+    "interpreter": {
+diff --git a/examples/creation_examples/photometric_realization_demo.ipynb b/examples/creation_examples/photometric_realization_demo.ipynb
+index 69d0fc0..1ab3213 100644
+--- a/examples/creation_examples/photometric_realization_demo.ipynb
++++ b/examples/creation_examples/photometric_realization_demo.ipynb
+@@ -27,7 +27,7 @@
+     "import matplotlib.pyplot as plt\n",
+     "from pzflow.examples import get_example_flow\n",
+     "from rail.creation.engines.flowEngine import FlowCreator\n",
+-    "from rail.creation.degraders.lsst_error_model import LSSTErrorModel\n",
++    "from rail.creation.degraders.photometric_errors import LSSTErrorModel\n",
+     "from rail.core.stage import RailStage\n"
+    ]
+   },
+@@ -353,7 +353,7 @@
+    "name": "python",
+    "nbconvert_exporter": "python",
+    "pygments_lexer": "ipython3",
+-   "version": "3.11.4"
++   "version": "3.10.0"
+   },
+   "widgets": {
+    "application/vnd.jupyter.widget-state+json": {
+diff --git a/examples/creation_examples/posterior-demo.ipynb b/examples/creation_examples/posterior-demo.ipynb
+index 42f62d3..0bdc62b 100644
+--- a/examples/creation_examples/posterior-demo.ipynb
++++ b/examples/creation_examples/posterior-demo.ipynb
+@@ -39,7 +39,7 @@
+     "import pandas as pd\n",
+     "from pzflow.examples import get_example_flow\n",
+     "from rail.creation.engines.flowEngine import FlowCreator, FlowPosterior\n",
+-    "from rail.creation.degraders.lsst_error_model import LSSTErrorModel\n",
++    "from rail.creation.degraders.photometric_errors import LSSTErrorModel\n",
+     "from rail.creation.degraders.quantityCut import QuantityCut\n",
+     "from rail.creation.degraders.spectroscopic_degraders import (\n",
+     "    InvRedshiftIncompleteness,\n",
+diff --git a/examples/goldenspike_examples/goldenspike.ipynb b/examples/goldenspike_examples/goldenspike.ipynb
+index 2dc8f0a..c42cf6a 100644
+--- a/examples/goldenspike_examples/goldenspike.ipynb
++++ b/examples/goldenspike_examples/goldenspike.ipynb
+@@ -74,7 +74,7 @@
+    "source": [
+     "# Various rail modules\n",
+     "import rail\n",
+-    "from rail.creation.degraders.lsst_error_model import LSSTErrorModel\n",
++    "from rail.creation.degraders.photometric_errors import LSSTErrorModel\n",
+     "from rail.creation.degraders.spectroscopic_degraders import (\n",
+     "    InvRedshiftIncompleteness,\n",
+     "    LineConfusion,\n",
+diff --git a/examples/goldenspike_examples/goldenspike.yml b/examples/goldenspike_examples/goldenspike.yml
+index ab03f02..4ef13a4 100644
+--- a/examples/goldenspike_examples/goldenspike.yml
++++ b/examples/goldenspike_examples/goldenspike.yml
+@@ -18,7 +18,7 @@ stages:
+   name: flow_creator_train
+   nprocess: 1
+ - classname: LSSTErrorModel
+-  module_name: rail.creation.degraders.lsst_error_model
++  module_name: rail.creation.degraders.photometric_errors
+   name: lsst_error_model_train
+   nprocess: 1
+ - classname: InvRedshiftIncompleteness
+@@ -46,7 +46,7 @@ stages:
+   name: flow_creator_test
+   nprocess: 1
+ - classname: LSSTErrorModel
+-  module_name: rail.creation.degraders.lsst_error_model
++  module_name: rail.creation.degraders.photometric_errors
+   name: lsst_error_model_test
+   nprocess: 1
+ - classname: ColumnMapper

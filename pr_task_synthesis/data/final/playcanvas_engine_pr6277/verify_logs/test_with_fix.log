@@ -1,0 +1,97 @@
+>>>>> Start Test Output
+
+> playcanvas@1.71.0-dev test
+> mocha --recursive --require test/fixtures.mjs --require test/fixtures.mjs /tests/tests/test-shader-utils-duplicate-attrs.test.mjs /tests/tests/test-particle-shader-conditionals.test.mjs
+
+Server started at http://localhost:3000
+
+
+  ShaderUtils.collectAttributes - Duplicate Attribute Handling
+    duplicate attribute detection
+      ✔ should handle a single attribute correctly
+      ✔ should handle multiple unique attributes correctly
+Attribute [vertex_position] already exists when extracting the attributes from the vertex shader, ignoring. {
+  vsCode: '\n' +
+    '                attribute vec4 vertex_position;\n' +
+    '                attribute vec3 vertex_normal;\n' +
+    '                attribute vec4 vertex_position;\n' +
+    '                void main() { }\n' +
+    '            '
+}
+      ✔ should handle duplicate attributes without adding them twice
+Attribute [vertex_position] already exists when extracting the attributes from the vertex shader, ignoring. {
+  vsCode: '\n' +
+    '                attribute vec4 vertex_position;\n' +
+    '                attribute vec4 vertex_position;\n' +
+    '                attribute vec4 vertex_position;\n' +
+    '                void main() { }\n' +
+    '            '
+}
+Attribute [vertex_position] already exists when extracting the attributes from the vertex shader, ignoring. {
+  vsCode: '\n' +
+    '                attribute vec4 vertex_position;\n' +
+    '                attribute vec4 vertex_position;\n' +
+    '                attribute vec4 vertex_position;\n' +
+    '                void main() { }\n' +
+    '            '
+}
+      ✔ should handle multiple duplicate occurrences of the same attribute
+Attribute [custom_attr] already exists when extracting the attributes from the vertex shader, ignoring. {
+  vsCode: '\n' +
+    '                attribute vec4 custom_attr;\n' +
+    '                attribute vec3 vertex_normal;\n' +
+    '                attribute vec4 custom_attr;\n' +
+    '                void main() { }\n' +
+    '            '
+}
+      ✔ should handle duplicate custom attributes (non-semantic)
+Attribute [custom_attr] already exists when extracting the attributes from the vertex shader, ignoring. {
+  vsCode: '\n' +
+    '                attribute vec4 custom_attr;\n' +
+    '                attribute vec4 custom_attr;\n' +
+    '                void main() { }\n' +
+    '            '
+}
+      ✔ should not change mapping for duplicate custom attributes
+Attribute [particle_vertexData5] already exists when extracting the attributes from the vertex shader, ignoring. {
+  vsCode: '\n' +
+    '                attribute vec4 particle_vertexData;\n' +
+    '                attribute vec4 particle_vertexData2;\n' +
+    '                attribute vec4 particle_vertexData3;\n' +
+    '                attribute float particle_vertexData4;\n' +
+    '                #ifndef USE_MESH\n' +
+    '                attribute vec2 particle_vertexData5;\n' +
+    '                #else\n' +
+    '                attribute vec4 particle_vertexData5;\n' +
+    '                #endif\n' +
+    '                void main() { }\n' +
+    '            '
+}
+      ✔ should handle the particle shader duplicate attribute pattern
+
+  Particle Shader Conditional Sampler Uniforms
+    particle_cpu.js
+      ✔ should wrap internalTex0 in #ifdef PARTICLE_GPU
+      ✔ should wrap internalTex1 in #ifdef PARTICLE_GPU
+      ✔ should wrap internalTex2 in #ifdef PARTICLE_GPU
+      ✔ should not have unconditional internalTex0 declaration outside #ifdef block
+      ✔ should not have unconditional internalTex1 declaration outside #ifdef block
+      ✔ should not have unconditional internalTex2 declaration outside #ifdef block
+    particle_init.js
+      ✔ should wrap internalTex0 in #ifdef PARTICLE_GPU
+      ✔ should wrap internalTex1 in #ifdef PARTICLE_GPU
+      ✔ should wrap internalTex2 in #ifdef PARTICLE_GPU
+      ✔ should not have unconditional internalTex0 declaration outside #ifdef block
+      ✔ should not have unconditional internalTex1 declaration outside #ifdef block
+      ✔ should not have unconditional internalTex2 declaration outside #ifdef block
+
+
+  19 passing (8ms)
+
+
+========================================
+TEST RESULT: PASSED
+All tests passed successfully.
+========================================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

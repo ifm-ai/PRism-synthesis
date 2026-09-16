@@ -1,0 +1,41 @@
+>>>>> Start Test Output
+(node:21) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+FAIL tests/.openenv_hidden/batch_size_fix.test.js
+  batch_size calculation fix
+    addPastKeyValues with missing dims property
+      ✓ should handle decoder input without dims property (key test case) (2 ms)
+      ✓ should use dims[0] when decoder input has dims property
+      ✓ should fall back to attention_mask.dims when input_ids is missing
+      ✕ should default to batch_size=1 when decoderFeeds is empty (31 ms)
+      ✓ should handle input_ids without dims when attention_mask also lacks dims
+
+  ● batch_size calculation fix › addPastKeyValues with missing dims property › should default to batch_size=1 when decoderFeeds is empty
+
+    expect(received).not.toThrow()
+
+    Error name:    "TypeError"
+    Error message: "Cannot read properties of undefined (reading 'dims')"
+
+          1758 |             const empty = (dtype === 'float16') ? new Uint16Array() : [];
+          1759 |
+        > 1760 |             const batch_size = (decoderFeeds[this.main_input_name] ?? decoderFeeds.attention_mask).dims?.[0] ?? 1;
+               |                                                                                                    ^
+          1761 |             const shapes = getKeyValueShapes(this.config, { batch_size });
+          1762 |
+          1763 |             for (const name in shapes) {
+
+      at Object.addPastKeyValues (src/models.js:1760:100)
+      at tests/.openenv_hidden/batch_size_fix.test.js:162:17
+      at Object.<anonymous> (node_modules/@jest/expect/node_modules/expect/build/index.js:1806:9)
+      at Object.throwingMatcher [as toThrow] (node_modules/@jest/expect/node_modules/expect/build/index.js:2181:93)
+      at Object.<anonymous> (tests/.openenv_hidden/batch_size_fix.test.js:163:20)
+      at Object.<anonymous> (tests/.openenv_hidden/batch_size_fix.test.js:163:20)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 4 passed, 5 total
+Snapshots:   0 total
+Time:        0.818 s
+Ran all test suites matching .openenv_hidden/batch_size_fix.
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

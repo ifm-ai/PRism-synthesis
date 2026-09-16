@@ -1,0 +1,72 @@
+{
+  "base_image": "condaforge/mambaforge:latest",
+  "base_image_os": "debian",
+  "base_image_codename": "bookworm",
+  "build_context_files": [
+    "setup_runtime.sh",
+    "repo_setup.sh"
+  ],
+  "copied_to_image": {
+    "setup_runtime.sh": "/opt/benchmark/setup_runtime.sh",
+    "repo_setup.sh": "/opt/benchmark/repo_setup.sh"
+  },
+  "build_steps": [
+    {
+      "type": "base_image",
+      "command": "FROM condaforge/mambaforge:latest",
+      "notes": "Base image includes mambaforge/conda pre-installed at /opt/conda with conda-forge channel pre-configured"
+    },
+    {
+      "type": "copy",
+      "command": "COPY setup_runtime.sh /opt/benchmark/setup_runtime.sh",
+      "notes": "Copy runtime setup script"
+    },
+    {
+      "type": "copy",
+      "command": "COPY repo_setup.sh /opt/benchmark/repo_setup.sh",
+      "notes": "Copy repo setup script"
+    },
+    {
+      "type": "run",
+      "command": "chmod +x /opt/benchmark/setup_runtime.sh /opt/benchmark/repo_setup.sh",
+      "notes": "Make scripts executable"
+    },
+    {
+      "type": "run",
+      "command": "/opt/benchmark/repo_setup.sh",
+      "notes": "Materialize /workspace from git repository"
+    },
+    {
+      "type": "run",
+      "command": "/opt/benchmark/setup_runtime.sh",
+      "notes": "Create bioconda conda environment with gcc/gxx from conda-forge"
+    }
+  ],
+  "workdir": "/workspace",
+  "cmd": "/bin/bash",
+  "runtime_profile": {
+    "ecosystem": "conda",
+    "package_manager": "conda",
+    "env": "bioconda",
+    "activation_command": "source /opt/conda/etc/profile.d/conda.sh && conda activate bioconda"
+  },
+  "conda_config": {
+    "channels": [
+      "defaults",
+      "conda-forge",
+      "bioconda"
+    ],
+    "channel_priority": "flexible",
+    "env_packages": [
+      "python",
+      "conda-build",
+      "conda-verify",
+      "make",
+      "wget",
+      "gcc",
+      "gxx"
+    ],
+    "notes": "Simplified setup: removed bioconda-utils and mamba. Uses gcc/gxx from conda-forge with flexible channel priority."
+  },
+  "notes": "Dockerfile uses condaforge/mambaforge:latest which has conda pre-installed at /opt/conda on Debian bookworm. Simplified setup removes bioconda-utils (known import/dependency conflicts) and uses gcc/gxx directly from conda-forge instead of gcc_linux-64/gxx_linux-64. Channel priority set to flexible for better dependency resolution."
+}

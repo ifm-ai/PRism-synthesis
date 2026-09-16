@@ -1,0 +1,21 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "base_image": "rust:slim",
+  "copied_artifacts": [
+    "setup_runtime.sh -> /opt/benchmark/setup_runtime.sh",
+    "repo_setup.sh -> /opt/benchmark/repo_setup.sh"
+  ],
+  "uses_repo_setup_script": true,
+  "repo_materialization_mode": "git_clone_via_repo_setup_sh",
+  "container_build_plan_written": true,
+  "build_backend_target": "buildah",
+  "buildability_assessment": "probably_buildable",
+  "blocking_risks": [],
+  "warnings": [
+    "Hidden tests in /artifacts/evaluation/tests/ are NOT copied into the image - they must be mounted at runtime for eval.sh to access them",
+    "eval.sh is NOT baked into the image - it must be mounted at runtime as a verifier asset"
+  ],
+  "recommended_fixes": [],
+  "notes": "Dockerfile.final created with rust:slim base image. System packages (git, curl, build-essential, protobuf-compiler, libprotobuf-dev, libtss2-dev, libssl-dev, pkg-config, cmake, clang, llvm) installed via apt-get. repo_setup.sh runs first to clone confidential-containers/trustee at commit 79722e7525dfd2fe7700d29d8bcdddb9437cfa70. setup_runtime.sh runs second to install Rust toolchain via rustup. WORKDIR set to /workspace. Verifier assets (eval.sh, hidden tests) are intentionally NOT baked into the image per the contract - they are runtime-mounted. The image is ready for Buildah validation."
+}

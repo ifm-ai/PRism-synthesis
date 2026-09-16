@@ -1,0 +1,61 @@
+{
+  "base_image": "node:20-bookworm",
+  "base_image_candidate": "node:20-bookworm",
+  "system_packages": [
+    "build-essential",
+    "ca-certificates",
+    "curl",
+    "git",
+    "libcairo2-dev",
+    "libjpeg-dev",
+    "libpango1.0-dev",
+    "libgif-dev",
+    "openssl",
+    "pkg-config",
+    "wget",
+    "xvfb"
+  ],
+  "runtime_setup_commands": [
+    "curl -fsSL https://nodejs.org/dist/v20.18.0/node-v20.18.0-linux-x64.tar.xz -o /tmp/node.tar.xz",
+    "tar -xf /tmp/node.tar.xz -C /opt/nodejs --strip-components=1",
+    "ln -sf /opt/nodejs/bin/node /usr/local/bin/node",
+    "ln -sf /opt/nodejs/bin/npm /usr/local/bin/npm",
+    "ln -sf /opt/nodejs/bin/npx /usr/local/bin/npx",
+    "npm config set script-shell /bin/bash",
+    "npm config set fund false",
+    "npm config set update-notifier false",
+    "npm config set prefer-offline true"
+  ],
+  "setup_runtime_commands": [
+    "cd /workspace && npm install --legacy-peer-deps --ignore-scripts",
+    "npm install -g ts-patch || true",
+    "ts-patch install -s || true",
+    "timeout 120 npm run build:tools || true"
+  ],
+  "activation_commands": [],
+  "activation_command": "",
+  "activation_type": "system",
+  "activation_validation_command": "node --version && npm --version",
+  "detected_test_command": "npm test",
+  "runtime_smoke_command": "node --version && npm --version && jest --version",
+  "runtime_profile": {
+    "ecosystem": "Node.js/TypeScript",
+    "package_manager": "npm",
+    "env": {},
+    "env_name": null,
+    "prepare_commands": [
+      "export PUPPETEER_SKIP_DOWNLOAD=true",
+      "export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true",
+      "cd /workspace && npm install --legacy-peer-deps --ignore-scripts"
+    ],
+    "activation_commands": [],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "npm install --legacy-peer-deps --ignore-scripts",
+    "cache_dirs": [
+      "/workspace/node_modules",
+      "/root/.npm"
+    ],
+    "notes": "Node.js 20.x LTS installed globally. Puppeteer browser download skipped. ts-patch installed for TypeScript patching."
+  },
+  "notes": "Base image node:20-bookworm already includes git, curl, and Node.js 20.x. System packages added for native module compilation (canvas, etc.) and headless browser testing (xvfb). The setup_runtime.sh script installs Node.js 20.18.0 LTS which satisfies the package.json engine requirement (>=16.0.0 <23.0.0). Jest is the primary test runner for unit tests."
+}

@@ -1,0 +1,75 @@
+{
+  "pr_summary": "Fix DATE_MODIFIED being stored in milliseconds instead of seconds in ImageSaver.kt. The issue causes incorrect dates on some Android devices when saving images to MediaStore. The fix changes Instant.now().toEpochMilli() to Instant.now().epochSecond.",
+  "runtime_family": "android",
+  "package_manager": "gradle",
+  "touched_files": [
+    "app/src/main/java/eu/kanade/tachiyomi/data/saver/ImageSaver.kt"
+  ],
+  "important_build_files": [
+    "build.gradle.kts",
+    "settings.gradle.kts",
+    "app/build.gradle.kts",
+    "gradle/libs.versions.toml",
+    "gradle/wrapper/gradle-wrapper.properties",
+    "gradle.properties",
+    "buildSrc/src/main/kotlin/AndroidConfig.kt"
+  ],
+  "important_test_files": [
+    "domain/src/test/java/tachiyomi/domain/release/interactor/GetApplicationReleaseTest.kt",
+    "domain/src/test/java/tachiyomi/domain/manga/interactor/FetchIntervalTest.kt",
+    "domain/src/test/java/tachiyomi/domain/chapter/service/ChapterRecognitionTest.kt",
+    "domain/src/test/java/tachiyomi/domain/chapter/service/MissingChaptersTest.kt",
+    "domain/src/test/java/tachiyomi/domain/library/model/LibraryFlagsTest.kt"
+  ],
+  "candidate_build_commands": [
+    "./gradlew assembleStandardRelease",
+    "./gradlew assembleDebug",
+    "./gradlew detekt"
+  ],
+  "candidate_test_commands": [
+    "./gradlew testReleaseUnitTest",
+    "./gradlew test",
+    "./gradlew detekt assembleStandardRelease testReleaseUnitTest"
+  ],
+  "candidate_smoke_commands": [
+    "./gradlew --version",
+    "./gradlew tasks --all"
+  ],
+  "candidate_activation_checks": [
+    "echo $ANDROID_HOME",
+    "echo $ANDROID_SDK_ROOT",
+    "test -d $ANDROID_HOME && echo 'Android SDK found'"
+  ],
+  "environment_management": "gradle",
+  "special_system_dependencies": [
+    "Android SDK (API 34)",
+    "Android Build Tools 29.0.3",
+    "Android NDK 26.1.10909125",
+    "JDK 17"
+  ],
+  "high_value_files": [
+    "app/src/main/java/eu/kanade/tachiyomi/data/saver/ImageSaver.kt",
+    "app/build.gradle.kts",
+    "buildSrc/src/main/kotlin/AndroidConfig.kt",
+    ".github/workflows/build_push.yml"
+  ],
+  "patch_file_cues": [
+    "ImageSaver.kt contains DATE_MODIFIED MediaStore field",
+    "Uses java.time.Instant for timestamp generation",
+    "Android Q+ (API 29+) MediaStore API usage"
+  ],
+  "test_file_cues": [
+    "Unit tests located in domain/src/test/java/",
+    "Uses JUnit 5 (Jupiter)",
+    "Uses Kotest assertions and Mockk for mocking"
+  ],
+  "platform_constraint": "android",
+  "platform_constraint_evidence": [
+    "app/build.gradle.kts uses com.android.application plugin",
+    "AndroidConfig.kt specifies compileSdk=34, minSdk=26, targetSdk=34",
+    ".github/workflows/build_push.yml runs on ubuntu-latest with Android SDK setup",
+    "README.md states 'Requires Android 8.0 or higher'",
+    "CONTRIBUTING.md requires Android Studio and basic Android development knowledge"
+  ],
+  "notes": "This is an Android application (Mihon/Tachiyomi fork) built with Gradle and Kotlin. The fix is a one-line change in ImageSaver.kt that corrects the DATE_MODIFIED timestamp from milliseconds to seconds. The CI workflow shows the project builds on Linux (ubuntu-latest) with Android SDK. The project requires JDK 17, Android SDK 34, and specific NDK version. Unit tests are in the domain module and can be run with ./gradlew test."
+}

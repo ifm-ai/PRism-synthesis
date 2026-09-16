@@ -1,0 +1,40 @@
+>>>>> Start Test Output
+   Compiling alloy-primitives v0.8.0 (/workspace/crates/primitives)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.31s
+     Running unittests src/lib.rs (target/debug/deps/alloy_primitives-53fb08afbe839a31)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 80 filtered out; finished in 0.00s
+
+     Running tests/test_signature_v_hex.rs (target/debug/deps/test_signature_v_hex-a99b6c62d3181bb4)
+
+running 3 tests
+test test_v28_serialization_is_hex ... 
+thread 'test_v28_serialization_is_hex' (10972) panicked at crates/primitives/tests/test_signature_v_hex.rs:95:5:
+v field should be hex-encoded as "0x1c" but got: {"r":"0x3d43270611ffb1a10fcab841e636e355a787151969b920cf10fef48d3a61aac3","s":"0x11336489e3050e3ec017079dfe16582ce3d167559bcaa8383b665b3fda4eb963","v":28}
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test test_v_roundtrip ... 
+thread 'test_v_roundtrip' (10973) panicked at crates/primitives/tests/test_signature_v_hex.rs:56:5:
+assertion `left == right` failed: Roundtrip should preserve hex-encoded v field
+  left: "{\"r\":\"0x3d43270611ffb1a10fcab841e636e355a787151969b920cf10fef48d3a61aac3\",\"s\":\"0x11336489e3050e3ec017079dfe16582ce3d167559bcaa8383b665b3fda4eb963\",\"v\":27}"
+ right: "{\"r\":\"0x3d43270611ffb1a10fcab841e636e355a787151969b920cf10fef48d3a61aac3\",\"s\":\"0x11336489e3050e3ec017079dfe16582ce3d167559bcaa8383b665b3fda4eb963\",\"v\":\"0x1b\"}"
+FAILED
+test test_v_serialization_is_hex ... 
+thread 'test_v_serialization_is_hex' (10974) panicked at crates/primitives/tests/test_signature_v_hex.rs:28:5:
+v field should be hex-encoded as "0x1b" but got: {"r":"0x3d43270611ffb1a10fcab841e636e355a787151969b920cf10fef48d3a61aac3","s":"0x11336489e3050e3ec017079dfe16582ce3d167559bcaa8383b665b3fda4eb963","v":27}
+FAILED
+
+failures:
+
+failures:
+    test_v28_serialization_is_hex
+    test_v_roundtrip
+    test_v_serialization_is_hex
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.05s
+
+error: test failed, to rerun pass `-p alloy-primitives --test test_signature_v_hex`
+>>>>> End Test Output
+OPENENV_EXIT_CODE=101

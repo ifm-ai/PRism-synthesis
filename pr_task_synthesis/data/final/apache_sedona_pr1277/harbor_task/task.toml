@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "apache_sedona_pr1277"
+description = "OpenEnv: apache/sedona PR #1277"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/apache/sedona.git"
+git_pr_id = "1277"
+git_base_commit = "6954eecfb50d5b1b4b0b08be32bb95bee1aa4d01"
+task_id = "apache_sedona_pr1277"
+repo_full_name = "apache/sedona"
+domain = "SCIENTIFIC_COMPUTING_MATH"
+primary_language = "Java"
+runtime_family = "Java/JVM"
+complexity = "hard"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

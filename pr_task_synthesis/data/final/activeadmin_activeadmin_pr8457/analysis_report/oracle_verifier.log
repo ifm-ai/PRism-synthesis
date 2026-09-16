@@ -1,0 +1,15 @@
+>>>>> Start Test Output
+warning: parser/current is loading parser/ruby32, which recognizes 3.2.5-compliant syntax, but you are running 3.2.11.
+Please see https://github.com/whitequark/parser#compatibility-with-ruby-mri.
+Run options: include {:full_description=>/calls\ status_tag\ even\ when\ attribute\ is\ nil/}
+
+Randomized with seed 39759
+.
+
+Finished in 0.10797 seconds (files took 1.89 seconds to load)
+1 example, 0 failures
+
+Randomized with seed 39759
+
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

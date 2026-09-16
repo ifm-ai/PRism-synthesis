@@ -1,0 +1,56 @@
+/tests/eval.sh: line 15: /opt/cargo/env: No such file or directory
+>>>>> Start Test Output
+   Compiling datafusion v40.0.0 (https://github.com/apache/datafusion.git?rev=35c2e7e#35c2e7e7)
+   Compiling zstd-safe v5.0.2+zstd.1.5.2
+   Compiling datafusion-comet-proto v0.2.0 (/workspace/native/proto)
+   Compiling chrono-tz v0.8.6
+   Compiling prost v0.12.6
+   Compiling lz4-sys v1.10.0
+   Compiling typemap-ors v1.0.0
+   Compiling brotli-decompressor v2.5.1
+   Compiling java-locator v0.1.7
+   Compiling serde-value v0.7.0
+   Compiling combine v4.6.7
+   Compiling thread-id v4.2.2
+   Compiling libloading v0.7.4
+   Compiling crc32fast v1.4.2
+   Compiling arc-swap v1.7.1
+   Compiling log-mdc v0.1.0
+   Compiling jni-sys v0.3.0
+   Compiling cesu8 v1.1.0
+   Compiling fnv v1.0.7
+   Compiling log4rs v1.3.0
+   Compiling jni v0.21.1
+   Compiling parquet v52.0.0 (https://github.com/apache/arrow-rs.git?rev=0a4d8a1#0a4d8a14)
+   Compiling flate2 v1.0.30
+   Compiling brotli v3.5.0
+   Compiling symbolic-demangle v12.9.2
+   Compiling lz4 v1.26.0
+   Compiling rayon v1.10.0
+   Compiling datafusion-comet-spark-expr v0.2.0 (/workspace/native/spark-expr)
+   Compiling zstd v0.11.2+zstd.1.5.2
+   Compiling findshlibs v0.10.2
+   Compiling plotters v0.3.6
+   Compiling ciborium v0.2.2
+   Compiling snap v1.1.1
+   Compiling clap v4.5.9
+   Compiling nix v0.26.4
+   Compiling tinytemplate v1.2.1
+   Compiling itertools v0.11.0
+   Compiling anes v0.1.6
+   Compiling simd-adler32 v0.3.7
+   Compiling oorandom v11.1.4
+   Compiling criterion v0.5.1
+   Compiling datafusion-comet v0.2.0 (/workspace/native/core)
+   Compiling pprof v0.13.0
+   Compiling assertables v7.0.1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 27s
+     Running tests/decimal_promotion_check.rs (target/debug/deps/decimal_promotion_check-77222a8a988fff37)
+
+running 1 test
+test test_low_precision_decimal_addition_no_unnecessary_decimal256_promotion ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

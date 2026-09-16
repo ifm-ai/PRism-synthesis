@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "playcanvas_engine_pr6277"
+description = "OpenEnv: playcanvas/engine PR #6277"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/playcanvas/engine.git"
+git_pr_id = "6277"
+git_base_commit = "1aac7ee7bcc6491e655804b94db4478743bb4e6b"
+task_id = "playcanvas_engine_pr6277"
+repo_full_name = "playcanvas/engine"
+domain = "GAMES_SIMULATION_MISC_CRAFT"
+primary_language = "JavaScript"
+runtime_family = "JavaScript/WebGL/WebGPU"
+complexity = "medium"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

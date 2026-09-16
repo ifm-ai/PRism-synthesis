@@ -1,0 +1,108 @@
+{
+  "base_image_candidate": "debian:bookworm",
+  "system_packages": [
+    "ca-certificates",
+    "git",
+    "curl",
+    "golang-go",
+    "libvips-dev",
+    "pkg-config",
+    "gcc",
+    "libexpat1-dev",
+    "libgsf-1-dev",
+    "libfftw3-dev",
+    "libcfitsio-dev",
+    "libimagequant-dev",
+    "libcgif-dev",
+    "libexif12",
+    "libjpeg-dev",
+    "libpng-dev",
+    "libwebp-dev",
+    "libpango1.0-dev",
+    "libfontconfig-dev",
+    "libtiff-dev",
+    "librsvg2-dev",
+    "libcairo2-dev",
+    "libmatio-dev",
+    "liblcms2-dev",
+    "libopenexr-dev",
+    "libopenjp2-7-dev",
+    "liborc-0.4-dev"
+  ],
+  "base_setup_commands": [
+    "apt-get update",
+    "DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates git curl golang-go libvips-dev pkg-config gcc libexpat1-dev libgsf-1-dev libfftw3-dev libcfitsio-dev libimagequant-dev libcgif-dev libexif12 libjpeg-dev libpng-dev libwebp-dev libpango1.0-dev libfontconfig-dev libtiff-dev librsvg2-dev libcairo2-dev libmatio-dev liblcms2-dev libopenexr-dev libopenjp2-7-dev liborc-0.4-dev"
+  ],
+  "setup_runtime_commands": [
+    "export GOPATH=/root/go",
+    "export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin",
+    "cd /workspace",
+    "CGO_CFLAGS_ALLOW=-Xpreprocessor go mod download",
+    "CGO_CFLAGS_ALLOW=-Xpreprocessor go build -v ./vips"
+  ],
+  "activation_commands": [
+    "export GOPATH=/root/go",
+    "export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin",
+    "export CGO_CFLAGS_ALLOW=-Xpreprocessor"
+  ],
+  "activation_command": "export GOPATH=/root/go && export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin && export CGO_CFLAGS_ALLOW=-Xpreprocessor",
+  "activation_type": "system",
+  "activation_validation_command": "bash -c 'export GOPATH=/root/go && export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin && export CGO_CFLAGS_ALLOW=-Xpreprocessor && go version && pkg-config --modversion vips'",
+  "detected_test_command": "CGO_CFLAGS_ALLOW=-Xpreprocessor go test -v -coverprofile=profile.cov ./...",
+  "runtime_smoke_command": "CGO_CFLAGS_ALLOW=-Xpreprocessor go build -v ./vips",
+  "runtime_profile": {
+    "ecosystem": "go",
+    "package_manager": "go modules",
+    "env": {
+      "GOPATH": "/root/go",
+      "CGO_CFLAGS_ALLOW": "-Xpreprocessor",
+      "PATH": "$PATH:/usr/local/go/bin:$GOPATH/bin"
+    },
+    "env_name": "system-go",
+    "prepare_commands": [
+      "cd /workspace",
+      "CGO_CFLAGS_ALLOW=-Xpreprocessor go mod download"
+    ],
+    "activation_commands": [
+      "export GOPATH=/root/go",
+      "export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin",
+      "export CGO_CFLAGS_ALLOW=-Xpreprocessor"
+    ],
+    "base_deps_installed": [
+      "ca-certificates",
+      "golang-go (1.19+)",
+      "libvips-dev (8.14) with all transitive dev dependencies",
+      "gcc",
+      "pkg-config",
+      "git",
+      "curl",
+      "libexpat1-dev",
+      "libgsf-1-dev",
+      "libfftw3-dev",
+      "libcfitsio-dev",
+      "libimagequant-dev",
+      "libcgif-dev",
+      "libexif12",
+      "libjpeg-dev",
+      "libpng-dev",
+      "libwebp-dev",
+      "libpango1.0-dev",
+      "libfontconfig-dev",
+      "libtiff-dev",
+      "librsvg2-dev",
+      "libcairo2-dev",
+      "libmatio-dev",
+      "liblcms2-dev",
+      "libopenexr-dev",
+      "libopenjp2-7-dev",
+      "liborc-0.4-dev"
+    ],
+    "test_only_install_strategy": "none - dependencies installed via go mod download in setup_runtime",
+    "cache_dirs": [
+      "/root/go/pkg/mod",
+      "/root/.cache/go-build"
+    ],
+    "notes": "Go project using CGO to wrap libvips C library. Requires CGO_CFLAGS_ALLOW=-Xpreprocessor for building. libvips-dev requires numerous transitive development dependencies for full functionality including TIFF, JPEG, PNG, WebP, and other format support. Test files include golden tests and foreign tests for TIFF export."
+  },
+  "notes": "Base image debian:bookworm provides git and curl by default when golang-go and libvips-dev are installed. Go 1.19 from bookworm repos satisfies the go 1.15+ requirement. libvips-dev 8.14 satisfies the 8.10+ requirement. All libvips transitive development dependencies are explicitly installed to ensure CGO compilation succeeds. The project uses Go modules (go.mod/go.sum) for dependency management. CGO requires special flags for building."
+}

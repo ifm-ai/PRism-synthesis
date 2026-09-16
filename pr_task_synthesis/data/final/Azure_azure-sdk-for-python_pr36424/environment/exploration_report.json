@@ -1,0 +1,66 @@
+{
+  "pr_summary": "Finetuning job objects must accept the `task` argument in camelCase form (e.g., 'chatCompletion', 'textCompletion') and correctly translate it to the SDK's internal snake_case representation. The fix introduces a new constants file with snake_case task types and changes the casing_transform from camel_to_snake to snake_to_camel in the FineTuningVerticalSchema.",
+  "runtime_family": "Python",
+  "package_manager": "pip",
+  "touched_files": [
+    "sdk/ml/azure-ai-ml/azure/ai/ml/_schema/_finetuning/constants.py",
+    "sdk/ml/azure-ai-ml/azure/ai/ml/_schema/_finetuning/finetuning_vertical.py",
+    "sdk/ml/azure-ai-ml/azure/ai/ml/constants/_job/finetuning.py"
+  ],
+  "important_build_files": [
+    "sdk/ml/azure-ai-ml/setup.py",
+    "sdk/ml/azure-ai-ml/pyproject.toml",
+    "sdk/ml/azure-ai-ml/dev_requirements.txt"
+  ],
+  "important_test_files": [
+    "sdk/ml/azure-ai-ml/tests/finetuning_job/unittests/test_azure_openai_finetuning_job_schema.py",
+    "sdk/ml/azure-ai-ml/tests/finetuning_job/unittests/test_custom_model_finetuning_job_schema.py",
+    "sdk/ml/azure-ai-ml/tests/finetuning_job/conftest.py"
+  ],
+  "candidate_build_commands": [
+    "cd sdk/ml/azure-ai-ml && pip install -e .",
+    "cd sdk/ml/azure-ai-ml && python setup.py install"
+  ],
+  "candidate_test_commands": [
+    "cd sdk/ml/azure-ai-ml && pytest tests/finetuning_job/unittests/ -v",
+    "cd sdk/ml/azure-ai-ml && pytest tests/finetuning_job/unittests/test_azure_openai_finetuning_job_schema.py -v",
+    "cd sdk/ml/azure-ai-ml && pytest tests/finetuning_job/unittests/test_custom_model_finetuning_job_schema.py -v"
+  ],
+  "candidate_smoke_commands": [
+    "python -c \"from azure.ai.ml.entities._job.finetuning import AzureOpenAIFineTuningJob, CustomModelFineTuningJob; print('Import successful')\"",
+    "python -c \"from azure.ai.ml._schema._finetuning.constants import SnakeCaseFineTuningTaskTypes; print(SnakeCaseFineTuningTaskTypes.CHAT_COMPLETION)\""
+  ],
+  "candidate_activation_checks": [
+    "python -c \"import azure.ai.ml; print(azure.ai.ml.__version__)\"",
+    "pip show azure-ai-ml"
+  ],
+  "environment_management": "pip with setup.py and pyproject.toml for build configuration. The project uses a monorepo structure with local path dependencies in dev_requirements.txt.",
+  "special_system_dependencies": [],
+  "high_value_files": [
+    "sdk/ml/azure-ai-ml/azure/ai/ml/_schema/_finetuning/finetuning_vertical.py",
+    "sdk/ml/azure-ai-ml/azure/ai/ml/_schema/_finetuning/constants.py",
+    "sdk/ml/azure-ai-ml/azure/ai/ml/constants/_job/finetuning.py",
+    "sdk/ml/azure-ai-ml/azure/ai/ml/entities/_job/finetuning/finetuning_vertical.py",
+    "sdk/ml/azure-ai-ml/azure/ai/ml/entities/_job/finetuning/azure_openai_finetuning_job.py",
+    "sdk/ml/azure-ai-ml/azure/ai/ml/entities/_job/finetuning/custom_model_finetuning_job.py",
+    "sdk/ml/azure-ai-ml/azure/ai/ml/_utils/utils.py"
+  ],
+  "patch_file_cues": [
+    "New constants.py file with SnakeCaseFineTuningTaskTypes class defining snake_case task types",
+    "finetuning_vertical.py changes: imports SnakeCaseFineTuningTaskTypes, changes casing_transform from camel_to_snake to snake_to_camel",
+    "constants/_job/finetuning.py adds FineTuningTaskTypes class with PascalCase values (ChatCompletion, TextCompletion, etc.)"
+  ],
+  "test_file_cues": [
+    "test_azure_openai_finetuning_job_schema.py: task changed from 'chat_completion' to 'chatCompletion'",
+    "test_custom_model_finetuning_job_schema.py: task changed from 'text_completion' to 'textCompletion'",
+    "Tests verify that camelCase task strings are accepted and properly converted to snake_case for REST API"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "Python package with no platform-specific dependencies",
+    "No Windows-only or macOS-only CI configurations",
+    "Standard pip-based installation works on Linux",
+    "Azure SDK for Python is cross-platform"
+  ],
+  "notes": "The issue is about accepting camelCase task arguments (e.g., 'chatCompletion') from users and converting them to snake_case (e.g., 'chat_completion') for the REST API. The fix creates a new constants file with snake_case task type values and changes the StringTransformedEnum to use snake_to_camel as the casing_transform (which converts snake_case input to camelCase for comparison against the allowed_values). The REST client enum FineTuningTaskType uses PascalCase values like 'ChatCompletion'. The test patches show the expected behavior: users provide camelCase like 'chatCompletion' which should be accepted."
+}

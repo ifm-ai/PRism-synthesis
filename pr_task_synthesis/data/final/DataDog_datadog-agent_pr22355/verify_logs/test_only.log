@@ -1,0 +1,9 @@
+>>>>> Start Test Output
+# github.com/DataDog/datadog-agent/comp/core/workloadmeta/collectors/internal/containerd [github.com/DataDog/datadog-agent/comp/core/workloadmeta/collectors/internal/containerd.test]
+comp/core/workloadmeta/collectors/internal/containerd/containerd_image_consolidation_test.go:33:31: knownImages.getPreferredName undefined (type *knownImages has no field or method getPreferredName)
+comp/core/workloadmeta/collectors/internal/containerd/containerd_image_consolidation_test.go:228:31: knownImages.getPreferredName undefined (type *knownImages has no field or method getPreferredName)
+comp/core/workloadmeta/collectors/internal/containerd/containerd_image_consolidation_test.go:380:32: knownImages.getPreferredName undefined (type *knownImages has no field or method getPreferredName)
+FAIL	github.com/DataDog/datadog-agent/comp/core/workloadmeta/collectors/internal/containerd [build failed]
+FAIL
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

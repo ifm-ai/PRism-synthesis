@@ -1,0 +1,28 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "verification_command": "cd /workspace/apis/python && pytest test/test_distance_metrics.py -s -x -v --tb=short -k \"test_cosine_distance or test_inner_product_distances or test_ivf_flat_cosine_simple or test_ivf_flat_ingestion_cosine\"",
+  "activation_source": "source /opt/benchmark/venv/bin/activate",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "test_patch_with_selective_tests",
+  "copied_test_patch": true,
+  "supplemental_tests_created": false,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that COSINE and INNER_PRODUCT distance metrics are correctly supported in IVF_FLAT index ingestion and querying, as added in fix.patch.",
+  "fix_patch_grounding": "The fix.patch adds flip_results() function for INNER_PRODUCT metric handling and normalize_vectors/normalize_vector functions for COSINE metric, modifying query results transformation and vector normalization during ingestion and querying.",
+  "issue_context_used": "The issue.md context identifies the need for INNER_PRODUCT and COSINE distance metric support in the TileDB vector search library.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": [
+    "cd /workspace/apis/python && pytest test/test_distance_metrics.py -s -x -v --tb=short -k \"test_cosine_distance or test_inner_product_distances or test_ivf_flat_cosine_simple or test_ivf_flat_ingestion_cosine\""
+  ],
+  "required_verifier_files": [
+    "eval.sh",
+    "test.patch"
+  ],
+  "notes": "The eval.sh applies test.patch to add hidden verifier tests and conditionally applies fix.patch based on TEST_WITH_FIX environment variable. Tests target COSINE and INNER_PRODUCT distance metrics which are the core behavioral changes in fix.patch. PYTHONPATH is set to /workspace/apis/python/src to ensure tests run against workspace code instead of pre-installed PyPI package."
+}

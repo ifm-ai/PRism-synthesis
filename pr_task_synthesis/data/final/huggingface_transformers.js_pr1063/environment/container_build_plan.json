@@ -1,0 +1,64 @@
+{
+  "base_image": "node:20-bookworm",
+  "system_packages": [
+    "git",
+    "curl",
+    "git-lfs"
+  ],
+  "base_setup_commands": [
+    "apt-get update",
+    "apt-get install -y git curl git-lfs",
+    "git lfs install"
+  ],
+  "build_context_scripts": {
+    "repo_setup": "repo_setup.sh",
+    "setup_runtime": "setup_runtime.sh"
+  },
+  "image_paths": {
+    "repo_setup_script": "/opt/benchmark/repo_setup.sh",
+    "setup_runtime_script": "/opt/benchmark/setup_runtime.sh"
+  },
+  "build_steps": [
+    {
+      "step": 1,
+      "action": "base_image",
+      "description": "Start from node:20-bookworm"
+    },
+    {
+      "step": 2,
+      "action": "install_system_packages",
+      "description": "Install git, curl, git-lfs and configure git-lfs"
+    },
+    {
+      "step": 3,
+      "action": "copy_scripts",
+      "description": "Copy repo_setup.sh and setup_runtime.sh to /opt/benchmark/"
+    },
+    {
+      "step": 4,
+      "action": "materialize_workspace",
+      "description": "Run repo_setup.sh to clone transformers.js repository"
+    },
+    {
+      "step": 5,
+      "action": "setup_runtime",
+      "description": "Run setup_runtime.sh to install npm dependencies"
+    },
+    {
+      "step": 6,
+      "action": "set_workdir",
+      "description": "Set WORKDIR to /workspace"
+    }
+  ],
+  "runtime_mounts": {
+    "eval_script": "/artifacts/evaluation/eval.sh",
+    "tests_dir": "/artifacts/evaluation/tests/",
+    "note": "eval.sh and tests/ are runtime-mounted verifier assets, NOT baked into the image"
+  },
+  "workdir": "/workspace",
+  "ecosystem": "node",
+  "package_manager": "npm",
+  "repo_materialization_mode": "git_partial_clone",
+  "repo_url": "https://github.com/huggingface/transformers.js.git",
+  "repo_commit": "958426347a9012b26a314d9b4b0ab7685dfd94eb"
+}

@@ -1,0 +1,25 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "is_finish": true,
+  "route_to": null,
+  "hacking_detected": false,
+  "hacking_repair_cycles": 0,
+  "local_preflight": {
+    "test_only_exit_code": 1,
+    "test_only_passed": false,
+    "test_with_fix_exit_code": 0,
+    "test_with_fix_passed": true,
+    "criterion_met": true
+  },
+  "official_verifier": {
+    "test_only_exit_code": 1,
+    "test_only_passed": false,
+    "test_with_fix_exit_code": 0,
+    "test_with_fix_passed": true,
+    "criterion_met": true,
+    "notes": "Local preflight confirms discriminating verifier behavior"
+  },
+  "verifier_alignment_repair_cycles": 0,
+  "notes": "Test analyst audit complete. The eval.sh correctly runs hidden tests from /artifacts/evaluation/tests/test_annotation_sort.py. The verifier distinguishes between buggy state (TypeError, exit code 1) and fixed state (PASSED, exit code 0). No hacking detected. Ready to proceed to dockerfile-builder."
+}

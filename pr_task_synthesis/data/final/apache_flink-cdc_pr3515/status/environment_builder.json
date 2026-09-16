@@ -1,0 +1,19 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "debian:bookworm",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "dependencies_precached": true,
+  "setup_runtime_updated": true,
+  "maven_nexus_configured": true,
+  "runtime_profile_summary": "Java 8 (Temurin JDK 8u412) + Maven 3.8.7 environment for Apache Flink CDC project with pre-cached Maven dependencies. Build order: (1) mvn install -DskipTests -U builds all modules and installs inter-module SNAPSHOTs (retries 3x), (2) mvn dependency:go-offline caches external deps (retries 3x), (3) mvn dependency:resolve resolves test dependencies. Maven configured to use Mirror proxy at http://mirror.proxy.hpc:8081/repository/maven-public/ with fallback to Maven Central (mirrorOf=external:*). Retry logic: wagon retry handler (count=3, delay_secs=10). Tests run in offline mode (-o) using cached dependencies.",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "Tests run: 1, Failures: 0, Errors: 0, Skipped: 0\nPostTransformOperatorTest#testDataChangeEventTransformWithDuplicateColumns\nBUILD SUCCESS in offline mode (-o) with cached dependencies",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "export JAVA_HOME=/opt/java/jdk8u412-b08 && export PATH=$JAVA_HOME/bin:$PATH && export MAVEN_HOME=/usr/share/maven && export PATH=$MAVEN_HOME/bin:$PATH",
+  "notes": "Maven dependency pre-caching fix applied. The setup_runtime.sh script now includes: (1) Maven settings.xml with Mirror proxy (mirrorOf=external:*) allowing fallback to Maven Central when Mirror is unreachable, (2) Retry logic for mvn commands (3 attempts with 10s delay), (3) Wagon HTTP retry handler configuration (-Dmaven.wagon.http.retryHandler.count=3 -Dmaven.wagon.http.retryHandler.delay_secs=10), (4) Verification step that fails if no JARs cached. The Mirror proxy configuration uses external:* mirror to allow fallback to Central. HTTP timeouts configured in settings.xml (connection=30s, request=60s, socket=30s) but Maven 3.8.x has limited Wagon support for these settings (warnings are benign). Tests verified to run in offline mode (-o flag) using cached /root/.m2/repository. Current cache: 998 JARs, 1761 POMs. Key dependencies cached: org.apache:apache:20, flink-cdc-common:3.2-SNAPSHOT, all Flink 1.18.1 dependencies."
+}

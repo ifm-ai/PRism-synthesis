@@ -1,0 +1,29 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running tests/decimal128_optimization_tests.rs (target/debug/deps/decimal128_optimization_tests-d00e1ddd596d224a)
+
+running 11 tests
+test test_decimal128_max_precision_constant ... ok
+test test_decimal_array_basic_operations ... ok
+test test_decimal_div_by_zero ... ok
+test test_decimal_div_high_precision_fallback ... ok
+test test_decimal_div_low_precision_uses_i128_path ... ok
+test test_decimal_div_negative ... ok
+test test_decimal_div_precision_boundary_calculation ... ok
+test test_decimal_precision_boundary_calculation_multiply ... ok
+test test_decimal_precision_boundary_calculation_plus_minus ... ok
+test test_decimal_precision_boundary_low ... ok
+test test_decimal_precision_boundary_max ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+SPARK_EXPR_EXIT_CODE=0
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.19s
+     Running unittests src/lib.rs (target/debug/deps/comet-12f3a0d47507558b)
+
+running 2 tests
+test execution::datafusion::planner::tests::test_decimal128_addition_no_unnecessary_promotion ... ok
+test execution::datafusion::planner::tests::test_decimal_multiply_precision_boundary ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 60 filtered out; finished in 0.00s
+
+CORE_EXIT_CODE=0

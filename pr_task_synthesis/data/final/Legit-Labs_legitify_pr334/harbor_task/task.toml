@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "Legit-Labs_legitify_pr334"
+description = "OpenEnv: Legit-Labs/legitify PR #334"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/Legit-Labs/legitify.git"
+git_pr_id = "334"
+git_base_commit = "0cea8da09e19f93630ea00481774f7ae00f5c67a"
+task_id = "Legit-Labs_legitify_pr334"
+repo_full_name = "Legit-Labs/legitify"
+domain = "SECURITY_FORENSICS"
+primary_language = "JavaScript"
+runtime_family = "go"
+complexity = "medium"
+star_category = "stars_501_1000"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

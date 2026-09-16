@@ -1,0 +1,17 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "verification_command": "vendor/bin/phpunit tests/PhpSpreadsheetTests/Style/ConditionalFormatting/PR3946Test.php",
+  "activation_source": "system",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "test_patch_applied",
+  "copied_test_patch": true,
+  "supplemental_tests_created": false,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "notes": "eval.sh repaired to apply test.patch using git apply before running PHPUnit tests. The script now properly creates PR3946Test.php from the patch in /tasks/test.patch (copied to SCRIPT_DIR/test.patch). The test runs vendor/bin/phpunit on the specific test file which tests the Conditional text initialization bug. No activation command needed as PHP uses system-level installation. Composer install runs if vendor/ doesn't exist."
+}

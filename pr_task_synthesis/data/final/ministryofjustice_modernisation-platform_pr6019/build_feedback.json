@@ -1,0 +1,17 @@
+{
+  "is_finish": true,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "failure_domain": null,
+  "route_to": null,
+  "blocking_errors": [],
+  "warnings": [
+    "Terraform download failed during build (network restricted) - base image should include terraform for full functionality"
+  ],
+  "next_actions": [
+    "OCI archive exported to /artifacts/environment/openenv_validation_oci.tar",
+    "Image ready for evaluation"
+  ],
+  "notes": "Build succeeded with conftest@v0.48.0 (compatible with Go 1.23.2). The previous failure due to conftest@latest requiring Go 1.25.8+ has been resolved by pinning conftest version in setup_runtime.sh."
+}

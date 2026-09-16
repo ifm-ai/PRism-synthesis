@@ -1,0 +1,80 @@
+{
+  "pr_summary": "The CI pipelines for LightGBM use `pip install --user` which causes cross-job contamination in hosted runners. The user-site directory persists across CI jobs, leading to stale package installations. The fix removes `--user` flags from pip install commands in `.ci/test.sh` and `.ci/test_windows.ps1` to ensure each CI job installs the freshly built wheel into the isolated Conda environment.",
+  "runtime_family": "python",
+  "package_manager": "pip",
+  "touched_files": [
+    ".ci/test.sh",
+    ".ci/test_windows.ps1"
+  ],
+  "important_build_files": [
+    "CMakeLists.txt",
+    "build-python.sh",
+    "python-package/pyproject.toml",
+    ".ci/setup.sh"
+  ],
+  "important_test_files": [
+    "tests/python_package_test/test_basic.py",
+    "tests/python_package_test/test_engine.py",
+    "tests/python_package_test/test_sklearn.py",
+    "tests/cpp_tests/",
+    "tests/c_api_test/"
+  ],
+  "candidate_build_commands": [
+    "cmake -B build -S .",
+    "cmake --build build --target _lightgbm -j4",
+    "sh ./build-python.sh sdist",
+    "sh ./build-python.sh bdist_wheel"
+  ],
+  "candidate_test_commands": [
+    "pytest tests/python_package_test",
+    "pytest tests",
+    "cmake --build build --target testlightgbm && ./testlightgbm"
+  ],
+  "candidate_smoke_commands": [
+    "python -c \"import lightgbm\"",
+    "python -c \"import lightgbm; print(lightgbm.__version__)\""
+  ],
+  "candidate_activation_checks": [
+    "source activate $CONDA_ENV",
+    "conda activate test-env"
+  ],
+  "environment_management": "conda/mamba",
+  "special_system_dependencies": [
+    "cmake>=3.18",
+    "libomp-dev (OpenMP)",
+    "openmpi-dev (for MPI builds)",
+    "libboost-dev (for GPU builds)",
+    "ocl-icd-opencl-dev (for OpenCL builds)",
+    "CUDA toolkit (for CUDA builds)"
+  ],
+  "high_value_files": [
+    ".ci/test.sh",
+    ".ci/test_windows.ps1",
+    "build-python.sh",
+    ".ci/setup.sh",
+    ".ci/conda-envs/ci-core.txt",
+    ".ci/conda-envs/ci-core-py37.txt",
+    "python-package/pyproject.toml",
+    "CMakeLists.txt"
+  ],
+  "patch_file_cues": [
+    ".ci/test.sh: removes --user from pip install commands (lines 120, 158, 203, 215-216, 224, 239-240, 252-253, 261, 270-271, 284)",
+    ".ci/test_windows.ps1: removes --user from pip install commands (lines 100, 106, 109)"
+  ],
+  "test_file_cues": [
+    "tests/python_package_test/ - main Python package tests",
+    "tests/cpp_tests/ - C++ unit tests",
+    "tests/c_api_test/ - C API tests",
+    "tests/distributed/ - distributed training tests"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    ".ci/test.sh is a bash script for Linux/macOS CI",
+    ".ci/test_windows.ps1 is for Windows but the fix is cross-platform",
+    "CMakeLists.txt supports cross-platform builds",
+    "GitHub Actions workflows run on ubuntu-latest, macos-13, and windows",
+    "python-package/pyproject.toml classifiers include Linux, macOS, Windows",
+    "LightGBM is a cross-platform ML framework with no Windows/macOS-only restrictions for the Python package"
+  ],
+  "notes": "LightGBM is a gradient boosting framework with Python, R, and C++ interfaces. The Python package uses scikit-build-core for building CMake-based native extensions. The project uses conda/mamba for CI environment management with pip for package installation. The fix removes --user flags to prevent cross-job contamination in CI. The project is fully cross-platform and can be built/tested in a Linux x86-64 container. Python 3.7+ is supported, with CI testing Python 3.7-3.11."
+}

@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "ministryofjustice_modernisation-platform_pr6019"
+description = "OpenEnv: ministryofjustice/modernisation-platform PR #6019"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/ministryofjustice/modernisation-platform.git"
+git_pr_id = "6019"
+git_base_commit = "f37922ba1126cddb8d1ee0ae44776422d08c3a1a"
+task_id = "ministryofjustice_modernisation-platform_pr6019"
+repo_full_name = "ministryofjustice/modernisation-platform"
+domain = "DEVOPS_NETWORK_SERVICES"
+primary_language = "Ruby"
+runtime_family = "terraform"
+complexity = "medium"
+star_category = "stars_501_1000"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

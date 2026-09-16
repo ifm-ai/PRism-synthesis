@@ -1,0 +1,13 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "high_value_files": [
+    "src/pytorch_ie/core/document.py",
+    "tests/core/test_document.py",
+    "pyproject.toml",
+    "noxfile.py",
+    "README.md"
+  ],
+  "notes": "Repository exploration complete. This is a Python project (pytorch-ie) using Poetry for dependency management. The fix modifies the Annotation class in src/pytorch_ie/core/document.py to add comparison_fields_and_values property and __lt__ method for sorting annotations. The test adds test_annotation_sort to tests/core/test_document.py. Platform is Linux-compatible (CI runs on ubuntu-latest). No blocking issues found."
+}

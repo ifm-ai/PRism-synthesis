@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "official_verifier": {
+    "execution_mode": "real_execution",
+    "test_only_exit_code": 1,
+    "test_with_fix_exit_code": 0
+  },
+  "non_discriminating": false,
+  "notes": "Local preflight two-run verifier check passed: testOnly exit code 1 (tests fail on buggy workspace), testWithFix exit code 0 (tests pass on fixed workspace). Tests verify that example notebooks and YAML files use the correct import path (rail.creation.degraders.photometric_errors) for LSSTErrorModel class. No hacking patterns detected. Verifier alignment is aligned with direct overlap between patch-touched files and test targets."
+}

@@ -1,0 +1,73 @@
+{
+  "is_finish": true,
+  "route_to": null,
+  "failure_type": null,
+  "hacking_detected": false,
+  "hacking_checklist": {
+    "H1": false,
+    "H2": false,
+    "H3": false,
+    "H4": false,
+    "H5": false,
+    "H5b": false,
+    "H5c": true,
+    "H6": false,
+    "H7": false,
+    "H8": false,
+    "H9": false,
+    "H10": false
+  },
+  "hacking_signals": [],
+  "local_test_only_exit_code": 1,
+  "local_test_with_fix_exit_code": 0,
+  "workers_invoked": [],
+  "observations": [
+    "eval.sh correctly invokes Jest test runner with external config",
+    "Tests verify all 5 WGSL shader files modified by fix.patch",
+    "Test output contains real Jest test results with pass/fail indicators",
+    "OPENENV_EXIT_CODE properly captured from RC=$?",
+    "No hacking patterns detected in eval.sh",
+    "required_verifier_files are clean - no problematic paths",
+    "test_runner_reachable is true in environment_builder.json, matching eval.sh Jest invocation",
+    "activation_command is empty, no check needed",
+    "Two-run criterion satisfied: testOnly=1 (fail), testWithFix=0 (pass)"
+  ],
+  "requested_context": [],
+  "next_actions": [],
+  "verifier_alignment": {
+    "status": "aligned",
+    "blocks_outer_progress": false,
+    "route_to": null,
+    "target_overlap": "direct",
+    "patch_touched_files": [
+      "packages/dev/core/src/ShadersWGSL/ShadersInclude/bumpFragment.fx",
+      "packages/dev/core/src/ShadersWGSL/ShadersInclude/depthPrePass.fx",
+      "packages/dev/core/src/ShadersWGSL/ShadersInclude/morphTargetsVertex.fx",
+      "packages/dev/core/src/ShadersWGSL/ShadersInclude/oitFragment.fx",
+      "packages/dev/core/src/ShadersWGSL/default.fragment.fx"
+    ],
+    "test_target_files": [
+      "ShadersInclude/bumpFragment.fx",
+      "ShadersInclude/depthPrePass.fx",
+      "ShadersInclude/oitFragment.fx",
+      "ShadersInclude/morphTargetsVertex.fx",
+      "default.fragment.fx"
+    ],
+    "instruction_suspicious": false,
+    "required_files_audit": {
+      "declared": [
+        "eval.sh",
+        "tests/wgsl-shader-fixes.test.ts",
+        "tests/jest.config.external.js"
+      ],
+      "flagged_unnecessary": [],
+      "path_traversal_violations": [],
+      "suggested_required_verifier_files": [
+        "eval.sh",
+        "tests/wgsl-shader-fixes.test.ts",
+        "tests/jest.config.external.js"
+      ],
+      "has_issues": false
+    }
+  }
+}

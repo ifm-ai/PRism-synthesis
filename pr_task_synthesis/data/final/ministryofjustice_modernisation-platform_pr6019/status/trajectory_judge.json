@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "fail",
+  "oracle_outcome": "fail",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "Solver correctly localized to the IAM policy file and made substantial progress (removed cognito:*, added ec2:ModifyVpc*, route table/ACL/flow logs permissions). Oracle failures are due to implementation pattern issues (over-removal of cognito-idp:*, failure to consolidate individual VPC endpoint actions) rather than behavioral mismatches. This is a high-value RL example showing partial progress with clear oracle feedback on implementation patterns."
+}

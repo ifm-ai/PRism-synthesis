@@ -1,0 +1,102 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.10.12, pytest-9.1.0, pluggy-1.6.0 -- /opt/benchmark/dali_venv/bin/python
+cachedir: .pytest_cache
+rootdir: /tmp/tmp.R1uF3RXc7s
+collecting ... collected 29 items
+
+../tmp/tmp.R1uF3RXc7s/test_string_view_api.py::TestStringViewAPI::test_input_feed_count_exists SKIPPED [  3%]
+../tmp/tmp.R1uF3RXc7s/test_string_view_api.py::TestStringViewAPI::test_input_feed_count_with_string_literal SKIPPED [  6%]
+../tmp/tmp.R1uF3RXc7s/test_string_view_api.py::TestStringViewAPI::test_input_feed_count_with_string_variable SKIPPED [ 10%]
+../tmp/tmp.R1uF3RXc7s/test_string_view_api.py::TestStringViewAPI::test_input_feed_count_nonexistent_input SKIPPED [ 13%]
+../tmp/tmp.R1uF3RXc7s/test_string_view_api.py::TestStringViewAPI::test_get_operator_node_exists SKIPPED [ 17%]
+../tmp/tmp.R1uF3RXc7s/test_string_view_api.py::TestStringViewAPI::test_pipeline_with_multiple_inputs SKIPPED [ 20%]
+../tmp/tmp.R1uF3RXc7s/test_string_view_api.py::TestStringViewAPI::test_string_substring_compatibility SKIPPED [ 24%]
+../tmp/tmp.R1uF3RXc7s/test_string_view_api.py::TestDALINotAvailable::test_dali_not_available PASSED [ 27%]
+../tmp/tmp.R1uF3RXc7s/test_string_view_api.py::test_string_view_api_grounding PASSED [ 31%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestExecutorAPIChanges::test_executor_h_has_string_view_inputfeedcount FAILED [ 34%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestExecutorAPIChanges::test_executor_h_has_get_operator_method FAILED [ 37%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestExecutorAPIChanges::test_executor_impl_has_get_operator_implementation FAILED [ 41%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestExecutorAPIChanges::test_executor_impl_inputfeedcount_uses_string_view PASSED [ 44%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_has_nodeptr_method FAILED [ 48%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_has_nodeid_method FAILED [ 51%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_tensorid_returns_optional FAILED [ 55%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_has_tensorptr_method FAILED [ 58%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_uses_less_comparator FAILED [ 62%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_addop_returns_reference FAILED [ 65%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_inputfeedcount_uses_string_view PASSED [ 68%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getoperatornode_uses_string_view PASSED [ 72%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getinputoperatornode_uses_string_view PASSED [ 75%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getreadermeta_uses_string_view PASSED [ 79%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getinputlayout_uses_string_view PASSED [ 82%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getinputndim_uses_string_view PASSED [ 86%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_getinputdtype_uses_string_view PASSED [ 89%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestPipelineAPIChanges::test_pipeline_h_input_operators_uses_less_comparator PASSED [ 93%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestImplementationChanges::test_pipeline_cc_getoperatornode_implementation PASSED [ 96%]
+../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestImplementationChanges::test_pipeline_cc_getreadermeta_uses_executor_getoperator FAILED [100%]
+
+=================================== FAILURES ===================================
+____ TestExecutorAPIChanges.test_executor_h_has_string_view_inputfeedcount _____
+/tmp/tmp.R1uF3RXc7s/test_fix_verification.py:66: in test_executor_h_has_string_view_inputfeedcount
+    assert has_old_string is None, \
+E   AssertionError: executor.h should not have old InputFeedCount(const std::string&) signature
+E   assert <re.Match object; span=(2131, 2176), match='InputFeedCount(const std::string &input_name)'> is None
+________ TestExecutorAPIChanges.test_executor_h_has_get_operator_method ________
+/tmp/tmp.R1uF3RXc7s/test_fix_verification.py:77: in test_executor_h_has_get_operator_method
+    assert has_get_operator is not None, \
+E   AssertionError: executor.h should declare GetOperator(std::string_view) method
+E   assert None is not None
+__ TestExecutorAPIChanges.test_executor_impl_has_get_operator_implementation ___
+/tmp/tmp.R1uF3RXc7s/test_fix_verification.py:90: in test_executor_impl_has_get_operator_implementation
+    assert has_implementation, \
+E   AssertionError: executor_impl.cc should implement GetOperator method
+E   assert False
+_________ TestOpGraphAPIChanges.test_lowered_graph_has_nodeptr_method __________
+/tmp/tmp.R1uF3RXc7s/test_fix_verification.py:116: in test_lowered_graph_has_nodeptr_method
+    assert has_nodeptr is not None, \
+E   AssertionError: lowered_graph.h should declare NodePtr(std::string_view) method
+E   assert None is not None
+__________ TestOpGraphAPIChanges.test_lowered_graph_has_nodeid_method __________
+/tmp/tmp.R1uF3RXc7s/test_fix_verification.py:126: in test_lowered_graph_has_nodeid_method
+    assert has_nodeid is not None, \
+E   AssertionError: lowered_graph.h should declare NodeId(std::string_view) method
+E   assert None is not None
+______ TestOpGraphAPIChanges.test_lowered_graph_tensorid_returns_optional ______
+/tmp/tmp.R1uF3RXc7s/test_fix_verification.py:136: in test_lowered_graph_tensorid_returns_optional
+    assert has_optional is not None, \
+E   AssertionError: lowered_graph.h should have TensorId returning std::optional<TensorNodeId>
+E   assert None is not None
+________ TestOpGraphAPIChanges.test_lowered_graph_has_tensorptr_method _________
+/tmp/tmp.R1uF3RXc7s/test_fix_verification.py:146: in test_lowered_graph_has_tensorptr_method
+    assert has_tensorptr is not None, \
+E   AssertionError: lowered_graph.h should declare TensorPtr(std::string_view) method
+E   assert None is not None
+________ TestOpGraphAPIChanges.test_lowered_graph_uses_less_comparator _________
+/tmp/tmp.R1uF3RXc7s/test_fix_verification.py:162: in test_lowered_graph_uses_less_comparator
+    assert has_heterogeneous_map is not None, \
+E   AssertionError: lowered_graph.h should use std::less<> for heterogeneous map lookup
+E   assert None is not None
+_______ TestOpGraphAPIChanges.test_lowered_graph_addop_returns_reference _______
+/tmp/tmp.R1uF3RXc7s/test_fix_verification.py:172: in test_lowered_graph_addop_returns_reference
+    assert has_return_ref is not None, \
+E   AssertionError: lowered_graph.h should have AddOp returning OpNode&
+E   assert None is not None
+_ TestImplementationChanges.test_pipeline_cc_getreadermeta_uses_executor_getoperator _
+/tmp/tmp.R1uF3RXc7s/test_fix_verification.py:304: in test_pipeline_cc_getreadermeta_uses_executor_getoperator
+    assert has_executor_getop, \
+E   AssertionError: pipeline.cc GetReaderMeta should use executor_->GetOperator()
+E   assert False
+=========================== short test summary info ============================
+FAILED ../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestExecutorAPIChanges::test_executor_h_has_string_view_inputfeedcount
+FAILED ../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestExecutorAPIChanges::test_executor_h_has_get_operator_method
+FAILED ../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestExecutorAPIChanges::test_executor_impl_has_get_operator_implementation
+FAILED ../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_has_nodeptr_method
+FAILED ../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_has_nodeid_method
+FAILED ../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_tensorid_returns_optional
+FAILED ../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_has_tensorptr_method
+FAILED ../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_uses_less_comparator
+FAILED ../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestOpGraphAPIChanges::test_lowered_graph_addop_returns_reference
+FAILED ../tmp/tmp.R1uF3RXc7s/test_fix_verification.py::TestImplementationChanges::test_pipeline_cc_getreadermeta_uses_executor_getoperator
+=================== 10 failed, 12 passed, 7 skipped in 0.06s ===================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

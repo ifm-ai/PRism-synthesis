@@ -1,0 +1,74 @@
+{
+  "pr_summary": "The LSST error model class was relocated from rail.creation.degraders.lsst_error_model to rail.creation.degraders.photometric_errors. The fix updates import statements in example Jupyter notebooks and YAML pipeline configuration files to use the new module path, preventing ImportError when users run examples or load pipeline configurations.",
+  "runtime_family": "Python",
+  "package_manager": "pip",
+  "touched_files": [
+    "examples/core_examples/Build_Save_Load_Run_Pipeline.ipynb",
+    "examples/core_examples/pipe_example.yml",
+    "examples/creation_examples/degradation-demo.ipynb",
+    "examples/creation_examples/photometric_realization_demo.ipynb",
+    "examples/creation_examples/posterior-demo.ipynb",
+    "examples/goldenspike_examples/goldenspike.ipynb",
+    "examples/goldenspike_examples/goldenspike.yml"
+  ],
+  "important_build_files": [
+    "pyproject.toml",
+    "setup.py",
+    "requirements.txt",
+    "conda-reqs.txt",
+    "environment.yml"
+  ],
+  "important_test_files": [
+    "tests/hub/test_import.py"
+  ],
+  "candidate_build_commands": [
+    "pip install .",
+    "pip install .[dev]",
+    "pip install -r requirements.txt"
+  ],
+  "candidate_test_commands": [
+    "python -m pytest tests",
+    "python -m pytest tests --cov=rail --cov-report=html"
+  ],
+  "candidate_smoke_commands": [
+    "python -c \"import rail\"",
+    "python -c \"from rail.creation.degraders.photometric_errors import LSSTErrorModel\"",
+    "rail render-nb examples/core_examples/Build_Save_Load_Run_Pipeline.ipynb"
+  ],
+  "candidate_activation_checks": [
+    "python -c \"import rail; print(rail.__version__)\"",
+    "python -c \"from rail.creation.degraders.photometric_errors import LSSTErrorModel; print('Import successful')\""
+  ],
+  "environment_management": "pip with optional conda support via environment.yml",
+  "special_system_dependencies": [
+    "mpi4py (requires MPI)",
+    "hdf5 with MPI support",
+    "h5py with MPI support",
+    "jax/jaxlib (may require GPU for full functionality)"
+  ],
+  "high_value_files": [
+    "pyproject.toml",
+    "examples/core_examples/pipe_example.yml",
+    "examples/goldenspike_examples/goldenspike.yml",
+    "examples/core_examples/Build_Save_Load_Run_Pipeline.ipynb",
+    "examples/creation_examples/degradation-demo.ipynb",
+    "tests/hub/test_import.py"
+  ],
+  "patch_file_cues": [
+    "Import path change: rail.creation.degraders.lsst_error_model -> rail.creation.degraders.photometric_errors",
+    "Affected files: 4 Jupyter notebooks, 2 YAML configuration files",
+    "Notebook Python version metadata also updated (3.11.4 -> 3.10.0 in some files)"
+  ],
+  "test_file_cues": [
+    "tests/hub/test_import.py tests rail.stages.import_and_attach_all()",
+    "Test verifies all RAIL stages can be imported correctly"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "GitHub Actions CI runs on ubuntu-latest",
+    "pyproject.toml specifies Operating System :: OS Independent",
+    "No Windows or macOS specific dependencies or configurations detected",
+    "Project uses standard Python packaging with pip/setuptools"
+  ],
+  "notes": "This is a Python project (pz-rail) for astronomical photometric redshift data processing. The LSSTErrorModel class has been relocated to a new module. The fix.patch updates 7 files (4 notebooks and 2 YAML files) to use the new import path. The project relies on pz-rail-base as a core dependency. Testing is done via pytest. The CI workflow runs on Ubuntu with Python 3.10 and 3.11. The project has optional dependencies for various algorithms (algos), Jupyter notebooks (nb), and development (dev). Special system dependencies include MPI-enabled packages (mpi4py, hdf5, h5py) which may require conda for easier installation."
+}

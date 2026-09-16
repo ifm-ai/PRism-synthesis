@@ -1,0 +1,45 @@
+{
+  "base_image_candidate": "debian:bookworm-slim",
+  "system_packages": [
+    "git",
+    "curl",
+    "python3",
+    "python3-pip",
+    "python3-venv",
+    "ca-certificates"
+  ],
+  "base_setup_commands": [
+    "apt-get update && apt-get install -y git curl python3 python3-pip python3-venv ca-certificates",
+    "curl -LO https://dl.k8s.io/release/v1.31.0/bin/linux/amd64/kubectl && chmod +x kubectl && mv kubectl /usr/local/bin/",
+    "pip3 install --break-system-packages poetry pytest"
+  ],
+  "setup_runtime_commands": [
+    "poetry config virtualenvs.create true --local"
+  ],
+  "activation_commands": [],
+  "activation_command": "",
+  "activation_type": "system",
+  "activation_validation_command": "echo ACTIVATION_OK",
+  "detected_test_command": "kubectl apply --dry-run=client --validate=false -f test/cti-stix-visualizer.yaml",
+  "runtime_smoke_command": "kubectl version --client && poetry --version",
+  "runtime_family": "kubernetes",
+  "runtime_profile": {
+    "ecosystem": "kubernetes",
+    "package_manager": "poetry",
+    "env": {},
+    "env_name": null,
+    "prepare_commands": [
+      "kubectl version --client",
+      "poetry --version"
+    ],
+    "activation_commands": [],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "none",
+    "cache_dirs": [
+      "/root/.cache/pypoetry",
+      "/root/.cache/kubectl"
+    ],
+    "notes": "Kubernetes manifest project with Python components. kubectl is used for YAML validation via dry-run. Poetry manages Python dependencies for subcomponents like redis/log-notebook."
+  },
+  "notes": "Base image debian:bookworm-slim provides git and curl by default. kubectl v1.31.0 installed for Kubernetes manifest validation. Poetry 2.4.1 installed for Python dependency management. The test framework uses kubectl apply --dry-run=client to validate YAML manifests."
+}

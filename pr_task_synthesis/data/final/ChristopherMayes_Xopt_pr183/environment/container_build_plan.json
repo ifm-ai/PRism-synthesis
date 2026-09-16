@@ -1,0 +1,67 @@
+{
+  "base_image": "ubuntu:22.04",
+  "build_backend": "buildah",
+  "output_format": "oci",
+  "output_archive": "/artifacts/environment/openenv_validation_oci.tar",
+  "system_packages": [
+    "git",
+    "curl",
+    "build-essential",
+    "libopenmpi-dev",
+    "openmpi-bin",
+    "libhdf5-dev",
+    "wget",
+    "ca-certificates"
+  ],
+  "base_setup_commands": [
+    "apt-get update",
+    "apt-get install -y git curl build-essential libopenmpi-dev openmpi-bin libhdf5-dev wget ca-certificates",
+    "wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -O /tmp/miniforge.sh",
+    "bash /tmp/miniforge.sh -b -p /opt/conda",
+    "rm /tmp/miniforge.sh",
+    "/opt/conda/bin/conda init bash"
+  ],
+  "copied_artifacts": [
+    {
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh"
+    },
+    {
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh"
+    }
+  ],
+  "build_steps": [
+    {
+      "type": "base_image",
+      "command": "FROM ubuntu:22.04"
+    },
+    {
+      "type": "system_packages",
+      "command": "apt-get update && apt-get install -y git curl build-essential libopenmpi-dev openmpi-bin libhdf5-dev wget ca-certificates"
+    },
+    {
+      "type": "miniforge_install",
+      "command": "wget && bash miniforge installer && conda init"
+    },
+    {
+      "type": "copy_scripts",
+      "files": ["setup_runtime.sh", "repo_setup.sh"]
+    },
+    {
+      "type": "repo_materialization",
+      "command": "/opt/benchmark/repo_setup.sh"
+    },
+    {
+      "type": "runtime_setup",
+      "command": "/opt/benchmark/setup_runtime.sh"
+    }
+  ],
+  "repo_materialization_mode": "git_clone_during_build",
+  "workdir": "/workspace",
+  "environment": {
+    "name": "xopt-dev",
+    "activation": "source /opt/conda/etc/profile.d/conda.sh && conda activate xopt-dev"
+  },
+  "notes": "Base image changed from condaforge/mambaforge:latest to ubuntu:22.04 to fix apt-get failure. Miniforge is installed manually via wget. System packages include wget and ca-certificates for secure Miniforge download."
+}

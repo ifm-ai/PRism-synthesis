@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "node:20-bookworm",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Node.js 20+ environment with npm package manager, Jest test framework, and git-lfs for model downloads. Configured with --ignore-scripts to skip onnxruntime-node GPU binary download.",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "/workspace/tests/tiny_random.test.js\n/workspace/tests/utils/maths.test.js\n/workspace/tests/processors.test.js\n/workspace/tests/pipelines.test.js\n/workspace/tests/tokenizers.test.js",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "",
+  "notes": "Transformers.js benchmark environment successfully created. Node.js v24.16.0 and npm 11.13.0 are available. Jest test runner is reachable and can discover tests. git-lfs is installed for model downloads. Fixed runtime_setup_failure (ConnectTimeoutError for onnxruntime-node GPU binary) by using --ignore-scripts flag during npm install to skip the postinstall script that downloads the GPU binary. CPU-only inference is supported via onnxruntime-web's WASM fallback."
+}

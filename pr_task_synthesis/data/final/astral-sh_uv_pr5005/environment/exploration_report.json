@@ -1,0 +1,85 @@
+{
+  "pr_summary": "The `--isolated` global flag is currently hidden from help output (`hide = true`). The fix makes this flag visible in all help displays (`uv --help`, `uv help`, and subcommand help). The flag prevents discovery of `pyproject.toml` or `uv.toml` configuration files.",
+  "runtime_family": "Rust",
+  "package_manager": "cargo",
+  "touched_files": [
+    "crates/uv-cli/src/lib.rs"
+  ],
+  "important_build_files": [
+    "Cargo.toml",
+    "Cargo.lock",
+    "rust-toolchain.toml",
+    "pyproject.toml",
+    "crates/uv-cli/Cargo.toml"
+  ],
+  "important_test_files": [
+    "crates/uv/tests/help.rs",
+    "crates/uv/tests/common/mod.rs"
+  ],
+  "candidate_build_commands": [
+    "cargo build",
+    "cargo build --profile profiling",
+    "cargo build --target x86_64-unknown-linux-musl"
+  ],
+  "candidate_test_commands": [
+    "cargo nextest run --features python-patch --workspace --status-level skip --failure-output immediate-final --no-fail-fast -j 12 --final-status-level slow",
+    "cargo test",
+    "cargo test --package uv --test help"
+  ],
+  "candidate_smoke_commands": [
+    "./target/debug/uv --help",
+    "./target/debug/uv help",
+    "./target/debug/uv pip --help",
+    "./target/debug/uv venv",
+    "./target/debug/uv pip install ruff"
+  ],
+  "candidate_activation_checks": [
+    "rustup show",
+    "cargo --version",
+    "rustc --version"
+  ],
+  "environment_management": {
+    "rust_toolchain": "1.79 (specified in rust-toolchain.toml)",
+    "minimum_rust_version": "1.77 (workspace.rust-version)",
+    "python_versions_required": ["3.12.1", "3.11.7", "3.10.13", "3.9.18", "3.8.18", "3.8.12"],
+    "python_install_command": "cargo run python install"
+  },
+  "special_system_dependencies": [
+    "C compiler (build-essential on Ubuntu/Debian)",
+    "CMake"
+  ],
+  "high_value_files": [
+    "Cargo.toml",
+    "rust-toolchain.toml",
+    "CONTRIBUTING.md",
+    "crates/uv-cli/src/lib.rs",
+    "crates/uv/tests/help.rs",
+    ".github/workflows/ci.yml"
+  ],
+  "patch_file_cues": {
+    "fix_patch": {
+      "file": "crates/uv-cli/src/lib.rs",
+      "change": "Removed `hide = true` from the `#[arg(global = true, long)]` attribute for the `isolated` field in GlobalArgs struct",
+      "line_context": "Line ~151: Changed from `#[arg(global = true, long, hide = true)]` to `#[arg(global = true, long)]`"
+    }
+  },
+  "test_file_cues": {
+    "test_patch": {
+      "file": "crates/uv/tests/help.rs",
+      "changes": "Adds `--isolated` flag with description to multiple test snapshots (help, help_flag, help_short_flag, help_subcommand, help_subsubcommand, help_flag_subcommand, help_flag_subsubcommand, help_with_global_option)",
+      "expected_output_lines": [
+        "--isolated",
+        "    Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any parent directories"
+      ]
+    }
+  },
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "CI workflow ci.yml runs cargo test on ubuntu-latest-large, macos-14, and windows-latest-large",
+    "README.md states: 'Support for macOS, Linux, and Windows'",
+    "Cargo.toml targets include x86_64-unknown-linux-gnu, x86_64-pc-windows-msvc, x86_64-apple-darwin and more",
+    "CONTRIBUTING.md provides setup instructions for Linux, macOS, and Windows",
+    "No Windows-only or macOS-only restrictions in fix.patch touched files"
+  ],
+  "notes": "This is the 'uv' project - a Rust-based Python package installer. The fix is a simple one-line change to make the --isolated flag visible in help output. Tests use insta snapshot testing. The project uses cargo-nextest for running tests. Python toolchains are installed via 'cargo run python install'. The test file help.rs contains snapshot tests that verify the exact help output format."
+}

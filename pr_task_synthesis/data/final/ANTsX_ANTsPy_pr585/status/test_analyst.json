@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "official_verifier": {
+    "execution_mode": "real_execution",
+    "test_only_exit_code": 1,
+    "test_with_fix_exit_code": 0
+  },
+  "non_discriminating": false,
+  "notes": "Two-run verifier preflight completed successfully. Buggy workspace fails (exit code 1) because singleprecision parameter is not present in apply_transforms. Fixed workspace passes (exit code 0) because the fix adds the singleprecision parameter. The eval.sh dynamically patches the installed antspyx package based on workspace state and runs pytest tests that verify both parameter existence and behavioral correctness. Verifier alignment is confirmed - test directly covers the code changed by fix.patch."
+}

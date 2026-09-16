@@ -1,0 +1,636 @@
+diff --git a/Makefile_calibrate_kubehound b/Makefile_calibrate_kubehound
+index 46a8f3a..750be81 100644
+--- a/Makefile_calibrate_kubehound
++++ b/Makefile_calibrate_kubehound
+@@ -9,10 +9,11 @@ ARCH := $(shell uname -m | sed 's/x86_64/amd64/')
+ calibrate: calibration-traces calibration-attack
+ 
+ # wipe all the stuff accumulated in REDIS ... just in case its nonsense... just saying :) 
+-wipe:  remove-calibration-attack remove-calibration-traces redis-wipe
++wipe:  remove-calibration-attack remove-calibration-traces 
+ 
+ 
+-# Target to flush Redis database
++# Target to flush Redis database #Doesnt work since that features is blocked in most containers
++# TODO: think if you really want a full wipe
+ redis-wipe:
+ 	@echo "Flushing Redis database..."
+ 	@REDIS_POD=$$(kubectl get pods -n redpanda -l app.kubernetes.io/name=redis -o jsonpath="{.items[0].metadata.name}");\
+@@ -22,29 +23,43 @@ redis-wipe:
+ .PHONY:
+ calibration-traces: 
+ 	@echo "Calibrating traces"
+-	kubectl apply -f traces/kubehound-verify/1-ce-nsenter.yaml
+-	kubectl apply -f traces/kubehound-verify/1-ce-priv-mount.yaml
+-	kubectl apply -f traces/kubehound-verify/1-ce-sys-ptrace.yaml
++	#kubectl apply -f traces/kubehound-verify/1-ce-nsenter.yaml
++	#kubectl apply -f traces/kubehound-verify/1-ce-priv-mount.yaml
++	#kubectl apply -f traces/kubehound-verify/1-ce-sys-ptrace.yaml
++	#kubectl apply -f traces/kubehound-verify/1-ce-module-load.yaml
++	#kubectl apply -f traces/kubehound-verify/1-ce-net-mitm.yaml
++	kubectl apply -f traces/kubehound-verify/1-ce-var-log-symlink.yaml
+ 
+ 
+ .PHONY: calibration-attack
+ calibration-attack: 
+ 	@echo "Attacking"
+-	-kubectl apply -f traces/kubehound-verify/attacks/CE_NSENTER.yaml
+-	-kubectl apply -f traces/kubehound-verify/attacks/CE_PRIV_MOUNT.yaml
+-	-kubectl apply -f traces/kubehound-verify/attacks/CE_SYS_PTRACE.yaml
++	#-kubectl apply -f traces/kubehound-verify/attacks/CE_NSENTER.yaml && kubectl exec -n default kh-calibration-ce-1 -- nsenter -t 1 -a /bin/bash 
++	#-kubectl apply -f traces/kubehound-verify/attacks/CE_PRIV_MOUNT.yaml
++	#-kubectl apply -f traces/kubehound-verify/attacks/CE_SYS_PTRACE.yaml
++	#-kubectl apply -f traces/kubehound-verify/attacks/CE_MODULE_LOAD.yaml
++	#-kubectl apply -f traces/kubehound-verify/attacks/CE_NET_MITM.yaml
++	-kubectl apply -f traces/kubehound-verify/attacks/CE_VAR_LOG_SYMLINK.yaml
+ 
+ 
+ .PHONY: remove-calibration-attack	
+ remove-calibration-attack:
+ 	@echo "Removing calibration attack"
+-	-kubectl delete -f traces/kubehound-verify/attacks/CE_NSENTER.yaml
+-	-kubectl delete -f traces/kubehound-verify/attacks/CE_PRIV_MOUNT.yaml
+-	-kubectl delete -f traces/kubehound-verify/attacks/CE_SYS_PTRACE.yaml
++	#-kubectl delete -f traces/kubehound-verify/attacks/CE_NSENTER.yaml
++	#-kubectl delete -f traces/kubehound-verify/attacks/CE_PRIV_MOUNT.yaml
++	#-kubectl delete -f traces/kubehound-verify/attacks/CE_SYS_PTRACE.yaml
++	#-kubectl delete -f traces/kubehound-verify/attacks/CE_MODULE_LOAD.yaml
++	#-kubectl delete -f traces/kubehound-verify/attacks/CE_NET_MITM.yaml
++	-kubectl delete -f traces/kubehound-verify/attacks/CE_VAR_LOG_SYMLINK.yaml
++
++
+ 
+ .PHONY: remove-calibration-traces		
+ remove-calibration-traces:
+ 	@echo "Rmoving calibration traces"
+-	-kubectl delete -f traces/kubehound-verify/1-ce-nsenter.yaml
+-	-kubectl delete -f traces/kubehound-verify/1-ce-priv-mount.yaml
+-	-kubectl delete -f traces/kubehound-verify/1-ce-sys-ptrace.yaml
+\ No newline at end of file
++	#-kubectl delete -f traces/kubehound-verify/1-ce-nsenter.yaml
++	#-kubectl delete -f traces/kubehound-verify/1-ce-priv-mount.yaml
++	#-kubectl delete -f traces/kubehound-verify/1-ce-sys-ptrace.yaml
++	#-kubectl delete -f traces/kubehound-verify/1-ce-module-load.yaml
++	#-kubectl delete -f traces/kubehound-verify/1-ce-net-mitm.yaml
++	-kubectl delete -f traces/kubehound-verify/1-ce-var-log-symlink.yaml
+\ No newline at end of file
+diff --git a/redis/log-notebook/kubehound-stix.json b/redis/log-notebook/kubehound-stix.json
+index 49b1e5d..f3be030 100644
+--- a/redis/log-notebook/kubehound-stix.json
++++ b/redis/log-notebook/kubehound-stix.json
+@@ -1,7 +1,7 @@
+ [
+ {
+   "type": "bundle",
+-  "id": "bundle--kubehound-attack-CE_NSENTER",
++  "id": "bundle--kubehound-attempt-CE_NSENTER",
+   "name": "CE_NSENTER",
+   "version": "1.0.0",
+   "spec_version": "2.1",
+@@ -10,7 +10,7 @@
+         "type": "attack-pattern",
+         "id": "attack-pattern--kh-ce-nsenter",
+         "name": "CE_NSENTER",
+-        "description": "Container Escape via NSENTER.",
++        "description": "Attempted Container Escape via NSENTER.",
+         "external_references": [
+           {
+             "source_name": "Kubehound",
+@@ -24,7 +24,7 @@
+         "id": "indicator--kh-ce-nsenter",
+         "name": "Container Module Loading",
+         "description": "Calibration test",
+-        "pattern": "[process:command_line = '/usr/bin/nsenter -t 1 -a bash']",
++        "pattern": "[process:command_line MATCHES '/usr/bin/nsenter -t 1']",
+         "pattern_type": "stix",
+         "valid_from": "2024-01-01T00:00:00Z"
+       },
+@@ -38,7 +38,7 @@
+     ]},
+ {
+   "type": "bundle",
+-  "id": "bundle--kubehound-attack-CE_SYS_PTRACE",
++  "id": "bundle--kubehound-attempt-CE_SYS_PTRACE",
+   "name": "CE_SYS_PTRACE",
+   "version": "1.0.0",
+   "spec_version": "2.1",
+@@ -47,13 +47,13 @@
+       "type": "attack-pattern",
+       "id": "attack-pattern--kh-ce-sys-ptrace",
+       "name": "CE_SYS_PTRACE",
+-      "description": "Using ptrace for process manipulation from a container."
++      "description": "Attempted use of GDB"
+     },
+     {
+         "type": "indicator",
+         "id": "indicator--kh-ce-sys-ptrace",
+         "name": "Ptrace System Call from Container",
+-        "description": "Detecting the use of the 'ptrace' system call from within a container, which can be used to manipulate other processes.",
++        "description": "Detecting the attempted use of the 'ptrace' system call from within a container, which can be used to manipulate other processes. TODO: thats not true",
+         "pattern": "[process:command_line MATCHES '/usr/bin/gdb']",
+         "pattern_type": "stix",
+         "valid_from": "2024-01-01T00:00:00Z"
+@@ -67,7 +67,7 @@
+       }]
+ },{
+   "type": "bundle",
+-  "id": "bundle--kubehound-attack-CE_PRIV_MOUNT",
++  "id": "bundle--kubehound-attempt-CE_PRIV_MOUNT",
+   "name": "CE_PRIV_MOUNT",
+   "version": "1.0.0",
+   "spec_version": "2.1",
+@@ -94,5 +94,106 @@
+         "source_ref": "indicator--kh-ce-priv-mount",
+         "target_ref": "attack-pattern--kh-ce-priv-mount"
+       }]
+-}
++    }
++,{
++    "type": "bundle",
++    "id": "bundle--kubehound-attempt-CE_MODULE_LOAD",
++    "name": "CE_MODULE_LOAD",
++    "version": "1.0.0",
++    "spec_version": "2.1",
++    "objects": [
++      {
++        "type": "attack-pattern",
++        "id": "attack-pattern--kh-ce-module-load",
++        "name": "CE_MODULE_LOAD",
++        "description": "Loading kernel modules from inside a container."
++      },
++      {
++          "type": "indicator",
++          "id": "indicator--kh-ce-module-load",
++          "name": "Modprobe from within Container",
++          "description": "Detecting an attempt to execute modprobe",
++          "pattern": "[process:command_line MATCHES 'modprobe']",
++          "pattern_type": "stix",
++          "valid_from": "2024-01-01T00:00:00Z"
++        },
++        {
++          "type": "relationship",
++          "id": "relationship--kh-ce-module-load",
++          "relationship_type": "indicates",
++          "source_ref": "indicator--kh-ce-module-load",
++          "target_ref": "attack-pattern--kh-ce-module-load"
++        }]
++  }
++  ,{
++    "type": "bundle",
++    "id": "bundle--kubehound-attempt-CE_NET_MITM",
++    "name": "CE_NET_MITM",
++    "version": "1.0.0",
++    "spec_version": "2.1",
++    "objects": [
++      {
++        "type": "attack-pattern",
++        "id": "attack-pattern--kh-ce-net-mitm",
++        "name": "CE_NET_MITM",
++        "description": "Attempting to tamper with iptables and trying to run mitmdump."
++      },
++      {
++          "type": "indicator",
++          "id": "indicator--kh-ce-net-mitm",
++          "name": "Modprobe from within Container",
++          "description": "Detecting an attempt to tamper with iptables",
++          "pattern": "[process:command_line MATCHES 'iptables -t nat -A PREROUTING' AND process:command_line MATCHES 'mitmdump']",
++          "pattern_type": "stix",
++          "valid_from": "2024-01-01T00:00:00Z"
++        },
++        {
++          "type": "relationship",
++          "id": "relationship--kh-ce-net-mitm",
++          "relationship_type": "indicates",
++          "source_ref": "indicator--kh-ce-net-mitm",
++          "target_ref": "attack-pattern--kh-ce-net-mitm"
++        }]
++  }
++  ,{
++    "type": "bundle",
++    "id": "bundle--kubehound-attempt-CE_VAR_LOG_SYMLINK",
++    "name": "CE_VAR_LOG_SYMLINK",
++    "version": "1.0.0",
++    "spec_version": "2.1",
++    "objects": [
++      {
++        "type": "attack-pattern",
++        "id": "attack-pattern--kh-ce-var-log-symlink",
++        "name": "CE_VAR_LOG_SYMLINK",
++        "description": "Attempting to tamper with iptables and trying to run mitmdump."
++      },
++      {
++          "type": "indicator",
++          "id": "indicator--kh-ce-var-log-symlink",
++          "name": "Modprobe from within Container",
++          "description": "Detecting an attempt to tamper with iptables",
++          "pattern": "[process:command_line MATCHES 'ln -s' AND process:command_line MATCHES '/var/log']",
++          "pattern_type": "stix",
++          "valid_from": "2024-01-01T00:00:00Z"
++        },
++        {
++          "type": "relationship",
++          "id": "relationship--kh-ce-var-log-symlink",
++          "relationship_type": "indicates",
++          "source_ref": "indicator--kh-ce-var-log-symlink",
++          "target_ref": "attack-pattern--kh-ce-var-log-symlink"
++        }]
++  }
+ ]
++
++
++
++
++
++
++
++
++
++
++
+diff --git a/redis/log-notebook/manual.py b/redis/log-notebook/manual.py
+index 0197784..ec9563d 100644
+--- a/redis/log-notebook/manual.py
++++ b/redis/log-notebook/manual.py
+@@ -45,201 +45,6 @@ def get_observable_id(bundle):
+     )
+ 
+ 
+-#STIX_PATTERN="[process:binary = '/usr/bin/nsenter' AND process:arguments = '-t 1 -a sleep 300' AND process:cwd = '/']"
+-STIX_PATTERN = "[process:command_line = '/usr/bin/nsenter -t 1 -a bash']"
+-STIX_PATTERNS = {
+-        "[process:command_line = '/usr/bin/nsenter -t 1 -a bash']": "NSENTER Container Escape",
+-        "[file:name = '/etc/shadow']": "Access to Shadow File",
+-        # Add more patterns here...
+-    }
+-
+-OBSERVABLE_STIX_BUNDLE_EXAMPLE2 = {
+-    "type": "bundle",
+-    "id": "bundle--0749b3fa-5f45-41fc-b132-15f909b0e855",
+-    "spec_version": "2.1",
+-    "objects": [
+-        {
+-            "type": "file",
+-            "id": "file--cc48c445-caaa-41ed-a067-9333c7841cc3",
+-            "name": "tini"
+-        },
+-        {
+-            "type": "file",
+-            "id": "file--ce73aa8b-a8eb-4fd0-b492-cc90103ec689",
+-            "name": "rancher"
+-        },
+-        {
+-            "type": "file",
+-            "id": "file--d6fa1f7f-867f-4023-91ab-c63281be2243",
+-            "name": "/run/secrets/kubernetes.io/serviceaccount/..2024_05_30_17_59_36.871209644/token"
+-        },
+-        {
+-            "type": "process",
+-            "id": "process--9690fcaa-f707-44e1-a9ea-2341a4304c8a",
+-            "pid": None,
+-            "command_line": "/usr/bin/tini -- rancher --http-listen-port=80 --https-listen-port=443 --audit-log-path=/var/log/auditlog/rancher-api-audit.log --audit-level=1 --audit-log-maxage=1 --audit-log-maxbackup=1 --audit-log-maxsize=100 --no-cacerts --http-listen-port=80 --https-listen-port=443 --add-local=true",
+-            "cwd": "/var/lib/rancher",
+-            "created_time": None,
+-            "image_ref": "file--cc48c445-caaa-41ed-a067-9333c7841cc3",
+-            "extensions": {
+-                "flags": "procFS auid"
+-            }
+-        },
+-        {
+-            "type": "process",
+-            "id": "process--07176c3f-4514-4114-b764-572bea195d62",
+-            "pid": None,
+-            "command_line": "/usr/bin/nsenter -t 1 -a bash",
+-            "cwd": "/",
+-            "created_time": None,
+-            "image_ref": "file--ce73aa8b-a8eb-4fd0-b492-cc90103ec689",
+-            "parent_ref": "process--9690fcaa-f707-44e1-a9ea-2341a4304c8a",
+-            "extensions": {
+-                "flags": "procFS auid",
+-                "docker": "7bd7197f085f946549f2e4fa0c28489",
+-                "container_id": "containerd: //7bd7197f085f946549f2e4fa0c28489cf179745364be4c174bd96673061b10bd",
+-                "pod_name": "rancher-55966c8d68-f56sc",
+-                "namespace": "cattle-system"
+-            }
+-        },
+-        {
+-            "type": "observed-data",
+-            "id": "observed-data--c4bd5cf6-86da-4446-bd76-25da430e9498",
+-            "created": None,
+-            "modified": None,
+-            "first_observed": "2024-03-30T18:14:23.507328Z",
+-            "last_observed": "2024-03-30T18:14:23.507328Z",
+-            "number_observed": 1,
+-            "object_refs": [
+-                "process--07176c3f-4514-4114-b764-572bea195d62",
+-                "process--9690fcaa-f707-44e1-a9ea-2341a4304c8a",
+-                "file--cc48c445-caaa-41ed-a067-9333c7841cc3",
+-                "file--ce73aa8b-a8eb-4fd0-b492-cc90103ec689",
+-                "file--d6fa1f7f-867f-4023-91ab-c63281be2243"
+-            ]
+-        }
+-    ]
+-}
+-
+-STIX_ATTACK_PATTERNS = [{
+-  "type": "bundle",
+-  "id": "bundle--kubehound-attack-CE_NSENTER",
+-  "name": "CE_NSENTER",
+-  "version": "1.0.0",
+-  "spec_version": "2.1",
+-  "objects": [
+-    {
+-        "type": "attack-pattern",
+-        "id": "attack-pattern--kh-ce-nsenter",
+-        "name": "CE_NSENTER",
+-        "description": "Container Escape via NSENTER.",
+-        "external_references": [
+-          {
+-            "source_name": "Kubehound",
+-            "url": "https://TODO",
+-            "description": "Usually a priviledged container can escape to the host using nsenter"
+-          }
+-        ]
+-      },
+-      {
+-        "type": "indicator",
+-        "id": "indicator--kh-ce-nsenter",
+-        "name": "Container Module Loading",
+-        "description": "Calibration test",
+-        "pattern": "[process:command_line = '/usr/bin/nsenter -t 1 -a bash']",
+-        "pattern_type": "stix",
+-        "valid_from": "2024-01-01T00:00:00Z"
+-      },
+-      {
+-        "type": "relationship",
+-        "id": "relationship--kh-ce-nsenter",
+-        "relationship_type": "indicates",
+-        "source_ref": "indicator--kh-ce-nsenter",
+-        "target_ref": "attack-pattern--kh-ce-nsenter"
+-      }
+-    ]},
+-{
+-  "type": "bundle",
+-  "id": "bundle--kubehound-attack-CE_SYS_PTRACE",
+-  "name": "CE_SYS_PTRACE",
+-  "version": "1.0.0",
+-  "spec_version": "2.1",
+-  "objects": [
+-    {
+-      "type": "attack-pattern",
+-      "id": "attack-pattern--kh-ce-sys-ptrace",
+-      "name": "CE_SYS_PTRACE",
+-      "description": "Using ptrace for process manipulation from a container."
+-    },
+-    {
+-        "type": "indicator",
+-        "id": "indicator--kh-ce-sys-ptrace",
+-        "name": "Ptrace System Call from Container",
+-        "description": "Detecting the use of the 'ptrace' system call from within a container, which can be used to manipulate other processes.",
+-        "pattern": "[process:command_line MATCHES '/usr/bin/gdb']",
+-        "pattern_type": "stix",
+-        "valid_from": "2024-01-01T00:00:00Z"
+-      },
+-      {
+-        "type": "relationship",
+-        "id": "relationship--kh-ce-sys-ptrace",
+-        "relationship_type": "indicates",
+-        "source_ref": "indicator--kh-ce-sys-ptrace",
+-        "target_ref": "attack-pattern--kh-ce-sys-ptrace"
+-      }]
+-}
+-]
+-
+-STIX_ATTACK_PATTERN= {
+-    "type": "bundle",
+-    "id": "bundle--kubehound-attacks",
+-    "spec_version": "2.1",
+-    "objects": [
+-      {
+-        "type": "attack-pattern",
+-        "id": "attack-pattern--kh-ce-nsenter",
+-        "name": "CE_NSENTER",
+-        "description": "Use NSENTER to Escape to HOST",
+-        "external_references": [
+-          {
+-            "source_name": "Kubehound",
+-            "url": "https://github.com/turbot/steampipe-mod-aws-compliance/blob/main/controls/cis-kubernetes-v1.6.0/controls/5.1.5.go",
+-            "description": "Control to ensure that the admission control plugin PodSecurityPolicy is set."
+-          }
+-        ]
+-      },
+-      {
+-          "type": "attack-pattern",
+-          "id": "attack-pattern--kh-ce-nsenter",
+-          "name": "CE_NSENTER",
+-          "description": "Container Escape via NSENTER.",
+-          "external_references": [
+-            {
+-              "source_name": "Kubehound",
+-              "url": "https://TODO",
+-              "description": "Calibration test"
+-            }
+-          ]
+-        },
+-        {
+-          "type": "indicator",
+-          "id": "indicator--kh-ce-nsenter",
+-          "name": "Container Module Loading",
+-          "description": "Calibration test",
+-          "pattern": "[process:command_line = '/usr/bin/nsenter -t 1 -a bash']",
+-          "pattern_type": "stix",
+-          "valid_from": "2024-01-01T00:00:00Z"
+-        },
+-        {
+-          "type": "relationship",
+-          "id": "relationship--kh-ce-nsenter",
+-          "relationship_type": "indicates",
+-          "source_ref": "indicator--kh-ce-nsenter",
+-          "target_ref": "attack-pattern--kh-ce-nsenter"
+-        }
+-      ]
+-}
+-
+ #needs to return the PATTERN and the ID from the indicator block
+ def get_pattern(STIX_ATTACK_PATTERN):
+     for obj in STIX_ATTACK_PATTERN["objects"]:
+diff --git a/traces/kubehound-verify/1-ce-module-load.yaml b/traces/kubehound-verify/1-ce-module-load.yaml
+index a648e5f..c37bd1f 100644
+--- a/traces/kubehound-verify/1-ce-module-load.yaml
++++ b/traces/kubehound-verify/1-ce-module-load.yaml
+@@ -5,4 +5,7 @@ metadata:
+ spec:
+   kprobes:
+   - call: "sys_init_module"
+-    syscall: true
+\ No newline at end of file
++    syscall: true
++    args:
++    - index: 0
++      type: "string"
+\ No newline at end of file
+diff --git a/traces/kubehound-verify/1-ce-net-mitm.yaml b/traces/kubehound-verify/1-ce-net-mitm.yaml
+new file mode 100644
+index 0000000..16033c1
+--- /dev/null
++++ b/traces/kubehound-verify/1-ce-net-mitm.yaml
+@@ -0,0 +1,23 @@
++apiVersion: cilium.io/v1alpha1
++kind: TracingPolicy
++metadata:
++  name: "detect-iptables-mitm"
++spec:
++  kprobes:
++  - call: "fd_install"
++    syscall: false
++    args:
++    - index: 0
++      type: "int" 
++    - index: 1
++      type: "file" 
++    selectors:
++    - matchArgs:
++       - index: 1
++         operator: "Prefix"
++         values:
++         - "/sbin/iptables"
++         - "/usr/sbin/iptables"
++         - "/usr/bin/mitmdump"
++
++
+diff --git a/traces/kubehound-verify/1-ce-var-log-symlink.yaml b/traces/kubehound-verify/1-ce-var-log-symlink.yaml
+index 78a298e..6cf8462 100644
+--- a/traces/kubehound-verify/1-ce-var-log-symlink.yaml
++++ b/traces/kubehound-verify/1-ce-var-log-symlink.yaml
+@@ -4,18 +4,24 @@ metadata:
+   name: "detect-ce-var-log-symlink"
+ spec:
+   kprobes:
+-  - call: "sys_symlink"
++  - call: "sys_symlinkat"
+     syscall: true
+     args:
+     - index: 0
+       type: "string"
+     - index: 1
++      type: "int"
++    - index: 2
+       type: "string"
+     selectors:
+     - matchArgs:
+       - index: 0
+-        operator: "Postfix"
++        operator: "Prefix"
+         values:
+-        - "var-log"
++        - "/"
++      - index: 2
++        operator: "Equal"
++        values:
++        - "/host/var/log/root_link"
+       matchActions:
+       - action: Post  
+\ No newline at end of file
+diff --git a/traces/kubehound-verify/attacks/CE_MODULE_LOAD.yaml b/traces/kubehound-verify/attacks/CE_MODULE_LOAD.yaml
+index 759cedd..6176034 100644
+--- a/traces/kubehound-verify/attacks/CE_MODULE_LOAD.yaml
++++ b/traces/kubehound-verify/attacks/CE_MODULE_LOAD.yaml
+@@ -8,10 +8,13 @@ metadata:
+ spec:
+   containers:
+     - name: kh-calibration-mod-load-pod
+-      image: ubuntu
++      image: centos:latest
+       securityContext:
++        privileged: true
+         capabilities:
+           add: ["SYS_MODULE"]
+       command: [ "/bin/sh", "-c" ]
+-      args: ["modprobe ip_tables && sleep 300"] 
++      args: ["lsmod && modprobe dummy && sleep 300"] 
+ 
++
++#https://www.baeldung.com/linux/docker-container-kernel-modules
+\ No newline at end of file
+diff --git a/traces/kubehound-verify/attacks/CE_NET_MITM.yaml b/traces/kubehound-verify/attacks/CE_NET_MITM.yaml
+index 44ee673..2ba2712 100644
+--- a/traces/kubehound-verify/attacks/CE_NET_MITM.yaml
++++ b/traces/kubehound-verify/attacks/CE_NET_MITM.yaml
+@@ -9,9 +9,20 @@ spec:
+   hostNetwork: true
+   containers:
+     - name: netadmin-pod
+-      image: ubuntu
++      image: entlein/kh-verify:0.0.1
+       securityContext:
+         capabilities:
+           add: ["NET_ADMIN"]
++      resources:
++        limits:
++          memory: "256Mi"
++          cpu: "500m"
++        requests:
++          memory: "128Mi"
++          cpu: "250m"
+       command: [ "/bin/sh", "-c", "--" ]
+-      args: [ "while true; do sleep 30; done;" ]
++      args: [
++        "iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080 && \
++         iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8080 && \
++         mitmdump && sleep 300"
++      ]
+diff --git a/traces/kubehound-verify/attacks/CE_VAR_LOG_SYMLINK.yaml b/traces/kubehound-verify/attacks/CE_VAR_LOG_SYMLINK.yaml
+index 3035115..b036fab 100644
+--- a/traces/kubehound-verify/attacks/CE_VAR_LOG_SYMLINK.yaml
++++ b/traces/kubehound-verify/attacks/CE_VAR_LOG_SYMLINK.yaml
+@@ -44,7 +44,7 @@ spec:
+       - mountPath: /host/var/log
+         name: nodelog
+       command: [ "/bin/sh", "-c", "--" ]
+-      args: [ "while true; do sleep 30; done;" ]
++      args: [ "ln -s / /host/var/log/root_link &&  sleep 30 && rm -f /host/var/log/root_link" ]
+   serviceAccountName: varlog-sa
+   volumes:
+     - name: nodelog
+diff --git a/traces/kubehound-verify/attacks/Dockerfile b/traces/kubehound-verify/attacks/Dockerfile
+new file mode 100644
+index 0000000..37daaaa
+--- /dev/null
++++ b/traces/kubehound-verify/attacks/Dockerfile
+@@ -0,0 +1,14 @@
++FROM ubuntu:latest
++
++# Install necessary tools
++RUN apt-get update && \
++    apt-get install -y \
++    kmod \
++    iptables \
++    mitmproxy \
++    iproute2 \
++    net-tools \
++    && apt-get clean
++
++# Set up the entrypoint
++ENTRYPOINT ["/bin/bash"]
+\ No newline at end of file
+diff --git a/vector/gkevalues.yaml b/vector/gkevalues.yaml
+index 79ce495..8e32e45 100644
+--- a/vector/gkevalues.yaml
++++ b/vector/gkevalues.yaml
+@@ -300,6 +300,8 @@ customConfig:
+         .pre     = if exists(.process_exec) { "exec" } else { if exists(.process_exit) { "exit" } else { if exists(.process_kprobe){ "kpro" }  else { "1" } } }
+         .key, err = to_string(.field1) + to_string(.field2) + to_string(.field3) + to_string(.field11) + to_string(.field22) + to_string(.field33)
+         .md5_hash = to_string(md5(.key))
++        .dedup    = .md5_hash + to_string(.pre)
++        
+ 
+     remove-fields:
+       type: remap
+@@ -320,7 +322,7 @@ customConfig:
+       inputs:
+         - remove-fields
+       fields :
+-        match: [.md5_hash]
++        match: [.dedup]
+     modify:
+       type: remap
+       inputs:

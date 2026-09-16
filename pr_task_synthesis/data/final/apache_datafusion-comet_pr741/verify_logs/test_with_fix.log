@@ -1,0 +1,14 @@
+/tests/eval.sh: line 15: /opt/cargo/env: No such file or directory
+>>>>> Start Test Output
+   Compiling datafusion-comet-spark-expr v0.2.0 (/workspace/native/spark-expr)
+   Compiling datafusion-comet v0.2.0 (/workspace/native/core)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 28.39s
+     Running tests/decimal_promotion_check.rs (target/debug/deps/decimal_promotion_check-77222a8a988fff37)
+
+running 1 test
+test test_low_precision_decimal_addition_no_unnecessary_decimal256_promotion ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

@@ -1,0 +1,80 @@
+{
+  "pr_summary": "Add new NumberListAlignment enum setting to replace DontJustifyNumbers boolean. The new enum supports four modes: Left, Right, Decimal, and Normalize for aligning numeric values in JSON arrays and table-like structures.",
+  "runtime_family": "dotnet",
+  "package_manager": "dotnet",
+  "touched_files": [
+    ".gitignore",
+    "FracturedJson/Formatter.cs",
+    "FracturedJson/Formatting/PaddedFormattingTokens.cs",
+    "FracturedJson/Formatting/TableTemplate.cs",
+    "FracturedJson/FracturedJsonOptions.cs",
+    "FracturedJson/NumberListAlignment.cs (new file)",
+    "FracturedJsonCli/.gitignore (deleted)",
+    "FracturedJsonCli/Cli.cs",
+    "WebFormatter/Shared/SettingsPanel.razor"
+  ],
+  "important_build_files": [
+    "FracturedJson.sln",
+    "FracturedJson/FracturedJson.csproj",
+    "FracturedJsonCli/FracturedJsonCli.csproj",
+    "Tests/Tests.csproj",
+    "WebFormatter/WebFormatter.csproj"
+  ],
+  "important_test_files": [
+    "Tests/NumberFormattingTests.cs",
+    "Tests/UniversalJsonTests.cs",
+    "Tests/Usings.cs"
+  ],
+  "candidate_build_commands": [
+    "dotnet build FracturedJson.sln",
+    "dotnet build FracturedJson/FracturedJson.csproj",
+    "dotnet build Tests/Tests.csproj"
+  ],
+  "candidate_test_commands": [
+    "dotnet test FracturedJson.sln",
+    "dotnet test Tests/Tests.csproj",
+    "dotnet test --filter NumberFormattingTests",
+    "dotnet test --filter UniversalJsonTests"
+  ],
+  "candidate_smoke_commands": [
+    "dotnet --version",
+    "dotnet build FracturedJson.sln --configuration Release",
+    "dotnet run --project FracturedJsonCli/FracturedJsonCli.csproj -- --help"
+  ],
+  "candidate_activation_checks": [
+    "dotnet --version",
+    "test -f FracturedJson.sln"
+  ],
+  "environment_management": "dotnet SDK (uses .NET 6.0 for tests, netstandard2.0 for library)",
+  "special_system_dependencies": [
+    ".NET SDK 6.0 or later required for building and testing"
+  ],
+  "high_value_files": [
+    "FracturedJson/NumberListAlignment.cs (new enum definition)",
+    "FracturedJson/FracturedJsonOptions.cs (options configuration)",
+    "FracturedJson/Formatter.cs (main formatting logic)",
+    "FracturedJson/Formatting/TableTemplate.cs (table alignment logic)",
+    "Tests/NumberFormattingTests.cs (test validation)",
+    "Tests/UniversalJsonTests.cs (universal JSON tests)"
+  ],
+  "patch_file_cues": [
+    "New NumberListAlignment enum with Left, Right, Decimal, Normalize modes",
+    "Replacement of DontJustifyNumbers boolean with NumberListAlignment enum",
+    "Changes to TableTemplate.cs for number alignment logic",
+    "CLI argument change from -j|--no-justify to -j|--justify with values l/r/d/n",
+    "Web UI settings panel updated to use dropdown instead of checkbox"
+  ],
+  "test_file_cues": [
+    "Tests/NumberFormattingTests.cs - new tests for LeftAlign, RightAlign, DecimalAlign, NormalizeAlign",
+    "Tests/UniversalJsonTests.cs - changed DontJustifyNumbers to NumberListAlignment.Decimal",
+    "Test removed: DontJustifyOptionRespected (replaced by new alignment tests)"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    ".NET Standard 2.0 and .NET 6.0 are cross-platform",
+    "Solution file (.sln) and csproj files are platform-agnostic",
+    "No Windows-specific APIs or MSVC dependencies in touched files",
+    "README shows no platform restrictions"
+  ],
+  "notes": "The fix replaces a simple boolean DontJustifyNumbers with a more flexible NumberListAlignment enum offering four alignment modes. The main changes are in Formatter.cs, TableTemplate.cs, and FracturedJsonOptions.cs. Tests verify the new alignment modes produce correct output. This is a cross-platform .NET project that can be built and tested on Linux with the .NET SDK."
+}

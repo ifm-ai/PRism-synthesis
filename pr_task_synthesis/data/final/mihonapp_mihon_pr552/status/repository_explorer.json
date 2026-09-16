@@ -1,0 +1,17 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "platform_constraint": "android",
+  "build_system": "gradle",
+  "language": "kotlin",
+  "high_value_files": [
+    "app/src/main/java/eu/kanade/tachiyomi/data/saver/ImageSaver.kt",
+    "app/build.gradle.kts",
+    "buildSrc/src/main/kotlin/AndroidConfig.kt",
+    ".github/workflows/build_push.yml",
+    "build.gradle.kts",
+    "settings.gradle.kts",
+    "gradle/libs.versions.toml"
+  ],
+  "notes": "Android project (Mihon manga reader) with Gradle build system. The fix.patch modifies ImageSaver.kt to correct DATE_MODIFIED timestamp format. Project builds on Linux with Android SDK. Requires JDK 17, Android SDK 34, NDK 26.1.10909125. Unit tests exist in domain module. Platform is Android but builds in Linux container with proper Android SDK setup - not blocked."
+}

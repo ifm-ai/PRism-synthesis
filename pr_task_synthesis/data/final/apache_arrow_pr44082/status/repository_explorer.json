@@ -1,0 +1,18 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "platform_constraint": "none",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "high_value_files": [
+    "cpp/src/parquet/arrow/reader_writer_benchmark.cc",
+    "cpp/CMakeLists.txt",
+    "cpp/src/parquet/CMakeLists.txt",
+    "ci/conda_env_cpp.txt",
+    "ci/scripts/cpp_build.sh",
+    "ci/scripts/cpp_test.sh",
+    "dev/archery/archery/benchmark/google.py",
+    "docs/source/developers/benchmarks.rst"
+  ],
+  "notes": "Repository is Apache Arrow, a cross-platform in-memory analytics project. The fix targets C++ Parquet Arrow benchmarks. Build requires CMake, conda dependencies (google-benchmark, boost, gtest), and standard Linux toolchain. No platform restrictions - fully compatible with Linux x86-64 containers. The benchmark fix corrects bytes_per_second calculation for boolean (bit-packed) and Float16 types."
+}

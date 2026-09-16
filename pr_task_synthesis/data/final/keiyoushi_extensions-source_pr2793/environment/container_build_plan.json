@@ -1,0 +1,110 @@
+{
+  "base_image": "ubuntu:22.04",
+  "build_strategy": "layered_build",
+  "build_steps": [
+    {
+      "step": 1,
+      "name": "base_image_setup",
+      "description": "Start from ubuntu:22.04 and configure non-interactive mode",
+      "commands": [
+        "FROM ubuntu:22.04",
+        "ENV DEBIAN_FRONTEND=noninteractive"
+      ]
+    },
+    {
+      "step": 2,
+      "name": "system_packages",
+      "description": "Install required system packages from environment_request.json",
+      "commands": [
+        "apt-get update -qq",
+        "apt-get install -y -qq git curl wget unzip apt-transport-https",
+        "rm -rf /var/lib/apt/lists/*"
+      ],
+      "packages": ["git", "curl", "wget", "unzip", "apt-transport-https"]
+    },
+    {
+      "step": 3,
+      "name": "directory_structure",
+      "description": "Create benchmark directories for runtime installation",
+      "commands": [
+        "mkdir -p /opt/benchmark /opt/android-sdk/cmdline-tools /root/.gradle /workspace",
+        "chmod 777 /workspace"
+      ]
+    },
+    {
+      "step": 4,
+      "name": "copy_scripts",
+      "description": "Copy build-context scripts into the image",
+      "artifacts_copied": [
+        {
+          "source": "repo_setup.sh",
+          "destination": "/opt/benchmark/repo_setup.sh"
+        },
+        {
+          "source": "setup_runtime.sh",
+          "destination": "/opt/benchmark/setup_runtime.sh"
+        }
+      ]
+    },
+    {
+      "step": 5,
+      "name": "repo_materialization",
+      "description": "Execute repo_setup.sh to clone Keiyoushi extensions-source into /workspace",
+      "script": "/opt/benchmark/repo_setup.sh",
+      "purpose": "Materialize repository at commit 774c312826036181182170e3559c3b43d48a8609"
+    },
+    {
+      "step": 6,
+      "name": "runtime_installation",
+      "description": "Execute setup_runtime.sh to install JDK 17, Gradle 8.7, and Android SDK",
+      "script": "/opt/benchmark/setup_runtime.sh",
+      "runtime_components": [
+        "JDK 17 (Temurin)",
+        "Gradle 8.7",
+        "Android SDK command-line tools",
+        "Android SDK platform-tools",
+        "Android SDK platforms;android-34",
+        "Android SDK build-tools;34.0.0",
+        "Gradle properties configuration"
+      ]
+    },
+    {
+      "step": 7,
+      "name": "environment_configuration",
+      "description": "Set runtime environment variables",
+      "environment_variables": {
+        "JAVA_HOME": "/opt/benchmark/temurin-17",
+        "GRADLE_HOME": "/opt/benchmark/gradle-8.7",
+        "ANDROID_HOME": "/opt/android-sdk",
+        "PATH": "$JAVA_HOME/bin:$GRADLE_HOME/bin:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+      }
+    },
+    {
+      "step": 8,
+      "name": "working_directory",
+      "description": "Set final working directory",
+      "command": "WORKDIR /workspace"
+    }
+  ],
+  "runtime_profile": {
+    "ecosystem": "JVM",
+    "package_manager": "gradle",
+    "test_command": "./gradlew -p src assembleRelease",
+    "smoke_command": "./gradlew tasks"
+  },
+  "artifact_placement": {
+    "repo_setup_script": "/opt/benchmark/repo_setup.sh",
+    "setup_runtime_script": "/opt/benchmark/setup_runtime.sh",
+    "workspace": "/workspace (materialized by repo_setup.sh)",
+    "eval_sh": "runtime-mounted (NOT baked into image)",
+    "hidden_tests": "runtime-mounted (NOT baked into image)"
+  },
+  "build_backend": "buildah",
+  "output_format": "oci",
+  "notes": [
+    "eval.sh and hidden tests are intentionally NOT copied into the image",
+    "They are runtime-mounted verifier assets per the environment design",
+    "repo_setup.sh MUST run before setup_runtime.sh to ensure /workspace exists",
+    "The image is designed for Buildah validation and Apptainer runtime compatibility"
+  ]
+}

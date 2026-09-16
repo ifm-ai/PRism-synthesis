@@ -1,0 +1,74 @@
+{
+  "base_image_candidate": "ubuntu:22.04",
+  "system_packages": [
+    "git",
+    "curl",
+    "build-essential",
+    "pkg-config",
+    "ca-certificates"
+  ],
+  "base_setup_commands": [
+    "apt-get update",
+    "apt-get install -y git curl build-essential pkg-config ca-certificates"
+  ],
+  "setup_runtime_commands": [
+    "curl -fsSL https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o /tmp/miniconda.sh",
+    "bash /tmp/miniconda.sh -b -p /opt/conda",
+    "rm /tmp/miniconda.sh",
+    "export PATH=\"/opt/conda/bin:$PATH\"",
+    "conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main",
+    "conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r",
+    "conda config --set always_yes yes",
+    "conda config --set channel_priority flexible",
+    "/opt/conda/bin/conda create -n arrow-cpp -y python=3.11 cmake>=3.16 ninja c-compiler cxx-compiler pkg-config make",
+    "/opt/conda/bin/conda install -n arrow-cpp -y -c conda-forge benchmark>=1.6.0 boost-cpp>=1.68.0 gtest>=1.10.0 gflags glog snappy lz4-c zlib brotli thrift-cpp>=0.11.0 rapidjson re2 zstd openssl"
+  ],
+  "activation_commands": [
+    "source /opt/conda/etc/profile.d/conda.sh",
+    "conda activate arrow-cpp"
+  ],
+  "activation_command": "source /opt/conda/etc/profile.d/conda.sh && conda activate arrow-cpp",
+  "activation_type": "conda",
+  "activation_validation_command": "bash -c 'source /opt/conda/etc/profile.d/conda.sh && conda activate arrow-cpp && cmake --version'",
+  "detected_test_command": "cd /workspace/cpp && cmake -B build -DCMAKE_PREFIX_PATH=/opt/conda/envs/arrow-cpp -DCMAKE_BUILD_TYPE=Release -DARROW_BUILD_TESTS=ON -DARROW_BUILD_BENCHMARKS=ON -DPARQUET_BUILD_BENCHMARKS=ON && cmake --build build -j$(nproc) --target parquet-benchmarks",
+  "runtime_smoke_command": "source /opt/conda/etc/profile.d/conda.sh && conda activate arrow-cpp && cmake --version && ninja --version",
+  "runtime_profile": {
+    "ecosystem": "C++",
+    "package_manager": "conda",
+    "env": "/opt/conda/envs/arrow-cpp",
+    "env_name": "arrow-cpp",
+    "prepare_commands": [
+      "source /opt/conda/etc/profile.d/conda.sh",
+      "conda activate arrow-cpp",
+      "export CMAKE_PREFIX_PATH=/opt/conda/envs/arrow-cpp:$CMAKE_PREFIX_PATH",
+      "export PKG_CONFIG_PATH=/opt/conda/envs/arrow-cpp/lib/pkgconfig:$PKG_CONFIG_PATH"
+    ],
+    "activation_commands": "source /opt/conda/etc/profile.d/conda.sh && conda activate arrow-cpp",
+    "base_deps_installed": [
+      "cmake>=3.16",
+      "ninja",
+      "benchmark>=1.6.0",
+      "boost-cpp>=1.68.0",
+      "gtest>=1.10.0",
+      "gflags",
+      "glog",
+      "snappy",
+      "lz4-c",
+      "zlib",
+      "brotli",
+      "thrift-cpp>=0.11.0",
+      "rapidjson",
+      "re2",
+      "zstd",
+      "c-compiler",
+      "cxx-compiler"
+    ],
+    "test_only_install_strategy": "none",
+    "cache_dirs": [
+      "/opt/conda/envs/arrow-cpp",
+      "/opt/conda/pkgs"
+    ],
+    "notes": "Conda environment 'arrow-cpp' contains all C++ dependencies for building and running Apache Arrow Parquet benchmarks. The environment uses conda-forge channel for C++ packages."
+  },
+  "notes": "Base image ubuntu:22.04 provides git and curl by default in minimal installations, but they are explicitly included in system_packages for clarity. The conda environment 'arrow-cpp' is created with all necessary C++ toolchain and library dependencies for the Apache Arrow Parquet benchmark project. CMake 3.16+ and ninja are included as required by the build system."
+}

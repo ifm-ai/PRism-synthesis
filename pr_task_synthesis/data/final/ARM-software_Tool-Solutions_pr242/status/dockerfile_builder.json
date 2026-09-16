@@ -1,0 +1,29 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "base_image": "ubuntu:22.04",
+  "copied_artifacts": [
+    {
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh",
+      "purpose": "Repository materialization script"
+    },
+    {
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh",
+      "purpose": "Python virtualenv creation and dependency installation"
+    }
+  ],
+  "uses_repo_setup_script": true,
+  "repo_materialization_mode": "git_clone_during_build",
+  "container_build_plan_written": true,
+  "build_backend_target": "buildah",
+  "buildability_assessment": "probably_buildable",
+  "blocking_risks": [],
+  "warnings": [
+    "PyTorch 2.2.0 wheels are x86_64 standard; AArch64 builds would require custom compilation",
+    "sox pip package may fail to install if not available (script has fallback)"
+  ],
+  "recommended_fixes": [],
+  "notes": "Dockerfile.final created as the authoritative packaging spec. The image installs system packages, copies repo_setup.sh and setup_runtime.sh from the build context, runs repo_setup.sh to clone the ARM-software/Tool-Solutions repository into /workspace, and runs setup_runtime.sh to create the Python virtualenv at /opt/benchmark/mlcommons-venv with all ML dependencies including librosa==0.10.0. The eval.sh verifier script and hidden tests are NOT baked into the image; they are intended to be runtime-mounted. The container_build_plan.json provides the structured build specification for Buildah validation."
+}

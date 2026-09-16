@@ -1,0 +1,145 @@
+diff --git a/common/src/test/java/org/apache/sedona/common/FunctionsTest.java b/common/src/test/java/org/apache/sedona/common/FunctionsTest.java
+index 47a0b8424..a3167fb18 100644
+--- a/common/src/test/java/org/apache/sedona/common/FunctionsTest.java
++++ b/common/src/test/java/org/apache/sedona/common/FunctionsTest.java
+@@ -561,6 +561,18 @@ public class FunctionsTest extends TestBase {
+         assertEquals(expects, levels);
+     }
+ 
++    @Test
++    public void testS2ToGeom() {
++        Geometry target = GEOMETRY_FACTORY.createPolygon(
++                coordArray(0.1, 0.1, 0.5, 0.1, 1.0, 0.3, 1.0, 1.0, 0.1, 1.0, 0.1, 0.1)
++        );
++        Long[] cellIds = Functions.s2CellIDs(target, 10);
++        Geometry[] polygons = Functions.s2ToGeom(Arrays.stream(cellIds).mapToLong(Long::longValue).toArray());
++        assertTrue(polygons[0].intersects(target));
++        assertTrue(polygons[20].intersects(target));
++        assertTrue(polygons[100].intersects(target));
++    }
++
+     /**
+      * Test H3CellIds: pass in all the types of geometry, test if the function cover
+      */
+diff --git a/flink/src/test/java/org/apache/sedona/flink/FunctionTest.java b/flink/src/test/java/org/apache/sedona/flink/FunctionTest.java
+index 4a5129af5..c0bed79d5 100644
+--- a/flink/src/test/java/org/apache/sedona/flink/FunctionTest.java
++++ b/flink/src/test/java/org/apache/sedona/flink/FunctionTest.java
+@@ -1052,6 +1052,16 @@ public class FunctionTest extends TestBase{
+         assertEquals(2, first(joinCleanedTable).getField(1));
+     }
+ 
++    @Test
++    public void testS2ToGeom() {
++        Table pointTable = tableEnv.sqlQuery("select ST_S2ToGeom(ST_S2CellIDs(ST_GeomFromWKT('POLYGON ((0.1 0.1, 0.5 0.1, 1 0.3, 1 1, 0.1 1, 0.1 0.1))'), 10))");
++        Geometry target = (Geometry) first(tableEnv.sqlQuery("select ST_GeomFromWKT('POLYGON ((0.1 0.1, 0.5 0.1, 1 0.3, 1 1, 0.1 1, 0.1 0.1))')")).getField(0);
++        Geometry[] actual = (Geometry[]) Objects.requireNonNull(first(pointTable).getField(0));
++        assertTrue(actual[0].intersects(target));
++        assertTrue(actual[20].intersects(target));
++        assertTrue(actual[100].intersects(target));
++    }
++
+     @Test
+     public void testH3CellIDs() {
+         String initExplodeQuery = "SELECT id, geom, cell_tbl.cell from (VALUES %s) as raw_tbl(id, geom, cells) CROSS JOIN UNNEST(raw_tbl.cells) AS cell_tbl (cell)";
+diff --git a/python/tests/sql/test_dataframe_api.py b/python/tests/sql/test_dataframe_api.py
+index 4469178a3..6d545f9fa 100644
+--- a/python/tests/sql/test_dataframe_api.py
++++ b/python/tests/sql/test_dataframe_api.py
+@@ -144,6 +144,7 @@ test_configurations = [
+     (stf.ST_RemovePoint, ("line", 1), "linestring_geom", "", "LINESTRING (0 0, 2 0, 3 0, 4 0, 5 0)"),
+     (stf.ST_Reverse, ("line",), "linestring_geom", "", "LINESTRING (5 0, 4 0, 3 0, 2 0, 1 0, 0 0)"),
+     (stf.ST_S2CellIDs, ("point", 30), "point_geom", "", [1153451514845492609]),
++    (stf.ST_S2ToGeom, (lambda: f.expr("array(1154047404513689600)"),), "null", "ST_ReducePrecision(geom[0], 5)", "POLYGON ((0 2.46041, 2.46041 2.46041, 2.46041 0, 0 0, 0 2.46041))"),
+     (stf.ST_SetPoint, ("line", 1, lambda: f.expr("ST_Point(1.0, 1.0)")), "linestring_geom", "", "LINESTRING (0 0, 1 1, 2 0, 3 0, 4 0, 5 0)"),
+     (stf.ST_SetSRID, ("point", 3021), "point_geom", "ST_SRID(geom)", 3021),
+     (stf.ST_ShiftLongitude, ("geom",), "triangle_geom", "", "POLYGON ((0 0, 1 0, 1 1, 0 0))"),
+@@ -301,6 +302,7 @@ wrong_type_configurations = [
+     (stf.ST_RemovePoint, ("", 1.0)),
+     (stf.ST_Reverse, (None,)),
+     (stf.ST_S2CellIDs, (None, 2)),
++    (stf.ST_S2ToGeom, (None,)),
+     (stf.ST_SetPoint, (None, 1, "")),
+     (stf.ST_SetPoint, ("", None, "")),
+     (stf.ST_SetPoint, ("", 1, None)),
+diff --git a/python/tests/sql/test_function.py b/python/tests/sql/test_function.py
+index 2b1f674b1..7ca4146c9 100644
+--- a/python/tests/sql/test_function.py
++++ b/python/tests/sql/test_function.py
+@@ -1238,6 +1238,16 @@ class TestPredicateJoin(TestBase):
+         cell_ids = self.spark.sql("select ST_S2CellIDs(null, 6)").take(1)[0][0]
+         assert cell_ids is None
+ 
++    def test_st_s2_to_geom(self):
++        df = self.spark.sql("""
++        SELECT
++            ST_Intersects(ST_GeomFromWKT('POLYGON ((0.1 0.1, 0.5 0.1, 1 0.3, 1 1, 0.1 1, 0.1 0.1))'), ST_S2ToGeom(ST_S2CellIDs(ST_GeomFromWKT('POLYGON ((0.1 0.1, 0.5 0.1, 1 0.3, 1 1, 0.1 1, 0.1 0.1))'), 10))[0]),
++            ST_Intersects(ST_GeomFromWKT('POLYGON ((0.1 0.1, 0.5 0.1, 1 0.3, 1 1, 0.1 1, 0.1 0.1))'), ST_S2ToGeom(ST_S2CellIDs(ST_GeomFromWKT('POLYGON ((0.1 0.1, 0.5 0.1, 1 0.3, 1 1, 0.1 1, 0.1 0.1))'), 10))[1]),
++            ST_Intersects(ST_GeomFromWKT('POLYGON ((0.1 0.1, 0.5 0.1, 1 0.3, 1 1, 0.1 1, 0.1 0.1))'), ST_S2ToGeom(ST_S2CellIDs(ST_GeomFromWKT('POLYGON ((0.1 0.1, 0.5 0.1, 1 0.3, 1 1, 0.1 1, 0.1 0.1))'), 10))[2])
++        """)
++        res1, res2, res3 = df.take(1)[0]
++        assert res1 and res2 and res3
++
+     def test_st_h3_cell_ids(self):
+         test_cases = [
+             "'POLYGON((-1 0, 1 0, 0 0, 0 1, -1 0))'",
+diff --git a/spark/common/src/test/scala/org/apache/sedona/sql/dataFrameAPITestScala.scala b/spark/common/src/test/scala/org/apache/sedona/sql/dataFrameAPITestScala.scala
+index e5006261c..1fea0b5d2 100644
+--- a/spark/common/src/test/scala/org/apache/sedona/sql/dataFrameAPITestScala.scala
++++ b/spark/common/src/test/scala/org/apache/sedona/sql/dataFrameAPITestScala.scala
+@@ -19,7 +19,7 @@
+ package org.apache.sedona.sql
+ 
+ import org.apache.commons.codec.binary.Hex
+-import org.apache.spark.sql.functions.{col, element_at, lit}
++import org.apache.spark.sql.functions.{array, col, element_at, lit}
+ import org.apache.spark.sql.sedona_sql.expressions.st_aggregates._
+ import org.apache.spark.sql.sedona_sql.expressions.st_constructors._
+ import org.apache.spark.sql.sedona_sql.expressions.st_functions._
+@@ -1079,6 +1079,17 @@ class dataFrameAPITestScala extends TestBaseScala {
+       assert (actualResult.subsetOf(mbrResult))
+     }
+ 
++    it("Passed ST_S2ToGeom") {
++      val baseDf = sparkSession.sql("SELECT ST_GeomFromWKT('POLYGON ((0.1 0.1, 0.5 0.1, 1 0.3, 1 1, 0.1 1, 0.1 0.1))') as geom")
++      val df = baseDf.select(ST_S2ToGeom(ST_S2CellIDs("geom", 10)).as("polygons"), col("geom"))
++      var intersectsDf = df.select(ST_Intersects(col("geom"), element_at(col("polygons"), 1)))
++      assert(intersectsDf.first().getBoolean(0))
++      intersectsDf = df.select(ST_Intersects(col("geom"), element_at(col("polygons"), 21)))
++      assert(intersectsDf.first().getBoolean(0))
++      intersectsDf = df.select(ST_Intersects(col("geom"), element_at(col("polygons"), 101)))
++      assert(intersectsDf.first().getBoolean(0))
++    }
++
+     it("Passed ST_H3CellIDs") {
+       val baseDF = sparkSession.sql("SELECT ST_GeomFromWKT('Polygon ((0 0, 1 2, 2 2, 3 2, 5 0, 4 0, 3 1, 2 1, 1 0, 0 0))') as geom")
+       val df = baseDF.select(ST_H3ToGeom(ST_H3CellIDs("geom", 6, true)))
+diff --git a/spark/common/src/test/scala/org/apache/sedona/sql/functions/STS2CellIDs.scala b/spark/common/src/test/scala/org/apache/sedona/sql/functions/STS2CellIDs.scala
+index dffed533f..56bdce42f 100644
+--- a/spark/common/src/test/scala/org/apache/sedona/sql/functions/STS2CellIDs.scala
++++ b/spark/common/src/test/scala/org/apache/sedona/sql/functions/STS2CellIDs.scala
+@@ -100,4 +100,24 @@ class STS2CellIDs extends TestBaseScala with Matchers with GeometrySample with G
+       )
+     }
+   }
++
++  describe("should pass ST_S2ToGeom") {
++    it("should intersect with the target geometry") {
++      val baseDf = sparkSession.sql("SELECT ST_GeomFromWKT('POLYGON ((0.1 0.1, 0.5 0.1, 1 0.3, 1 1, 0.1 1, 0.1 0.1))') as geom")
++      val df = baseDf.selectExpr("ST_S2ToGeom(ST_S2CellIDs(geom, 10)) as polygons", "geom")
++      var intersectsDf = df.selectExpr("ST_Intersects(geom, polygons[0])")
++      assert(intersectsDf.first().getBoolean(0))
++      intersectsDf = df.selectExpr("ST_Intersects(geom, polygons[20])")
++      assert(intersectsDf.first().getBoolean(0))
++      intersectsDf = df.selectExpr("ST_Intersects(geom, polygons[100])")
++      assert(intersectsDf.first().getBoolean(0))
++    }
++
++    it("should collect array of Geometry into a MultiPolygon") {
++      val baseDf = sparkSession.sql("SELECT ST_GeomFromWKT('POLYGON ((0.1 0.1, 0.5 0.1, 1 0.3, 1 1, 0.1 1, 0.1 0.1))') as geom")
++      val df = baseDf.selectExpr("ST_Collect(ST_S2ToGeom(ST_S2CellIDs(geom, 10))) as multipolygon")
++      val geomType = df.selectExpr("GeometryType(multipolygon)").first().get(0)
++      assert(geomType == "MULTIPOLYGON")
++    }
++  }
+ }

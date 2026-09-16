@@ -1,0 +1,48 @@
+{
+  "base_image_candidate": "debian:bookworm",
+  "system_packages": [
+    "cmake",
+    "ninja-build",
+    "gcc",
+    "g++",
+    "pkg-config",
+    "libpng-dev",
+    "libjpeg-dev",
+    "libfreetype6-dev",
+    "ruby-dev",
+    "git",
+    "curl",
+    "python3",
+    "python3-pip"
+  ],
+  "base_setup_commands": [
+    "apt-get update",
+    "apt-get install -y cmake ninja-build gcc g++ pkg-config libpng-dev libjpeg-dev libfreetype6-dev ruby-dev git curl python3 python3-pip"
+  ],
+  "setup_runtime_commands": [
+    "pip3 install --break-system-packages pypng lz4"
+  ],
+  "activation_commands": [],
+  "activation_command": "",
+  "activation_type": "system",
+  "activation_validation_command": "cmake --version && ninja --version && gcc --version",
+  "detected_test_command": "./tests/main.py test",
+  "runtime_smoke_command": "cmake -S . -B build -GNinja && cmake --build build --target lvgl",
+  "runtime_profile": {
+    "ecosystem": "C/C++",
+    "package_manager": "none",
+    "env": {},
+    "env_name": null,
+    "prepare_commands": [
+      "pip3 install --break-system-packages pypng lz4"
+    ],
+    "activation_commands": [],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "none",
+    "cache_dirs": [
+      "/root/.cache/pip"
+    ],
+    "notes": "LVGL uses CMake with Ninja generator. Tests are run via Python script main.py. No virtual environment needed - system-level toolchain is sufficient."
+  },
+  "notes": "LVGL is a C graphics library built with CMake/Ninja. The fix.patch modifies GIF image descriptor initialization in src/libs/gif/lv_gif.c and lv_gif.h. System-level installation is appropriate - no language runtime activation needed. git and curl are explicitly included in system_packages."
+}

@@ -1,0 +1,22 @@
+WARNING: Skipping mount /etc/localtime [binds]: /etc/localtime doesn't exist in container
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.10.12, pytest-9.1.1, pluggy-1.6.0 -- /opt/benchmark/mlcommons-venv/bin/python3.10
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /tests/tests
+plugins: typeguard-4.5.2, hypothesis-6.155.7
+collecting ... collected 8 items
+
+../tests/tests/test_librosa_api_compatibility.py::TestPatchFileExists::test_patch_file_exists PASSED [ 12%]
+../tests/tests/test_librosa_api_compatibility.py::TestLibrosaFiltersMel::test_fixed_mel_pattern_present PASSED [ 25%]
+../tests/tests/test_librosa_api_compatibility.py::TestLibrosaCoreResample::test_fixed_resample_pattern_present PASSED [ 37%]
+../tests/tests/test_librosa_api_compatibility.py::TestLibrosaEffectsTrim::test_fixed_trim_pattern_present PASSED [ 50%]
+../tests/tests/test_librosa_api_compatibility.py::TestTorchSTFT::test_fixed_stft_return_complex_present PASSED [ 62%]
+../tests/tests/test_librosa_api_compatibility.py::TestTorchSTFT::test_fixed_view_as_real_present PASSED [ 75%]
+../tests/tests/test_librosa_api_compatibility.py::TestNumpyArrayDtypeObject::test_fixed_numpy_dtype_present PASSED [ 87%]
+../tests/tests/test_librosa_api_compatibility.py::TestContextManagerPattern::test_fixed_context_manager_present PASSED [100%]
+
+============================== 8 passed in 0.08s ===============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

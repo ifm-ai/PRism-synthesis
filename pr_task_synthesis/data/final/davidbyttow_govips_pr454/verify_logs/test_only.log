@@ -1,0 +1,17 @@
+>>>>> Start Test Output
+# test_test [test.test]
+./tiff_export_test.go:17:9: params.Pyramid undefined (type *vips.TiffExportParams has no field or method Pyramid)
+./tiff_export_test.go:20:24: params.Pyramid undefined (type *vips.TiffExportParams has no field or method Pyramid)
+./tiff_export_test.go:30:9: params.Tile undefined (type *vips.TiffExportParams has no field or method Tile)
+./tiff_export_test.go:33:24: params.Tile undefined (type *vips.TiffExportParams has no field or method Tile)
+./tiff_export_test.go:43:9: params.TileHeight undefined (type *vips.TiffExportParams has no field or method TileHeight)
+./tiff_export_test.go:44:9: params.TileWidth undefined (type *vips.TiffExportParams has no field or method TileWidth)
+./tiff_export_test.go:47:30: params.TileHeight undefined (type *vips.TiffExportParams has no field or method TileHeight)
+./tiff_export_test.go:48:30: params.TileWidth undefined (type *vips.TiffExportParams has no field or method TileWidth)
+./tiff_export_test.go:59:25: params.Pyramid undefined (type *vips.TiffExportParams has no field or method Pyramid)
+./tiff_export_test.go:60:25: params.Tile undefined (type *vips.TiffExportParams has no field or method Tile)
+./tiff_export_test.go:60:25: too many errors
+FAIL	test [build failed]
+FAIL
+>>>>> End Test Output
+OPENENV_EXIT_CODE=2

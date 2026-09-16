@@ -1,0 +1,29 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "verification_command": "/workspace/node_modules/.bin/jest --config tests/jest.config.external.js --runInBand --no-coverage",
+  "activation_source": "system",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "hidden_tests",
+  "copied_test_patch": false,
+  "supplemental_tests_created": true,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that WGSL shader source files contain correct variable references (fragmentInputs.*, uniforms.*) and proper WGSL syntax (var vs uvar, vec4f construction, fragmentOutputs return) for WebGPU shader compilation.",
+  "fix_patch_grounding": "The fix.patch corrects 5 WGSL shader files: bumpFragment.fx uses fragmentInputs.vDetailUV/vBumpUV instead of bare variables and vec3f() for detailNormal scaling; depthPrePass.fx uses fragmentOutputs.color and return fragmentOutputs; oitFragment.fx uses var instead of uvar; morphTargetsVertex.fx uses vec4f() for tangent updates; default.fragment.fx uses fragmentInputs.vDecalUV and uniforms.vDetailInfos.",
+  "issue_context_used": "The issue describes WebGPU rendering failures due to incorrect shader variable references and syntax errors, which the tests verify by checking the exact patterns fixed in the patch.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": [
+    "tests/wgsl-shader-fixes.test.ts"
+  ],
+  "required_verifier_files": [
+    "eval.sh",
+    "tests/wgsl-shader-fixes.test.ts",
+    "tests/jest.config.external.js"
+  ],
+  "notes": "Hidden tests verify WGSL shader source files contain the correct patterns from fix.patch. Tests run from /artifacts/evaluation context using workspace's Jest installation. Tests verify 5 shader files across 15 test cases covering all bug fixes."
+}

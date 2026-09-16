@@ -1,0 +1,59 @@
+{
+  "base_image_candidate": "rust:slim",
+  "system_packages": [
+    "git",
+    "curl",
+    "pkg-config",
+    "libssl-dev"
+  ],
+  "base_setup_commands": [
+    "apt-get update && apt-get install -y git curl pkg-config libssl-dev",
+    "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --profile minimal",
+    "echo 'export RUSTUP_HOME=/root/.rustup' >> /etc/environment",
+    "echo 'export CARGO_HOME=/root/.cargo' >> /etc/environment",
+    "echo 'export PATH=\"$CARGO_HOME/bin:$PATH\"' >> /etc/environment",
+    "rustup default stable"
+  ],
+  "setup_runtime_commands": [
+    "source /root/.cargo/env",
+    "rustup default stable",
+    "rustc --version",
+    "cargo --version"
+  ],
+  "activation_commands": [
+    "export RUSTUP_HOME=/root/.rustup",
+    "export CARGO_HOME=/root/.cargo",
+    "source /root/.cargo/env"
+  ],
+  "activation_command": "export RUSTUP_HOME=/root/.rustup && export CARGO_HOME=/root/.cargo && source /root/.cargo/env",
+  "activation_type": "cargo",
+  "activation_validation_command": "bash -c 'export RUSTUP_HOME=/root/.rustup && export CARGO_HOME=/root/.cargo && source /root/.cargo/env && cargo --version && rustc --version'",
+  "detected_test_command": "cargo test --package alloy-primitives --features serde",
+  "runtime_smoke_command": "cargo check --package alloy-primitives --features serde",
+  "runtime_profile": {
+    "ecosystem": "rust",
+    "package_manager": "cargo",
+    "env": {
+      "RUSTUP_HOME": "/root/.rustup",
+      "CARGO_HOME": "/root/.cargo"
+    },
+    "env_name": "stable",
+    "prepare_commands": [
+      "rustup default stable"
+    ],
+    "activation_commands": [
+      "export RUSTUP_HOME=/root/.rustup",
+      "export CARGO_HOME=/root/.cargo",
+      "source /root/.cargo/env"
+    ],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "cargo test handles dependency resolution automatically",
+    "cache_dirs": [
+      "/root/.cargo/registry",
+      "/root/.rustup/toolchains",
+      "target"
+    ],
+    "notes": "Rust toolchain installed via rustup with stable channel. The alloy-primitives package requires the 'serde' feature for JSON serialization tests. MSRV is 1.65 but stable (1.96.0) is used for compatibility."
+  },
+  "notes": "Base image rust:slim is recommended as it includes Rust pre-installed. Alternatively, use debian:bookworm-slim and install Rust via rustup. Git and curl are included in baseline system packages. The activation command sources the cargo environment and sets RUSTUP_HOME/CARGO_HOME explicitly to ensure the correct toolchain is used."
+}

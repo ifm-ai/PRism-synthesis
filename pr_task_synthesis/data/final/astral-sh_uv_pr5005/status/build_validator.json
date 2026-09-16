@@ -1,0 +1,9 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "route_to": null,
+  "notes": "Buildah build of Dockerfile.final completed successfully. OCI archive exported to /artifacts/environment/openenv_validation_oci.tar (547 MB). Image includes debian:bookworm base with Rust 1.79 toolchain, build-essential, cmake, pkg-config, libssl-dev, git, curl. Repository cloned from https://github.com/astral-sh/uv at commit 23c6cd7."
+}

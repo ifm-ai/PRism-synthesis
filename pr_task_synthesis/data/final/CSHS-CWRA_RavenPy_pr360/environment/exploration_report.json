@@ -1,0 +1,85 @@
+{
+  "pr_summary": "CustomOutput configuration rendering does not produce expected line format. The fix changes CustomOutput class inheritance from FlatCommand to LineCommand, ensuring the output is emitted as a single line with colon prefix. Additional bug fixes in commands.py (Gauge error message), utils.py (alt_names handling), ravenpy.py (Path handling), and coords.py (import cleanup).",
+  "runtime_family": "Python",
+  "package_manager": "pip/flit (also supports conda)",
+  "touched_files": [
+    "ravenpy/config/commands.py",
+    "ravenpy/config/utils.py",
+    "ravenpy/ravenpy.py",
+    "ravenpy/utilities/coords.py"
+  ],
+  "important_build_files": [
+    "pyproject.toml",
+    "setup.cfg",
+    "environment.yml",
+    "tox.ini",
+    "Makefile"
+  ],
+  "important_test_files": [
+    "tests/test_commands.py",
+    "tests/test_rvs.py",
+    "tests/conftest.py",
+    "tests/test_coords.py",
+    "tests/test_utils.py"
+  ],
+  "candidate_build_commands": [
+    "pip install -e .",
+    "pip install -e '.[dev]'",
+    "flit install",
+    "conda env create -f environment.yml"
+  ],
+  "candidate_test_commands": [
+    "pytest",
+    "pytest --cov",
+    "pytest tests/test_commands.py -v",
+    "tox -e py311-linux",
+    "python -m pytest --cov --numprocesses=logical"
+  ],
+  "candidate_smoke_commands": [
+    "python -c 'import ravenpy; print(ravenpy.__version__)'",
+    "python -c 'from ravenpy.config.commands import CustomOutput; c = CustomOutput(time_per=\"YEARLY\", stat=\"AVERAGE\", variable=\"PRECIP\", space_agg=\"ENTIRE_WATERSHED\"); print(c.to_rv())'",
+    "ravenpy --help"
+  ],
+  "candidate_activation_checks": [
+    "python -c 'import ravenpy'",
+    "python -c 'from ravenpy.config.base import LineCommand, FlatCommand'",
+    "python -c 'from ravenpy.config.commands import CustomOutput; print(CustomOutput.__bases__)'"
+  ],
+  "environment_management": "pip with flit build backend; conda environment files provided (environment.yml, environment-rtd.yml); tox for multi-environment testing",
+  "special_system_dependencies": [
+    "GDAL (libgdal-dev on Ubuntu)",
+    "raven-hydro (C++ hydrological framework)",
+    "NetCDF libraries (for netCDF4-python)"
+  ],
+  "high_value_files": [
+    "ravenpy/config/commands.py",
+    "ravenpy/config/base.py",
+    "ravenpy/config/rvs.py",
+    "ravenpy/ravenpy.py",
+    "pyproject.toml",
+    "tests/test_commands.py"
+  ],
+  "patch_file_cues": [
+    "CustomOutput class changed from FlatCommand to LineCommand - affects output formatting",
+    "Gauge.from_nc() improved error message for missing netCDF data",
+    "utils.nc_specs() handles alt_names=None case",
+    "ravenpy.run() uses absolute paths for configdir and outputdir",
+    "coords.units_transform() removes unused import"
+  ],
+  "test_file_cues": [
+    "tests/test_commands.py - tests for Raven command classes including CustomOutput",
+    "tests/test_rvs.py - tests for RV configuration classes",
+    "tests/test_coords.py - tests for coordinate transformation utilities",
+    "tests/conftest.py - pytest fixtures for test data management"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "CI workflow main.yml runs primarily on ubuntu-latest (Linux)",
+    "macOS tests are commented out in CI",
+    "Windows tests explicitly disabled with comment 'disabled until xesmf is available'",
+    "GDAL installation uses apt-get on Ubuntu",
+    "No Windows-specific dependencies or MSVC requirements",
+    "Project is cross-platform Python package with standard dependencies"
+  ],
+  "notes": "RavenPy is a Python wrapper for the Raven hydrological modeling framework. The fix addresses CustomOutput rendering by changing inheritance from FlatCommand to LineCommand. LineCommand.to_rv() produces single-line output with colon prefix and proper spacing, while FlatCommand inherits default Command.to_rv() which produces nested output. Python 3.9+ required. Tests use pytest with pytest-xdist for parallelization. Test data is downloaded from remote repository during test runs."
+}

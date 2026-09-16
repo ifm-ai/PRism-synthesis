@@ -1,0 +1,21 @@
+WARNING: Skipping mount /etc/localtime [binds]: /etc/localtime doesn't exist in container
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-9.1.0, pluggy-1.6.0 -- /opt/conda/envs/arrow-cpp/bin/python3
+cachedir: .pytest_cache
+rootdir: /tests/tests
+collecting ... collected 8 items
+
+../tests/tests/test_benchmark_fix.py::TestBytesForItemsTemplate::test_bytes_for_items_template_exists PASSED [ 12%]
+../tests/tests/test_benchmark_fix.py::TestBytesForItemsTemplate::test_boolean_specialization_uses_bit_packing PASSED [ 25%]
+../tests/tests/test_benchmark_fix.py::TestBytesForItemsTemplate::test_float16_specialization_uses_2_bytes PASSED [ 37%]
+../tests/tests/test_benchmark_fix.py::TestSetBytesProcessed::test_set_bytes_processed_signature_fixed PASSED [ 50%]
+../tests/tests/test_benchmark_fix.py::TestSetBytesProcessed::test_items_processed_separate_from_bytes_processed PASSED [ 62%]
+../tests/tests/test_benchmark_fix.py::TestSetBytesProcessed::test_bytesforitems_used_in_setbytesprocessed PASSED [ 75%]
+../tests/tests/test_benchmark_fix.py::TestRequiredIncludes::test_type_traits_include PASSED [ 87%]
+../tests/tests/test_benchmark_fix.py::TestRequiredIncludes::test_bit_util_include PASSED [100%]
+
+============================== 8 passed in 0.01s ===============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

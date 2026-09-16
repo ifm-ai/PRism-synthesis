@@ -1,0 +1,58 @@
+{
+  "base_image": "debian:bookworm",
+  "platform": "linux/amd64",
+  "build_context_files": [
+    "setup_runtime.sh",
+    "repo_setup.sh"
+  ],
+  "system_packages": [
+    "build-essential",
+    "cmake",
+    "pkg-config",
+    "libssl-dev",
+    "git",
+    "curl"
+  ],
+  "runtime_setup": {
+    "toolchain": "rust-1.79",
+    "package_manager": "cargo",
+    "cargo_home": "/root/.cargo"
+  },
+  "build_steps": [
+    {
+      "step": 1,
+      "action": "base_image",
+      "description": "Start from debian:bookworm"
+    },
+    {
+      "step": 2,
+      "action": "system_packages",
+      "description": "Install build-essential, cmake, pkg-config, libssl-dev, git, curl"
+    },
+    {
+      "step": 3,
+      "action": "copy_scripts",
+      "description": "Copy setup_runtime.sh and repo_setup.sh to /opt/benchmark/"
+    },
+    {
+      "step": 4,
+      "action": "repo_materialization",
+      "description": "Run repo_setup.sh to clone and prepare /workspace"
+    },
+    {
+      "step": 5,
+      "action": "runtime_setup",
+      "description": "Run setup_runtime.sh to install Rust 1.79 toolchain"
+    }
+  ],
+  "final_workdir": "/workspace",
+  "repo_materialization_mode": "git_clone_during_build",
+  "runtime_mounted_artifacts": [
+    "/artifacts/evaluation/eval.sh",
+    "/artifacts/evaluation/test.patch",
+    "/artifacts/evaluation/tests/"
+  ],
+  "build_command": "cargo build",
+  "test_command": "cargo test --package uv --test help",
+  "notes": "eval.sh, test.patch, and tests/ are runtime-mounted verifier assets, not baked into the image"
+}

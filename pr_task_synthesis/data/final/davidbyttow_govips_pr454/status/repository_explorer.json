@@ -1,0 +1,15 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "platform_constraint": "none",
+  "platform_constraint_evidence": "The repository is a Go CGO project that wraps libvips. CI runs on ubuntu-latest with libvips-dev installed via apt-get. The fix.patch touches vips/foreign.go and vips/image.go which are cross-platform Go/CGO files. No Windows-only or macOS-only constraints detected. The project can be built and tested on Linux x86-64 containers.",
+  "high_value_files": [
+    "go.mod",
+    "Makefile",
+    "vips/foreign.go",
+    "vips/image.go",
+    "vips/foreign.c",
+    ".github/workflows/build.yml"
+  ],
+  "notes": "Repository exploration complete. This is a Go image processing library using CGO to wrap libvips. The fix adds TIFF pyramid and tiling support. Build requires libvips-dev system package and CGO compiler. Tests can be run with 'make test' or 'go test -v ./...'. Platform is fully Linux-compatible."
+}

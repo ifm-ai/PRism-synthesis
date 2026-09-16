@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "official_verifier": {
+    "execution_mode": "real_execution",
+    "test_only_exit_code": 1,
+    "test_with_fix_exit_code": 0
+  },
+  "non_discriminating": false,
+  "notes": "Two-run verifier preflight completed successfully. testOnly (buggy workspace) failed with exit code 1 as expected - the test_clustering_key_fix_present test failed because the buggy version lacks the custom_properties = {} initialization. testWithFix (fixed workspace) passed with exit code 0 - both tests passed because the fix is present. Output quality verified with proper Start/End markers, real pytest output with test session info and pass/fail counts, and OPENENV_EXIT_CODE at end of both logs. No hacking patterns detected in eval.sh - it uses pytest as a real test runner and properly captures RC=$?. Tests directly verify the CLUSTERING_KEY fix in snowflake_schema_gen.py which matches fix.patch scope."
+}

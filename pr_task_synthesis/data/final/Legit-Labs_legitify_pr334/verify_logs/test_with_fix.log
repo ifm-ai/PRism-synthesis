@@ -1,0 +1,11 @@
+>>>>> Start Test Output
+=== RUN   TestGitlabRepositoryRestrictsOverrideVariables
+=== RUN   TestGitlabRepositoryRestrictsOverrideVariables/Restrict_Override_Of_Defined_Variables
+=== RUN   TestGitlabRepositoryRestrictsOverrideVariables/Restrict_Override_Of_Defined_Variables#01
+--- PASS: TestGitlabRepositoryRestrictsOverrideVariables (0.02s)
+    --- PASS: TestGitlabRepositoryRestrictsOverrideVariables/Restrict_Override_Of_Defined_Variables (0.01s)
+    --- PASS: TestGitlabRepositoryRestrictsOverrideVariables/Restrict_Override_Of_Defined_Variables#01 (0.01s)
+PASS
+ok  	github.com/Legit-Labs/legitify/test	0.038s
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

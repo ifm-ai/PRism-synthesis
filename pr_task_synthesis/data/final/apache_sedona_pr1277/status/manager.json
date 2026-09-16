@@ -1,0 +1,13 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_full_outer_turn": false,
+  "blocks_reason": null,
+  "repair_cycles_attempted": 0,
+  "workers_used": 2,
+  "iterations": 1,
+  "verifier_asset_mode": "hidden_tests",
+  "build_backend": "buildah",
+  "container_build_status": "success",
+  "notes": "Remediation complete. Fixed eval.sh to install pyspark before running tests. External verifier failure (testWithFix OPENENV_EXIT_CODE=1 due to ModuleNotFoundError: pyspark) was resolved by updating the install_test_only_extras section in eval.sh to run 'pip install pyspark'. Local preflight verification passed: testOnly=1 (fail, ST_S2ToGeom missing), testWithFix=0 (pass, ST_S2ToGeom present). Build validator status remains success since eval.sh is runtime-mounted and doesn't affect the container image."
+}

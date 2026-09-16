@@ -1,0 +1,26 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "base_image": "ubuntu:22.04",
+  "copied_artifacts": [
+    "setup_runtime.sh -> /opt/benchmark/setup_runtime.sh",
+    "repo_setup.sh -> /opt/benchmark/repo_setup.sh"
+  ],
+  "uses_repo_setup_script": true,
+  "repo_materialization_mode": "runtime_clone_via_repo_setup_sh",
+  "container_build_plan_written": true,
+  "build_backend_target": "buildah",
+  "buildability_assessment": {
+    "rating": "buildable",
+    "syntax_valid": true,
+    "build_context_complete": true,
+    "package_manager_compatible": true,
+    "script_paths_consistent": true,
+    "workspace_contract_valid": true,
+    "verifier_separation_valid": true
+  },
+  "blocking_risks": [],
+  "warnings": [],
+  "recommended_fixes": [],
+  "notes": "Dockerfile.final is ready for Buildah validation. The image uses ubuntu:22.04 base, installs required system packages (git, curl, build-essential, pkg-config, ca-certificates), copies setup scripts to /opt/benchmark/, executes repo_setup.sh to materialize /workspace from Apache Arrow commit 9986b7b, installs Miniconda at /opt/conda, then executes setup_runtime.sh to create the conda environment 'arrow-cpp' with all C++ dependencies. Verifier assets (eval.sh, test.patch, tests/) are correctly excluded from the image and will be runtime-mounted. Final WORKDIR is /workspace."
+}

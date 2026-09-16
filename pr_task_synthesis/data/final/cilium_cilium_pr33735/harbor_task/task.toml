@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "cilium_cilium_pr33735"
+description = "OpenEnv: cilium/cilium PR #33735"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/cilium/cilium.git"
+git_pr_id = "33735"
+git_base_commit = "7e9de944a06eca20a88abd8d072d751dd3b56447"
+task_id = "cilium_cilium_pr33735"
+repo_full_name = "cilium/cilium"
+domain = "DEVOPS_NETWORK_SERVICES"
+primary_language = "Go"
+runtime_family = "go"
+complexity = "hard"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

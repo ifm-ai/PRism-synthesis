@@ -1,0 +1,306 @@
+/tests/eval.sh: line 16: /root/.cargo/env: No such file or directory
+>>>>> Start Test Output
+    Updating crates.io index
+     Locking 267 packages to latest compatible versions
+      Adding bcs v0.1.6 (available: v0.2.1)
+      Adding bincode v1.3.3 (available: v3.0.0)
+      Adding criterion v0.5.1 (available: v0.8.2)
+      Adding crypto-common v0.1.6 (available: v0.1.7)
+      Adding derive_more v0.99.20 (available: v2.1.1)
+      Adding getrandom v0.2.17 (available: v0.4.3)
+      Adding hex-literal v0.4.1 (available: v1.1.0)
+      Adding proptest-derive v0.5.1 (available: v0.8.0)
+      Adding rand v0.8.6 (available: v0.10.1)
+      Adding winnow v0.6.26 (available: v1.0.3)
+ Downloading crates ...
+  Downloaded anes v0.1.6
+  Downloaded impl-codec v0.6.0
+  Downloaded plotters-svg v0.3.7
+  Downloaded alloy-rlp v0.3.15
+  Downloaded tap v1.0.1
+  Downloaded ark-serialize v0.4.2
+  Downloaded itoa v1.0.18
+  Downloaded plotters-backend v0.3.7
+  Downloaded clap_lex v1.1.0
+  Downloaded ark-ff-macros v0.5.0
+  Downloaded zeroize_derive v1.5.0
+  Downloaded base16ct v0.2.0
+  Downloaded cpufeatures v0.2.17
+  Downloaded rustc_version v0.4.1
+  Downloaded proc-macro-crate v3.5.0
+  Downloaded hex-literal v0.4.1
+  Downloaded fastrlp v0.4.0
+  Downloaded byte-slice-cast v1.2.3
+  Downloaded ark-ff-macros v0.3.0
+  Downloaded crunchy v0.2.4
+  Downloaded same-file v1.0.6
+  Downloaded num-integer v0.1.46
+  Downloaded funty v2.0.0
+  Downloaded ciborium-io v0.2.2
+  Downloaded ark-ff-asm v0.5.0
+  Downloaded primitive-types v0.12.2
+  Downloaded signature v2.2.0
+  Downloaded hex v0.4.3
+  Downloaded fnv v1.0.7
+  Downloaded rlp v0.5.2
+  Downloaded quick-error v1.2.3
+  Downloaded rfc6979 v0.4.0
+  Downloaded ark-ff-asm v0.3.0
+  Downloaded wait-timeout v0.2.1
+  Downloaded konst_macro_rules v0.2.19
+  Downloaded enum-ordinalize v4.3.2
+  Downloaded version_check v0.9.5
+  Downloaded subtle v2.6.1
+  Downloaded ruint-macro v1.2.1
+  Downloaded rand_chacha v0.3.1
+  Downloaded convert_case v0.4.0
+  Downloaded rustc-hex v2.1.0
+  Downloaded unicode-xid v0.2.6
+  Downloaded radium v0.7.0
+  Downloaded ciborium-ll v0.2.2
+  Downloaded cast v0.3.0
+  Downloaded rand_xorshift v0.4.0
+  Downloaded unarray v0.1.4
+  Downloaded cfg-if v1.0.4
+  Downloaded ark-ff-asm v0.4.2
+  Downloaded digest v0.9.0
+  Downloaded bit-set v0.8.0
+  Downloaded equivalent v1.0.2
+  Downloaded ark-serialize v0.5.0
+  Downloaded rustc_version v0.3.3
+  Downloaded paste v1.0.15
+  Downloaded anstyle v1.0.14
+  Downloaded zeroize v1.9.0
+  Downloaded wyz v0.5.1
+  Downloaded rustversion v1.0.22
+  Downloaded oorandom v11.1.5
+  Downloaded rand_core v0.6.4
+  Downloaded tinytemplate v1.2.1
+  Downloaded rand_core v0.9.5
+  Downloaded block-buffer v0.10.4
+  Downloaded ark-serialize v0.3.0
+  Downloaded thiserror-impl v1.0.69
+  Downloaded zmij v1.0.21
+  Downloaded semver-parser v0.10.3
+  Downloaded sha2 v0.10.9
+  Downloaded fixed-hash v0.8.0
+  Downloaded ppv-lite86 v0.2.21
+  Downloaded spki v0.7.3
+  Downloaded quote v1.0.45
+  Downloaded keccak-asm v0.1.8
+  Downloaded ark-ff-macros v0.4.2
+  Downloaded is-terminal v0.4.17
+  Downloaded fastrlp v0.3.1
+  Downloaded enum-ordinalize-derive v4.3.2
+  Downloaded rand_chacha v0.9.0
+  Downloaded thiserror v1.0.69
+  Downloaded valuable v0.1.1
+  Downloaded semver v0.11.0
+  Downloaded shlex v2.0.1
+  Downloaded parity-scale-codec-derive v3.7.5
+  Downloaded errno v0.3.14
+  Downloaded walkdir v2.5.0
+  Downloaded static_assertions v1.1.0
+  Downloaded crypto-common v0.1.6
+  Downloaded toml_datetime v1.1.1+spec-1.1.0
+  Downloaded uint v0.9.5
+  Downloaded pkcs8 v0.10.2
+  Downloaded group v0.13.0
+  Downloaded rusty-fork v0.3.1
+  Downloaded toml_parser v1.1.2+spec-1.1.0
+  Downloaded ark-std v0.4.0
+  Downloaded base64ct v1.8.3
+  Downloaded ucd-trie v0.1.7
+  Downloaded const_format_proc_macros v0.2.34
+  Downloaded num-traits v0.2.19
+  Downloaded semver v1.0.28
+  Downloaded sec1 v0.7.3
+  Downloaded generic-array v0.14.9
+  Downloaded ark-ff v0.3.0
+  Downloaded either v1.16.0
+  Downloaded crossbeam-deque v0.8.6
+  Downloaded bincode v1.3.3
+  Downloaded bcs v0.1.6
+  Downloaded autocfg v1.5.1
+  Downloaded ark-std v0.5.0
+  Downloaded parity-scale-codec v3.7.5
+  Downloaded ff v0.13.1
+  Downloaded fastrand v2.4.1
+  Downloaded byteorder v1.5.0
+  Downloaded ark-std v0.3.0
+  Downloaded impl-trait-for-tuples v0.2.3
+  Downloaded bit-vec v0.8.0
+  Downloaded find-msvc-tools v0.1.9
+  Downloaded ecdsa v0.16.9
+  Downloaded criterion-plot v0.5.0
+  Downloaded const-hex v1.19.1
+  Downloaded digest v0.10.7
+  Downloaded arrayvec v0.7.7
+  Downloaded educe v0.6.0
+  Downloaded const-oid v0.9.6
+  Downloaded derivative v2.2.0
+  Downloaded auto_impl v1.3.0
+  Downloaded once_cell v1.21.4
+  Downloaded ciborium v0.2.2
+  Downloaded crossbeam-utils v0.8.21
+  Downloaded crossbeam-epoch v0.9.18
+  Downloaded hmac v0.12.1
+  Downloaded getrandom v0.2.17
+  Downloaded getrandom v0.3.4
+  Downloaded tempfile v3.27.0
+  Downloaded serde_derive v1.0.228
+  Downloaded serde_core v1.0.228
+  Downloaded tiny-keccak v2.0.2
+  Downloaded elliptic-curve v0.13.8
+  Downloaded ark-ff v0.5.0
+  Downloaded clap v4.6.1
+  Downloaded getrandom v0.4.3
+  Downloaded toml_edit v0.25.12+spec-1.1.0
+  Downloaded proc-macro2 v1.0.106
+  Downloaded konst v0.2.20
+  Downloaded bytes v1.12.0
+  Downloaded bitflags v2.13.0
+  Downloaded derive_more v0.99.20
+  Downloaded ark-ff v0.4.2
+  Downloaded half v2.7.1
+  Downloaded const_format v0.2.36
+  Downloaded cc v1.2.65
+  Downloaded crypto-bigint v0.5.5
+  Downloaded der v0.7.10
+  Downloaded unicode-ident v1.0.24
+  Downloaded k256 v0.13.4
+  Downloaded rayon-core v1.13.0
+  Downloaded itertools v0.10.5
+  Downloaded indexmap v2.14.0
+  Downloaded criterion v0.5.1
+  Downloaded rand v0.8.6
+  Downloaded itertools v0.13.0
+  Downloaded aho-corasick v1.1.4
+  Downloaded hashbrown v0.17.1
+  Downloaded clap_builder v4.6.0
+  Downloaded memchr v2.8.2
+  Downloaded rand v0.9.4
+  Downloaded bitvec v1.1.1
+  Downloaded serde v1.0.228
+  Downloaded zerocopy-derive v0.8.52
+  Downloaded typenum v1.20.1
+  Downloaded num-bigint v0.4.6
+  Downloaded pest v2.8.6
+  Downloaded libm v0.2.16
+  Downloaded plotters v0.3.7
+  Downloaded libc v0.2.186
+  Downloaded regex v1.12.4
+  Downloaded ruint v1.18.0
+  Downloaded serde_json v1.0.150
+  Downloaded rayon v1.12.0
+  Downloaded winnow v1.0.3
+  Downloaded proptest v1.11.0
+  Downloaded syn v1.0.109
+  Downloaded zerocopy v0.8.52
+  Downloaded linux-raw-sys v0.12.1
+  Downloaded syn v2.0.118
+  Downloaded regex-syntax v0.8.11
+  Downloaded sha3-asm v0.1.8
+  Downloaded rustix v1.1.4
+  Downloaded regex-automata v0.4.14
+   Compiling proc-macro2 v1.0.106
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.45
+   Compiling syn v2.0.118
+   Compiling serde_core v1.0.228
+   Compiling serde v1.0.228
+   Compiling serde_derive v1.0.228
+   Compiling crossbeam-utils v0.8.21
+   Compiling cfg-if v1.0.4
+   Compiling zerocopy v0.8.52
+   Compiling zerocopy-derive v0.8.52
+   Compiling zmij v1.0.21
+   Compiling autocfg v1.5.1
+   Compiling num-traits v0.2.19
+   Compiling crossbeam-epoch v0.9.18
+   Compiling either v1.16.0
+   Compiling serde_json v1.0.150
+   Compiling rayon-core v1.13.0
+   Compiling libc v0.2.186
+   Compiling itoa v1.0.18
+   Compiling crunchy v0.2.4
+   Compiling crossbeam-deque v0.8.6
+   Compiling half v2.7.1
+   Compiling plotters-backend v0.3.7
+   Compiling tiny-keccak v2.0.2
+   Compiling thiserror v1.0.69
+   Compiling memchr v2.8.2
+   Compiling ciborium-io v0.2.2
+   Compiling clap_lex v1.1.0
+   Compiling regex-syntax v0.8.11
+   Compiling anstyle v1.0.14
+   Compiling clap_builder v4.6.0
+   Compiling regex-automata v0.4.14
+   Compiling ciborium-ll v0.2.2
+   Compiling plotters-svg v0.3.7
+   Compiling itertools v0.10.5
+   Compiling thiserror-impl v1.0.69
+   Compiling ruint-macro v1.2.1
+   Compiling convert_case v0.4.0
+   Compiling same-file v1.0.6
+   Compiling cpufeatures v0.2.17
+   Compiling cast v0.3.0
+   Compiling criterion-plot v0.5.0
+   Compiling const-hex v1.19.1
+   Compiling walkdir v2.5.0
+   Compiling derive_more v0.99.20
+   Compiling ruint v1.18.0
+   Compiling is-terminal v0.4.17
+   Compiling rayon v1.12.0
+   Compiling plotters v0.3.7
+   Compiling tinytemplate v1.2.1
+   Compiling ciborium v0.2.2
+   Compiling regex v1.12.4
+   Compiling clap v4.6.1
+   Compiling bytes v1.12.0
+   Compiling oorandom v11.1.5
+   Compiling anes v0.1.6
+   Compiling once_cell v1.21.4
+   Compiling hex-literal v0.4.1
+   Compiling criterion v0.5.1
+   Compiling bcs v0.1.6
+   Compiling bincode v1.3.3
+   Compiling alloy-primitives v0.8.0 (/workspace/crates/primitives)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 39s
+     Running unittests src/lib.rs (target/debug/deps/alloy_primitives-53fb08afbe839a31)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 80 filtered out; finished in 0.00s
+
+     Running tests/test_signature_v_hex.rs (target/debug/deps/test_signature_v_hex-a99b6c62d3181bb4)
+
+running 3 tests
+test test_v28_serialization_is_hex ... 
+thread 'test_v28_serialization_is_hex' (1796) panicked at crates/primitives/tests/test_signature_v_hex.rs:95:5:
+v field should be hex-encoded as "0x1c" but got: {"r":"0x3d43270611ffb1a10fcab841e636e355a787151969b920cf10fef48d3a61aac3","s":"0x11336489e3050e3ec017079dfe16582ce3d167559bcaa8383b665b3fda4eb963","v":28}
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test test_v_roundtrip ... 
+thread 'test_v_roundtrip' (1797) panicked at crates/primitives/tests/test_signature_v_hex.rs:56:5:
+assertion `left == right` failed: Roundtrip should preserve hex-encoded v field
+  left: "{\"r\":\"0x3d43270611ffb1a10fcab841e636e355a787151969b920cf10fef48d3a61aac3\",\"s\":\"0x11336489e3050e3ec017079dfe16582ce3d167559bcaa8383b665b3fda4eb963\",\"v\":27}"
+ right: "{\"r\":\"0x3d43270611ffb1a10fcab841e636e355a787151969b920cf10fef48d3a61aac3\",\"s\":\"0x11336489e3050e3ec017079dfe16582ce3d167559bcaa8383b665b3fda4eb963\",\"v\":\"0x1b\"}"
+FAILED
+test test_v_serialization_is_hex ... 
+thread 'test_v_serialization_is_hex' (1798) panicked at crates/primitives/tests/test_signature_v_hex.rs:28:5:
+v field should be hex-encoded as "0x1b" but got: {"r":"0x3d43270611ffb1a10fcab841e636e355a787151969b920cf10fef48d3a61aac3","s":"0x11336489e3050e3ec017079dfe16582ce3d167559bcaa8383b665b3fda4eb963","v":27}
+FAILED
+
+failures:
+
+failures:
+    test_v28_serialization_is_hex
+    test_v_roundtrip
+    test_v_serialization_is_hex
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p alloy-primitives --test test_signature_v_hex`
+>>>>> End Test Output
+OPENENV_EXIT_CODE=101

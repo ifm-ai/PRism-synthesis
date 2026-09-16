@@ -1,0 +1,9 @@
+{
+  "status": "success",
+  "blocks_outer_progress": false,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "route_to": null,
+  "notes": "Build completed successfully. Prime gem fix verified: gem is installed and working. RSpec and Rails both functional in the built image. OCI archive exported."
+}

@@ -1,0 +1,31 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": "CI workflow (.github/workflows/ci.yml) runs on ubuntu-latest. All build and test commands are cross-platform npm scripts. WebGL/WebGPU targets are web standards. Karma tests use Chrome which runs on Linux with xvfb. No Windows-only or macOS-only constraints detected.",
+  "build_system": "Node.js project using npm as package manager. Build system uses rollup (rollup.config.mjs) with custom build.mjs wrapper. Commands: 'npm install' for dependencies, 'npm run build' for full build, 'npm run build:esm' for ES modules, 'npm run build:umd' for UMD bundle.",
+  "test_framework": "Dual test setup: (1) Mocha + Chai for Node-based unit tests in /test directory using test/fixtures.mjs, run via 'npm test'. (2) Karma + Mocha + Sinon for browser-based tests in /tests directory using karma.conf.cjs, run via 'npm run test:karma' with xvfb for headless Chrome.",
+  "key_files": [
+    "package.json",
+    "build.mjs",
+    "rollup.config.mjs",
+    "tsconfig.json",
+    "test/fixtures.mjs",
+    "tests/karma.conf.cjs",
+    "src/platform/graphics/shader-utils.js",
+    "src/scene/shader-lib/chunks/particle/vert/particle_cpu.js",
+    "src/scene/shader-lib/chunks/particle/vert/particle_init.js",
+    ".github/workflows/ci.yml"
+  ],
+  "high_value_files": [
+    "src/platform/graphics/shader-utils.js",
+    "src/scene/shader-lib/chunks/particle/vert/particle_cpu.js",
+    "src/scene/shader-lib/chunks/particle/vert/particle_init.js",
+    "package.json",
+    "build.mjs",
+    "tests/karma.conf.cjs",
+    "test/fixtures.mjs",
+    ".github/workflows/ci.yml"
+  ],
+  "notes": "Repository exploration complete. This is a cross-platform JavaScript/WebGL engine project. The fix/test path is fully runnable in a Linux x86-64 container. No platform incompatibility blocking synthesis."
+}

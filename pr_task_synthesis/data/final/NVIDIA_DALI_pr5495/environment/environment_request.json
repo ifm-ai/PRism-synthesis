@@ -1,0 +1,67 @@
+{
+  "base_image_candidate": "nvidia/cuda:12.0.1-devel-ubuntu22.04",
+  "system_packages": [
+    "cmake",
+    "build-essential",
+    "ninja-build",
+    "pkg-config",
+    "wget",
+    "ca-certificates",
+    "gnupg",
+    "lsb-release",
+    "python3-full",
+    "python3-venv",
+    "git",
+    "curl"
+  ],
+  "base_setup_commands": [
+    "apt-get update -qq",
+    "apt-get install -y -qq cmake build-essential ninja-build pkg-config wget ca-certificates gnupg lsb-release python3-full python3-venv git curl",
+    "wget -qO- https://apt.kitware.com/keys/kitware-archive-latest.asc | gpg --dearmor - > /usr/share/keyrings/kitware-archive-keyring.gpg",
+    "echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ jammy main' > /etc/apt/sources.list.d/kitware.list",
+    "apt-get update -qq",
+    "apt-get install -y -qq cmake"
+  ],
+  "setup_runtime_commands": [
+    "python3 -m venv /opt/benchmark/dali_venv",
+    "source /opt/benchmark/dali_venv/bin/activate",
+    "pip install --upgrade pip setuptools wheel",
+    "pip install pytest numpy",
+    "deactivate",
+    "mkdir -p /opt/cuda /usr/local/cuda"
+  ],
+  "activation_commands": [
+    "source /opt/benchmark/dali_venv/bin/activate",
+    "export CUDA_HOME=/usr/local/cuda",
+    "export PATH=$CUDA_HOME/bin:$PATH",
+    "export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH"
+  ],
+  "activation_command": "source /opt/benchmark/dali_venv/bin/activate && export CUDA_HOME=/usr/local/cuda && export PATH=$CUDA_HOME/bin:$PATH && export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH",
+  "activation_type": "venv",
+  "activation_validation_command": "bash -c 'source /opt/benchmark/dali_venv/bin/activate && python -c \"import pytest; print(\\\"pytest OK\\\")\"'",
+  "detected_test_command": "ctest --output-on-failure",
+  "runtime_smoke_command": "python -c \"import nvidia.dali as dali; print(dali.__version__)\"",
+  "runtime_profile": {
+    "ecosystem": "C++/Python",
+    "package_manager": "pip",
+    "env": "/opt/benchmark/dali_venv",
+    "env_name": "dali_venv",
+    "prepare_commands": [
+      "python3 -m venv /opt/benchmark/dali_venv",
+      "pip install --upgrade pip setuptools wheel",
+      "pip install pytest numpy"
+    ],
+    "activation_commands": [
+      "source /opt/benchmark/dali_venv/bin/activate"
+    ],
+    "base_deps_installed": ["cmake", "build-essential", "ninja-build", "python3-venv", "pytest", "numpy"],
+    "test_only_install_strategy": "Use pytest from venv; DALI tests require built DALI binaries",
+    "cache_dirs": [
+      "/opt/benchmark/dali_venv",
+      "/usr/local/cuda",
+      "/opt/cuda"
+    ],
+    "notes": "CUDA toolkit should be provided by base image (nvidia/cuda:12.0.1-devel-ubuntu22.04). DALI build requires CMake 3.18+ and CUDA toolkit. Tests use Google Test framework (C++) and pytest (Python)."
+  },
+  "notes": "NVIDIA DALI is a GPU-accelerated data loading library. The base image should include CUDA toolkit. This environment provides CMake 3.25+, Python 3.11 venv with pytest and numpy. The actual DALI build requires CUDA toolkit which should come from the nvidia/cuda base image. git and curl are included in system packages as they are available in the base Debian image."
+}

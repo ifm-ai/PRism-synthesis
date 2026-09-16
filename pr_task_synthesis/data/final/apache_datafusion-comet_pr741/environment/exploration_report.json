@@ -1,0 +1,85 @@
+{
+  "pr_summary": "Decimal128 arithmetic optimization - avoid unnecessary promotion to Decimal256 for operations that can safely remain in Decimal128. The fix adds precision/scale checks before promoting Decimal128 operations to Decimal256, and optimizes spark_decimal_div to use native i128 arithmetic when precision allows instead of BigInt.",
+  "runtime_family": "Rust",
+  "package_manager": "cargo",
+  "touched_files": [
+    "native/core/src/execution/datafusion/planner.rs",
+    "native/spark-expr/src/scalar_funcs.rs"
+  ],
+  "important_build_files": [
+    "/workspace/native/Cargo.toml",
+    "/workspace/native/core/Cargo.toml",
+    "/workspace/native/spark-expr/Cargo.toml",
+    "/workspace/pom.xml",
+    "/workspace/Makefile"
+  ],
+  "important_test_files": [
+    "/workspace/native/core/src/execution/datafusion/planner.rs (inline tests)",
+    "/workspace/native/spark-expr/src/cast.rs (inline tests)",
+    "/workspace/spark/src/test/scala/org/apache/comet/CometExpressionSuite.scala",
+    "/workspace/spark/src/test/scala/org/apache/comet/exec/CometExecSuite.scala",
+    "/workspace/spark/src/test/scala/org/apache/comet/exec/CometAggregateSuite.scala"
+  ],
+  "candidate_build_commands": [
+    "cd native && cargo build",
+    "make core",
+    "make"
+  ],
+  "candidate_test_commands": [
+    "cd native && cargo test",
+    "make test-rust",
+    "make test-jvm",
+    "make test",
+    "./mvnw test -Dsuites=\"org.apache.comet.CometExpressionSuite\""
+  ],
+  "candidate_smoke_commands": [
+    "cd native && cargo check",
+    "cd native && cargo fmt --all -- --check",
+    "cd native && cargo clippy --all-targets --workspace -- -D warnings"
+  ],
+  "candidate_activation_checks": [
+    "rustc --version",
+    "cargo --version",
+    "java -version",
+    "echo $JAVA_HOME"
+  ],
+  "environment_management": "Rust toolchain via rustup (rust-version = 1.75 minimum), JDK 8/11/17 for JVM side, Maven for Java/Scala build",
+  "special_system_dependencies": [
+    "protobuf-compiler (for protobuf message generation)",
+    "JDK 8/11/17",
+    "Rust 1.75+",
+    "Maven (mvnw wrapper included)"
+  ],
+  "high_value_files": [
+    "/workspace/native/core/src/execution/datafusion/planner.rs",
+    "/workspace/native/spark-expr/src/scalar_funcs.rs",
+    "/workspace/native/Cargo.toml",
+    "/workspace/.github/workflows/pr_build.yml",
+    "/workspace/.github/actions/rust-test/action.yaml",
+    "/workspace/.github/actions/setup-builder/action.yaml",
+    "/workspace/Makefile",
+    "/workspace/docs/source/contributor-guide/development.md"
+  ],
+  "patch_file_cues": [
+    "DECIMAL128_MAX_PRECISION constant from arrow_schema",
+    "Decimal128 arithmetic operations (Plus, Minus, Multiply, Modulo)",
+    "Precision and scale calculations (p1, s1, p2, s2)",
+    "spark_decimal_div function optimization",
+    "BigInt vs native i128 arithmetic decision based on precision bounds"
+  ],
+  "test_file_cues": [
+    "planner.rs has inline tests module at line 1829",
+    "scalar_funcs.rs has tests in sub-modules (hex.rs, unhex.rs)",
+    "CometExpressionSuite.scala for expression testing",
+    "CometExecSuite.scala for execution testing"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "CI runs on ubuntu-latest container with amd64/rust image",
+    "Linux shared library output (.so) in Makefile targets",
+    "Cross-compilation support for Linux x86_64 and aarch64",
+    "No Windows-specific dependencies or MSVC requirements",
+    "Project builds and tests successfully on Linux containers"
+  ],
+  "notes": "This is a multi-language project (Rust + Java/Scala) with Rust native code as a Spark accelerator. The fix.patch modifies Rust code for Decimal128 optimization. The project uses Cargo for Rust builds and Maven for JVM builds. Tests can run on Linux x86-64 containers. The Rust minimum version is 1.75. Key dependencies include Apache DataFusion, Arrow, and Parquet. The fix avoids unnecessary Decimal256 promotion when Decimal128 precision is sufficient."
+}

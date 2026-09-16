@@ -1,0 +1,70 @@
+{
+  "repo_url": "https://github.com/firezone/firezone.git",
+  "base_commit": "2bad4c617f90acb19a82afbc71390573905d421d",
+  "language": ["Rust", "Elixir"],
+  "build_system": "cargo",
+  "test_framework": "proptest",
+  "dependencies": [
+    "/workspace/rust/Cargo.toml",
+    "/workspace/rust/Cargo.lock",
+    "/workspace/rust/relay/Cargo.toml",
+    "/workspace/requirements.txt"
+  ],
+  "platform_constraint": "none",
+  "platform_constraint_evidence": [
+    "Rust project with cross-platform support",
+    "README.md states 'The Firezone Relay supports Linux only' but this is for runtime deployment, not build/test constraints",
+    "No Windows-only or macOS-only build targets in the touched files",
+    "Fix and test patches modify rust/relay/src/server.rs and rust/relay/tests/regression.rs which are standard Rust code",
+    "Cargo workspace builds on Linux x86-64 containers"
+  ],
+  "touched_files": [
+    "rust/relay/src/server.rs",
+    "rust/relay/tests/regression.rs"
+  ],
+  "important_build_files": [
+    "/workspace/rust/Cargo.toml",
+    "/workspace/rust/relay/Cargo.toml",
+    "/workspace/rust/rust-toolchain.toml",
+    "/workspace/Makefile"
+  ],
+  "important_test_files": [
+    "/workspace/rust/relay/tests/regression.rs"
+  ],
+  "candidate_build_commands": [
+    "cd /workspace/rust && cargo build --package firezone-relay",
+    "cd /workspace/rust && cargo build --release --bin firezone-relay"
+  ],
+  "candidate_test_commands": [
+    "cd /workspace/rust && cargo test --package firezone-relay --features proptest",
+    "cd /workspace/rust && cargo test --package firezone-relay --test regression --features proptest"
+  ],
+  "candidate_smoke_commands": [
+    "cd /workspace/rust/relay && ./run_smoke_test.sh"
+  ],
+  "candidate_activation_checks": [
+    "rustc --version",
+    "cargo --version"
+  ],
+  "environment_management": "cargo",
+  "special_system_dependencies": [
+    "Rust toolchain 1.75.0 (from rust-toolchain.toml)",
+    "Docker (for smoke tests with Redis)"
+  ],
+  "high_value_files": [
+    "/workspace/rust/relay/src/server.rs",
+    "/workspace/rust/relay/tests/regression.rs",
+    "/workspace/rust/relay/Cargo.toml",
+    "/workspace/rust/relay/README.md"
+  ],
+  "patch_file_cues": [
+    "rust/relay/src/server.rs: can_relay_to() method modified to support IPv6 addresses",
+    "rust/relay/tests/regression.rs: can_make_ipv6_allocation test renamed to ping_pong_ip6_relay with extended IPv6 channel binding tests"
+  ],
+  "test_file_cues": [
+    "regression.rs uses proptest for property-based testing",
+    "Test uses SocketAddrV6 for IPv6 addresses",
+    "Tests ChannelBind and ChannelData message handling for IPv6"
+  ],
+  "notes": "The fix extends the relay component to handle IPv6 addresses throughout the allocation and channel binding workflow. The can_relay_to method in server.rs was modified to check IP version compatibility. The test patch adds comprehensive IPv6 testing including ChannelBind requests and ChannelData message forwarding. The project is a Rust workspace with cargo as the package manager. Tests require the 'proptest' feature flag."
+}

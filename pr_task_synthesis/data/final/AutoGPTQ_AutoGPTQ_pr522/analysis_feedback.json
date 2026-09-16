@@ -1,0 +1,39 @@
+{
+  "verifier_alignment": {
+    "blocks_outer_progress": false,
+    "target_overlap": "high",
+    "patch_touched_files": [
+      "auto_gptq/modeling/_base.py",
+      "auto_gptq/modeling/_utils.py",
+      "auto_gptq/nn_modules/qlinear/qlinear_marlin.py",
+      "auto_gptq/utils/marlin_utils.py"
+    ],
+    "required_files_audit": {
+      "suggested_required_verifier_files": [
+        "eval.sh",
+        "test.patch",
+        "tests/test_marlin_utils.py"
+      ],
+      "audit_passed": true
+    },
+    "hacking_detected": false,
+    "hacking_evidence": null,
+    "status": "aligned",
+    "notes": "Tests correctly distinguish between buggy and fixed states. Buggy code fails with ModuleNotFoundError for marlin_utils and AttributeError for is_marlin_format field. Fixed code passes all tests."
+  },
+  "test_only_summary": {
+    "exit_code": 1,
+    "passed": 2,
+    "failed": 14,
+    "total": 16,
+    "primary_failure_mode": "ModuleNotFoundError for auto_gptq.utils.marlin_utils"
+  },
+  "test_with_fix_summary": {
+    "exit_code": 0,
+    "passed": 16,
+    "failed": 0,
+    "total": 16
+  },
+  "alignment_status": "aligned",
+  "recommendation": "proceed_to_dockerfile_builder"
+}

@@ -1,0 +1,18 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "base_image": "debian:bookworm",
+  "copied_artifacts": [
+    "setup_runtime.sh",
+    "repo_setup.sh"
+  ],
+  "uses_repo_setup_script": true,
+  "repo_materialization_mode": "repo_setup_script",
+  "container_build_plan_written": true,
+  "build_backend_target": "buildah",
+  "buildability_assessment": "buildable",
+  "blocking_risks": [],
+  "warnings": [],
+  "recommended_fixes": [],
+  "notes": "Dockerfile.final compiled from structured environment artifacts. Base image debian:bookworm with Go 1.19, OPA v0.55.0, and Regal v0.11.0. repo_setup.sh clones the legitify repository at commit 0cea8da09e19f93630ea00481774f7ae00f5c67a. setup_runtime.sh installs Go tools and downloads dependencies. eval.sh and test.patch are runtime-mounted verifier assets, not baked into the image. Image is ready for Buildah validation."
+}

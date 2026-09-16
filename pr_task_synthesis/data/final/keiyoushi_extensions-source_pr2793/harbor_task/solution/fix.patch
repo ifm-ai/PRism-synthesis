@@ -1,0 +1,27 @@
+diff --git a/src/en/voyceme/build.gradle b/src/en/voyceme/build.gradle
+index f30c9fb06..fea4ddfaa 100644
+--- a/src/en/voyceme/build.gradle
++++ b/src/en/voyceme/build.gradle
+@@ -1,7 +1,8 @@
+ ext {
+     extName = 'Voyce.Me'
+     extClass = '.VoyceMe'
+-    extVersionCode = 3
++    extVersionCode = 4
++    isNsfw = false
+ }
+ 
+ apply from: "$rootDir/common.gradle"
+diff --git a/src/en/voyceme/src/eu/kanade/tachiyomi/extension/en/voyceme/VoyceMe.kt b/src/en/voyceme/src/eu/kanade/tachiyomi/extension/en/voyceme/VoyceMe.kt
+index 0e5a30e2b..f1ea93b99 100644
+--- a/src/en/voyceme/src/eu/kanade/tachiyomi/extension/en/voyceme/VoyceMe.kt
++++ b/src/en/voyceme/src/eu/kanade/tachiyomi/extension/en/voyceme/VoyceMe.kt
+@@ -29,7 +29,7 @@ class VoyceMe : HttpSource() {
+ 
+     override val name = "VoyceMe"
+ 
+-    override val baseUrl = "http://voyce.me"
++    override val baseUrl = "https://www.voyce.me"
+ 
+     override val lang = "en"
+ 

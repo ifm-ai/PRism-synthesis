@@ -1,0 +1,19 @@
+>>>>> Start Test Output
+(node:22) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS tests/.openenv_hidden/batch_size_fix.test.js
+  batch_size calculation fix
+    addPastKeyValues with missing dims property
+      ✓ should handle decoder input without dims property (key test case) (2 ms)
+      ✓ should use dims[0] when decoder input has dims property (1 ms)
+      ✓ should fall back to attention_mask.dims when input_ids is missing
+      ✓ should default to batch_size=1 when decoderFeeds is empty (1 ms)
+      ✓ should handle input_ids without dims when attention_mask also lacks dims
+
+Test Suites: 1 passed, 1 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        0.444 s
+Ran all test suites matching .openenv_hidden/batch_size_fix.
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

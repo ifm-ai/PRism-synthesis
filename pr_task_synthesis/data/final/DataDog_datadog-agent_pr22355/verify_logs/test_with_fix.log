@@ -1,0 +1,55 @@
+>>>>> Start Test Output
+=== RUN   TestKnownImagesGetPreferredNameExists
+--- PASS: TestKnownImagesGetPreferredNameExists (0.00s)
+=== RUN   TestKnownImagesAddReferenceConsolidation
+--- PASS: TestKnownImagesAddReferenceConsolidation (0.00s)
+=== RUN   TestKnownImagesDeleteReference
+--- PASS: TestKnownImagesDeleteReference (0.00s)
+=== RUN   TestIsAnImageID
+=== RUN   TestIsAnImageID/valid_image_id
+=== RUN   TestIsAnImageID/valid_image_id_short
+=== RUN   TestIsAnImageID/repo_tag
+=== RUN   TestIsAnImageID/repo_digest
+=== RUN   TestIsAnImageID/empty
+=== RUN   TestIsAnImageID/random
+--- PASS: TestIsAnImageID (0.00s)
+    --- PASS: TestIsAnImageID/valid_image_id (0.00s)
+    --- PASS: TestIsAnImageID/valid_image_id_short (0.00s)
+    --- PASS: TestIsAnImageID/repo_tag (0.00s)
+    --- PASS: TestIsAnImageID/repo_digest (0.00s)
+    --- PASS: TestIsAnImageID/empty (0.00s)
+    --- PASS: TestIsAnImageID/random (0.00s)
+=== RUN   TestIsARepoDigest
+=== RUN   TestIsARepoDigest/valid_repo_digest
+=== RUN   TestIsARepoDigest/valid_repo_digest_docker
+=== RUN   TestIsARepoDigest/image_id
+=== RUN   TestIsARepoDigest/repo_tag
+=== RUN   TestIsARepoDigest/empty
+=== RUN   TestIsARepoDigest/random
+--- PASS: TestIsARepoDigest (0.00s)
+    --- PASS: TestIsARepoDigest/valid_repo_digest (0.00s)
+    --- PASS: TestIsARepoDigest/valid_repo_digest_docker (0.00s)
+    --- PASS: TestIsARepoDigest/image_id (0.00s)
+    --- PASS: TestIsARepoDigest/repo_tag (0.00s)
+    --- PASS: TestIsARepoDigest/empty (0.00s)
+    --- PASS: TestIsARepoDigest/random (0.00s)
+=== RUN   TestImageMetadataConsolidationLogic
+--- PASS: TestImageMetadataConsolidationLogic (0.00s)
+=== RUN   TestNameUpdateWhenMoreReadable
+=== RUN   TestNameUpdateWhenMoreReadable/keep_readable_existing_when_new_has_raw_sha
+=== RUN   TestNameUpdateWhenMoreReadable/update_to_readable_when_existing_has_sha
+=== RUN   TestNameUpdateWhenMoreReadable/keep_new_when_both_have_sha
+=== RUN   TestNameUpdateWhenMoreReadable/keep_new_repo_digest_when_existing_has_raw_sha
+=== RUN   TestNameUpdateWhenMoreReadable/keep_readable_when_new_has_repo_digest
+--- PASS: TestNameUpdateWhenMoreReadable (0.00s)
+    --- PASS: TestNameUpdateWhenMoreReadable/keep_readable_existing_when_new_has_raw_sha (0.00s)
+    --- PASS: TestNameUpdateWhenMoreReadable/update_to_readable_when_existing_has_sha (0.00s)
+    --- PASS: TestNameUpdateWhenMoreReadable/keep_new_when_both_have_sha (0.00s)
+    --- PASS: TestNameUpdateWhenMoreReadable/keep_new_repo_digest_when_existing_has_raw_sha (0.00s)
+    --- PASS: TestNameUpdateWhenMoreReadable/keep_readable_when_new_has_repo_digest (0.00s)
+=== RUN   TestKnownImagesReferenceReplacement
+--- PASS: TestKnownImagesReferenceReplacement (0.00s)
+PASS
+ok  	github.com/DataDog/datadog-agent/comp/core/workloadmeta/collectors/internal/containerd	0.022s
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

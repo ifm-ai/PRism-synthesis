@@ -1,0 +1,33 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": "Cargo.toml workspace.metadata.vendor-filter only lists Linux targets (aarch64-unknown-linux-gnu, i686-unknown-linux-gnu, powerpc64le-unknown-linux-gnu, s390x-unknown-linux-gnu, x86_64-unknown-linux-gnu). CI workflows run on ubuntu-latest. Dependencies include libsystemd and systemd-journal-logger (Linux systemd specific). Socket paths use Unix domain sockets (/run/bpfman-sock). Project uses eBPF which is Linux-specific.",
+  "language": "Rust",
+  "toolchain": "rustc/cargo (stable and nightly)",
+  "build_system": "cargo with xtask",
+  "key_files": [
+    "Cargo.toml",
+    "Cargo.lock",
+    "bpfman/Cargo.toml",
+    "bpfman-api/Cargo.toml",
+    "bpfman-api/src/bin/rpc/main.rs",
+    "bpfman-api/src/bin/rpc/serve.rs",
+    "bpfman/src/bin/cli/main.rs",
+    "bpfman/src/utils.rs",
+    "bpfman/src/lib.rs",
+    ".github/workflows/build.yml",
+    "xtask/Cargo.toml"
+  ],
+  "high_value_files": [
+    "Cargo.toml",
+    "bpfman-api/src/bin/rpc/main.rs",
+    "bpfman-api/src/bin/rpc/serve.rs",
+    "bpfman/src/bin/cli/main.rs",
+    "bpfman/src/utils.rs",
+    "bpfman/src/lib.rs",
+    ".github/workflows/build.yml",
+    "scripts/setup.sh"
+  ],
+  "notes": "Repository is a Rust workspace for bpfman (eBPF manager). Linux-only due to eBPF, systemd, and Unix socket dependencies. Fix adds socket directory creation and logging initialization to RPC and CLI binaries. No test.patch present - tests may need synthesis. Build requires clang, llvm, libbpf-dev, and other system deps."
+}

@@ -1,0 +1,17 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": "CI workflow runs primarily on ubuntu-latest; macOS tests commented out; Windows explicitly disabled. No Windows-only dependencies. Project is cross-platform Python.",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "high_value_files": [
+    "ravenpy/config/commands.py",
+    "ravenpy/config/base.py",
+    "ravenpy/config/rvs.py",
+    "ravenpy/ravenpy.py",
+    "pyproject.toml",
+    "tests/test_commands.py"
+  ],
+  "notes": "Repository exploration complete. RavenPy is a Python package for hydrological modeling. The fix changes CustomOutput from FlatCommand to LineCommand to fix output formatting. Tests can run on Linux with pytest. Required dependencies include GDAL and raven-hydro. Python 3.9+ required."
+}

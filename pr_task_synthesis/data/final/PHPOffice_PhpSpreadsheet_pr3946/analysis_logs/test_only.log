@@ -1,0 +1,22 @@
+>>>>> Start Test Output
+PHPUnit 9.6.17 by Sebastian Bergmann and contributors.
+
+E                                                                   1 / 1 (100%)
+
+Time: 00:00.034, Memory: 12.00 MB
+
+There was 1 error:
+
+1) PhpOffice\PhpSpreadsheetTests\Style\ConditionalFormatting\PR3946Test::testConditionalTextInitialized
+Error: Typed property PhpOffice\PhpSpreadsheet\Style\Conditional::$text must not be accessed before initialization
+
+/workspace/src/PhpSpreadsheet/Style/Conditional.php:179
+/workspace/src/PhpSpreadsheet/Writer/Xlsx/Worksheet.php:640
+/workspace/src/PhpSpreadsheet/Writer/Xlsx/Worksheet.php:852
+/workspace/src/PhpSpreadsheet/Writer/Xlsx/Worksheet.php:103
+/workspace/tests/PhpSpreadsheetTests/Style/ConditionalFormatting/PR3946Test.php:39
+
+ERRORS!
+Tests: 1, Assertions: 0, Errors: 1.
+>>>>> End Test Output
+OPENENV_EXIT_CODE=2

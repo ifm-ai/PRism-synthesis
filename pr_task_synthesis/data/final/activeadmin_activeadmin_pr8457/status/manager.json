@@ -1,0 +1,13 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "blocks_full_outer_turn": false,
+  "blocks_reason": null,
+  "repair_cycles_attempted": 0,
+  "workers_used": 3,
+  "iterations": 1,
+  "verifier_asset_mode": "test_patch_applied",
+  "build_backend": "buildah",
+  "container_build_status": "success",
+  "notes": "Remediation turn completed successfully. Fixed testWithFix failure (OPENENV_EXIT_CODE=1) caused by yard gem being excluded from bundle install. The docs.rake file requires yard at load time, causing LoadError before tests could run. openenv-eval-builder updated environment_request.json and setup_runtime.sh to include the docs group (removed 'docs' from exclusion list). openenv-test-analyst confirmed local preflight passes: testOnly exits with code 1 (expected failure on buggy code), testWithFix exits with code 0 (expected pass on fixed code). openenv-build-validator validated container build with updated runtime setup. OCI archive exported successfully."
+}

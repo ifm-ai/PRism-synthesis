@@ -1,0 +1,68 @@
+{
+  "base_image": "debian:bookworm",
+  "build_backend": "buildah",
+  "dockerfile_path": "/artifacts/environment/Dockerfile.final",
+  "build_context_files": [
+    "/artifacts/environment/setup_runtime.sh",
+    "/artifacts/environment/repo_setup.sh"
+  ],
+  "build_steps": [
+    {
+      "step": 1,
+      "action": "FROM",
+      "description": "Use debian:bookworm as base image"
+    },
+    {
+      "step": 2,
+      "action": "COPY",
+      "description": "Copy setup_runtime.sh to /opt/benchmark/setup_runtime.sh"
+    },
+    {
+      "step": 3,
+      "action": "COPY",
+      "description": "Copy repo_setup.sh to /opt/benchmark/repo_setup.sh"
+    },
+    {
+      "step": 4,
+      "action": "RUN",
+      "description": "Execute repo_setup.sh to materialize /workspace from git"
+    },
+    {
+      "step": 5,
+      "action": "RUN",
+      "description": "Execute setup_runtime.sh to install system packages and Python dependencies"
+    },
+    {
+      "step": 6,
+      "action": "WORKDIR",
+      "description": "Set working directory to /workspace"
+    }
+  ],
+  "system_packages": [
+    "cmake",
+    "ninja-build",
+    "gcc",
+    "g++",
+    "pkg-config",
+    "libpng-dev",
+    "libjpeg-dev",
+    "libfreetype6-dev",
+    "ruby-dev",
+    "git",
+    "curl",
+    "python3",
+    "python3-pip"
+  ],
+  "python_packages": [
+    "pypng",
+    "lz4"
+  ],
+  "runtime_assets": {
+    "repo_setup_script": "/opt/benchmark/repo_setup.sh",
+    "setup_runtime_script": "/opt/benchmark/setup_runtime.sh",
+    "workspace_path": "/workspace",
+    "eval_script_mount": "/artifacts/evaluation/eval.sh (runtime-mounted, not baked)"
+  },
+  "export_target": "/artifacts/environment/openenv_validation_oci.tar",
+  "notes": "eval.sh and tests/ are runtime-mounted verifier assets, not baked into the image"
+}

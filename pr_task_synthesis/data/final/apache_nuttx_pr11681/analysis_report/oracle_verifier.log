@@ -1,0 +1,109 @@
+WARNING: Skipping mount /etc/localtime [binds]: /etc/localtime doesn't exist in container
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.10.12, pytest-6.2.5, py-1.11.0, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /tests/tests
+plugins: json-0.4.0, ordering-0.6, repeat-0.9.1
+collecting ... collected 25 items
+
+../tests/tests/test_fix_verification.py::TestCoreBugFix::test_setbits_initialization FAILED [  4%]
+../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_adc_driver_exists PASSED [  8%]
+../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_gpio_driver_exists PASSED [ 12%]
+../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_pwm_driver_exists PASSED [ 16%]
+../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_qencoder_driver_exists FAILED [ 20%]
+../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_usb_driver_exists PASSED [ 24%]
+../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_defconfig_exists FAILED [ 28%]
+../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_adc_config FAILED [ 32%]
+../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_gpio_config FAILED [ 36%]
+../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_pwm_config FAILED [ 40%]
+../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_qencoder_config FAILED [ 44%]
+../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_usb_config FAILED [ 48%]
+../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_adc_init PASSED [ 52%]
+../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_gpio_init PASSED [ 56%]
+../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_pwm_init PASSED [ 60%]
+../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_qencoder_init FAILED [ 64%]
+../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_usb_init PASSED [ 68%]
+../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_adc PASSED [ 72%]
+../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_gpio PASSED [ 76%]
+../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_pwm PASSED [ 80%]
+../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_qencoder PASSED [ 84%]
+../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_usb PASSED [ 88%]
+../tests/tests/test_fix_verification.py::TestBoardHeaderUpdates::test_board_h_has_adc_definitions FAILED [ 92%]
+../tests/tests/test_fix_verification.py::TestBoardHeaderUpdates::test_board_h_has_tim_definitions FAILED [ 96%]
+../tests/tests/test_fix_verification.py::TestBoardHeaderUpdates::test_board_h_has_otg_definitions FAILED [100%]
+
+=================================== FAILURES ===================================
+__________________ TestCoreBugFix.test_setbits_initialization __________________
+/tests/tests/test_fix_verification.py:45: in test_setbits_initialization
+    assert match is not None, (
+E   AssertionError: Core bug fix not found: 'uint32_t setbits = 0;' initialization is missing in stm32_adc.c. This causes undefined behavior.
+E   assert None is not None
+________________ TestNewDriverFiles.test_qencoder_driver_exists ________________
+/tests/tests/test_fix_verification.py:109: in test_qencoder_driver_exists
+    assert "stm32_qencoder_initialize" in content
+E   AssertionError: assert 'stm32_qencoder_initialize' in '/****************************************************************************\n * boards/arm/stm32h7/nucleo-h745zi/sr...* Now we are initialized */\n\n      initialized = true;\n    }\n\n  return OK;\n#else\n  return -ENODEV;\n#endif\n}\n'
+_______________ TestPysimConfig.test_pysim_cm7_defconfig_exists ________________
+/tests/tests/test_fix_verification.py:136: in test_pysim_cm7_defconfig_exists
+    assert os.path.exists(defconfig), f"pysim_cm7 defconfig not found: {defconfig}"
+E   AssertionError: pysim_cm7 defconfig not found: /workspace/boards/arm/stm32h7/nucleo-h745zi/configs/pysim_cm7/defconfig
+E   assert False
+E    +  where False = <function exists at 0x7f5cc9659ea0>('/workspace/boards/arm/stm32h7/nucleo-h745zi/configs/pysim_cm7/defconfig')
+E    +    where <function exists at 0x7f5cc9659ea0> = <module 'posixpath' from '/usr/lib/python3.10/posixpath.py'>.exists
+E    +      where <module 'posixpath' from '/usr/lib/python3.10/posixpath.py'> = os.path
+________________ TestPysimConfig.test_pysim_cm7_has_adc_config _________________
+/tests/tests/test_fix_verification.py:144: in test_pysim_cm7_has_adc_config
+    with open(defconfig, "r") as f:
+E   FileNotFoundError: [Errno 2] No such file or directory: '/workspace/boards/arm/stm32h7/nucleo-h745zi/configs/pysim_cm7/defconfig'
+________________ TestPysimConfig.test_pysim_cm7_has_gpio_config ________________
+/tests/tests/test_fix_verification.py:156: in test_pysim_cm7_has_gpio_config
+    with open(defconfig, "r") as f:
+E   FileNotFoundError: [Errno 2] No such file or directory: '/workspace/boards/arm/stm32h7/nucleo-h745zi/configs/pysim_cm7/defconfig'
+________________ TestPysimConfig.test_pysim_cm7_has_pwm_config _________________
+/tests/tests/test_fix_verification.py:167: in test_pysim_cm7_has_pwm_config
+    with open(defconfig, "r") as f:
+E   FileNotFoundError: [Errno 2] No such file or directory: '/workspace/boards/arm/stm32h7/nucleo-h745zi/configs/pysim_cm7/defconfig'
+______________ TestPysimConfig.test_pysim_cm7_has_qencoder_config ______________
+/tests/tests/test_fix_verification.py:178: in test_pysim_cm7_has_qencoder_config
+    with open(defconfig, "r") as f:
+E   FileNotFoundError: [Errno 2] No such file or directory: '/workspace/boards/arm/stm32h7/nucleo-h745zi/configs/pysim_cm7/defconfig'
+________________ TestPysimConfig.test_pysim_cm7_has_usb_config _________________
+/tests/tests/test_fix_verification.py:189: in test_pysim_cm7_has_usb_config
+    with open(defconfig, "r") as f:
+E   FileNotFoundError: [Errno 2] No such file or directory: '/workspace/boards/arm/stm32h7/nucleo-h745zi/configs/pysim_cm7/defconfig'
+__________ TestBringupIntegration.test_bringup_includes_qencoder_init __________
+/tests/tests/test_fix_verification.py:241: in test_bringup_includes_qencoder_init
+    assert "stm32_qencoder_initialize" in content, "QEncoder init not called"
+E   AssertionError: QEncoder init not called
+E   assert 'stm32_qencoder_initialize' in '/****************************************************************************\n * boards/arm/stm32h7/nucleo-h745zi/sr...K)\n    {\n      syslog(LOG_INFO, "USB host initialized successfully\\n");\n    }\n#endif\n#endif\n\n  return OK;\n}\n'
+___________ TestBoardHeaderUpdates.test_board_h_has_adc_definitions ____________
+/tests/tests/test_fix_verification.py:331: in test_board_h_has_adc_definitions
+    assert "GPIO_ADC" in content, "ADC definitions missing from board.h"
+E   AssertionError: ADC definitions missing from board.h
+E   assert 'GPIO_ADC' in '/****************************************************************************\n * boards/arm/stm32h7/nucleo-h745zi/in..._cplusplus)\n}\n#endif\n\n#endif /* __ASSEMBLY__ */\n#endif /* __BOARDS_ARM_STM32H7_NUCLEO_H745ZI_INCLUDE_BOARD_H */\n'
+___________ TestBoardHeaderUpdates.test_board_h_has_tim_definitions ____________
+/tests/tests/test_fix_verification.py:342: in test_board_h_has_tim_definitions
+    assert "GPIO_TIM" in content, "TIM definitions missing from board.h"
+E   AssertionError: TIM definitions missing from board.h
+E   assert 'GPIO_TIM' in '/****************************************************************************\n * boards/arm/stm32h7/nucleo-h745zi/in..._cplusplus)\n}\n#endif\n\n#endif /* __ASSEMBLY__ */\n#endif /* __BOARDS_ARM_STM32H7_NUCLEO_H745ZI_INCLUDE_BOARD_H */\n'
+___________ TestBoardHeaderUpdates.test_board_h_has_otg_definitions ____________
+/tests/tests/test_fix_verification.py:353: in test_board_h_has_otg_definitions
+    assert "GPIO_OTGFS" in content, "OTGFS definitions missing from board.h"
+E   AssertionError: OTGFS definitions missing from board.h
+E   assert 'GPIO_OTGFS' in '/****************************************************************************\n * boards/arm/stm32h7/nucleo-h745zi/in..._cplusplus)\n}\n#endif\n\n#endif /* __ASSEMBLY__ */\n#endif /* __BOARDS_ARM_STM32H7_NUCLEO_H745ZI_INCLUDE_BOARD_H */\n'
+=========================== short test summary info ============================
+FAILED ../tests/tests/test_fix_verification.py::TestCoreBugFix::test_setbits_initialization
+FAILED ../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_qencoder_driver_exists
+FAILED ../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_defconfig_exists
+FAILED ../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_adc_config
+FAILED ../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_gpio_config
+FAILED ../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_pwm_config
+FAILED ../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_qencoder_config
+FAILED ../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_usb_config
+FAILED ../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_qencoder_init
+FAILED ../tests/tests/test_fix_verification.py::TestBoardHeaderUpdates::test_board_h_has_adc_definitions
+FAILED ../tests/tests/test_fix_verification.py::TestBoardHeaderUpdates::test_board_h_has_tim_definitions
+FAILED ../tests/tests/test_fix_verification.py::TestBoardHeaderUpdates::test_board_h_has_otg_definitions
+======================== 12 failed, 13 passed in 0.08s =========================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

@@ -1,0 +1,9 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "route_to": null,
+  "notes": "Build completed successfully. OCI archive exported to /artifacts/environment/openenv_validation_oci.tar (712MB). Warnings: Network timeouts during sdkmanager and Gradle wrapper operations - runtime network access may be required for full functionality."
+}

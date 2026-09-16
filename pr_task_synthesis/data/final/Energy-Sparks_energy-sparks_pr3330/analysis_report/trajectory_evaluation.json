@@ -1,0 +1,54 @@
+{
+  "schema_version": "2.0",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "scores": {
+    "environment_readiness": 4,
+    "dependency_completeness": 4,
+    "verifier_integrity": 4,
+    "instruction_verifier_alignment": 4,
+    "trajectory_progress_value": 4
+  },
+  "struggle_patterns": [
+    {
+      "pattern": "none",
+      "phase": "edit",
+      "evidence": "Solver successfully implemented parameter validation with validated_supply and validated_period methods, replaced send call with explicit supply_available? method, and added proper redirect on invalid parameters.",
+      "score_impacts": []
+    }
+  ],
+  "phase_signals": {
+    "tests_executed": false,
+    "first_meaningful_edit_made": true,
+    "touched_relevant_files": true,
+    "solver_time_budget_exhausted": false,
+    "oracle_verifier_executed": true,
+    "oracle_verifier_passed": true
+  },
+  "signal_strength": {
+    "solver_signal": "strong",
+    "oracle_signal": "strong"
+  },
+  "verifier_diagnosis": {
+    "verifier_coverage_class": "behavioral",
+    "solver_approach_valid": true,
+    "repair_priority": "none"
+  },
+  "needs_verifier_change": false,
+  "needs_instruction_change": false,
+  "instruction_tuning_advice": {
+    "priority": "none",
+    "missing_spec_type": "none",
+    "tuning_context": "The instruction clearly described the required behavioral changes and the solver implemented them correctly.",
+    "anti_contamination_constraints": []
+  },
+  "filter_label": "keep",
+  "summary": "The solver correctly localized the problem to app/controllers/schools/usage_controller.rb and implemented robust parameter validation with validated_supply and validated_period methods that return nil for invalid values. The oracle verifier passed (2 examples, 0 failures), confirming the solver's behavioral approach matches the test expectations for valid params returning 200 and invalid params triggering redirect.",
+  "evidence": [
+    "Solver edited app/controllers/schools/usage_controller.rb with validated_supply, validated_period, and supply_available? methods",
+    "Solver replaced 'return unless @supply && @period' with 'return redirect_to school_path(@school) unless @supply && @period' to ensure HTTP 302 on invalid params",
+    "Solver removed the old get_period method that raised exceptions",
+    "Oracle verifier executed bundle exec rspec spec/controllers/schools/usage_controller_spec.rb with exit code 0",
+    "Oracle log shows '2 examples, 0 failures' confirming tests passed"
+  ]
+}

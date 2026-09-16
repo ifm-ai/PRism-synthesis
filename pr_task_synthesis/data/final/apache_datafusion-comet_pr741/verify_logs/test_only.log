@@ -1,0 +1,280 @@
+/tests/eval.sh: line 15: /opt/cargo/env: No such file or directory
+>>>>> Start Test Output
+   Compiling cfg-if v1.0.0
+   Compiling libc v0.2.155
+   Compiling num-traits v0.2.19
+   Compiling libm v0.2.8
+   Compiling regex-syntax v0.8.4
+   Compiling getrandom v0.2.15
+   Compiling aho-corasick v1.1.3
+   Compiling regex-automata v0.4.7
+   Compiling siphasher v0.3.11
+   Compiling once_cell v1.19.0
+   Compiling regex v1.10.5
+   Compiling bitflags v2.6.0
+   Compiling phf_shared v0.11.2
+   Compiling ahash v0.8.11
+   Compiling zerocopy v0.7.35
+   Compiling bytes v1.6.1
+   Compiling phf_generator v0.11.2
+   Compiling allocator-api2 v0.2.18
+   Compiling memchr v2.7.4
+   Compiling hashbrown v0.14.5
+   Compiling phf_codegen v0.11.2
+   Compiling phf v0.11.2
+   Compiling parse-zoneinfo v0.3.1
+   Compiling num-integer v0.1.46
+   Compiling serde v1.0.204
+   Compiling half v2.4.1
+   Compiling iana-time-zone v0.1.60
+   Compiling chrono v0.4.38
+   Compiling num-bigint v0.4.6
+   Compiling num-rational v0.4.2
+   Compiling num-iter v0.1.45
+   Compiling num-complex v0.4.6
+   Compiling num v0.4.3
+   Compiling chrono-tz-build v0.3.0
+   Compiling equivalent v1.0.1
+   Compiling static_assertions v1.1.0
+   Compiling chrono-tz v0.9.0
+   Compiling arrow-buffer v52.2.0
+   Compiling arrow-schema v52.2.0
+   Compiling itoa v1.0.11
+   Compiling arrow-data v52.2.0
+   Compiling ryu v1.0.18
+   Compiling jobserver v0.1.31
+   Compiling arrow-array v52.2.0
+   Compiling lexical-util v0.8.5
+   Compiling cc v1.1.6
+   Compiling either v1.13.0
+   Compiling lazy_static v1.5.0
+   Compiling lexical-parse-integer v0.8.6
+   Compiling lexical-write-integer v0.8.5
+   Compiling arrow-select v52.2.0
+   Compiling indexmap v2.2.6
+   Compiling pin-project-lite v0.2.14
+   Compiling lexical-write-float v0.8.5
+   Compiling lexical-parse-float v0.8.5
+   Compiling strum v0.26.3
+   Compiling smallvec v1.13.2
+   Compiling unicode-width v0.1.13
+   Compiling scopeguard v1.2.0
+   Compiling linux-raw-sys v0.4.14
+   Compiling rustix v0.38.34
+   Compiling lock_api v0.4.12
+   Compiling comfy-table v7.1.1
+   Compiling parking_lot_core v0.9.10
+   Compiling lexical-core v0.8.5
+   Compiling serde_json v1.0.120
+   Compiling log v0.4.22
+   Compiling atoi v2.0.0
+   Compiling base64 v0.22.1
+   Compiling futures-sink v0.3.30
+   Compiling tinyvec_macros v0.1.1
+   Compiling futures-core v0.3.30
+   Compiling bitflags v1.3.2
+   Compiling futures-channel v0.3.30
+   Compiling tinyvec v1.8.0
+   Compiling arrow-cast v52.2.0
+   Compiling slab v0.4.9
+   Compiling twox-hash v1.6.3
+   Compiling pin-utils v0.1.0
+   Compiling futures-io v0.3.30
+   Compiling futures-task v0.3.30
+   Compiling futures-util v0.3.30
+   Compiling unicode-normalization v0.1.23
+   Compiling parking_lot v0.12.3
+   Compiling csv-core v0.1.11
+   Compiling num_cpus v1.16.0
+   Compiling same-file v1.0.6
+   Compiling percent-encoding v2.3.1
+   Compiling unicode-bidi v0.3.15
+   Compiling idna v0.5.0
+   Compiling form_urlencoded v1.2.1
+   Compiling walkdir v2.5.0
+   Compiling tokio v1.38.1
+   Compiling csv v1.3.0
+   Compiling flatbuffers v24.3.25
+   Compiling doc-comment v0.3.3
+   Compiling crossbeam-utils v0.8.20
+   Compiling futures-executor v0.3.30
+   Compiling lz4_flex v0.11.3
+   Compiling tracing-core v0.1.32
+   Compiling humantime v2.1.0
+   Compiling fastrand v2.1.0
+   Compiling tempfile v3.10.1
+   Compiling tracing v0.1.40
+   Compiling arrow-ipc v52.2.0
+   Compiling futures v0.3.30
+   Compiling snafu v0.7.5
+   Compiling arrow-csv v52.2.0
+   Compiling url v2.5.2
+   Compiling arrow-string v52.2.0
+   Compiling arrow-json v52.2.0
+   Compiling arrow-ord v52.2.0
+   Compiling itertools v0.13.0
+   Compiling arrow-arith v52.2.0
+   Compiling arrow-row v52.2.0
+   Compiling sqlparser v0.49.0
+   Compiling object_store v0.10.2
+   Compiling arrow v52.2.0
+   Compiling rand_core v0.6.4
+   Compiling ppv-lite86 v0.2.17
+   Compiling rand_chacha v0.3.1
+   Compiling datafusion-common v40.0.0 (https://github.com/apache/datafusion.git?rev=35c2e7e#35c2e7e7)
+   Compiling fixedbitset v0.4.2
+   Compiling datafusion-expr v40.0.0 (https://github.com/apache/datafusion.git?rev=35c2e7e#35c2e7e7)
+   Compiling rand v0.8.5
+   Compiling typenum v1.17.0
+   Compiling anyhow v1.0.86
+   Compiling dashmap v6.0.1
+   Compiling datafusion-execution v40.0.0 (https://github.com/apache/datafusion.git?rev=35c2e7e#35c2e7e7)
+   Compiling generic-array v0.14.7
+   Compiling datafusion-physical-expr-common v40.0.0 (https://github.com/apache/datafusion.git?rev=35c2e7e#35c2e7e7)
+   Compiling itertools v0.12.1
+   Compiling unicode-segmentation v1.11.0
+   Compiling hex v0.4.3
+   Compiling crypto-common v0.1.6
+   Compiling block-buffer v0.10.4
+   Compiling petgraph v0.6.5
+   Compiling itertools v0.10.5
+   Compiling uuid v1.10.0
+   Compiling subtle v2.6.1
+   Compiling arrayvec v0.7.4
+   Compiling digest v0.10.7
+   Compiling which v4.4.2
+   Compiling prost-derive v0.9.0
+   Compiling datafusion-physical-expr v40.0.0 (https://github.com/apache/datafusion.git?rev=35c2e7e#35c2e7e7)
+   Compiling prost v0.9.0
+   Compiling zstd-sys v2.0.12+zstd.1.5.6
+   Compiling prost-build v0.9.0
+   Compiling datafusion-functions-aggregate v40.0.0 (https://github.com/apache/datafusion.git?rev=35c2e7e#35c2e7e7)
+   Compiling datafusion-common-runtime v40.0.0 (https://github.com/apache/datafusion.git?rev=35c2e7e#35c2e7e7)
+   Compiling blake3 v1.5.3
+   Compiling thiserror v1.0.63
+   Compiling datafusion-physical-plan v40.0.0 (https://github.com/apache/datafusion.git?rev=35c2e7e#35c2e7e7)
+   Compiling prost-types v0.9.0
+   Compiling heck v0.3.3
+   Compiling chrono-tz-build v0.2.1
+   Compiling ordered-float v2.10.1
+   Compiling arrayref v0.3.8
+   Compiling glob v0.3.1
+   Compiling cpufeatures v0.2.12
+   Compiling adler v1.0.2
+   Compiling constant_time_eq v0.3.0
+   Compiling miniz_oxide v0.7.4
+   Compiling sha2 v0.10.8
+   Compiling chrono-tz v0.8.6
+   Compiling blake2 v0.10.6
+   Compiling md-5 v0.10.6
+   Compiling crossbeam-epoch v0.9.18
+   Compiling lz4-sys v1.10.0
+   Compiling rayon-core v1.12.1
+   Compiling alloc-no-stdlib v2.0.4
+   Compiling destructure_traitobject v0.2.0
+   Compiling cpp_demangle v0.4.3
+   Compiling zstd-safe v5.0.2+zstd.1.5.2
+   Compiling unsafe-any-ors v1.0.0
+   Compiling alloc-stdlib v0.2.2
+   Compiling crossbeam-deque v0.8.5
+   Compiling prost-derive v0.12.6
+   Compiling datafusion-functions v40.0.0 (https://github.com/apache/datafusion.git?rev=35c2e7e#35c2e7e7)
+   Compiling datafusion-comet-proto v0.2.0 (/workspace/native/proto)
+   Compiling datafusion-physical-optimizer v40.0.0 (https://github.com/apache/datafusion.git?rev=35c2e7e#35c2e7e7)
+   Compiling datafusion-catalog v40.0.0 (https://github.com/apache/datafusion.git?rev=35c2e7e#35c2e7e7)
+   Compiling datafusion-optimizer v40.0.0 (https://github.com/apache/datafusion.git?rev=35c2e7e#35c2e7e7)
+   Compiling debugid v0.8.0
+   Compiling datafusion-sql v40.0.0 (https://github.com/apache/datafusion.git?rev=35c2e7e#35c2e7e7)
+   Compiling findshlibs v0.10.2
+   Compiling backtrace v0.3.73
+   Compiling is-terminal v0.4.12
+   Compiling memmap2 v0.9.4
+   Compiling gimli v0.29.0
+   Compiling symbolic-demangle v12.9.2
+   Compiling stable_deref_trait v1.2.0
+   Compiling clap_lex v0.7.1
+   Compiling bytemuck v1.16.1
+   Compiling unsafe-libyaml v0.2.11
+   Compiling rustc-demangle v0.1.24
+   Compiling integer-encoding v3.0.4
+   Compiling ciborium-io v0.2.2
+   Compiling anstyle v1.0.7
+   Compiling byteorder v1.5.0
+   Compiling plotters-backend v0.3.6
+   Compiling plotters-svg v0.3.6
+   Compiling thrift v0.17.0
+   Compiling clap_builder v4.5.9
+   Compiling ciborium-ll v0.2.2
+   Compiling serde_yaml v0.9.34+deprecated
+   Compiling rgb v0.8.45
+   Compiling symbolic-common v12.9.2
+   Compiling addr2line v0.22.0
+   Compiling datafusion v40.0.0 (https://github.com/apache/datafusion.git?rev=35c2e7e#35c2e7e7)
+   Compiling prost v0.12.6
+   Compiling brotli-decompressor v2.5.1
+   Compiling typemap-ors v1.0.0
+   Compiling java-locator v0.1.7
+   Compiling serde-value v0.7.0
+   Compiling num-format v0.4.4
+   Compiling object v0.36.1
+   Compiling quick-xml v0.26.0
+   Compiling combine v4.6.7
+   Compiling thread-id v4.2.2
+   Compiling crc32fast v1.4.2
+   Compiling libloading v0.7.4
+   Compiling cast v0.3.0
+   Compiling log-mdc v0.1.0
+   Compiling pprof v0.13.0
+   Compiling arc-swap v1.7.1
+   Compiling jni-sys v0.3.0
+   Compiling fnv v1.0.7
+   Compiling cesu8 v1.1.0
+   Compiling str_stack v0.1.0
+   Compiling inferno v0.11.20
+   Compiling jni v0.21.1
+   Compiling parquet v52.0.0 (https://github.com/apache/arrow-rs.git?rev=0a4d8a1#0a4d8a14)
+   Compiling log4rs v1.3.0
+   Compiling criterion-plot v0.5.0
+   Compiling flate2 v1.0.30
+   Compiling brotli v3.5.0
+   Compiling lz4 v1.26.0
+   Compiling rayon v1.10.0
+   Compiling datafusion-comet-spark-expr v0.2.0 (/workspace/native/spark-expr)
+   Compiling zstd v0.11.2+zstd.1.5.2
+   Compiling snap v1.1.1
+   Compiling ciborium v0.2.2
+   Compiling clap v4.5.9
+   Compiling plotters v0.3.6
+   Compiling nix v0.26.4
+   Compiling tinytemplate v1.2.1
+   Compiling itertools v0.11.0
+   Compiling simd-adler32 v0.3.7
+   Compiling oorandom v11.1.4
+   Compiling anes v0.1.6
+   Compiling criterion v0.5.1
+   Compiling datafusion-comet v0.2.0 (/workspace/native/core)
+   Compiling assertables v7.0.1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4m 24s
+     Running tests/decimal_promotion_check.rs (target/debug/deps/decimal_promotion_check-77222a8a988fff37)
+
+running 1 test
+test test_low_precision_decimal_addition_no_unnecessary_decimal256_promotion ... FAILED
+
+failures:
+
+---- test_low_precision_decimal_addition_no_unnecessary_decimal256_promotion stdout ----
+thread 'test_low_precision_decimal_addition_no_unnecessary_decimal256_promotion' panicked at core/tests/decimal_promotion_check.rs:167:5:
+assertion `left == right` failed: BUG DETECTED: Low-precision Decimal128(10,2) + Decimal128(10,2) created 2 unnecessary Decimal256 cast(s). Boundary value 10 is less than DECIMAL128_MAX_PRECISION (38), so the optimization should keep operations in Decimal128 without promotion to Decimal256. This indicates the buggy code path that always promotes to Decimal256.
+  left: 2
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    test_low_precision_decimal_addition_no_unnecessary_decimal256_promotion
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p datafusion-comet --test decimal_promotion_check`
+>>>>> End Test Output
+OPENENV_EXIT_CODE=101

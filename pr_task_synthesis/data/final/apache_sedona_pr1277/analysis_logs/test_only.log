@@ -1,0 +1,72 @@
+Looking in indexes: http://mirror.proxy.hpc:8081/repository/pypi-proxy/simple/
+Requirement already satisfied: pyspark in ./python/.venv/lib/python3.11/site-packages (4.1.2)
+Requirement already satisfied: py4j<0.10.9.10,>=0.10.9.7 in ./python/.venv/lib/python3.11/site-packages (from pyspark) (0.10.9.9)
+Looking in indexes: http://mirror.proxy.hpc:8081/repository/pypi-proxy/simple/
+Obtaining file:///workspace/python
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: apache-sedona
+  Building editable for apache-sedona (pyproject.toml): started
+  Building editable for apache-sedona (pyproject.toml): finished with status 'done'
+  Created wheel for apache-sedona: filename=apache_sedona-1.5.1-0.editable-cp311-cp311-linux_x86_64.whl size=3478 sha256=51c9cf38aa7adf23690264387550a37e0c15781c015369e61e021f7a55e64ab8
+  Stored in directory: /tmp/pip-ephem-wheel-cache-5nsgk52h/wheels/3d/23/b0/6aa2e6700286497d1d65222efb6505e8b4d33282d4b2346fd0
+Successfully built apache-sedona
+Installing collected packages: apache-sedona
+  Attempting uninstall: apache-sedona
+    Found existing installation: apache-sedona 1.5.1
+    Uninstalling apache-sedona-1.5.1:
+      Successfully uninstalled apache-sedona-1.5.1
+Successfully installed apache-sedona-1.5.1
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.0, pluggy-1.6.0 -- /workspace/python/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /artifacts/evaluation/tests
+collecting ... collected 3 items
+
+../artifacts/evaluation/tests/test_st_s2_to_geom_quick.py::test_st_s2_to_geom_import FAILED [ 33%]
+../artifacts/evaluation/tests/test_st_s2_to_geom_quick.py::test_st_s2_to_geom_in_exports FAILED [ 66%]
+../artifacts/evaluation/tests/test_st_s2_to_geom_quick.py::test_st_s2_to_geom_signature FAILED [100%]
+
+=================================== FAILURES ===================================
+__________________________ test_st_s2_to_geom_import ___________________________
+
+    def test_st_s2_to_geom_import():
+        """Test that ST_S2ToGeom can be imported from sedona.sql.st_functions."""
+>       from sedona.sql.st_functions import ST_S2ToGeom
+E       ImportError: cannot import name 'ST_S2ToGeom' from 'sedona.sql.st_functions' (/workspace/python/sedona/sql/st_functions.py)
+
+/artifacts/evaluation/tests/test_st_s2_to_geom_quick.py:29: ImportError
+________________________ test_st_s2_to_geom_in_exports _________________________
+
+    def test_st_s2_to_geom_in_exports():
+        """Test that ST_S2ToGeom is in the module's __all__ exports."""
+        from sedona.sql import st_functions
+>       assert "ST_S2ToGeom" in st_functions.__all__, "ST_S2ToGeom should be in __all__"
+E       AssertionError: ST_S2ToGeom should be in __all__
+E       assert 'ST_S2ToGeom' in ['GeometryType', 'ST_3DDistance', 'ST_AddPoint', 'ST_Area', 'ST_AreaSpheroid', 'ST_AsBinary', ...]
+E        +  where ['GeometryType', 'ST_3DDistance', 'ST_AddPoint', 'ST_Area', 'ST_AreaSpheroid', 'ST_AsBinary', ...] = <module 'sedona.sql.st_functions' from '/workspace/python/sedona/sql/st_functions.py'>.__all__
+
+/artifacts/evaluation/tests/test_st_s2_to_geom_quick.py:37: AssertionError
+_________________________ test_st_s2_to_geom_signature _________________________
+
+    def test_st_s2_to_geom_signature():
+        """Test that ST_S2ToGeom has the expected function signature."""
+>       from sedona.sql.st_functions import ST_S2ToGeom
+E       ImportError: cannot import name 'ST_S2ToGeom' from 'sedona.sql.st_functions' (/workspace/python/sedona/sql/st_functions.py)
+
+/artifacts/evaluation/tests/test_st_s2_to_geom_quick.py:42: ImportError
+=========================== short test summary info ============================
+FAILED ../artifacts/evaluation/tests/test_st_s2_to_geom_quick.py::test_st_s2_to_geom_import
+FAILED ../artifacts/evaluation/tests/test_st_s2_to_geom_quick.py::test_st_s2_to_geom_in_exports
+FAILED ../artifacts/evaluation/tests/test_st_s2_to_geom_quick.py::test_st_s2_to_geom_signature
+============================== 3 failed in 0.54s ===============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1
+EXIT_CODE=1

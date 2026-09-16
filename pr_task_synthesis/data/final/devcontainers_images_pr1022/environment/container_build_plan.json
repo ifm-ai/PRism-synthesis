@@ -1,0 +1,95 @@
+{
+  "build_plan_version": "1.0",
+  "base_image": "continuumio/anaconda3:latest",
+  "platform": "linux/amd64",
+  "build_context": {
+    "source_directory": "/artifacts/environment",
+    "required_files": [
+      "setup_runtime.sh",
+      "repo_setup.sh"
+    ]
+  },
+  "system_packages": [
+    "git",
+    "curl",
+    "bzip2",
+    "ca-certificates",
+    "libglib2.0-0",
+    "libsm6",
+    "libxcomposite1",
+    "libxcursor1",
+    "libxdamage1",
+    "libxext6",
+    "libxfixes3",
+    "libxi6",
+    "libxinerama1",
+    "libxrandr2",
+    "libxrender1",
+    "mercurial",
+    "openssh-client",
+    "procps",
+    "subversion",
+    "wget"
+  ],
+  "build_steps": [
+    {
+      "step": 1,
+      "type": "FROM",
+      "description": "Base Anaconda image (Debian Bullseye)"
+    },
+    {
+      "step": 2,
+      "type": "RUN",
+      "description": "Install system packages via apt-get"
+    },
+    {
+      "step": 3,
+      "type": "RUN",
+      "description": "Create /opt/benchmark directory"
+    },
+    {
+      "step": 4,
+      "type": "COPY",
+      "description": "Copy setup_runtime.sh to /opt/benchmark/"
+    },
+    {
+      "step": 5,
+      "type": "COPY",
+      "description": "Copy repo_setup.sh to /opt/benchmark/"
+    },
+    {
+      "step": 6,
+      "type": "RUN",
+      "description": "Execute repo_setup.sh to materialize /workspace"
+    },
+    {
+      "step": 7,
+      "type": "RUN",
+      "description": "Execute setup_runtime.sh to create conda environment"
+    },
+    {
+      "step": 8,
+      "type": "WORKDIR",
+      "description": "Set working directory to /workspace"
+    }
+  ],
+  "runtime_environment": {
+    "type": "conda",
+    "environment_name": "benchmark",
+    "python_version": "3.11",
+    "key_packages": [
+      "Pillow==10.3.0",
+      "pytest"
+    ],
+    "activation_command": "source /opt/conda/etc/profile.d/conda.sh && conda activate benchmark"
+  },
+  "repo_materialization": {
+    "method": "repo_setup.sh",
+    "target_directory": "/workspace",
+    "repository": "devcontainers/images",
+    "commit": "3dd6643d76efedbe1915456bc48421cc6e559299"
+  },
+  "build_backend": "buildah",
+  "output_artifact": "/artifacts/environment/openenv_validation_oci.tar",
+  "notes": "Dockerfile.final is the authoritative packaging spec. eval.sh and tests/ are runtime-mounted verifier assets, not baked into the image."
+}

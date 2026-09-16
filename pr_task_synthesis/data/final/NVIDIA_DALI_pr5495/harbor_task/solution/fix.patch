@@ -1,0 +1,525 @@
+diff --git a/dali/pipeline/executor/async_separated_pipelined_executor.cc b/dali/pipeline/executor/async_separated_pipelined_executor.cc
+index 27e48d1e..47888e42 100644
+--- a/dali/pipeline/executor/async_separated_pipelined_executor.cc
++++ b/dali/pipeline/executor/async_separated_pipelined_executor.cc
+@@ -44,7 +44,7 @@ void AsyncSeparatedPipelinedExecutor::Prefetch() {
+   }
+ }
+ 
+-int AsyncSeparatedPipelinedExecutor::InputFeedCount(const std::string &op_name) {
++int AsyncSeparatedPipelinedExecutor::InputFeedCount(std::string_view op_name) {
+   (void)graph_->Node(op_name);
+   return queue_sizes_.cpu_size + queue_sizes_.gpu_size;
+ }
+diff --git a/dali/pipeline/executor/async_separated_pipelined_executor.h b/dali/pipeline/executor/async_separated_pipelined_executor.h
+index 935a835b..b8471cd0 100644
+--- a/dali/pipeline/executor/async_separated_pipelined_executor.h
++++ b/dali/pipeline/executor/async_separated_pipelined_executor.h
+@@ -1,4 +1,4 @@
+-// Copyright (c) 2019-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
++// Copyright (c) 2019-2024, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ //
+ // Licensed under the Apache License, Version 2.0 (the "License");
+ // you may not use this file except in compliance with the License.
+@@ -91,7 +91,7 @@ class DLL_PUBLIC AsyncSeparatedPipelinedExecutor : public SeparatedPipelinedExec
+     }
+   }
+ 
+-  DLL_PUBLIC int InputFeedCount(const std::string &op_name) override;
++  DLL_PUBLIC int InputFeedCount(std::string_view op_name) override;
+ 
+  protected:
+   DLL_PUBLIC void Prefetch() override;
+diff --git a/dali/pipeline/executor/executor.h b/dali/pipeline/executor/executor.h
+index f0fd10ed..4d68db63 100644
+--- a/dali/pipeline/executor/executor.h
++++ b/dali/pipeline/executor/executor.h
+@@ -22,9 +22,12 @@
+ #include "dali/core/common.h"
+ #include "dali/pipeline/workspace/workspace.h"
+ #include "dali/pipeline/operator/checkpointing/checkpoint.h"
++#include "dali/pipeline/graph/op_graph2.h"
+ 
+ namespace dali {
+ 
++class OperatorBase;
++
+ struct DLL_PUBLIC ExecutorMeta {
+   size_t real_size;
+   size_t max_real_size;
+@@ -50,7 +53,8 @@ class DLL_PUBLIC ExecutorBase {
+   DLL_PUBLIC virtual void Shutdown() = 0;
+   DLL_PUBLIC virtual Checkpoint& GetCurrentCheckpoint() = 0;
+   DLL_PUBLIC virtual void RestoreStateFromCheckpoint(const Checkpoint &cpt) = 0;
+-  DLL_PUBLIC virtual int InputFeedCount(const std::string &input_name) = 0;
++  DLL_PUBLIC virtual int InputFeedCount(std::string_view input_name) = 0;
++  DLL_PUBLIC virtual OperatorBase *GetOperator(std::string_view name) = 0;
+ 
+  protected:
+   // virtual to allow the TestPruneWholeGraph test in gcc
+diff --git a/dali/pipeline/executor/executor_impl.cc b/dali/pipeline/executor/executor_impl.cc
+index d93bd992..93fbd536 100644
+--- a/dali/pipeline/executor/executor_impl.cc
++++ b/dali/pipeline/executor/executor_impl.cc
+@@ -352,11 +352,20 @@ void Executor<WorkspacePolicy, QueuePolicy>::Run() {
+ }
+ 
+ template <typename WorkspacePolicy, typename QueuePolicy>
+-int Executor<WorkspacePolicy, QueuePolicy>::InputFeedCount(const std::string &op_name) {
++int Executor<WorkspacePolicy, QueuePolicy>::InputFeedCount(std::string_view op_name) {
+   (void)graph_->Node(op_name);
+   return queue_sizes_.cpu_size;
+ }
+ 
++template <typename WorkspacePolicy, typename QueuePolicy>
++OperatorBase *Executor<WorkspacePolicy, QueuePolicy>::GetOperator(std::string_view op_name) {
++  if (auto *node = graph_->NodePtr(op_name))
++    return node->op.get();
++  else
++    return nullptr;
++}
++
++
+ template <typename WorkspacePolicy, typename QueuePolicy>
+ void Executor<WorkspacePolicy, QueuePolicy>::Prefetch() {
+   int i;
+diff --git a/dali/pipeline/executor/executor_impl.h b/dali/pipeline/executor/executor_impl.h
+index 376106ad..3376faa6 100644
+--- a/dali/pipeline/executor/executor_impl.h
++++ b/dali/pipeline/executor/executor_impl.h
+@@ -98,7 +98,6 @@ class DLL_PUBLIC Executor : public ExecutorBase, public QueuePolicy {
+   DLL_PUBLIC void EnableCheckpointing(bool checkpointing = false) override {
+     checkpointing_ = checkpointing;
+   }
+-  DLL_PUBLIC void Build(OpGraph *graph, vector<string> output_names) override;
+   DLL_PUBLIC void Run() override;
+   DLL_PUBLIC void Prefetch() override;
+   DLL_PUBLIC void Init() override {}
+@@ -129,7 +128,11 @@ class DLL_PUBLIC Executor : public ExecutorBase, public QueuePolicy {
+   */
+   DLL_PUBLIC void RestoreStateFromCheckpoint(const Checkpoint &cpt) override;
+ 
+-  DLL_PUBLIC int InputFeedCount(const std::string &op_name) override;
++  DLL_PUBLIC int InputFeedCount(std::string_view op_name) override;
++
++  DLL_PUBLIC void Build(OpGraph *graph, vector<string> output_names) override;
++
++  DLL_PUBLIC OperatorBase *GetOperator(std::string_view instance_name) override;
+ 
+  protected:
+   DLL_PUBLIC virtual void RunCPU();
+@@ -335,7 +338,7 @@ class DLL_PUBLIC Executor : public ExecutorBase, public QueuePolicy {
+   // true iff the graph that is executed contains if statements, set by DetectConditionals()
+   bool has_conditionals_ = false;
+ 
+-  bool checkpointing_;
++  bool checkpointing_ = false;
+ 
+  private:
+   void RunHelper(OpNode &op_node, Workspace &ws, size_t iteration_id);
+diff --git a/dali/pipeline/executor/lowered_graph.cc b/dali/pipeline/executor/lowered_graph.cc
+index 8d289080..7ac16509 100644
+--- a/dali/pipeline/executor/lowered_graph.cc
++++ b/dali/pipeline/executor/lowered_graph.cc
+@@ -103,6 +103,7 @@ OpNode& OpGraph::PlaceNewOp(OpType op_type, const OpSpec &op_spec, std::string i
+   auto new_partition_id = NumOp(op_type);
+   node.partition_index = new_partition_id;
+   op_partitions_[static_cast<int>(op_type)].push_back(node.id);
++  op_name_to_id_[node.instance_name] = node.id;
+   return node;
+ }
+ 
+@@ -113,7 +114,7 @@ TensorNode& OpGraph::PlaceNewTensor() {
+ }
+ 
+ 
+-void OpGraph::AddOp(const OpSpec &spec, const std::string &op_name) {
++OpNode &OpGraph::AddOp(const OpSpec &spec, const std::string &op_name) {
+   // Validate the op specification
+   CheckOpConstraints(spec);
+ 
+@@ -202,6 +203,8 @@ void OpGraph::AddOp(const OpSpec &spec, const std::string &op_name) {
+                              ", but output with this name already exists as output of op '",
+                              this->Node(TensorSourceID(name)).instance_name, "'"));
+   }
++
++  return new_node;
+ }
+ 
+ void OpGraph::InstantiateOperators() {
+@@ -269,6 +272,9 @@ void OpGraph::RemoveTensorNode(TensorNodeId id) {
+ void OpGraph::SwapOpNodes(OpNodeId left_id, OpNodeId right_id) {
+   auto &left = op_nodes_[left_id];
+   auto &right = op_nodes_[right_id];
++
++  op_name_to_id_[left.instance_name] = right_id;
++  op_name_to_id_[right.instance_name] = left_id;
+   // Swap all references in tensor edges
+   // Produced tensors (children)
+   {
+@@ -350,7 +356,7 @@ void OpGraph::RemoveOpNode(OpNodeId id) {
+   for (auto parent_id : op_nodes_.back().parents) {
+     Node(parent_id).children.erase(op_nodes_.back().id);
+   }
+-  // assume that we removed one element
++  op_name_to_id_.erase(op_nodes_.back().instance_name);
+   op_nodes_.pop_back();
+ }
+ 
+@@ -433,14 +439,20 @@ std::vector<std::vector<TensorNodeId>> OpGraph::PartitionTensorByOpType() const
+   return out;
+ }
+ 
+-// TODO(klecki): get rid of string indexing
+-OpNode& OpGraph::Node(const std::string& name) {
+-  for (auto &node : op_nodes_) {
+-    if (node.instance_name == name) {
+-      return node;
+-    }
++std::optional<OpNodeId> OpGraph::NodeId(std::string_view instance_name) {
++  auto it = op_name_to_id_.find(instance_name);
++  if (it != op_name_to_id_.end()) {
++    OpNodeId id = it->second;
++    assert(id >= 0 && id < OpNodeId(op_nodes_.size()));
++    return id;
+   }
+-  DALI_FAIL("Operator node with name " + name + " not found.");
++  return std::nullopt;
++}
++
++OpNode *OpGraph::NodePtr(std::string_view instance_name) {
++  if (auto id = NodeId(instance_name))
++    return &op_nodes_[*id];
++  return nullptr;
+ }
+ 
+ namespace {
+@@ -577,7 +589,10 @@ std::vector<TensorNodeId> OpGraph::GetOutputs(const std::vector<string>& output_
+                                               bool follow_pass_through) const {
+   std::vector<TensorNodeId> output_ids;
+   for (const auto& out : output_names) {
+-    output_ids.push_back(TensorId(out));
++    auto id = TensorId(out);
++    if (!id)
++      DALI_FAIL("Tensor with name \"", out, "\" not found.");
++    output_ids.push_back(*id);
+   }
+   if (!follow_pass_through) {
+     return output_ids;
+diff --git a/dali/pipeline/executor/lowered_graph.h b/dali/pipeline/executor/lowered_graph.h
+index 34b5b431..4fe80a80 100644
+--- a/dali/pipeline/executor/lowered_graph.h
++++ b/dali/pipeline/executor/lowered_graph.h
+@@ -15,6 +15,7 @@
+ #ifndef DALI_PIPELINE_EXECUTOR_LOWERED_GRAPH_H_
+ #define DALI_PIPELINE_EXECUTOR_LOWERED_GRAPH_H_
+ 
++#include <functional>
+ #include <map>
+ #include <unordered_set>
+ #include <utility>
+@@ -27,6 +28,7 @@
+ #include "dali/core/common.h"
+ #include "dali/core/error_handling.h"
+ #include "dali/pipeline/operator/operator.h"
++#include "dali/pipeline/graph/op_graph2.h"
+ 
+ namespace dali {
+ 
+@@ -96,7 +98,7 @@ using consumer_edge_t = TensorMeta;
+ // Second type of graph nodes.
+ struct TensorNode {
+   TensorNodeId id;
+-  std::string name;  // TODO(klecki): not happy about all the strings
++  std::string name;
+   producer_edge_t producer;
+   // order of consumers is arbitrary
+   std::vector<consumer_edge_t> consumers;
+@@ -134,7 +136,7 @@ class DLL_PUBLIC OpGraph {
+   /**
+    * @brief Adds an op with the input specification to the graph.
+    */
+-  DLL_PUBLIC void AddOp(const OpSpec &spec, const std::string& name);
++  DLL_PUBLIC OpNode &AddOp(const OpSpec &spec, const std::string& name);
+ 
+   /**
+    * @brief Removes the node with the specified OpNodeId from
+@@ -183,12 +185,21 @@ class DLL_PUBLIC OpGraph {
+   }
+ 
+   /**
+-   * @brief Returns the graph node with the given name.
+-   * This function is much slower than the version taking
+-   * index as argument so should not be used in performance
+-   * critical section of the code.
++   * @brief Returns the graph node with the given name or nullptr, if not found.
+    */
+-  DLL_PUBLIC OpNode& Node(const std::string& name);
++  DLL_PUBLIC OpNode *NodePtr(std::string_view instance_name);
++
++  DLL_PUBLIC OpNode &Node(std::string_view instance_name) {
++    OpNode *node = NodePtr(instance_name);
++    if (!node)
++      DALI_FAIL(make_string("Operator node with name \"", instance_name, "\" not found."));
++    return *node;
++  }
++
++  /**
++   * @brief Returns the id of the data node with given name or nullopt, if not found.
++   */
++  DLL_PUBLIC std::optional<OpNodeId> NodeId(std::string_view instance_name);
+ 
+   /**
+    * @brief Returns the graph node with the given index in the graph.
+@@ -216,20 +227,31 @@ class DLL_PUBLIC OpGraph {
+     return tensor_nodes_[id];
+   }
+ 
+-  DLL_PUBLIC TensorNodeId TensorId(const std::string& name) const {
++  DLL_PUBLIC std::optional<TensorNodeId> TensorId(std::string_view name) const {
+     auto it = tensor_name_to_id_.find(name);
+-    DALI_ENFORCE(it != tensor_name_to_id_.end(),
+-                 "Tensor with name " + name + " does not exist in graph.");
++    if (it == tensor_name_to_id_.end())
++      return std::nullopt;
+     return it->second;
+   }
+ 
+   /**
+-   * @brief Returns the Tensor node with the given name.
++   * @brief Returns the Tensor node with the given name or nullptr, if not found.
+    */
+-  DLL_PUBLIC const TensorNode& Tensor(const std::string& name) const {
+-    return tensor_nodes_[TensorId(name)];
++  DLL_PUBLIC const TensorNode *TensorPtr(std::string_view name) const {
++    auto id = TensorId(name);
++    if (!id)
++      return nullptr;
++    return &Tensor(*id);
++  }
++
++  DLL_PUBLIC const TensorNode &Tensor(std::string_view name) const {
++    auto *t = TensorPtr(name);
++    if (!t)
++      DALI_FAIL(make_string("Tensor with name \"", name, "\" not found"));
++    return *t;
+   }
+ 
++
+   DLL_PUBLIC std::vector<std::vector<TensorNodeId>> PartitionTensorByOpType() const;
+ 
+   /**
+@@ -467,8 +489,9 @@ class DLL_PUBLIC OpGraph {
+    */
+   void RemoveOpNode(OpNodeId id);
+ 
+-  std::map<std::string, TensorNodeId> tensor_name_to_id_;
++  std::map<std::string, TensorNodeId, std::less<>> tensor_name_to_id_;
+   mutable std::map<TensorNodeId, bool> has_consumers_in_other_stage_;
++  std::map<std::string, OpNodeId, std::less<>> op_name_to_id_;
+ 
+   bool pass_through_computed_ = false;
+ };
+diff --git a/dali/pipeline/executor/pipelined_executor.cc b/dali/pipeline/executor/pipelined_executor.cc
+index dd1b0233..af5cd774 100644
+--- a/dali/pipeline/executor/pipelined_executor.cc
++++ b/dali/pipeline/executor/pipelined_executor.cc
+@@ -31,7 +31,7 @@ size_t PipelinedExecutorImpl<WorkspacePolicy, QueuePolicy>::CalcIterationDataSiz
+          this->queue_sizes_.gpu_size /* mixed_queue_size */ + 1;
+ }
+ 
+-int SeparatedPipelinedExecutor::InputFeedCount(const std::string &op_name) {
++int SeparatedPipelinedExecutor::InputFeedCount(std::string_view op_name) {
+   (void)graph_->Node(op_name);
+   return queue_sizes_.cpu_size + queue_sizes_.gpu_size;
+ }
+diff --git a/dali/pipeline/executor/pipelined_executor.h b/dali/pipeline/executor/pipelined_executor.h
+index e949817c..83778eda 100644
+--- a/dali/pipeline/executor/pipelined_executor.h
++++ b/dali/pipeline/executor/pipelined_executor.h
+@@ -50,8 +50,6 @@ class DLL_PUBLIC PipelinedExecutorImpl : public Executor<WorkspacePolicy, QueueP
+ 
+   DLL_PUBLIC ~PipelinedExecutorImpl() override = default;
+ 
+-  DLL_PUBLIC void Build(OpGraph *graph, vector<string> output_names) override;
+-
+   DISABLE_COPY_MOVE_ASSIGN(PipelinedExecutorImpl);
+ 
+  protected:
+@@ -83,12 +81,6 @@ class DLL_PUBLIC PipelinedExecutorImpl : public Executor<WorkspacePolicy, QueueP
+   size_t CalcIterationDataSize() const override;
+ };
+ 
+-template <typename WorkspacePolicy, typename QueuePolicy>
+-void PipelinedExecutorImpl<WorkspacePolicy, QueuePolicy>::Build(OpGraph *graph,
+-                                                                vector<string> output_names) {
+-  Executor<WorkspacePolicy, QueuePolicy>::Build(graph, output_names);
+-}
+-
+ template <typename WorkspacePolicy, typename QueuePolicy>
+ void PipelinedExecutorImpl<WorkspacePolicy, QueuePolicy>::SetupOutputInfo(OpGraph &graph) {
+   DeviceGuard g(device_id_);
+@@ -123,7 +115,7 @@ class DLL_PUBLIC SeparatedPipelinedExecutor
+   using ImplBase = PipelinedExecutorImpl<AOT_WS_Policy<SeparateQueuePolicy>, SeparateQueuePolicy>;
+   using ImplBase::ImplBase;
+  public:
+-  int InputFeedCount(const std::string &name) override;
++  int InputFeedCount(std::string_view name) override;
+ };
+ 
+ }  // namespace dali
+diff --git a/dali/pipeline/pipeline.cc b/dali/pipeline/pipeline.cc
+index 2637c4cc..3587a6f9 100644
+--- a/dali/pipeline/pipeline.cc
++++ b/dali/pipeline/pipeline.cc
+@@ -571,8 +571,6 @@ void Pipeline::Build(std::vector<PipelineOutputDesc> output_descs) {
+     }
+   }
+ 
+-  graph_.InstantiateOperators();
+-
+   // Load the final graph into the executor
+   executor_->Build(&graph_, outputs);
+ 
+@@ -789,16 +787,14 @@ string Pipeline::SerializeToProtobuf() const {
+   return output;
+ }
+ 
+-OpNode * Pipeline::GetOperatorNode(const std::string& name) {
++OpNode *Pipeline::GetOperatorNode(std::string_view name) {
+   return &(graph_.Node(name));
+ }
+ 
+-const OpNode *Pipeline::GetInputOperatorNode(const std::string& name) {
+-  for (auto &[op_name, node] : input_operators_) {
+-    if (op_name == name) {
+-      return node;
+-    }
+-  }
++const OpNode *Pipeline::GetInputOperatorNode(std::string_view name) {
++  auto it = input_operators_.find(name);
++  if (it != input_operators_.end())
++    return it->second;
+   DALI_FAIL(make_string("Could not find an input operator with name \"", name, "\""));
+ }
+ 
+@@ -814,23 +810,19 @@ std::map<std::string, ReaderMeta> Pipeline::GetReaderMeta() {
+   return ret;
+ }
+ 
+-ReaderMeta Pipeline::GetReaderMeta(const std::string &name) {
+-  ReaderMeta meta;
+-  for (Index i = 0; i < graph_.NumOp(); ++i) {
+-    const OpNode &current = graph_.Node(i);
+-    if (current.instance_name == name) {
+-      meta = current.op->GetReaderMeta();
+-      break;
+-    }
++ReaderMeta Pipeline::GetReaderMeta(std::string_view name) {
++  ReaderMeta meta{};
++  if (auto *op = executor_->GetOperator(name)) {
++    meta = op->GetReaderMeta();
+   }
+   return meta;
+ }
+ 
+-int Pipeline::InputFeedCount(const std::string &name) {
++int Pipeline::InputFeedCount(std::string_view name) {
+   return executor_->InputFeedCount(name);
+ }
+ 
+-const TensorLayout &Pipeline::GetInputLayout(const std::string &name) {
++const TensorLayout &Pipeline::GetInputLayout(std::string_view name) {
+   DALI_ENFORCE(built_, "\"Build()\" must be called prior to calling \"GetInputLayout()\".");
+   const auto *node = GetOperatorNode(name);
+   if (node->op_type == OpType::CPU) {
+@@ -853,7 +845,7 @@ const TensorLayout &Pipeline::GetInputLayout(const std::string &name) {
+ }
+ 
+ 
+-int Pipeline::GetInputNdim(const std::string &name) {
++int Pipeline::GetInputNdim(std::string_view name) {
+   DALI_ENFORCE(built_, "\"Build()\" must be called prior to calling \"GetInputNdim()\".");
+   const auto *node = GetOperatorNode(name);
+   if (node->op_type == OpType::CPU) {
+@@ -876,7 +868,7 @@ int Pipeline::GetInputNdim(const std::string &name) {
+ }
+ 
+ 
+-DALIDataType Pipeline::GetInputDtype(const std::string &name) {
++DALIDataType Pipeline::GetInputDtype(std::string_view name) {
+   DALI_ENFORCE(built_, "\"Build()\" must be called prior to calling \"GetInputDtype()\".");
+   const auto *node = GetOperatorNode(name);
+   if (node->op_type == OpType::CPU) {
+diff --git a/dali/pipeline/pipeline.h b/dali/pipeline/pipeline.h
+index 68985125..a95d57df 100644
+--- a/dali/pipeline/pipeline.h
++++ b/dali/pipeline/pipeline.h
+@@ -17,6 +17,7 @@
+ 
+ #include <chrono>
+ #include <exception>
++#include <functional>
+ #include <limits>
+ #include <map>
+ #include <memory>
+@@ -246,12 +247,12 @@ class DLL_PUBLIC Pipeline {
+    * @brief Returns the graph node with Operator
+    * with a given name
+    */
+-  DLL_PUBLIC OpNode * GetOperatorNode(const std::string& name);
++  DLL_PUBLIC OpNode *GetOperatorNode(std::string_view name);
+ 
+   /**
+    * @brief Rreturns an input graph node with a given name
+    */
+-  DLL_PUBLIC const OpNode *GetInputOperatorNode(const std::string &name);
++  DLL_PUBLIC const OpNode *GetInputOperatorNode(std::string_view name);
+ 
+   /** @{ */
+   /**
+@@ -428,7 +429,7 @@ class DLL_PUBLIC Pipeline {
+    * @param input_name The name of the input, as specified in the input operator.
+    * @return The number of times that feed_input needs to be called.
+    */
+-  DLL_PUBLIC int InputFeedCount(const std::string &input_name);
++  DLL_PUBLIC int InputFeedCount(std::string_view input_name);
+ 
+   /**
+    * @brief Fills the input device workspace with the output of the pipeline.
+@@ -482,22 +483,22 @@ class DLL_PUBLIC Pipeline {
+   /**
+    * @brief Returns the reader meta for a node with given name
+    */
+-  DLL_PUBLIC ReaderMeta GetReaderMeta(const std::string &name);
++  DLL_PUBLIC ReaderMeta GetReaderMeta(std::string_view name);
+ 
+   /**
+    * @brief Get the data layout required by the external input with a given name.
+    */
+-  DLL_PUBLIC const TensorLayout &GetInputLayout(const std::string &name);
++  DLL_PUBLIC const TensorLayout &GetInputLayout(std::string_view name);
+ 
+   /**
+    * @brief Get the required number of dimensions for the external input with a given name.
+    */
+-  DLL_PUBLIC int GetInputNdim(const std::string &name);
++  DLL_PUBLIC int GetInputNdim(std::string_view name);
+ 
+   /**
+    * @brief Get the data type required by the external input with a given name.
+    */
+-  DLL_PUBLIC DALIDataType GetInputDtype(const std::string &name);
++  DLL_PUBLIC DALIDataType GetInputDtype(std::string_view name);
+ 
+   /**
+    * @brief Returns the number of threads used by the pipeline.
+@@ -738,7 +739,7 @@ class DLL_PUBLIC Pipeline {
+   std::map<int, int64_t> logical_id_to_seed_;
+ 
+   // input operators are sorted by names
+-  std::map<std::string, const OpNode*> input_operators_;
++  std::map<std::string, const OpNode*, std::less<>> input_operators_;
+ 
+   /**
+    * @brief Handles repeating recent inputs for ExternalSource nodes with repeat_last flag on

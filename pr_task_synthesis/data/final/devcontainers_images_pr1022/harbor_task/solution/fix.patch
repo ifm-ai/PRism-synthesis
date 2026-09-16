@@ -1,0 +1,28 @@
+diff --git a/src/anaconda/.devcontainer/Dockerfile b/src/anaconda/.devcontainer/Dockerfile
+index b59fff4f..bd3e9b71 100644
+--- a/src/anaconda/.devcontainer/Dockerfile
++++ b/src/anaconda/.devcontainer/Dockerfile
+@@ -30,8 +30,8 @@ RUN python3 -m pip install --upgrade \
+     pyarrow==14.0.1 \
+     # https://github.com/advisories/GHSA-v68g-wm8c-6x7j
+     transformers==4.36.0 \
+-    # https://github.com/advisories/GHSA-3f63-hfp8-52jq
+-    pillow==10.2.0 \
++    # https://github.com/advisories/GHSA-44wm-f244-xhp3
++    pillow==10.3.0 \
+     # https://github.com/advisories/GHSA-44cc-43rp-5947
+     jupyterlab==4.0.11 \
+     # https://github.com/advisories/GHSA-5h86-8mv2-jq9f
+diff --git a/src/anaconda/test-project/test.sh b/src/anaconda/test-project/test.sh
+index 2390f204..d50b1ddb 100755
+--- a/src/anaconda/test-project/test.sh
++++ b/src/anaconda/test-project/test.sh
+@@ -47,7 +47,7 @@ checkPythonPackageVersion "aiohttp" "3.9.2"
+ checkPythonPackageVersion "jupyter_server" "2.7.2"
+ checkPythonPackageVersion "tornado" "6.3.3"
+ checkPythonPackageVersion "pyarrow" "14.0.1"
+-checkPythonPackageVersion "pillow" "10.2.0"
++checkPythonPackageVersion "pillow" "10.3.0"
+ checkPythonPackageVersion "jupyterlab" "4.0.11"
+ checkPythonPackageVersion "gitpython" "3.1.41"
+ checkPythonPackageVersion "jupyter-lsp" "2.2.2"

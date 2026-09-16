@@ -1,0 +1,10 @@
+{
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    ".github/workflows/*.yml uses ubuntu-latest runner",
+    "Ruby on Rails project - cross-platform",
+    "No Windows or macOS specific dependencies",
+    "CI runs on Linux without platform restrictions"
+  ],
+  "exploration_complete": true
+}

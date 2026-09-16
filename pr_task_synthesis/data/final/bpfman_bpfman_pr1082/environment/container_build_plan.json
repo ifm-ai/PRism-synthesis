@@ -1,0 +1,96 @@
+{
+  "base_image": "rust:1-slim",
+  "platform": "linux/amd64",
+  "build_backend": "buildah",
+  "build_context_files": [
+    "setup_runtime.sh",
+    "repo_setup.sh"
+  ],
+  "system_packages": [
+    "git",
+    "curl",
+    "clang",
+    "llvm",
+    "libbpf-dev",
+    "libelf-dev",
+    "protobuf-compiler",
+    "cmake",
+    "libssl-dev",
+    "gcc-multilib",
+    "pkg-config"
+  ],
+  "base_setup_commands": [
+    "apt-get update && apt-get install -y git curl clang llvm libbpf-dev libelf-dev protobuf-compiler cmake libssl-dev gcc-multilib pkg-config && rm -rf /var/lib/apt/lists/*",
+    "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --profile minimal",
+    "source $HOME/.cargo/env && rustup toolchain install nightly --profile minimal",
+    "source $HOME/.cargo/env && rustup component add rust-src --toolchain nightly"
+  ],
+  "copied_artifacts": [
+    {
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh",
+      "purpose": "Build-time runtime environment setup"
+    },
+    {
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh",
+      "purpose": "Repository materialization script"
+    }
+  ],
+  "build_steps": [
+    {
+      "type": "base_image",
+      "command": "FROM rust:1-slim"
+    },
+    {
+      "type": "system_packages",
+      "command": "RUN apt-get update && apt-get install -y git curl clang llvm libbpf-dev libelf-dev protobuf-compiler cmake libssl-dev gcc-multilib pkg-config && rm -rf /var/lib/apt/lists/*"
+    },
+    {
+      "type": "rust_toolchain",
+      "commands": [
+        "RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --profile minimal",
+        "RUN source $HOME/.cargo/env && rustup toolchain install nightly --profile minimal",
+        "RUN source $HOME/.cargo/env && rustup component add rust-src --toolchain nightly"
+      ]
+    },
+    {
+      "type": "copy_scripts",
+      "commands": [
+        "COPY setup_runtime.sh /opt/benchmark/setup_runtime.sh",
+        "COPY repo_setup.sh /opt/benchmark/repo_setup.sh",
+        "RUN chmod +x /opt/benchmark/setup_runtime.sh /opt/benchmark/repo_setup.sh"
+      ]
+    },
+    {
+      "type": "repo_materialization",
+      "command": "RUN /opt/benchmark/repo_setup.sh",
+      "target": "/workspace"
+    },
+    {
+      "type": "runtime_setup",
+      "command": "RUN /opt/benchmark/setup_runtime.sh",
+      "description": "Build Rust dependencies and eBPF programs"
+    },
+    {
+      "type": "workdir",
+      "command": "WORKDIR /workspace"
+    }
+  ],
+  "runtime_mounts": {
+    "eval_sh": {
+      "source": "/artifacts/evaluation/eval.sh",
+      "target": "/artifacts/evaluation/eval.sh",
+      "mode": "runtime-only"
+    },
+    "tests": {
+      "source": "/artifacts/evaluation/tests/",
+      "target": "/artifacts/evaluation/tests/",
+      "mode": "runtime-only"
+    }
+  },
+  "final_workdir": "/workspace",
+  "repo_materialization_mode": "repo_setup_script",
+  "uses_repo_setup_script": true,
+  "notes": "Image is built with Buildah. eval.sh and tests are runtime-mounted verifier assets, not baked into the image. The repo_setup.sh script materializes /workspace from git. setup_runtime.sh builds all Rust dependencies and eBPF programs."
+}

@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "debian:bookworm",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Go 1.19+ with CGO, libvips-dev 8.14 with all transitive dev dependencies, go modules package manager",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "VIPS 64 found /usr/lib/x86_64-linux-gnu/vips-modules-8.14\ngovips 64 vips 8.14.1 started with concurrency=128\ngovips 64 registered image type loader type=tiff\ngovips 64 registered image type loader type=webp\ngovips 64 registered image type loader type=heif",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "export GOPATH=/root/go && export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin && export CGO_CFLAGS_ALLOW=-Xpreprocessor",
+  "notes": "Environment updated with all required libvips transitive development dependencies. The setup_runtime.sh script was executed successfully against a disposable probe directory (exit code 0). Test runner reachability confirmed with exit code 0 - Go tests can be listed and compiled. All libvips dev dependencies are now properly installed: libexpat1-dev, libgsf-1-dev, libfftw3-dev, libcfitsio-dev, libimagequant-dev, libcgif-dev, libexif12, libjpeg-dev, libpng-dev, libwebp-dev, libpango1.0-dev, libfontconfig-dev, libtiff-dev, librsvg2-dev, libcairo2-dev, libmatio-dev, liblcms2-dev, libopenexr-dev, libopenjp2-7-dev, liborc-0.4-dev. Git and curl are provided by the base image debian:bookworm."
+}

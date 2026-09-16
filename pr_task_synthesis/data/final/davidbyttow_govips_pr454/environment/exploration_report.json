@@ -1,0 +1,75 @@
+{
+  "pr_summary": "Add support for advanced TIFF export features including pyramidal layers and tiled storage. The fix extends TiffExportParams struct with four new fields: Pyramid (bool), Tile (bool), TileHeight (int), and TileWidth (int). These fields are passed to the underlying libvips C implementation in vipsSaveTIFFToBuffer to enable multi-resolution TIFF generation and tiled storage for efficient region reads.",
+  "runtime_family": "go",
+  "package_manager": "go modules",
+  "touched_files": [
+    "vips/foreign.go",
+    "vips/image.go"
+  ],
+  "important_build_files": [
+    "go.mod",
+    "go.sum",
+    "Makefile",
+    "vips/foreign.c",
+    "vips/foreign.h",
+    "vips/govips.c",
+    "vips/govips.h"
+  ],
+  "important_test_files": [
+    "vips/foreign_test.go",
+    "vips/image_test.go",
+    "vips/image_golden_test.go",
+    "vips/image_gif_test.go",
+    "vips/image_thumbnail_test.go"
+  ],
+  "candidate_build_commands": [
+    "CGO_CFLAGS_ALLOW=-Xpreprocessor go build -v ./vips",
+    "make build",
+    "go build -v ./vips"
+  ],
+  "candidate_test_commands": [
+    "CGO_CFLAGS_ALLOW=-Xpreprocessor go test -v -coverprofile=profile.cov ./...",
+    "make test"
+  ],
+  "candidate_smoke_commands": [
+    "CGO_CFLAGS_ALLOW=-Xpreprocessor go build -v ./vips",
+    "go version"
+  ],
+  "candidate_activation_checks": [
+    "which go",
+    "go version",
+    "pkg-config --modversion vips"
+  ],
+  "environment_management": "go modules (go.mod/go.sum)",
+  "special_system_dependencies": [
+    "libvips-dev (libvips 8.10+)",
+    "gcc or clang (CGO compiler)",
+    "pkg-config"
+  ],
+  "high_value_files": [
+    "go.mod",
+    "Makefile",
+    "vips/foreign.go",
+    "vips/image.go",
+    "vips/foreign.c",
+    ".github/workflows/build.yml"
+  ],
+  "patch_file_cues": [
+    "vips/foreign.go - vipsSaveTIFFToBuffer function modified to pass pyramid/tile params to C",
+    "vips/image.go - TiffExportParams struct extended with Pyramid, Tile, TileHeight, TileWidth fields"
+  ],
+  "test_file_cues": [
+    "vips/foreign_test.go - Tests for image type detection including TIFF",
+    "vips/image_golden_test.go - Golden tests for image operations",
+    "vips/image_test.go - Core image processing tests"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    ".github/workflows/build.yml runs on ubuntu-latest",
+    "CI installs libvips-dev via apt-get",
+    "README mentions Windows users should use WSL/Ubuntu",
+    "CGO requires gcc/clang which is standard on Linux",
+    "No Windows-specific or macOS-specific code in touched files"
+  ],
+  "notes": "This is a Go project using CGO to wrap libvips C library. The fix adds TIFF pyramid and tiling support by extending TiffExportParams struct and passing values to the C layer. Tests require libvips-dev system package. The project uses Go modules for dependency management and Makefile for common commands. Platform is Linux-compatible; CI runs on Ubuntu."
+}

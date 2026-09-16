@@ -1,0 +1,113 @@
+{
+  "pr_summary": "The Spanish language recognizer fails to extract date ranges referring to decades when using 'años' or 'anos' (with or without tilde), and does not recognize age expressions containing 'anos' without accent. The fix updates Spanish datetime and number-with-unit patterns to match both accented ('año', 'años') and unaccented ('ano', 'anos') forms of the word for 'year', enabling proper parsing of decade expressions like 'los años 90', 'los anos 90', 'década de 1990', and age expressions like 'Tengo diez anos'.",
+  "runtime_family": "multi-language (.NET/C#, Python, JavaScript/TypeScript, Java)",
+  "package_manager": {
+    "dotnet": "nuget/msbuild",
+    "python": "pip",
+    "javascript": "npm/lerna",
+    "java": "maven"
+  },
+  "touched_files": [
+    ".NET/Microsoft.Recognizers.Definitions.Common/Spanish/DateTimeDefinitions.cs",
+    ".NET/Microsoft.Recognizers.Definitions.Common/Spanish/NumbersWithUnitDefinitions.cs",
+    "Patterns/Spanish/Spanish-DateTime.yaml",
+    "Patterns/Spanish/Spanish-NumbersWithUnit.yaml",
+    "Specs/DateTime/Spanish/DatePeriodExtractor.json",
+    "Specs/DateTime/Spanish/DatePeriodParser.json",
+    "Specs/DateTime/Spanish/DateTimeModel.json",
+    "Specs/NumberWithUnit/Spanish/AgeModel.json"
+  ],
+  "important_build_files": [
+    ".NET/Microsoft.Recognizers.Text.sln",
+    ".NET/build.sh",
+    ".NET/build.cmd",
+    "Python/build.sh",
+    "Python/build.cmd",
+    "Python/setup.py",
+    "Python/requirements.txt",
+    "JavaScript/package.json",
+    "JavaScript/lerna.json",
+    "JavaScript/build.sh",
+    "Java/pom.xml",
+    "Java/build.cmd"
+  ],
+  "important_test_files": [
+    "Specs/DateTime/Spanish/DatePeriodExtractor.json",
+    "Specs/DateTime/Spanish/DatePeriodParser.json",
+    "Specs/DateTime/Spanish/DateTimeModel.json",
+    "Specs/NumberWithUnit/Spanish/AgeModel.json",
+    "Python/tests/test_runner_datetime.py",
+    "Python/tests/test_runner_number_with_unit.py",
+    ".NET/Microsoft.Recognizers.Text.DataDrivenTests/",
+    "JavaScript/test/"
+  ],
+  "candidate_build_commands": [
+    "cd .NET && ./build.sh",
+    "cd Python && ./build.sh",
+    "cd JavaScript && npm run build",
+    "cd Java && mvn clean install"
+  ],
+  "candidate_test_commands": [
+    "cd Python && pytest --tb=line",
+    "cd JavaScript && npm test",
+    "cd Java && mvn test",
+    "cd .NET && dotnet test"
+  ],
+  "candidate_smoke_commands": [
+    "python -c \"import recognizers_suite\"",
+    "node -e \"require('@microsoft/recognizers-text-suite')\"",
+    "dotnet --version",
+    "java -version"
+  ],
+  "candidate_activation_checks": [
+    "command -v python && python --version",
+    "command -v node && node --version",
+    "command -v dotnet && dotnet --version",
+    "command -v mvn && mvn --version",
+    "pip list | grep recognizers"
+  ],
+  "environment_management": {
+    "python": "pip with -e editable installs, no virtualenv specified in repo",
+    "javascript": "npm with lerna for monorepo management",
+    "dotnet": "nuget/msbuild or dotnet CLI",
+    "java": "maven"
+  },
+  "special_system_dependencies": [
+    ".NET SDK or Mono with MSBuild for .NET builds",
+    "Node.js 10.3+ for JavaScript builds",
+    "Python 3.x with pip for Python builds",
+    "Java JDK 8+ with Maven for Java builds",
+    "NuGet CLI (or mono with nuget.exe) for .NET on Linux"
+  ],
+  "high_value_files": [
+    ".NET/Microsoft.Recognizers.Definitions.Common/Spanish/DateTimeDefinitions.cs",
+    ".NET/Microsoft.Recognizers.Definitions.Common/Spanish/NumbersWithUnitDefinitions.cs",
+    "Patterns/Spanish/Spanish-DateTime.yaml",
+    "Patterns/Spanish/Spanish-NumbersWithUnit.yaml",
+    "Specs/DateTime/Spanish/DatePeriodParser.json",
+    "Specs/NumberWithUnit/Spanish/AgeModel.json"
+  ],
+  "patch_file_cues": {
+    "DateTimeDefinitions.cs": "Regex patterns updated to match 'a[nñ]o' instead of 'año' for date units, range units, unit regex, special year terms, year type regex, and decade with century regex. Added 'anos' and 'ano' to UnitMap, UnitValueMap, and YearTerms dictionaries.",
+    "NumbersWithUnitDefinitions.cs": "AgeSuffixList updated to include 'anos|ano' patterns. AmbiguousAgeUnitList and Año luz patterns updated.",
+    "Spanish-DateTime.yaml": "YAML pattern definitions updated with same regex changes as C# file for DateUnitRegex, RangeUnitRegex, UnitRegex, SpecialYearTermsRegex, DecadeWithCenturyRegex, UnitMap, UnitValueMap, YearTerms, YearTypeRegex, and WrittenDecades.",
+    "Spanish-NumbersWithUnit.yaml": "AgeSuffixList, AmbiguousAgeUnitList, and Año luz patterns updated.",
+    "test_specs": "Test specs updated to include test cases for 'anos' without tilde and decade expressions with written numbers (diez, veinte, etc.). NotSupported markers changed from 'dotnet' to indicate .NET now passes these tests."
+  },
+  "test_file_cues": {
+    "DatePeriodExtractor.json": "Tests for 'los años 1970', 'los anos 90', 'ultimos 3 anos' patterns",
+    "DatePeriodParser.json": "Parser tests with TIMEX resolution for decade ranges, tests marked as NotSupported for java/python but supported for dotnet/javascript after fix",
+    "DateTimeModel.json": "Model-level tests for 'los años noventa', 'los años 90', 'los anos 90', 'década de 1990'",
+    "AgeModel.json": "Age recognition test for 'Tengo diez anos' with unit 'Año'"
+  },
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    ".NET/build.sh - Linux-compatible bash script using dotnet CLI and msbuild",
+    "Python/build.sh - Standard pip-based Python build",
+    "JavaScript/build.sh - Standard npm-based JavaScript build",
+    "Java/pom.xml - Standard Maven build (cross-platform)",
+    "appveyor.yml - CI configured for Windows but project supports cross-platform builds",
+    "README.md - States support for .NET, JavaScript, Python, and Java platforms"
+  ],
+  "notes": "This is a multi-language NLP/text recognition library (Microsoft Recognizers Text) that provides entity extraction for numbers, units, dates, and sequences. The fix targets Spanish language datetime and age recognition to handle both accented and unaccented forms of 'año' (year). The primary source files are in C# (.NET), with pattern definitions in YAML that are used to generate resources for Python, JavaScript, and Java implementations. Test specs in JSON format define expected behavior across all platforms. The .NET implementation is the primary/reference implementation, with other platforms following. The repository is fully cross-platform and can be built and tested on Linux."
+}

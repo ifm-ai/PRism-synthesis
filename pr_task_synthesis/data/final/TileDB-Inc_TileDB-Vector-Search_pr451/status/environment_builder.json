@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "python:3.11-slim-bookworm",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Python 3.11 venv at /opt/benchmark/venv with tiledb-vector-search 0.16.0, numpy 1.26.4, scikit-learn, tiledb-cloud, pytest 7.4.4",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "test/test_distance_metrics.py::test_cosine_distance\ntest/test_distance_metrics.py::test_inner_product_distances\ntest/test_distance_metrics.py::test_l2_distance\ntest/test_distance_metrics.py::test_wrong_distance_metric\ntest/test_distance_metrics.py::test_wrong_type_with_distance_metric",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "source /opt/benchmark/venv/bin/activate",
+  "notes": "Environment successfully created using pre-built PyPI wheel to avoid long C++ build times. The runtime is ready for test execution. Test runner pytest successfully collected 9 tests from test_distance_metrics.py."
+}

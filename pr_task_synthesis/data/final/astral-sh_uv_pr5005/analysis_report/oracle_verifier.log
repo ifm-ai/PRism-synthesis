@@ -1,0 +1,85 @@
+>>>>> Start Test Output
+ Downloading crates ...
+  Downloaded float-cmp v0.9.0
+  Downloaded wait-timeout v0.2.0
+  Downloaded termtree v0.4.1
+  Downloaded predicates-tree v1.0.9
+  Downloaded predicates-core v1.0.6
+  Downloaded normalize-line-endings v0.3.0
+  Downloaded linked-hash-map v0.5.6
+  Downloaded doc-comment v0.3.3
+  Downloaded difflib v0.4.0
+  Downloaded assert_fs v1.1.1
+  Downloaded assert_cmd v2.0.14
+  Downloaded globwalk v0.9.1
+  Downloaded predicates v3.1.0
+  Downloaded similar v2.5.0
+  Downloaded insta v1.39.0
+   Compiling regex-automata v0.4.6
+   Compiling regex v1.10.5
+   Compiling bstr v1.9.1
+   Compiling globset v0.4.14
+   Compiling ignore v0.4.22
+   Compiling cargo-util v0.2.12
+   Compiling pep508_rs v0.6.0 (/workspace/crates/pep508-rs)
+   Compiling uv-git v0.0.1 (/workspace/crates/uv-git)
+   Compiling pypi-types v0.0.1 (/workspace/crates/pypi-types)
+   Compiling distribution-types v0.0.1 (/workspace/crates/distribution-types)
+   Compiling install-wheel-rs v0.0.1 (/workspace/crates/install-wheel-rs)
+   Compiling uv-cache v0.0.1 (/workspace/crates/uv-cache)
+   Compiling uv-configuration v0.0.1 (/workspace/crates/uv-configuration)
+   Compiling uv-client v0.0.1 (/workspace/crates/uv-client)
+   Compiling uv-extract v0.0.1 (/workspace/crates/uv-extract)
+   Compiling uv-python v0.0.1 (/workspace/crates/uv-python)
+   Compiling uv-types v0.0.1 (/workspace/crates/uv-types)
+   Compiling uv-distribution v0.0.1 (/workspace/crates/uv-distribution)
+   Compiling requirements-txt v0.0.1 (/workspace/crates/requirements-txt)
+   Compiling uv-resolver v0.0.1 (/workspace/crates/uv-resolver)
+   Compiling uv-virtualenv v0.0.4 (/workspace/crates/uv-virtualenv)
+   Compiling uv-installer v0.0.1 (/workspace/crates/uv-installer)
+   Compiling uv-build v0.0.1 (/workspace/crates/uv-build)
+   Compiling uv-settings v0.0.1 (/workspace/crates/uv-settings)
+   Compiling tracing-subscriber v0.3.18
+   Compiling predicates-core v1.0.6
+   Compiling doc-comment v0.3.3
+   Compiling tracing-tree v0.3.1
+   Compiling uv-requirements v0.1.0 (/workspace/crates/uv-requirements)
+   Compiling uv-cli v0.0.1 (/workspace/crates/uv-cli)
+   Compiling uv-dispatch v0.0.1 (/workspace/crates/uv-dispatch)
+   Compiling uv-tool v0.0.1 (/workspace/crates/uv-tool)
+   Compiling uv-scripts v0.0.1 (/workspace/crates/uv-scripts)
+   Compiling float-cmp v0.9.0
+   Compiling termtree v0.4.1
+   Compiling normalize-line-endings v0.3.0
+   Compiling difflib v0.4.0
+   Compiling predicates v3.1.0
+   Compiling predicates-tree v1.0.9
+   Compiling uv v0.2.24 (/workspace/crates/uv)
+   Compiling assert_cmd v2.0.14
+   Compiling globwalk v0.9.1
+   Compiling wait-timeout v0.2.0
+   Compiling linked-hash-map v0.5.6
+   Compiling similar v2.5.0
+   Compiling insta v1.39.0
+   Compiling assert_fs v1.1.1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 36s
+     Running tests/help.rs (target/debug/deps/help-3218f163d8a1f673)
+
+running 12 tests
+test help ... ok
+test help_flag ... ok
+test help_flag_subcommand ... ok
+test help_flag_subsubcommand ... ok
+test help_short_flag ... ok
+test help_subcommand ... ok
+test help_subsubcommand ... ok
+test help_unknown_subcommand ... ok
+test help_unknown_subsubcommand ... ok
+test help_with_global_option ... ok
+test help_with_help ... ok
+test help_with_version ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.57s
+
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

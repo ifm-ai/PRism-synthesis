@@ -1,0 +1,65 @@
+{
+  "base_image_candidate": "debian:bookworm",
+  "system_packages": [
+    "git",
+    "curl",
+    "python3",
+    "python3-pip",
+    "python3-venv",
+    "nodejs",
+    "npm"
+  ],
+  "base_setup_commands": [
+    "apt-get update -qq",
+    "apt-get install -y python3.11-venv 2>/dev/null || apt-get install -y python3-venv"
+  ],
+  "setup_runtime_commands": [
+    "python3 -m venv /opt/benchmark/venv",
+    "source /opt/benchmark/venv/bin/activate",
+    "pip install --upgrade pip",
+    "cd /workspace/Python && pip install -r ./libraries/resource-generator/requirements.txt",
+    "cd /workspace/Python/libraries/resource-generator && python index.py ../recognizers-choice/resource-definitions.json && python index.py ../recognizers-number/resource-definitions.json && python index.py ../recognizers-number-with-unit/resource-definitions.json && python index.py ../recognizers-date-time/resource-definitions.json && python index.py ../recognizers-sequence/resource-definitions.json",
+    "cd /workspace/Python && pip install -e ./libraries/recognizers-text/ && pip install -e ./libraries/recognizers-number/ && pip install -e ./libraries/recognizers-number-with-unit/ && pip install -e ./libraries/datatypes-timex-expression/ && pip install -e ./libraries/recognizers-date-time/ && pip install -e ./libraries/recognizers-sequence/ && pip install -e ./libraries/recognizers-choice/ && pip install -e ./libraries/recognizers-suite/",
+    "pip install -r ./tests/requirements.txt"
+  ],
+  "activation_commands": [
+    "source /opt/benchmark/venv/bin/activate"
+  ],
+  "activation_command": "source /opt/benchmark/venv/bin/activate",
+  "activation_type": "venv",
+  "activation_validation_command": "bash -c 'source /opt/benchmark/venv/bin/activate && echo ACTIVATION_OK'",
+  "detected_test_command": "cd /workspace/Python && pytest --tb=line",
+  "runtime_smoke_command": "python -c \"import recognizers_suite; print('recognizers_suite imported successfully')\"",
+  "runtime_profile": {
+    "ecosystem": "python",
+    "package_manager": "pip",
+    "env": "venv",
+    "env_name": "benchmark",
+    "env_path": "/opt/benchmark/venv",
+    "prepare_commands": [
+      "python3 -m venv /opt/benchmark/venv",
+      "source /opt/benchmark/venv/bin/activate",
+      "pip install --upgrade pip"
+    ],
+    "activation_commands": [
+      "source /opt/benchmark/venv/bin/activate"
+    ],
+    "base_deps_installed": [
+      "recognizers-text",
+      "recognizers-number",
+      "recognizers-number-with-unit",
+      "datatypes-timex-expression",
+      "recognizers-date-time",
+      "recognizers-sequence",
+      "recognizers-choice",
+      "recognizers-suite"
+    ],
+    "test_only_install_strategy": "pip install -r tests/requirements.txt (pytest, pytest-cov)",
+    "cache_dirs": [
+      "/opt/benchmark/venv",
+      "/root/.cache/pip"
+    ],
+    "notes": "Python virtualenv-based environment with all Microsoft Recognizers Text libraries installed in editable mode. Resources are generated from YAML pattern definitions before library installation."
+  },
+  "notes": "Base image should be Debian Bookworm or similar. Git and curl are pre-installed in the base image. Python 3.11 with venv support is required. The environment uses a system-wide virtual environment at /opt/benchmark/venv for the Python implementation. Node.js is available for JavaScript platform support but not actively configured for testing. The .NET SDK and Java/Maven are not included in this environment as Python is the primary test platform. MOUNT REQUIREMENT: The /tests/ directory is created in setup_runtime.sh to provide a mount point for the outer verifier. OUTER VERIFIER READINESS: The eval.sh script at /artifacts/evaluation/eval.sh is designed to be mounted at /tests/eval.sh inside the container. The activation command 'source /opt/benchmark/venv/bin/activate' is embedded in eval.sh and will work correctly when the outer verifier mounts /artifacts/evaluation/ as /tests/. The /tests directory now exists in the image to support the mount operation."
+}

@@ -1,0 +1,116 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.1, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /artifacts/evaluation/tests
+plugins: anyio-4.14.0
+collecting ... collected 7 items
+
+../artifacts/evaluation/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_optimize_model_false_is_retained FAILED [ 14%]
+../artifacts/evaluation/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_use_cache_false_is_retained FAILED [ 28%]
+../artifacts/evaluation/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_both_flags_false_are_retained FAILED [ 42%]
+../artifacts/evaluation/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_default_values_when_not_provided PASSED [ 57%]
+../artifacts/evaluation/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_mixed_flag_values FAILED [ 71%]
+../artifacts/evaluation/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_BehavioralSimulation::test_fixed_pattern_retains_flags PASSED [ 85%]
+../artifacts/evaluation/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_BehavioralSimulation::test_buggy_pattern_loses_flags PASSED [100%]
+
+=================================== FAILURES ===================================
+______ TestBigDLLM_RuntimeBehavior.test_optimize_model_false_is_retained _______
+
+self = <test_bigdl_llm_kwargs.TestBigDLLM_RuntimeBehavior object at 0x7f17492c3bd0>
+
+    def test_optimize_model_false_is_retained(self):
+        """
+        Test that optimize_model=False is retained in bigdl_llm_kwargs.
+    
+        This test reads the actual source and executes the kwargs handling logic.
+    
+        Expected behavior with FIXED code:
+        - optimize_model=False should be retained
+    
+        Expected behavior with BUGGY code:
+        - optimize_model=False is lost, defaults to True
+        """
+        kwargs = {'optimize_model': False, 'use_cache': True}
+        result = extract_and_execute_full_kwargs_logic(kwargs)
+    
+>       assert result.get('optimize_model') is False, \
+            f"optimize_model=False should be retained, got {result.get('optimize_model')}"
+E       AssertionError: optimize_model=False should be retained, got True
+E       assert True is False
+E        +  where True = <built-in method get of dict object at 0x7f1747de9380>('optimize_model')
+E        +    where <built-in method get of dict object at 0x7f1747de9380> = {'optimize_model': True, 'use_cache': True}.get
+
+/artifacts/evaluation/tests/test_bigdl_llm_kwargs.py:112: AssertionError
+_________ TestBigDLLM_RuntimeBehavior.test_use_cache_false_is_retained _________
+
+self = <test_bigdl_llm_kwargs.TestBigDLLM_RuntimeBehavior object at 0x7f1747dd6a50>
+
+    def test_use_cache_false_is_retained(self):
+        """
+        Test that use_cache=False is retained in bigdl_llm_kwargs.
+    
+        Expected behavior with FIXED code:
+        - use_cache=False should be retained
+    
+        Expected behavior with BUGGY code:
+        - use_cache=False is lost, defaults to True
+        """
+        kwargs = {'optimize_model': True, 'use_cache': False}
+        result = extract_and_execute_full_kwargs_logic(kwargs)
+    
+>       assert result.get('use_cache') is False, \
+            f"use_cache=False should be retained, got {result.get('use_cache')}"
+E       AssertionError: use_cache=False should be retained, got True
+E       assert True is False
+E        +  where True = <built-in method get of dict object at 0x7f1747e2bf80>('use_cache')
+E        +    where <built-in method get of dict object at 0x7f1747e2bf80> = {'optimize_model': True, 'use_cache': True}.get
+
+/artifacts/evaluation/tests/test_bigdl_llm_kwargs.py:128: AssertionError
+________ TestBigDLLM_RuntimeBehavior.test_both_flags_false_are_retained ________
+
+self = <test_bigdl_llm_kwargs.TestBigDLLM_RuntimeBehavior object at 0x7f1747dd7090>
+
+    def test_both_flags_false_are_retained(self):
+        """
+        Test that both optimize_model=False and use_cache=False are retained.
+    
+        This is the key test case that exercises the exact bug scenario.
+        """
+        kwargs = {'optimize_model': False, 'use_cache': False}
+        result = extract_and_execute_full_kwargs_logic(kwargs)
+    
+>       assert result.get('optimize_model') is False, \
+            f"optimize_model=False should be retained, got {result.get('optimize_model')}"
+E       AssertionError: optimize_model=False should be retained, got True
+E       assert True is False
+E        +  where True = <built-in method get of dict object at 0x7f1747e420c0>('optimize_model')
+E        +    where <built-in method get of dict object at 0x7f1747e420c0> = {'optimize_model': True, 'use_cache': True}.get
+
+/artifacts/evaluation/tests/test_bigdl_llm_kwargs.py:140: AssertionError
+______________ TestBigDLLM_RuntimeBehavior.test_mixed_flag_values ______________
+
+self = <test_bigdl_llm_kwargs.TestBigDLLM_RuntimeBehavior object at 0x7f1747dd7e50>
+
+    def test_mixed_flag_values(self):
+        """
+        Test with one flag True and one flag False.
+        """
+        kwargs = {'optimize_model': True, 'use_cache': False}
+        result = extract_and_execute_full_kwargs_logic(kwargs)
+    
+        assert result.get('optimize_model') is True
+>       assert result.get('use_cache') is False
+E       AssertionError: assert True is False
+E        +  where True = <built-in method get of dict object at 0x7f1747e0afc0>('use_cache')
+E        +    where <built-in method get of dict object at 0x7f1747e0afc0> = {'optimize_model': True, 'use_cache': True}.get
+
+/artifacts/evaluation/tests/test_bigdl_llm_kwargs.py:167: AssertionError
+=========================== short test summary info ============================
+FAILED ../artifacts/evaluation/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_optimize_model_false_is_retained
+FAILED ../artifacts/evaluation/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_use_cache_false_is_retained
+FAILED ../artifacts/evaluation/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_both_flags_false_are_retained
+FAILED ../artifacts/evaluation/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_mixed_flag_values
+========================= 4 failed, 3 passed in 0.03s ==========================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

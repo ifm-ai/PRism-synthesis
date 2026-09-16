@@ -1,0 +1,24 @@
+>>>>> Start Test Output
+   Compiling uv-cli v0.0.1 (/workspace/crates/uv-cli)
+   Compiling uv v0.2.24 (/workspace/crates/uv)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 19.57s
+     Running tests/help.rs (target/debug/deps/help-3218f163d8a1f673)
+
+running 12 tests
+test help ... ok
+test help_flag ... ok
+test help_flag_subcommand ... ok
+test help_flag_subsubcommand ... ok
+test help_short_flag ... ok
+test help_subcommand ... ok
+test help_subsubcommand ... ok
+test help_unknown_subcommand ... ok
+test help_unknown_subsubcommand ... ok
+test help_with_global_option ... ok
+test help_with_help ... ok
+test help_with_version ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.58s
+
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

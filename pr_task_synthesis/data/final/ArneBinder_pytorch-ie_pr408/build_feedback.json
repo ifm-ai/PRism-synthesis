@@ -1,0 +1,15 @@
+{
+  "is_finish": true,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "failure_domain": "unknown",
+  "route_to": null,
+  "blocking_errors": [],
+  "warnings": [
+    "Poetry dev-dependencies section deprecated - use poetry.group.dev.dependencies instead",
+    "Some packages installed are yanked (safetensors 0.3.3.post1, furo 2023.8.19)"
+  ],
+  "next_actions": [],
+  "notes": "Build completed successfully. Dockerfile.final built without errors. OCI archive exported to /artifacts/environment/openenv_validation_oci.tar (2.3GB). All build steps executed: base image pull, system package install, poetry install, repo materialization via git, runtime setup via setup_runtime.sh."
+}

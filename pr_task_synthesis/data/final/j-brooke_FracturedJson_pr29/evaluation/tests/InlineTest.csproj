@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <!-- Include source files from FracturedJson directly -->
+        <Compile Include="EolStyle.cs" />
+        <Compile Include="CommentPolicy.cs" />
+        <Compile Include="FracturedJsonOptions.cs" />
+        <!-- NumberListAlignment.cs will be added conditionally by eval.sh -->
+        <Compile Include="NumberListAlignmentTest.cs" />
+    </ItemGroup>
+
+</Project>

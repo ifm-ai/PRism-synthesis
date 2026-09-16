@@ -1,0 +1,77 @@
+Base-DateTime.yaml => base_date_time.py
+English-DateTime.yaml => english_date_time.py
+Spanish-DateTime.yaml => spanish_date_time.py
+Portuguese-DateTime.yaml => portuguese_date_time.py
+Chinese-DateTime.yaml => chinese_date_time.py
+French-DateTime.yaml => french_date_time.py
+Italian-DateTime.yaml => italian_date_time.py
+German-DateTime.yaml => german_date_time.py
+English-TimeZone.yaml => english_time_zone.py
+Dutch-DateTime.yaml => dutch_date_time.py
+Dutch-TimeZone.yaml => dutch_time_zone.py
+Base-Units.yaml => base_units.py
+Base-Numbers.yaml => base_numbers.py
+Base-Currency.yaml => base_currency.py
+English-NumbersWithUnit.yaml => english_numeric_with_unit.py
+Spanish-NumbersWithUnit.yaml => spanish_numeric_with_unit.py
+Portuguese-NumbersWithUnit.yaml => portuguese_numeric_with_unit.py
+Chinese-NumbersWithUnit.yaml => chinese_numeric_with_unit.py
+French-NumbersWithUnit.yaml => french_numeric_with_unit.py
+Italian-NumbersWithUnit.yaml => italian_numeric_with_unit.py
+German-NumbersWithUnit.yaml => german_numeric_with_unit.py
+Dutch-NumbersWithUnit.yaml => dutch_numeric_with_unit.py
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.1, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /tests/tests
+plugins: cov-7.1.0
+collecting ... collected 11 items
+
+../tests/tests/test_spanish_datetime_age_fix.py::TestSpanishDatePeriodExtractor::test_decade_unaccented_anos_90 PASSED [  9%]
+../tests/tests/test_spanish_datetime_age_fix.py::TestSpanishDatePeriodExtractor::test_decade_accented_anos_90 PASSED [ 18%]
+../tests/tests/test_spanish_datetime_age_fix.py::TestSpanishDatePeriodExtractor::test_decade_relative_unaccented PASSED [ 27%]
+../tests/tests/test_spanish_datetime_age_fix.py::TestSpanishDatePeriodExtractor::test_decade_1970s_extraction PASSED [ 36%]
+../tests/tests/test_spanish_datetime_age_fix.py::TestSpanishDatePeriodExtractor::test_decade_2000s_extraction PASSED [ 45%]
+../tests/tests/test_spanish_datetime_age_fix.py::TestSpanishDatePeriodExtractor::test_decade_1940s_extraction PASSED [ 54%]
+../tests/tests/test_spanish_datetime_age_fix.py::TestSpanishAgeModel::test_age_diez_anos_unaccented PASSED [ 63%]
+../tests/tests/test_spanish_datetime_age_fix.py::TestSpanishAgeModel::test_age_numeric_anos PASSED [ 72%]
+../tests/tests/test_spanish_datetime_age_fix.py::TestSpanishAgeModel::test_age_accented_anos FAILED [ 81%]
+../tests/tests/test_spanish_datetime_age_fix.py::TestSpanishYearTypeRecognition::test_year_type_anos PASSED [ 90%]
+../tests/tests/test_spanish_datetime_age_fix.py::TestSpanishYearTypeRecognition::test_year_type_años PASSED [100%]
+
+=================================== FAILURES ===================================
+__________________ TestSpanishAgeModel.test_age_accented_anos __________________
+/tests/tests/test_spanish_datetime_age_fix.py:128: in test_age_accented_anos
+    assert len(age_results) > 0, "Should recognize '10 años' as age"
+E   AssertionError: Should recognize '10 años' as age
+E   assert 0 > 0
+E    +  where 0 = len([])
+=============================== warnings summary ===============================
+../opt/benchmark/venv/lib/python3.11/site-packages/emoji/core.py:34
+  /opt/benchmark/venv/lib/python3.11/site-packages/emoji/core.py:34: DeprecationWarning: invalid escape sequence '\`'
+    """
+
+Python/libraries/recognizers-number/recognizers_number/number/extractors.py:41
+  /workspace/Python/libraries/recognizers-number/recognizers_number/number/extractors.py:41: SyntaxWarning: "is" with a literal. Did you mean "=="?
+    if source is None or len(source.strip()) is 0:
+
+Python/libraries/recognizers-date-time/recognizers_date_time/date_time/utilities.py:659
+  /workspace/Python/libraries/recognizers-date-time/recognizers_date_time/date_time/utilities.py:659: SyntaxWarning: 'int' object is not subscriptable; perhaps you missed a comma?
+    bias = 0[0]
+
+Python/libraries/recognizers-date-time/recognizers_date_time/date_time/base_datetimeperiod.py:789
+  /workspace/Python/libraries/recognizers-date-time/recognizers_date_time/date_time/base_datetimeperiod.py:789: SyntaxWarning: "is not" with a literal. Did you mean "!="?
+    return match and substring.strip() is not ''
+
+Python/libraries/recognizers-date-time/recognizers_date_time/date_time/base_datetimeperiod.py:1418
+Python/libraries/recognizers-date-time/recognizers_date_time/date_time/base_datetimeperiod.py:1418
+  /workspace/Python/libraries/recognizers-date-time/recognizers_date_time/date_time/base_datetimeperiod.py:1418: SyntaxWarning: "is not" with a literal. Did you mean "!="?
+    extracted_results = self.config.date_extractor.extract((trimmed_before_str if trimmed_before_str is not '' else before_str) + ' ' + (trimmed_after_str if trimmed_after_str is not '' else after_str), reference)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../tests/tests/test_spanish_datetime_age_fix.py::TestSpanishAgeModel::test_age_accented_anos
+=================== 1 failed, 10 passed, 6 warnings in 1.84s ===================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

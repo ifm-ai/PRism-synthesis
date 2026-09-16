@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "bpfman_bpfman_pr1082"
+description = "OpenEnv: bpfman/bpfman PR #1082"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/bpfman/bpfman.git"
+git_pr_id = "1082"
+git_base_commit = "d9a2c1a56dc64afbfe990b82d5c47d25a11d52be"
+task_id = "bpfman_bpfman_pr1082"
+repo_full_name = "bpfman/bpfman"
+domain = "DEVOPS_NETWORK_SERVICES"
+primary_language = "Go"
+runtime_family = "Rust"
+complexity = "medium"
+star_category = "stars_101_500"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

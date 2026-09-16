@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "DataDog_datadog-agent_pr22355"
+description = "OpenEnv: DataDog/datadog-agent PR #22355"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/DataDog/datadog-agent.git"
+git_pr_id = "22355"
+git_base_commit = "15cf63aa1e85d62bb6cb5b18824b98da77facb25"
+task_id = "DataDog_datadog-agent_pr22355"
+repo_full_name = "DataDog/datadog-agent"
+domain = "DEVOPS_NETWORK_SERVICES"
+primary_language = "Go"
+runtime_family = "Go"
+complexity = "hard"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

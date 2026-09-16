@@ -1,0 +1,82 @@
+{
+  "pr_summary": "Fix librosa API compatibility issues in MLCommons inference RNNT speech recognition benchmark. Recent librosa versions changed function signatures requiring keyword arguments (sr=, orig_sr=, target_sr=, top_db=, n_fft=) instead of positional arguments. Also fixes torch.stft return_complex handling and numpy array dtype for coco.py.",
+  "runtime_family": "Python",
+  "package_manager": "pip",
+  "touched_files": [
+    "docker/pytorch-aarch64/patches/mlcommons_rnnt.patch"
+  ],
+  "important_build_files": [
+    "docker/pytorch-aarch64/Dockerfile",
+    "docker/pytorch-aarch64/build.sh",
+    "docker/pytorch-aarch64/scripts/build-mlcommons.sh",
+    "docker/pytorch-aarch64/patches/mlcommons_rnnt.patch"
+  ],
+  "important_test_files": [
+    "docker/pytorch-aarch64/examples/classify_image.py",
+    "docker/pytorch-aarch64/examples/detect_objects.py",
+    "docker/pytorch-aarch64/examples/answer_questions.py",
+    "docker/pytorch-aarch64/examples/ssd_resnet34.py"
+  ],
+  "candidate_build_commands": [
+    "docker/pytorch-aarch64/build.sh --build-type full",
+    "docker/pytorch-aarch64/build.sh --build-type pytorch"
+  ],
+  "candidate_test_commands": [
+    "cd docker/pytorch-aarch64/examples && python classify_image.py",
+    "cd docker/pytorch-aarch64/examples && python detect_objects.py",
+    "cd docker/pytorch-aarch64/examples && python answer_questions.py"
+  ],
+  "candidate_smoke_commands": [
+    "python -c \"import torch; print(torch.__version__)\"",
+    "python -c \"import librosa; print(librosa.__version__)\"",
+    "python -c \"import numpy; print(numpy.__version__)\""
+  ],
+  "candidate_activation_checks": [
+    "source /home/ubuntu/python3-venv/bin/activate",
+    "python -c \"import sys; print(sys.prefix)\""
+  ],
+  "environment_management": "Python virtualenv (python3-venv) located at /home/ubuntu/python3-venv. No conda required - the project specifically avoids conda for AArch64 systems.",
+  "special_system_dependencies": [
+    "AArch64 architecture required for Docker builds",
+    "Ubuntu 22.04 base image",
+    "GCC 11.3",
+    "OpenBLAS 0.3.24",
+    "oneDNN 3.3.4 with ACL (Arm Compute Library)",
+    "Python 3.10",
+    "sox (audio processing)",
+    "librosa==0.10.0",
+    "PyTorch 2.2.0-rc8",
+    "TorchVision 0.16.0",
+    "NumPy 1.25.2",
+    "SciPy 1.10.1"
+  ],
+  "high_value_files": [
+    "docker/pytorch-aarch64/patches/mlcommons_rnnt.patch",
+    "docker/pytorch-aarch64/Dockerfile",
+    "docker/pytorch-aarch64/scripts/build-mlcommons.sh",
+    "docker/pytorch-aarch64/README.md",
+    "docker/pytorch-aarch64/CHANGELOG.md"
+  ],
+  "patch_file_cues": [
+    "speech_recognition/rnnt/pytorch/parts/features.py - librosa.filters.mel() signature change (sr=, n_fft= keyword args)",
+    "speech_recognition/rnnt/pytorch/parts/segment.py - librosa.core.resample() signature change (orig_sr=, target_sr=)",
+    "speech_recognition/rnnt/pytorch/parts/segment.py - librosa.effects.trim() signature change (top_db=)",
+    "speech_recognition/rnnt/pytorch/parts/features.py - torch.stft return_complex handling",
+    "speech_recognition/rnnt/pytorch/parts/features.py - torch.no_grad() context manager placement",
+    "vision/classification_and_detection/python/coco.py - numpy array dtype=object for label_list"
+  ],
+  "test_file_cues": [
+    "MLCommons inference benchmarks (RNNT speech recognition)",
+    "vision/classification_and_detection - image classification and object detection",
+    "Examples in docker/pytorch-aarch64/examples/ serve as integration tests"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "docker/pytorch-aarch64/Dockerfile explicitly checks: RUN if ! [ \"$(arch)\" = \"aarch64\" ] ; then exit 1;",
+    "docker/pytorch-aarch64/README.md states: 'Confirm the machine is AArch64, other architectures are not supported'",
+    "Project targets Linux/AArch64 Docker containers (armswdev/pytorch-arm-neoverse)",
+    "Shell scripts use bash (#!/bin/bash) with Linux-specific paths (/home/ubuntu/python3-venv)",
+    "No Windows-only or macOS-only dependencies detected"
+  ],
+  "notes": "This is a MLCommons inference benchmark repository with ARM-specific optimizations. The fix.patch modifies the mlcommons_rnnt.patch file which is applied to the MLCommons inference repository during Docker build. The actual source files (features.py, segment.py, coco.py) are in the external MLCommons inference repository (github.com/mlcommons/inference), not directly in this repository. The patch file contains the fixes that will be applied to those external files. The project uses pip for Python package management with librosa==0.10.0 pinned in the Dockerfile. Platform is Linux/AArch64 - the Docker build explicitly requires aarch64 architecture."
+}

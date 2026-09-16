@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "BabylonJS_Babylon.js_pr15421"
+description = "OpenEnv: BabylonJS/Babylon.js PR #15421"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/BabylonJS/Babylon.js.git"
+git_pr_id = "15421"
+git_base_commit = "715c6964f32d53e4e285fe37f645766c8ba30807"
+task_id = "BabylonJS_Babylon.js_pr15421"
+repo_full_name = "BabylonJS/Babylon.js"
+domain = "GAMES_SIMULATION_MISC_CRAFT"
+primary_language = "TypeScript"
+runtime_family = "JavaScript/TypeScript"
+complexity = "hard"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

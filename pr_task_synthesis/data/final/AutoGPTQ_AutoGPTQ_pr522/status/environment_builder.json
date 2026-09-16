@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "python:3.11-slim",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Python 3.11 venv at /opt/benchmark/venv with torch 2.4.0+cpu, transformers 4.x, accelerate, peft 0.8.x, and AutoGPTQ installed in CPU-only mode (BUILD_CUDA_EXT=0)",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "tests/test_peft_conversion.py::TestPeftConversion::test_adalora_conversion\ntests/test_peft_conversion.py::TestPeftConversion::test_lora_conversion\ntests/test_q4.py::TestsQ4Exllama::test_exllama\ntests/test_q4.py::TestsQ4Exllama::test_exllama_buffer_size\ntests/test_q4.py::TestsQ4Exllama::test_generation_no_act_order",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "source /opt/benchmark/venv/bin/activate",
+  "notes": "Environment successfully created. CPU-only PyTorch installed for testing without GPU. Marlin kernel tests require NVIDIA GPU (compute capability 8.0+) and will be skipped or fail without GPU hardware. The fix adds marlin_utils.py module for Marlin format persistence."
+}

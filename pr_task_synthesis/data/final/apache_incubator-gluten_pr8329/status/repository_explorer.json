@@ -1,0 +1,25 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    ".github/workflows/velox_backend.yml runs on ubuntu-20.04 and ubuntu-22.04",
+    "CI workflows use Docker containers (apache/gluten:vcpkg-centos-7)",
+    "Shell scripts in dev/ directory are bash scripts for Linux",
+    "README.md mentions support for centos7/8 and ubuntu20.04/22.04",
+    "No Windows-specific or macOS-specific build requirements for the .idea/vcs.xml fix"
+  ],
+  "language": "Java/Scala",
+  "build_system": "Maven",
+  "test_framework": "ScalaTest",
+  "high_value_files": [
+    ".idea/vcs.xml",
+    "pom.xml",
+    "README.md",
+    "CONTRIBUTING.md",
+    ".github/workflows/velox_backend.yml",
+    "dev/buildbundle-veloxbe.sh",
+    "gluten-ut/pom.xml"
+  ],
+  "notes": "The fix.patch modifies an IntelliJ IDEA configuration file (.idea/vcs.xml) that controls issue reference navigation. This is a developer tooling fix, not runtime code. The repository is a Maven-based Java/Scala project with native C++ backends. The platform is Linux-compatible; the .idea/vcs.xml fix does not require any platform-specific tooling."
+}

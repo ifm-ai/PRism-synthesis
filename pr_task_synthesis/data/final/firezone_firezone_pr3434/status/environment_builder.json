@@ -1,0 +1,16 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "debian:bookworm-slim",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Rust 1.75.0 environment with cargo package manager, proptest testing framework, firezone-relay package target",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "Finished test [unoptimized + debuginfo] target(s) in 0.22s\n     Running unittests src/lib.rs (target/debug/deps/firezone_relay-3f91cb668e0ac14c)\nauth::tests::different_relay_secret_makes_password_invalid: test\nauth::tests::expired_is_not_valid: test\nauth::tests::generate_password_test_vector: test",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "export RUSTUP_HOME=/root/.rustup && export CARGO_HOME=/root/.cargo && export PATH=\"/root/.cargo/bin:$PATH\"",
+  "notes": "Environment successfully created. Rust 1.75.0 toolchain installed and verified. All 28 tests (20 lib + 1 main + 7 regression) are discoverable. The firezone-relay package builds successfully. Git and curl are available in the base image. build-essential was added to provide the cc linker required for Rust compilation."
+}

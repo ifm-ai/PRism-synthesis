@@ -1,0 +1,71 @@
+{
+  "build_spec_version": "1.0",
+  "base_image": "debian:bookworm",
+  "build_context_files": [
+    "repo_setup.sh",
+    "setup_runtime.sh"
+  ],
+  "system_packages": [
+    "git",
+    "curl",
+    "python3",
+    "python3-pip",
+    "python3-venv",
+    "nodejs",
+    "npm"
+  ],
+  "build_steps": [
+    {
+      "step": 1,
+      "action": "base_image",
+      "description": "Start from debian:bookworm"
+    },
+    {
+      "step": 2,
+      "action": "install_system_packages",
+      "description": "Install git, curl, python3, python3-pip, python3-venv, nodejs, npm"
+    },
+    {
+      "step": 3,
+      "action": "copy_repo_setup",
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh"
+    },
+    {
+      "step": 4,
+      "action": "run_repo_setup",
+      "description": "Execute repo_setup.sh to clone Microsoft Recognizers-Text repository"
+    },
+    {
+      "step": 5,
+      "action": "copy_runtime_setup",
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh"
+    },
+    {
+      "step": 6,
+      "action": "run_runtime_setup",
+      "description": "Execute setup_runtime.sh to create venv and install Python dependencies"
+    },
+    {
+      "step": 7,
+      "action": "set_workdir",
+      "workdir": "/workspace"
+    }
+  ],
+  "runtime_mounts": {
+    "eval_script": "/artifacts/evaluation/eval.sh",
+    "test_patch": "/artifacts/evaluation/test.patch",
+    "hidden_tests": "/artifacts/evaluation/tests/"
+  },
+  "virtualenv_path": "/opt/benchmark/venv",
+  "repo_materialization": {
+    "method": "repo_setup_script",
+    "target": "/workspace",
+    "source": "https://github.com/microsoft/Recognizers-Text.git",
+    "commit": "1b88159e3523a1aa8fba6370a2d28a9b39a90030"
+  },
+  "build_backend": "buildah",
+  "output_format": "oci",
+  "output_archive": "/artifacts/environment/openenv_validation_oci.tar"
+}

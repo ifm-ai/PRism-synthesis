@@ -1,0 +1,93 @@
+{
+  "pr_summary": "Ensure the bpfman RPC server creates socket directories at startup and initializes logging properly. The RPC binary must create /run/bpfman-sock (and optionally /run/bpfman/csi for CSI support) before binding the socket, and both RPC and CLI binaries must initialize logging (journald if under systemd, otherwise env_logger) with RUST_LOG environment variable support.",
+  "runtime_family": "Rust",
+  "package_manager": "cargo",
+  "touched_files": [
+    "bpfman-api/src/bin/rpc/main.rs",
+    "bpfman-api/src/bin/rpc/serve.rs",
+    "bpfman/src/bin/cli/main.rs",
+    "bpfman/src/lib.rs",
+    "bpfman/src/utils.rs"
+  ],
+  "important_build_files": [
+    "Cargo.toml",
+    "Cargo.lock",
+    "bpfman/Cargo.toml",
+    "bpfman-api/Cargo.toml",
+    "xtask/Cargo.toml",
+    "tests/integration-test/Cargo.toml"
+  ],
+  "important_test_files": [
+    "tests/integration-test/src/main.rs",
+    "tests/integration-test/src/tests/basic.rs",
+    "tests/integration-test/src/tests/e2e.rs",
+    "tests/integration-test/src/tests/mod.rs"
+  ],
+  "candidate_build_commands": [
+    "cargo build --verbose",
+    "cargo xtask build-ebpf --libbpf-dir ./libbpf",
+    "cargo xtask build-man-page",
+    "cargo xtask build-completion"
+  ],
+  "candidate_test_commands": [
+    "cargo test -p bpfman -p bpfman-api",
+    "cargo llvm-cov test --all-features -p bpfman -p bpfman-api",
+    "cargo xtask integration-test"
+  ],
+  "candidate_smoke_commands": [
+    "cargo build -p bpfman-api --bin bpfman-rpc",
+    "cargo build -p bpfman --bin bpfman",
+    "bpfman-rpc --help",
+    "bpfman --help"
+  ],
+  "candidate_activation_checks": [
+    "which cargo",
+    "cargo --version",
+    "rustc --version"
+  ],
+  "environment_management": "cargo (Rust package manager)",
+  "special_system_dependencies": [
+    "clang",
+    "llvm",
+    "libbpf-dev",
+    "libelf-dev",
+    "protobuf-compiler",
+    "cmake",
+    "libssl-dev",
+    "gcc-multilib"
+  ],
+  "high_value_files": [
+    "Cargo.toml",
+    "bpfman-api/src/bin/rpc/main.rs",
+    "bpfman-api/src/bin/rpc/serve.rs",
+    "bpfman/src/bin/cli/main.rs",
+    "bpfman/src/utils.rs",
+    "bpfman/src/lib.rs",
+    ".github/workflows/build.yml",
+    "scripts/setup.sh"
+  ],
+  "patch_file_cues": [
+    "RTDIR_SOCK: /run/bpfman-sock - socket directory path",
+    "RTDIR_BPFMAN_CSI: /run/bpfman/csi - CSI socket directory path",
+    "RUST_LOG environment variable for log level configuration",
+    "systemd_journal_logger::connected_to_journal - journald detection",
+    "JournalLog - systemd journal logging",
+    "env_logger - fallback logging",
+    "create_dir_all - directory creation for socket paths"
+  ],
+  "test_file_cues": [
+    "tests/integration-test/src/tests/basic.rs - basic integration tests",
+    "tests/integration-test/src/tests/e2e.rs - end-to-end tests",
+    "cargo xtask integration-test - integration test runner"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "Cargo.toml workspace.metadata.vendor-filter platforms only list Linux targets (aarch64-unknown-linux-gnu, i686-unknown-linux-gnu, powerpc64le-unknown-linux-gnu, s390x-unknown-linux-gnu, x86_64-unknown-linux-gnu)",
+    "CI workflows run on ubuntu-latest",
+    "Dependencies include libsystemd and systemd-journal-logger (Linux systemd specific)",
+    "Socket paths use Unix domain sockets (/run/bpfman-sock)",
+    "Dependencies include libbpf, nix crate with unix features",
+    "Containerfiles target Linux containers"
+  ],
+  "notes": "This is a Rust project (bpfman) that manages eBPF programs. The fix involves ensuring socket directories are created at startup and logging is properly initialized. The project is Linux-only due to systemd dependencies, eBPF requirements, and Unix domain socket usage. No test.patch file exists - tests may need to be synthesized. Key build tool is 'cargo xtask' for custom build tasks. The project requires libbpf and other system dependencies for eBPF functionality."
+}

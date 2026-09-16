@@ -1,0 +1,72 @@
+{
+  "base_image_candidate": "python:3.11-slim",
+  "system_packages": [
+    "git",
+    "curl",
+    "openmpi-bin",
+    "libopenmpi-dev",
+    "hdf5-tools",
+    "libhdf5-openmpi-dev"
+  ],
+  "base_setup_commands": [
+    "apt-get update",
+    "apt-get install -y git curl openmpi-bin libopenmpi-dev hdf5-tools libhdf5-openmpi-dev"
+  ],
+  "setup_runtime_commands": [
+    "python3 -m venv /opt/benchmark/venv",
+    "source /opt/benchmark/venv/bin/activate",
+    "pip install --upgrade pip setuptools wheel",
+    "pip install mpi4py",
+    "pip install h5py",
+    "pip install jax jaxlib",
+    "pip install numpy astropy healpy pandas fitsio pyarrow tables",
+    "pip install pz-rail-base",
+    "pip install -e /workspace",
+    "pip install pytest pytest-cov",
+    "deactivate"
+  ],
+  "activation_commands": [
+    "source /opt/benchmark/venv/bin/activate"
+  ],
+  "activation_command": "source /opt/benchmark/venv/bin/activate",
+  "activation_type": "venv",
+  "activation_validation_command": "bash -c 'source /opt/benchmark/venv/bin/activate && echo ACTIVATION_OK'",
+  "detected_test_command": "python -m pytest tests",
+  "runtime_smoke_command": "python -c \"import rail; print(rail.__version__)\"",
+  "runtime_profile": {
+    "ecosystem": "Python",
+    "package_manager": "pip",
+    "env": "/opt/benchmark/venv",
+    "env_name": "benchmark",
+    "prepare_commands": [
+      "python3 -m venv /opt/benchmark/venv",
+      "source /opt/benchmark/venv/bin/activate"
+    ],
+    "activation_commands": [
+      "source /opt/benchmark/venv/bin/activate"
+    ],
+    "base_deps_installed": [
+      "mpi4py",
+      "h5py",
+      "jax",
+      "jaxlib",
+      "numpy",
+      "astropy",
+      "healpy",
+      "pandas",
+      "fitsio",
+      "pyarrow",
+      "tables",
+      "pz-rail-base",
+      "pytest",
+      "pytest-cov"
+    ],
+    "test_only_install_strategy": "editable",
+    "cache_dirs": [
+      "/opt/benchmark/venv",
+      "/home/agent_sandbox/.cache/pip"
+    ],
+    "notes": "MPI-enabled Python environment for pz-rail. The environment includes MPI and HDF5 system libraries for mpi4py and h5py. JAX is installed for GPU-accelerated computations. The pz-rail package is installed in editable mode from /workspace."
+  },
+  "notes": "Base image python:3.11-slim recommended. git and curl are included in system_packages. The environment uses a Python venv at /opt/benchmark/venv. MPI and HDF5 system libraries are required for mpi4py and h5py. The pz-rail package is installed in editable mode so changes to /workspace are reflected immediately."
+}

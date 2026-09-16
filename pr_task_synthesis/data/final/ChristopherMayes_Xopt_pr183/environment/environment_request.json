@@ -1,0 +1,72 @@
+{
+  "base_image_candidate": "ubuntu:22.04",
+  "base_image": "ubuntu:22.04",
+  "system_packages": [
+    "git",
+    "curl",
+    "build-essential",
+    "libopenmpi-dev",
+    "openmpi-bin",
+    "libhdf5-dev",
+    "wget",
+    "ca-certificates"
+  ],
+  "base_setup_commands": [
+    "apt-get update",
+    "apt-get install -y git curl build-essential libopenmpi-dev openmpi-bin libhdf5-dev wget ca-certificates",
+    "wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -O /tmp/miniforge.sh",
+    "bash /tmp/miniforge.sh -b -p /opt/conda",
+    "rm /tmp/miniforge.sh",
+    "/opt/conda/bin/conda init bash",
+    "source /opt/conda/etc/profile.d/conda.sh"
+  ],
+  "environment_setup_commands": [
+    "source /opt/conda/etc/profile.d/conda.sh",
+    "conda env create -f /workspace/environment.yml",
+    "conda activate xopt-dev",
+    "pip install --no-dependencies -e ."
+  ],
+  "setup_runtime_commands": [
+    "source /opt/conda/etc/profile.d/conda.sh",
+    "cd /workspace && conda env create -f environment.yml",
+    "conda activate xopt-dev",
+    "pip install --no-dependencies -e ."
+  ],
+  "activation_commands": [
+    "source /opt/conda/etc/profile.d/conda.sh && conda activate xopt-dev"
+  ],
+  "activation_command": "source /opt/conda/etc/profile.d/conda.sh && conda activate xopt-dev",
+  "activation_type": "conda",
+  "activation_validation_command": "bash -c 'source /opt/conda/etc/profile.d/conda.sh && conda activate xopt-dev && echo ACTIVATION_OK'",
+  "dependency_install_commands": [
+    "conda activate xopt-dev",
+    "pip install --no-dependencies -e ."
+  ],
+  "detected_test_command": "python scripts/run_tests.py",
+  "runtime_smoke_command": "python -c \"from xopt.generators.ga.cnsga import CNSGAGenerator; print('CNSGAGenerator imported successfully')\"",
+  "runtime_profile": {
+    "ecosystem": "Python",
+    "package_manager": "conda/mamba",
+    "env": "xopt-dev",
+    "env_name": "xopt-dev",
+    "prepare_commands": [
+      "apt-get update && apt-get install -y git curl build-essential libopenmpi-dev openmpi-bin libhdf5-dev wget ca-certificates",
+      "wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -O /tmp/miniforge.sh",
+      "bash /tmp/miniforge.sh -b -p /opt/conda",
+      "/opt/conda/bin/conda init bash",
+      "source /opt/conda/etc/profile.d/conda.sh",
+      "conda env create -f environment.yml",
+      "conda activate xopt-dev",
+      "pip install --no-dependencies -e ."
+    ],
+    "activation_commands": "source /opt/conda/etc/profile.d/conda.sh && conda activate xopt-dev",
+    "base_deps_installed": true,
+    "test_only_install_strategy": "dependencies already installed in environment; test patch applied separately",
+    "cache_dirs": [
+      "/opt/conda/pkgs",
+      "/root/.cache/pip"
+    ],
+    "notes": "Base image ubuntu:22.04 with manually installed Miniforge. mpi4py requires OpenMPI system packages. Package installed in editable mode for development."
+  },
+  "notes": "Base image changed from condaforge/mambaforge:latest to ubuntu:22.04 to fix apt-get failure due to empty /etc/apt/sources.list. Miniforge is now installed manually via wget. System packages git and curl are installed via apt-get (not pre-provided by base image). The environment.yml file specifies all Python dependencies including numpy, torch, botorch, gpytorch, pandas, pydantic, deap, scipy, and mpi4py. The package is installed in editable mode with --no-dependencies since conda handles dependency resolution."
+}

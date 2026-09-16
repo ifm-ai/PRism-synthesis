@@ -1,0 +1,14 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.0, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /artifacts/evaluation/tests
+plugins: docker-3.2.5, anyio-4.14.0, cov-7.1.0
+collecting ... collected 2 items
+
+../artifacts/evaluation/tests/test_clustering_key.py::test_clustering_key_fix_present PASSED [ 50%]
+../artifacts/evaluation/tests/test_clustering_key.py::test_clustering_key_behavior PASSED [100%]
+
+============================== 2 passed in 0.01s ===============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

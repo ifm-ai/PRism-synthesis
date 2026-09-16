@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "ubuntu:22.04",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Python 3.11 conda environment (lightgbm-env) with CMake-built LightGBM from source. Includes numpy, scipy, scikit-learn, pandas, pytest, dask, pyarrow, matplotlib and all required build tools.",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "tests/c_api_test/test_.py::test_dataset\ntests/c_api_test/test_.py::test_booster\ntests/c_api_test/test_.py::test_max_thread_control\ntests/python_package_test/test_arrow.py::test_dataset_construct_fuzzy[<lambda>-dataset_params0]\ntests/python_package_test/test_arrow.py::test_dataset_construct_fuzzy[<lambda>-dataset_params1]",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "source /opt/conda/etc/profile.d/conda.sh && conda activate lightgbm-env",
+  "notes": "Environment successfully created and verified. LightGBM 4.3.0.99 (dev version) installed from source with precompiled C++ library. Test runner (pytest) is reachable and can discover 754 tests. Git submodules were initialized for external libraries (fast_double_parser, eigen, fmt, compute)."
+}

@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "eclipse-temurin:17-jdk-jammy",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Java/Scala Maven environment with pytest installed via apt with symlink",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "pytest installed via apt python3-pytest with symlink from py.test to pytest in setup_runtime.sh",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64 && export PATH=$JAVA_HOME/bin:$PATH && export MAVEN_HOME=/usr/share/maven",
+  "notes": "Fixed: pytest is now installed via apt python3-pytest with a symlink from /usr/bin/py.test to /usr/bin/pytest. The apt package provides 'py.test', and the symlink ensures 'pytest' command works. This approach avoids pip compatibility issues with older pip versions. Updated setup_runtime.sh and setup_runtime_commands in environment_request.json accordingly."
+}

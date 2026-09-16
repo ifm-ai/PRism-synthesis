@@ -1,0 +1,33 @@
+schema_version = "1.1"
+
+[task]
+name = "activeadmin_activeadmin_pr8457"
+description = "OpenEnv: activeadmin/activeadmin PR #8457"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/activeadmin/activeadmin.git"
+git_pr_id = "8457"
+git_base_commit = "18e17e4f5ce67c384c09e337f16206336175ed61"
+task_id = "activeadmin_activeadmin_pr8457"
+repo_full_name = "activeadmin/activeadmin"
+domain = "BACKEND_API_SERVICES"
+complexity = "easy"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

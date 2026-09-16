@@ -1,0 +1,9 @@
+{
+  "status": "success",
+  "blocks_outer_progress": false,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "route_to": null,
+  "notes": "Container build validation successful. Image openenv-validation:latest built and exported to OCI archive. No changes to Dockerfile.final required - eval.sh format fix is transparent to the container spec as eval.sh is runtime-mounted."
+}

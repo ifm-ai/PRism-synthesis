@@ -1,0 +1,201 @@
+diff --git a/metadata-ingestion/tests/integration/snowflake/common.py b/metadata-ingestion/tests/integration/snowflake/common.py
+index c4362368e..8f45be966 100644
+--- a/metadata-ingestion/tests/integration/snowflake/common.py
++++ b/metadata-ingestion/tests/integration/snowflake/common.py
+@@ -235,7 +235,7 @@ def default_query_results(  # noqa: C901
+                 "BYTES": 1024,
+                 "ROW_COUNT": 10000,
+                 "COMMENT": "Comment for Table",
+-                "CLUSTERING_KEY": None,
++                "CLUSTERING_KEY": "LINEAR(COL_1)",
+             }
+             for tbl_idx in range(1, num_tables + 1)
+         ]
+diff --git a/metadata-ingestion/tests/integration/snowflake/snowflake_golden.json b/metadata-ingestion/tests/integration/snowflake/snowflake_golden.json
+index 5cba4e8b3..9247c4cb0 100644
+--- a/metadata-ingestion/tests/integration/snowflake/snowflake_golden.json
++++ b/metadata-ingestion/tests/integration/snowflake/snowflake_golden.json
+@@ -488,7 +488,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.snowflake.com/ap-south-1.aws/abc12345/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_1/",
+             "name": "TABLE_1",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_1",
+@@ -787,7 +787,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.snowflake.com/ap-south-1.aws/abc12345/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_2/",
+             "name": "TABLE_2",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_2",
+@@ -1086,7 +1086,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.snowflake.com/ap-south-1.aws/abc12345/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_3/",
+             "name": "TABLE_3",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_3",
+@@ -1385,7 +1385,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.snowflake.com/ap-south-1.aws/abc12345/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_4/",
+             "name": "TABLE_4",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_4",
+@@ -1684,7 +1684,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.snowflake.com/ap-south-1.aws/abc12345/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_5/",
+             "name": "TABLE_5",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_5",
+@@ -1983,7 +1983,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.snowflake.com/ap-south-1.aws/abc12345/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_6/",
+             "name": "TABLE_6",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_4",
+@@ -2282,7 +2282,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.snowflake.com/ap-south-1.aws/abc12345/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_7/",
+             "name": "TABLE_7",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_7",
+@@ -2581,7 +2581,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.snowflake.com/ap-south-1.aws/abc12345/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_8/",
+             "name": "TABLE_8",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_8",
+@@ -2880,7 +2880,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.snowflake.com/ap-south-1.aws/abc12345/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_9/",
+             "name": "TABLE_9",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_9",
+@@ -3179,7 +3179,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.snowflake.com/ap-south-1.aws/abc12345/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_10/",
+             "name": "TABLE_10",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_10",
+diff --git a/metadata-ingestion/tests/integration/snowflake/snowflake_privatelink_golden.json b/metadata-ingestion/tests/integration/snowflake/snowflake_privatelink_golden.json
+index 71a74f883..2697b7315 100644
+--- a/metadata-ingestion/tests/integration/snowflake/snowflake_privatelink_golden.json
++++ b/metadata-ingestion/tests/integration/snowflake/snowflake_privatelink_golden.json
+@@ -141,7 +141,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.abc12345.ap-south-1.privatelink.snowflakecomputing.com/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_3/",
+             "name": "TABLE_3",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_3",
+@@ -810,7 +810,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.abc12345.ap-south-1.privatelink.snowflakecomputing.com/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_1/",
+             "name": "TABLE_1",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_1",
+@@ -1475,7 +1475,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.abc12345.ap-south-1.privatelink.snowflakecomputing.com/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_10/",
+             "name": "TABLE_10",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_10",
+@@ -1714,7 +1714,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.abc12345.ap-south-1.privatelink.snowflakecomputing.com/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_5/",
+             "name": "TABLE_5",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_5",
+@@ -1741,7 +1741,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.abc12345.ap-south-1.privatelink.snowflakecomputing.com/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_2/",
+             "name": "TABLE_2",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_2",
+@@ -2303,7 +2303,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.abc12345.ap-south-1.privatelink.snowflakecomputing.com/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_6/",
+             "name": "TABLE_6",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_6",
+@@ -2623,7 +2623,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.abc12345.ap-south-1.privatelink.snowflakecomputing.com/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_7/",
+             "name": "TABLE_7",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_7",
+@@ -2666,7 +2666,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.abc12345.ap-south-1.privatelink.snowflakecomputing.com/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_4/",
+             "name": "TABLE_4",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_4",
+@@ -3164,7 +3164,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.abc12345.ap-south-1.privatelink.snowflakecomputing.com/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_8/",
+             "name": "TABLE_8",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_8",
+@@ -3304,7 +3304,7 @@
+     "aspectName": "datasetProperties",
+     "aspect": {
+         "json": {
+-            "customProperties": {},
++            "customProperties": {"CLUSTERING_KEY": "LINEAR(COL_1)"},
+             "externalUrl": "https://app.abc12345.ap-south-1.privatelink.snowflakecomputing.com/#/data/databases/TEST_DB/schemas/TEST_SCHEMA/table/TABLE_9/",
+             "name": "TABLE_9",
+             "qualifiedName": "TEST_DB.TEST_SCHEMA.TABLE_9",

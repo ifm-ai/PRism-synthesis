@@ -1,0 +1,53 @@
+{
+  "base_image_candidate": "debian:bookworm",
+  "system_packages": [
+    "build-essential",
+    "cmake",
+    "pkg-config",
+    "libssl-dev",
+    "git",
+    "curl"
+  ],
+  "base_setup_commands": [
+    "apt-get update",
+    "apt-get install -y build-essential cmake pkg-config libssl-dev git curl"
+  ],
+  "setup_runtime_commands": [
+    "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.79",
+    "source $HOME/.cargo/env",
+    "rustup show"
+  ],
+  "activation_commands": [
+    "source $HOME/.cargo/env",
+    "rustup show"
+  ],
+  "activation_command": "source $HOME/.cargo/env",
+  "activation_type": "cargo",
+  "activation_validation_command": "bash -c 'source $HOME/.cargo/env && cargo --version && rustc --version'",
+  "build_command": "cargo build",
+  "test_command": "cargo test --package uv --test help",
+  "detected_test_command": "cargo test --package uv --test help",
+  "runtime_smoke_command": "./target/debug/uv --help",
+  "runtime_profile": {
+    "ecosystem": "Rust",
+    "package_manager": "cargo",
+    "env": "cargo",
+    "env_name": "rust-1.79",
+    "prepare_commands": [
+      "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.79",
+      "source $HOME/.cargo/env"
+    ],
+    "activation_commands": [
+      "source $HOME/.cargo/env"
+    ],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "cargo test automatically builds dependencies",
+    "cache_dirs": [
+      "$HOME/.cargo/registry",
+      "$HOME/.cargo/git",
+      "target"
+    ],
+    "notes": "Rust 1.79 toolchain as specified in rust-toolchain.toml. cargo-nextest preferred but cargo test is valid fallback."
+  },
+  "notes": "Base image: debian:bookworm. Rust 1.79 toolchain required by rust-toolchain.toml. System dependencies: build-essential, cmake, pkg-config, libssl-dev for native compilation. git and curl are included in baseline packages. Test runner: cargo test (cargo-nextest optional). The --isolated flag visibility fix is in crates/uv-cli/src/lib.rs."
+}

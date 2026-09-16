@@ -1,0 +1,7 @@
+{
+  "test_only_exit_code": 2,
+  "test_with_fix_exit_code": 0,
+  "is_success": true,
+  "issues": [],
+  "notes": "outer orchestrator image-level verification"
+}

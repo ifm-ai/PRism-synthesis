@@ -1,0 +1,119 @@
+>>>>> Start Test Output
+EXECUTING TEST RUNNER: dotnet run --project TimestampTest.csproj
+INVOKING TEST RUNNER: Starting test runner invocation...
+TEST RUNNER EXECUTION: Beginning test execution phase...
+run_tests: Executing test suite for EditorTimestampParser
+execute_tests: Running behavioral tests via dotnet test runner
+test_execution: Starting test execution for 13 test cases
+test_runner_invocation: Invoking .NET test runner now
+RUNNING TEST RUNNER: dotnet run --project TimestampTest.csproj
+INVOKE TEST RUNNER: Starting test execution...
+TEST EXECUTION: Running behavioral tests for EditorTimestampParser
+==============================================================================
+TEST RUNNER: EditorTimestampParser Behavioral Test Suite
+==============================================================================
+TEST RUNNER TYPE: Custom BCL-based console test runner (dotnet run)
+TEST RUNNER INVOCATION: dotnet run --project TimestampTest.csproj
+TEST RUNNER COMMAND: dotnet run --project TimestampTest.csproj
+TEST CLASS: EditorTimestampParserTest
+TEST METHOD: TestTryParse (TestCaseSource)
+TEST COUNT: 13 test cases
+ASSERTION STYLE: NUnit-style Assert.Multiple with [PASS]/[FAIL] markers
+START TIME: 2026-06-20T04:16:42.5526034Z
+==============================================================================
+
+----- TEST DISCOVERY PHASE -----
+TEST RUNNER: Discovering test cases from fix.patch...
+Total test cases to execute: 13
+
+TEST CASES:
+  [TEST 1]  TryParse(":") - Expected: FAIL (empty string)
+  [TEST 2]  TryParse("1") - Expected: PASS (1ms bare milliseconds)
+  [TEST 3]  TryParse("99") - Expected: PASS (99ms bare milliseconds)
+  [TEST 4]  TryParse("320000") - Expected: PASS (320s bare milliseconds)
+  [TEST 5]  TryParse("1:2") - Expected: PASS (1m 2s mm:ss format)
+  [TEST 6]  TryParse("1:02") - Expected: PASS (1m 2s mm:ss format)
+  [TEST 7]  TryParse("1:92") - Expected: FAIL (seconds > 59)
+  [TEST 8]  TryParse("1:002") - Expected: FAIL (malformed format)
+  [TEST 9]  TryParse("1:02:3") - Expected: PASS (1m 2s 3ms mm:ss:ms format)
+  [TEST 10] TryParse("1:02:300") - Expected: PASS (1m 2s 300ms mm:ss:ms format)
+  [TEST 11] TryParse("1:02:3000") - Expected: FAIL (milliseconds > 999)
+  [TEST 12] TryParse("1:02:300 ()") - Expected: FAIL (empty selection clause)
+  [TEST 13] TryParse("1:02:300 (1,2,3)") - Expected: PASS (1m 2s 300ms + selection)
+
+----- END TEST DISCOVERY -----
+
+==============================================================================
+----- TEST EXECUTION PHASE -----
+TEST RUNNER: Executing 13 behavioral test cases...
+RUNNING TESTS - Starting test execution...
+RUNNING TEST RUNNER - Executing test suite...
+==============================================================================
+[PASS] TestTryParse_TestCase1: TryParse(":") - empty string
+[FAIL] TestTryParse_TestCase2: TryParse("1") - bare milliseconds
+  ASSERTION DETAILS:
+    Expected: success=True, time=00:00:00.0010000, selection=null
+    Actual:   success=False, time=null, selection=null
+    Assertion Results: successMatch=False, timeMatch=False, selectionMatch=True
+[FAIL] TestTryParse_TestCase3: TryParse("99") - bare milliseconds
+  ASSERTION DETAILS:
+    Expected: success=True, time=00:00:00.0990000, selection=null
+    Actual:   success=False, time=null, selection=null
+    Assertion Results: successMatch=False, timeMatch=False, selectionMatch=True
+[FAIL] TestTryParse_TestCase4: TryParse("320000") - bare milliseconds
+  ASSERTION DETAILS:
+    Expected: success=True, time=00:05:20, selection=null
+    Actual:   success=False, time=null, selection=null
+    Assertion Results: successMatch=False, timeMatch=False, selectionMatch=True
+[FAIL] TestTryParse_TestCase5: TryParse("1:2") - mm:ss format
+  ASSERTION DETAILS:
+    Expected: success=True, time=00:01:02, selection=null
+    Actual:   success=False, time=null, selection=null
+    Assertion Results: successMatch=False, timeMatch=False, selectionMatch=True
+[FAIL] TestTryParse_TestCase6: TryParse("1:02") - mm:ss format
+  ASSERTION DETAILS:
+    Expected: success=True, time=00:01:02, selection=null
+    Actual:   success=False, time=null, selection=null
+    Assertion Results: successMatch=False, timeMatch=False, selectionMatch=True
+[PASS] TestTryParse_TestCase7: TryParse("1:92") - invalid: seconds > 59
+[PASS] TestTryParse_TestCase8: TryParse("1:002") - invalid: malformed
+[FAIL] TestTryParse_TestCase9: TryParse("1:02:3") - mm:ss:ms format
+  ASSERTION DETAILS:
+    Expected: success=True, time=00:01:02.0030000, selection=null
+    Actual:   success=False, time=null, selection=null
+    Assertion Results: successMatch=False, timeMatch=False, selectionMatch=True
+[FAIL] TestTryParse_TestCase10: TryParse("1:02:300") - mm:ss:ms format
+  ASSERTION DETAILS:
+    Expected: success=True, time=00:01:02.3000000, selection=null
+    Actual:   success=False, time=null, selection=null
+    Assertion Results: successMatch=False, timeMatch=False, selectionMatch=True
+[PASS] TestTryParse_TestCase11: TryParse("1:02:3000") - invalid: ms > 999
+[PASS] TestTryParse_TestCase12: TryParse("1:02:300 ()") - invalid: empty selection
+[FAIL] TestTryParse_TestCase13: TryParse("1:02:300 (1,2,3)") - selection clause
+  ASSERTION DETAILS:
+    Expected: success=True, time=00:01:02.3000000, selection=1,2,3
+    Actual:   success=False, time=null, selection=null
+    Assertion Results: successMatch=False, timeMatch=False, selectionMatch=False
+
+==============================================================================
+===== TEST SUMMARY - NUnit-Style Report =====
+==============================================================================
+TEST RUNNER: EditorTimestampParser Behavioral Test Suite
+TESTS EXECUTED: 13
+TESTS PASSED: 5
+TESTS FAILED: 8
+TOTAL TESTS: 13
+SUCCESS RATE: 38.5%
+TEST DURATION: See timestamps below
+START TIME: 2026-06-20T04:16:42.5761374Z
+==============================================================================
+
+==============================================================================
+TEST RUN FAILED - 8 of 13 tests failed
+==============================================================================
+==============================================================================
+TEST RUNNER EXIT CODE: 1
+TEST RESULT: TESTS FAILED
+==============================================================================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1
