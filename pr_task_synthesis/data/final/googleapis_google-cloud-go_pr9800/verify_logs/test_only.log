@@ -1,0 +1,9 @@
+>>>>> Start Test Output
+=== RUN   TestGrpcCredentialsProvider_TokenType
+    hidden_token_type_test.go:78: got " token", want "Bearer token"
+--- FAIL: TestGrpcCredentialsProvider_TokenType (0.00s)
+FAIL
+FAIL	cloud.google.com/go/auth/grpctransport	0.006s
+FAIL
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

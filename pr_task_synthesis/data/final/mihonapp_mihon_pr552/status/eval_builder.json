@@ -1,0 +1,28 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "verification_command": "java tachiyomi.verification.TimestampVerificationTest",
+  "activation_source": "environment_request.json activation_commands",
+  "eval_template_version": "1.0.0",
+  "verifier_asset_mode": "external_java_test",
+  "copied_test_patch": false,
+  "supplemental_tests_created": true,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that DATE_MODIFIED uses epochSecond (seconds) instead of toEpochMilli() (milliseconds) to produce correct timestamps for Android MediaStore.",
+  "fix_patch_grounding": "The fix changes Instant.now().toEpochMilli() to Instant.now().epochSecond in ImageSaver.kt line 82, ensuring DATE_MODIFIED receives seconds-since-epoch values that Android correctly interprets.",
+  "issue_context_used": "The issue describes that millisecond values cause Android Gallery to display dates far in the future (year 56189) because Android expects seconds for DATE_MODIFIED.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": [
+    "java tachiyomi.verification.TimestampVerificationTest"
+  ],
+  "required_verifier_files": [
+    "eval.sh",
+    "tests/ImageSaverTimestampTest.java"
+  ],
+  "notes": "Created standalone Java test that verifies the timestamp behavior without requiring the full Android project build. The test runs in isolation using only the JDK, verifying that epochSecond produces values in the seconds range (billions) while toEpochMilli() produces values in the milliseconds range (trillions). The test correctly fails when the buggy behavior (millis) is used and passes when the fixed behavior (seconds) is used."
+}

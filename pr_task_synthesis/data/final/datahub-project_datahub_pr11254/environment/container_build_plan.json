@@ -1,0 +1,23 @@
+{
+  "base_image": "python:3.11-slim",
+  "system_packages": [
+    "git",
+    "curl",
+    "openjdk-17-jdk-headless",
+    "python3.11-venv"
+  ],
+  "runtime_setup_script": "/opt/benchmark/setup_runtime.sh",
+  "repo_setup_script": "/opt/benchmark/repo_setup.sh",
+  "verifier_assets": [
+    "/artifacts/evaluation/eval.sh",
+    "/artifacts/evaluation/test.patch",
+    "/artifacts/evaluation/tests/"
+  ],
+  "workdir": "/workspace",
+  "build_context_scripts": [
+    "/artifacts/environment/setup_runtime.sh",
+    "/artifacts/environment/repo_setup.sh"
+  ],
+  "virtualenv_path": "/opt/benchmark/venv",
+  "activation_command": "source /opt/benchmark/venv/bin/activate"
+}

@@ -1,0 +1,26 @@
+{
+  "base_image": "python:3.11-slim",
+  "system_packages": [
+    "git",
+    "curl",
+    "openjdk-21-jre-headless",
+    "python3-venv"
+  ],
+  "runtime_commands": [
+    "python3 -m venv /opt/benchmark/venv",
+    "source /opt/benchmark/venv/bin/activate",
+    "pip install --upgrade pip setuptools wheel",
+    "pip install acryl-datahub==1.6.0.4",
+    "pip install acryl-datahub-classify",
+    "pip install 'pydantic<2' 'avro-gen3==0.7.13' 'avro<1.12,>=1.11.3'",
+    "pip install -e /workspace/metadata-ingestion/ --no-deps",
+    "pip install termcolor",
+    "pip install snowflake-connector-python snowflake-sqlalchemy msal",
+    "pip install pytest pytest-cov pytest-docker freezegun deepdiff"
+  ],
+  "activation_commands": [
+    "source /opt/benchmark/venv/bin/activate"
+  ],
+  "working_directory": "/workspace",
+  "repo_setup_script": "/artifacts/environment/repo_setup.sh"
+}

@@ -1,0 +1,79 @@
+{
+  "pr_summary": "Fix for CPU particle simulations failing on WebGPU due to duplicate attribute extraction and unused sampler uniforms. The fix modifies shader-utils.js to handle duplicate attributes gracefully with a warning, and wraps internalTex0/1/2 sampler uniforms in #ifdef PARTICLE_GPU blocks in particle_cpu.js and particle_init.js to prevent unused uniform errors on WebGPU.",
+  "runtime_family": "JavaScript/WebGL/WebGPU",
+  "package_manager": "npm",
+  "touched_files": [
+    "src/platform/graphics/shader-utils.js",
+    "src/scene/shader-lib/chunks/particle/vert/particle_cpu.js",
+    "src/scene/shader-lib/chunks/particle/vert/particle_init.js"
+  ],
+  "important_build_files": [
+    "package.json",
+    "build.mjs",
+    "rollup.config.mjs",
+    "tsconfig.json",
+    "tsconfig.build.json"
+  ],
+  "important_test_files": [
+    "test/fixtures.mjs",
+    "tests/karma.conf.cjs",
+    "tests/framework/components/particlesystem/test_particlesystemcomponent.js",
+    "test/platform/graphics/webgl-graphics-device.test.mjs"
+  ],
+  "candidate_build_commands": [
+    "npm install",
+    "npm run build",
+    "npm run build:release",
+    "npm run build:debug"
+  ],
+  "candidate_test_commands": [
+    "npm test",
+    "npm run test:coverage",
+    "npm run test:karma",
+    "xvfb-run --auto-servernum npm run test:karma"
+  ],
+  "candidate_smoke_commands": [
+    "node --version",
+    "npm --version",
+    "npm run build -- target:esm"
+  ],
+  "candidate_activation_checks": [
+    "test -d node_modules",
+    "test -f build/playcanvas.js",
+    "node -e \"require('playcanvas')\""
+  ],
+  "environment_management": "Standard npm/node_modules. No special environment manager (not using poetry, uv, conda, etc.).",
+  "special_system_dependencies": [
+    "Node.js 18.x (per CI)",
+    "xvfb (for karma tests with Chrome headless)",
+    "Chrome browser (for karma tests)"
+  ],
+  "high_value_files": [
+    "src/platform/graphics/shader-utils.js",
+    "src/scene/shader-lib/chunks/particle/vert/particle_cpu.js",
+    "src/scene/shader-lib/chunks/particle/vert/particle_init.js",
+    "package.json",
+    "build.mjs",
+    "tests/karma.conf.cjs",
+    "test/fixtures.mjs",
+    ".github/workflows/ci.yml"
+  ],
+  "patch_file_cues": [
+    "Duplicate attribute handling in shader attribute extraction",
+    "WebGPU-specific conditional compilation (#ifdef PARTICLE_GPU)",
+    "Sampler uniforms (internalTex0, internalTex1, internalTex2) for particle systems"
+  ],
+  "test_file_cues": [
+    "tests/framework/components/particlesystem/test_particlesystemcomponent.js - particle system component tests",
+    "test/platform/graphics/ - graphics-related unit tests",
+    "tests/karma.conf.cjs - karma configuration for browser-based tests"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "CI workflow (.github/workflows/ci.yml) runs on ubuntu-latest",
+    "All build and test commands are cross-platform npm scripts",
+    "WebGL/WebGPU targets are web standards, not platform-specific",
+    "Karma tests use Chrome which runs on Linux with xvfb"
+  ],
+  "notes": "This is a PlayCanvas WebGL game engine repository. The fix addresses WebGPU compatibility issues with CPU particle simulations. The project uses npm for package management, rollup for bundling, mocha/chai for Node-based unit tests, and karma for browser-based tests. The repository is fully cross-platform but CI runs on Linux (ubuntu-latest). No Windows or macOS specific constraints detected."
+}

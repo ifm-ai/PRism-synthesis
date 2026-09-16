@@ -1,0 +1,30 @@
+>>>>> Start Test Output
+   Compiling fix_verifier v0.1.0 (/tmp/tmp.aLRLdcbO3B/fix_verifier)
+    Finished `release` profile [optimized] target(s) in 0.28s
+     Running tests/verify_fix.rs (target/release/deps/verify_fix-04d808c248f181fe)
+
+running 1 test
+test test_msaa_multi_camera_fix ... === MSAA Multi-Camera Fix Verification ===
+
+Source file: /workspace/crates/bevy_render/src/view/mod.rs
+
+Verification Results:
+------------------------------------------------------------
+[PASS] Tuple destructuring: Fixed pattern found, buggy pattern absent
+[PASS] main_texture creation: Found in or_insert_with closure
+[PASS] main_texture clone: Fixed pattern (clone) found, buggy pattern absent
+------------------------------------------------------------
+
+RESULT: All checks PASSED
+
+The MSAA multi-camera fix is correctly applied.
+This fix ensures that when multiple cameras share the same render target,
+they correctly share the main_texture AtomicUsize state for proper MSAA
+texture swapping. The fix moves main_texture from per-entity to per-target
+cache entry.
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

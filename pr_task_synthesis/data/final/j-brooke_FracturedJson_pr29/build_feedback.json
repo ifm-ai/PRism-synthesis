@@ -1,0 +1,14 @@
+{
+  "is_finish": true,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "failure_domain": "unknown",
+  "route_to": null,
+  "blocking_errors": [],
+  "warnings": [
+    "dotnet restore timed out during build (network issue) - handled gracefully by setup_runtime.sh, packages will be restored at test time"
+  ],
+  "next_actions": [],
+  "notes": "Container build completed successfully. The Dockerfile.final builds without errors. NuGet restore experienced a network timeout but this is expected and handled by the setup_runtime.sh script which continues execution and defers package restoration to test time. OCI archive exported to /artifacts/environment/openenv_validation_oci.tar."
+}

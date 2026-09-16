@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "ubuntu:22.04",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "C/C++ embedded RTOS environment with ARM GCC toolchain, cmake, kconfiglib, and pytest-based testing framework for Apache NuttX. Fixed for Ubuntu 22.04 pip 22.0.2 compatibility using --user flag instead of --break-system-packages.",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "============================= test session starts ==============================\nplatform linux -- Python 3.11.2, pytest-6.2.5, py-1.11.0, pluggy-1.6.0\nrootdir: /tmp/openenv_runtime_probe/workspace/tools/ci/testrun, configfile: pytest.ini\nplugins: json-0.4.0, ordering-0.6, repeat-0.9.1\ncollected 13 items",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "",
+  "notes": "Environment synthesis completed successfully. Fixed setup_runtime.sh for Ubuntu 22.04 pip 22.0.2 compatibility: replaced --break-system-packages with --user flag (PEP 668). Ensured nuttx-apps clone happens before configure.sh with proper error handling. The runtime supports building NuttX with nucleo-h745zi:nsh_cm7 configuration. The pysim_cm7 configuration is available after applying fix.patch. Test runner (pytest) is reachable and can discover 13 tests in tools/ci/testrun/. System-level install with no activation command needed."
+}

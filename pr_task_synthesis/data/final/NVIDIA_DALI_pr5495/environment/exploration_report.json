@@ -1,0 +1,103 @@
+{
+  "pr_summary": "Modernize DALI's public query interfaces to accept std::string_view instead of owned std::string objects when querying information about pipeline inputs, operators, and feed counts. This eliminates unnecessary string allocations and copies. Additionally, add a new public function GetOperator() that returns a pointer to the underlying operator object (or nullptr if not found) given an operator name. All existing query functions (GetReaderMeta, GetInputLayout, GetInputNdim, GetInputDtype, InputFeedCount) are updated to accept string_view. The internal container for input operator descriptors is changed to support heterogeneous lookup.",
+  "runtime_family": "C++ (C++17)",
+  "package_manager": "pip (for Python bindings)",
+  "touched_files": [
+    "dali/pipeline/executor/async_separated_pipelined_executor.cc",
+    "dali/pipeline/executor/async_separated_pipelined_executor.h",
+    "dali/pipeline/executor/executor.h",
+    "dali/pipeline/executor/executor_impl.cc",
+    "dali/pipeline/executor/executor_impl.h",
+    "dali/pipeline/executor/lowered_graph.cc",
+    "dali/pipeline/executor/lowered_graph.h",
+    "dali/pipeline/executor/pipelined_executor.cc",
+    "dali/pipeline/executor/pipelined_executor.h",
+    "dali/pipeline/pipeline.cc",
+    "dali/pipeline/pipeline.h"
+  ],
+  "important_build_files": [
+    "CMakeLists.txt",
+    "dali/pipeline/executor/CMakeLists.txt",
+    "cmake/Dependencies.cmake",
+    "cmake/Dependencies.aarch64-linux.cmake",
+    "pyproject.toml"
+  ],
+  "important_test_files": [
+    "dali/pipeline/executor/executor_test.cc",
+    "dali/pipeline/executor/op_graph_test.cc",
+    "dali/pipeline/executor/source_info_propagation_test.cc",
+    "dali/test/dali_test.h",
+    "dali/test/dali_operator_test.h"
+  ],
+  "candidate_build_commands": [
+    "cmake ../ -DCMAKE_INSTALL_PREFIX=. -DCMAKE_BUILD_TYPE=Release -DBUILD_TEST=ON -DBUILD_BENCHMARK=ON -DBUILD_PYTHON=ON -DBUILD_OPENCV=ON -DBUILD_PROTOBUF=ON -DBUILD_NVJPEG=ON -DBUILD_LIBTIFF=ON -DBUILD_NVOF=ON -DBUILD_NVDEC=ON -DBUILD_LIBSND=ON -DBUILD_NVML=ON -DBUILD_FFTS=ON -DBUILD_CFITSIO=ON -DBUILD_CVCUDA=ON",
+    "make -j$(nproc)",
+    "make lint"
+  ],
+  "candidate_test_commands": [
+    "ctest --output-on-failure",
+    "./dali_test.bin",
+    "cd qa/L0_* && ./test.sh"
+  ],
+  "candidate_smoke_commands": [
+    "python -c \"import nvidia.dali as dali; print(dali.__version__)\"",
+    "python -c \"from nvidia.dali.pipeline import pipeline_def; print('DALI pipeline import successful')\""
+  ],
+  "candidate_activation_checks": [
+    "which cmake",
+    "which nvcc",
+    "python -c \"import nvidia.dali\"",
+    "ldd ./dali_core.so 2>/dev/null || echo 'Check DALI libs'"
+  ],
+  "environment_management": "cmake-based build system with optional conda packaging support. Python bindings built via setuptools. No poetry/uv/pipenv detected.",
+  "special_system_dependencies": [
+    "CUDA Toolkit (12.x recommended)",
+    "NVIDIA GPU drivers",
+    "CMake 3.18+",
+    "OpenCV",
+    "libjpeg-turbo",
+    "libtiff",
+    "FFmpeg (for video support)",
+    "Protobuf",
+    "LMDB",
+    "nvJPEG",
+    "cuFFT",
+    "NPP (NVIDIA Performance Primitives)"
+  ],
+  "high_value_files": [
+    "dali/pipeline/executor/lowered_graph.h",
+    "dali/pipeline/executor/lowered_graph.cc",
+    "dali/pipeline/executor/executor_impl.h",
+    "dali/pipeline/executor/executor_impl.cc",
+    "dali/pipeline/pipeline.h",
+    "dali/pipeline/pipeline.cc",
+    "CMakeLists.txt",
+    "docker/build_helper.sh",
+    "docker/Dockerfile.deps"
+  ],
+  "patch_file_cues": [
+    "Changes from std::string to std::string_view in function signatures",
+    "Addition of GetOperator() method returning OperatorBase*",
+    "Addition of NodeId() method returning std::optional<OpNodeId>",
+    "Addition of NodePtr() method returning OpNode*",
+    "Changes to TensorId() to return std::optional<TensorNodeId>",
+    "Changes to TensorPtr() method returning const TensorNode*",
+    "Use of std::less<> comparator for heterogeneous lookup in maps",
+    "Update to input_operators_ map to use std::less<> comparator"
+  ],
+  "test_file_cues": [
+    "executor_test.cc - tests for executor functionality",
+    "op_graph_test.cc - tests for operator graph operations",
+    "source_info_propagation_test.cc - tests for source info propagation"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "CMakeLists.txt uses Unix-style paths and Linux-specific compiler flags",
+    "CI workflows in .github/workflows/ run on ubuntu-latest",
+    "Docker build files target Linux (x86_64 and aarch64-linux)",
+    "build_helper.sh uses Linux-specific commands (grep, /proc/cpuinfo)",
+    "No Windows-specific code (.sln, .vcxproj) or macOS-specific frameworks detected",
+    "Project explicitly builds in Linux containers per docker/Dockerfile.deps"
+  ],
+  "notes": "This is NVIDIA DALI, a GPU-accelerated data loading and preprocessing library for deep learning. The fix modifies the executor and pipeline APIs to use std::string_view for more efficient string handling. The build requires CUDA toolkit and various NVIDIA libraries. Tests are built with Google Test framework. Python bindings are optional but commonly used. The project uses CMake as its primary build system with many optional components controlled by CMake flags."
+}

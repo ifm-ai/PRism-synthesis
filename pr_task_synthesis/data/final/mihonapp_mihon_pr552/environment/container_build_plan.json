@@ -1,0 +1,85 @@
+{
+  "base_image": "ubuntu:22.04",
+  "build_context_files": [
+    "setup_runtime.sh",
+    "repo_setup.sh"
+  ],
+  "system_packages": [
+    "git",
+    "curl",
+    "wget",
+    "unzip",
+    "openjdk-17-jdk",
+    "libstdc++6",
+    "libncurses5",
+    "libbz2-1.0",
+    "libzstd1"
+  ],
+  "environment_variables": {
+    "DEBIAN_FRONTEND": "noninteractive",
+    "JAVA_HOME": "/usr/lib/jvm/java-17-openjdk-amd64",
+    "ANDROID_HOME": "/opt/android-sdk",
+    "ANDROID_SDK_ROOT": "/opt/android-sdk",
+    "GRADLE_USER_HOME": "/opt/gradle",
+    "PATH": "$JAVA_HOME/bin:/opt/gradle/gradle-8.6/bin:$PATH"
+  },
+  "build_steps": [
+    {
+      "step": 1,
+      "action": "base_image",
+      "description": "Start from ubuntu:22.04"
+    },
+    {
+      "step": 2,
+      "action": "install_packages",
+      "description": "Install system packages via apt-get"
+    },
+    {
+      "step": 3,
+      "action": "copy_scripts",
+      "description": "Copy setup_runtime.sh and repo_setup.sh to /opt/benchmark/"
+    },
+    {
+      "step": 4,
+      "action": "run_repo_setup",
+      "description": "Execute repo_setup.sh to materialize /workspace from git"
+    },
+    {
+      "step": 5,
+      "action": "run_runtime_setup",
+      "description": "Execute setup_runtime.sh to install Android SDK and Gradle"
+    },
+    {
+      "step": 6,
+      "action": "set_workdir",
+      "description": "Set WORKDIR to /workspace"
+    }
+  ],
+  "repo_materialization": {
+    "mode": "git_clone",
+    "script": "repo_setup.sh",
+    "target": "/workspace",
+    "repository": "https://github.com/mihonapp/mihon.git",
+    "commit": "ebee2751109daf7be86d93736806374d6255be7c"
+  },
+  "runtime_setup": {
+    "script": "setup_runtime.sh",
+    "installs": [
+      "Android command-line tools",
+      "platform-tools",
+      "platforms/android-34",
+      "build-tools/29.0.3",
+      "ndk/26.1.10909125 (optional)",
+      "Gradle 8.6"
+    ]
+  },
+  "workdir": "/workspace",
+  "verifier_assets": {
+    "mount_strategy": "runtime",
+    "note": "eval.sh and tests/ are runtime-mounted, not baked into image"
+  },
+  "output_artifacts": {
+    "dockerfile": "/artifacts/environment/Dockerfile.final",
+    "build_plan": "/artifacts/environment/container_build_plan.json"
+  }
+}

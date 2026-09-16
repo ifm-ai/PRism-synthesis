@@ -1,0 +1,70 @@
+{
+  "base_image_candidate": "golang:1.23.2",
+  "system_packages": [
+    "jq",
+    "unzip",
+    "wget",
+    "ca-certificates"
+  ],
+  "base_setup_commands": [
+    "apt-get update && apt-get install -y jq unzip wget ca-certificates",
+    "export GOROOT=/usr/local/go",
+    "export GOPATH=/home/agent_sandbox/go",
+    "export PATH=$GOROOT/bin:$GOPATH/bin:$PATH"
+  ],
+  "setup_runtime_commands": [
+    "export GOPROXY=${GOPROXY:-http://mirror.proxy.hpc:8081/repository/go-proxy/,direct}",
+    "go install github.com/open-policy-agent/conftest@v0.48.0",
+    "cp $GOPATH/bin/conftest /usr/local/bin/conftest",
+    "chmod +x /usr/local/bin/conftest",
+    "cd /workspace/terraform/environments/core-network-services/test && go mod download",
+    "cd /workspace/terraform/environments/core-shared-services/test && go mod download",
+    "cd /workspace/terraform/environments/core-logging/test && go mod download",
+    "cd /workspace/terraform/environments/core-security/test && go mod download"
+  ],
+  "activation_commands": [
+    "export GOROOT=/usr/local/go",
+    "export GOPATH=/home/agent_sandbox/go",
+    "export PATH=$GOROOT/bin:$GOPATH/bin:$PATH",
+    "export GOPROXY=${GOPROXY:-http://mirror.proxy.hpc:8081/repository/go-proxy/,direct}"
+  ],
+  "activation_command": "export GOROOT=/usr/local/go && export GOPATH=/home/agent_sandbox/go && export PATH=$GOROOT/bin:$GOPATH/bin:$PATH && export GOPROXY=${GOPROXY:-http://mirror.proxy.hpc:8081/repository/go-proxy/,direct}",
+  "activation_type": "system",
+  "activation_validation_command": "bash -c 'export GOROOT=/usr/local/go && export GOPATH=/home/agent_sandbox/go && export PATH=$GOROOT/bin:$GOPATH/bin:$PATH && go version && conftest --version'",
+  "detected_test_command": "cd terraform/environments/core-network-services/test && go test -v",
+  "runtime_smoke_command": "terraform validate",
+  "runtime_profile": {
+    "ecosystem": "terraform",
+    "package_manager": "go mod",
+    "env": {
+      "GOROOT": "/usr/local/go",
+      "GOPATH": "/home/agent_sandbox/go",
+      "GOPROXY": "http://mirror.proxy.hpc:8081/repository/go-proxy/,direct"
+    },
+    "env_name": "terraform-go-env",
+    "prepare_commands": [
+      "export PATH=/usr/local/go/bin:/home/agent_sandbox/go/bin:$PATH",
+      "go install github.com/open-policy-agent/conftest@v0.48.0",
+      "cp /home/agent_sandbox/go/bin/conftest /usr/local/bin/conftest"
+    ],
+    "activation_commands": [
+      "export GOROOT=/usr/local/go",
+      "export GOPATH=/home/agent_sandbox/go",
+      "export PATH=$GOROOT/bin:$GOPATH/bin:$PATH"
+    ],
+    "base_deps_installed": [
+      "go (1.23.2)",
+      "conftest (dev)",
+      "jq (1.6)",
+      "git (2.50.0)",
+      "curl (7.88.1)"
+    ],
+    "test_only_install_strategy": "go mod download in each test directory",
+    "cache_dirs": [
+      "/home/agent_sandbox/go/pkg/mod",
+      "/root/.cache/go-build"
+    ],
+    "notes": "Terraform CLI should be pre-installed in base image or installed during container build when network access is available. Go modules are initialized for all test directories."
+  },
+  "notes": "Base image: golang:1.23.2 (includes Go 1.23.2, git, and curl pre-installed). Git and curl are provided by the golang base image, so they are not listed in system_packages. Go 1.23.2 is pre-installed at /usr/local/go. Conftest v0.48.0 installed via go install (pinned for Go 1.23.2 compatibility). Terraform CLI requires network access for installation - recommend including in base image. Test framework: Terratest (Go) with OPA/conftest for policy validation."
+}

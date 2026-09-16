@@ -1,0 +1,9 @@
+{
+  "status": "success",
+  "blocks_outer_progress": false,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "route_to": null,
+  "notes": "Build completed successfully. Container image built with CPU-only torch variant, reducing download size by ~93%. All dependencies installed and verified. OCI archive exported to /artifacts/environment/openenv_validation_oci.tar."
+}

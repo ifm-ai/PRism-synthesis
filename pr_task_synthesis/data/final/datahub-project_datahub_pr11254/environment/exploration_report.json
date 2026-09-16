@@ -1,0 +1,78 @@
+{
+  "pr_summary": "Fix Snowflake ingestion source to read CLUSTERING_KEY column from query results and add it as a custom property to datasetProperties. The fix adds logic to check if table.clustering_key exists and populate customProperties with CLUSTERING_KEY value. Tests validate this by setting mock CLUSTERING_KEY to 'LINEAR(COL_1)' and comparing generated JSON against golden files.",
+  "runtime_family": "Python",
+  "package_manager": "pip",
+  "touched_files": [
+    "metadata-ingestion/src/datahub/ingestion/source/snowflake/snowflake_schema_gen.py",
+    "metadata-ingestion/tests/integration/snowflake/common.py",
+    "metadata-ingestion/tests/integration/snowflake/snowflake_golden.json",
+    "metadata-ingestion/tests/integration/snowflake/snowflake_privatelink_golden.json"
+  ],
+  "important_build_files": [
+    "build.gradle",
+    "settings.gradle",
+    "metadata-ingestion/build.gradle",
+    "metadata-ingestion/setup.py",
+    "metadata-ingestion/setup.cfg",
+    "metadata-ingestion/pyproject.toml"
+  ],
+  "important_test_files": [
+    "metadata-ingestion/tests/integration/snowflake/test_snowflake.py",
+    "metadata-ingestion/tests/integration/snowflake/common.py",
+    "metadata-ingestion/tests/integration/snowflake/snowflake_golden.json",
+    "metadata-ingestion/tests/integration/snowflake/snowflake_privatelink_golden.json"
+  ],
+  "candidate_build_commands": [
+    "./gradlew :metadata-ingestion:installPackageOnly",
+    "./metadata-ingestion/scripts/install_deps.sh",
+    "pip install -e metadata-ingestion/"
+  ],
+  "candidate_test_commands": [
+    "./gradlew :metadata-ingestion:testQuick",
+    "./gradlew :metadata-ingestion:testIntegrationBatch2",
+    "pytest metadata-ingestion/tests/integration/snowflake/ -m integration",
+    "pytest metadata-ingestion/tests/integration/snowflake/test_snowflake.py"
+  ],
+  "candidate_smoke_commands": [
+    "python -c 'import datahub; print(datahub.__version__)'",
+    "python -c 'from datahub.ingestion.source.snowflake.snowflake_schema_gen import SnowflakeSchemaGenerator; print(\"OK\")'"
+  ],
+  "candidate_activation_checks": [
+    "source metadata-ingestion/venv/bin/activate",
+    "which python",
+    "pip show acryl-datahub"
+  ],
+  "environment_management": "pip with virtualenv (venv), Gradle for orchestration",
+  "special_system_dependencies": [
+    "JDK 17 (for Gradle build)",
+    "Python 3.8+ (runtime)",
+    "Snowflake connector (for Snowflake source tests)"
+  ],
+  "high_value_files": [
+    "metadata-ingestion/src/datahub/ingestion/source/snowflake/snowflake_schema_gen.py",
+    "metadata-ingestion/tests/integration/snowflake/common.py",
+    "metadata-ingestion/tests/integration/snowflake/snowflake_golden.json",
+    "metadata-ingestion/tests/integration/snowflake/snowflake_privatelink_golden.json",
+    "metadata-ingestion/build.gradle",
+    "metadata-ingestion/setup.py"
+  ],
+  "patch_file_cues": [
+    "snowflake_schema_gen.py: get_dataset_properties method modified to add customProperties with CLUSTERING_KEY",
+    "common.py: Mock query results changed CLUSTERING_KEY from None to 'LINEAR(COL_1)'",
+    "snowflake_golden.json: Expected output updated to include customProperties with CLUSTERING_KEY",
+    "snowflake_privatelink_golden.json: Expected output updated to include customProperties with CLUSTERING_KEY"
+  ],
+  "test_file_cues": [
+    "test_snowflake.py: Uses pytest with @pytest.mark.integration_batch_2",
+    "common.py: Contains default_query_results function with mock table data",
+    "Golden JSON files: Used for comparing generated metadata output"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "CI workflow .github/workflows/metadata-ingestion.yml runs on ubuntu-latest",
+    "Python package with no Windows/macOS-specific dependencies",
+    "Snowflake connector is cross-platform Python package",
+    "Gradle build system is platform-agnostic"
+  ],
+  "notes": "This is a DataHub metadata ingestion project with a monorepo structure. The main project uses Gradle for build orchestration, but the metadata-ingestion subproject is a Python package using setuptools. Tests use pytest with integration test batching. The fix is in the Snowflake source schema generator to handle CLUSTERING_KEY column. The test is in integration_batch_2. The project requires JDK 17 for Gradle and Python 3.8+ for the ingestion package."
+}

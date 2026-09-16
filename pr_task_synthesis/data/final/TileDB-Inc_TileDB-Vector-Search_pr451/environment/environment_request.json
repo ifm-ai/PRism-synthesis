@@ -1,0 +1,64 @@
+{
+  "base_image_candidate": "python:3.11-slim-bookworm",
+  "system_packages": [
+    "git",
+    "curl",
+    "python3.11-venv",
+    "python3.11-dev",
+    "libopenblas-dev",
+    "build-essential",
+    "cmake"
+  ],
+  "base_setup_commands": [
+    "apt-get update",
+    "apt-get install -y git curl python3.11-venv python3.11-dev libopenblas-dev build-essential cmake"
+  ],
+  "setup_runtime_commands": [
+    "python3 -m venv /opt/benchmark/venv",
+    "source /opt/benchmark/venv/bin/activate",
+    "pip install --upgrade pip setuptools wheel",
+    "pip install tiledb-vector-search numpy<2.0.0 scikit-learn tiledb-cloud",
+    "pip install pytest<8.0.0 pytest-xdist nbmake"
+  ],
+  "activation_commands": [
+    "source /opt/benchmark/venv/bin/activate"
+  ],
+  "activation_command": "source /opt/benchmark/venv/bin/activate",
+  "activation_type": "venv",
+  "activation_validation_command": "bash -c 'source /opt/benchmark/venv/bin/activate && python -c \"import tiledb.vector_search\"'",
+  "detected_test_command": "cd apis/python && pytest test/test_distance_metrics.py -s",
+  "runtime_smoke_command": "python -c \"import tiledb.vector_search; print(tiledb.vector_search.__version__)\"",
+  "runtime_profile": {
+    "ecosystem": "Python",
+    "package_manager": "pip",
+    "env": "/opt/benchmark/venv",
+    "env_name": "benchmark",
+    "prepare_commands": [
+      "python3 -m venv /opt/benchmark/venv",
+      "pip install --upgrade pip setuptools wheel",
+      "pip install tiledb-vector-search numpy<2.0.0 scikit-learn tiledb-cloud",
+      "pip install pytest<8.0.0 pytest-xdist nbmake"
+    ],
+    "activation_commands": [
+      "source /opt/benchmark/venv/bin/activate"
+    ],
+    "base_deps_installed": [
+      "tiledb-vector-search",
+      "tiledb",
+      "tiledb-cloud",
+      "numpy<2.0.0",
+      "scikit-learn",
+      "typing-extensions",
+      "pytest",
+      "pytest-xdist",
+      "nbmake"
+    ],
+    "test_only_install_strategy": "use_pre_installed",
+    "cache_dirs": [
+      "/opt/benchmark/venv",
+      "/root/.cache/pip"
+    ],
+    "notes": "Pre-built wheel from PyPI is used to avoid long C++ extension build times. The /workspace source directory contains the buggy code that will be patched by fix.patch during test execution."
+  },
+  "notes": "The environment uses a pre-built tiledb-vector-search wheel from PyPI (version 0.16.0) to provide the runtime. The test patches will be applied to /workspace to test the fix. git and curl are included in baseline system packages. The project requires numpy<2.0.0 per pyproject.toml constraints."
+}

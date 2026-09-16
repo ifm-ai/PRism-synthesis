@@ -1,0 +1,14 @@
+>>>>> Start Test Output
+=== RUN   TestChannelBufferFixAtLine270
+    channel_deadlock_test.go:53: Line 270: Found unbuffered channel (BUG): cfgch := make(chan types.CiliumClusterConfig)
+    channel_deadlock_test.go:58: 
+        	Error Trace:	/workspace/pkg/clustermesh/common/channel_deadlock_test.go:58
+        	Error:      	Should be true
+        	Test:       	TestChannelBufferFixAtLine270
+        	Messages:   	Channel buffer fix not found at line 270. Expected: make(chan types.CiliumClusterConfig, 1)
+--- FAIL: TestChannelBufferFixAtLine270 (0.00s)
+FAIL
+FAIL	github.com/cilium/cilium/pkg/clustermesh/common	0.029s
+FAIL
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

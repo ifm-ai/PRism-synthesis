@@ -1,0 +1,23 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "verification_command": "python -m pytest tests/generators/ga/test_cnsga.py::test_cnsga_baddf -v",
+  "activation_source": "source /opt/conda/etc/profile.d/conda.sh && conda activate xopt-dev",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "test_patch",
+  "copied_test_patch": true,
+  "supplemental_tests_created": false,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that CNSGAGenerator correctly handles DataFrames with non-unique indices by using positional indexing (.iloc[]) instead of label-based indexing (.loc[]), ensuring population size remains at the configured limit (32) even after many operations with duplicate-index DataFrames.",
+  "fix_patch_grounding": "The fix changes data.loc[[ind.index for ind in selected]] to data.iloc[[ind.index for ind in selected]] in cnsga_select(), and changes ind.index = ix[i] to ind.index = i in pop_from_data(), switching from label-based to positional indexing to handle duplicate DataFrame indices correctly.",
+  "issue_context_used": "The issue describes that CNSGAGenerator must keep its internal population DataFrame at exactly the configured population_size regardless of how data is added, and must handle DataFrames with non-unique indices without exceptions or population growth beyond the limit.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": ["python -m pytest tests/generators/ga/test_cnsga.py::test_cnsga_baddf -v"],
+  "required_verifier_files": ["eval.sh", "test.patch"],
+  "notes": "The test patch adds test_cnsga_baddf which exercises the bug fix by creating DataFrames with duplicate indices (all set to 1) and verifying the generator handles them correctly without population size exceeding the configured limit. Test verified: fails on buggy code (RC=1), passes on fixed code (RC=0)."
+}

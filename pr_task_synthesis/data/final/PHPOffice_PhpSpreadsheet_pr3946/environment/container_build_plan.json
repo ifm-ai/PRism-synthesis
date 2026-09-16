@@ -1,0 +1,93 @@
+{
+  "build_backend": "buildah",
+  "base_image": "mirror.gcr.io/library/php:8.2-cli",
+  "platform": "linux/amd64",
+  "build_context_files": [
+    "repo_setup.sh",
+    "setup_runtime.sh"
+  ],
+  "build_steps": [
+    {
+      "step": 1,
+      "type": "base_image",
+      "description": "Start from mirror.gcr.io/library/php:8.2-cli base image"
+    },
+    {
+      "step": 2,
+      "type": "system_packages",
+      "description": "Install system dependencies required for PHP extension compilation",
+      "packages": ["git", "curl", "libpng-dev", "libjpeg62-turbo-dev", "libfreetype-dev", "libzip-dev", "libonig-dev", "libxml2-dev"],
+      "reason": "System libraries needed for GD, ZIP, mbstring, and XML extension compilation"
+    },
+    {
+      "step": 3,
+      "type": "php_extensions",
+      "description": "Install PHP extensions: non-dom extensions first, then dom-dependent extensions together at the end",
+      "extensions": ["fileinfo", "ctype", "iconv", "mbstring", "zip", "gd", "dom", "xml", "xmlreader", "xmlwriter", "simplexml"],
+      "run_command": "docker-php-source extract && docker-php-ext-install fileinfo ctype iconv mbstring zip && docker-php-ext-configure gd --with-freetype --with-jpeg && docker-php-ext-install gd && docker-php-ext-install dom xml xmlreader xmlwriter simplexml && docker-php-source delete",
+      "reason": "docker-php-ext-install cleans up after each extension internally. Installing dom-dependent extensions (dom, xml, xmlreader, xmlwriter, simplexml) together at the end ensures dom headers remain available for xmlreader compilation. Non-dom extensions (fileinfo, ctype, iconv, mbstring, zip, gd) are installed first."
+    },
+    {
+      "step": 4,
+      "type": "verify_extensions",
+      "description": "Verify PHP extensions are installed via php -m"
+    },
+    {
+      "step": 5,
+      "type": "copy_script",
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh"
+    },
+    {
+      "step": 6,
+      "type": "run_script",
+      "script": "/opt/benchmark/repo_setup.sh",
+      "description": "Materialize repository at /workspace via git partial clone"
+    },
+    {
+      "step": 7,
+      "type": "copy_script",
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh"
+    },
+    {
+      "step": 8,
+      "type": "run_script",
+      "script": "/opt/benchmark/setup_runtime.sh",
+      "description": "Install Composer and project dependencies"
+    },
+    {
+      "step": 9,
+      "type": "workdir",
+      "path": "/workspace"
+    }
+  ],
+  "runtime_mounts": {
+    "eval_sh": {
+      "source": "/artifacts/evaluation/eval.sh",
+      "target": "/opt/benchmark/eval.sh",
+      "mode": "runtime"
+    },
+    "test_patch": {
+      "source": "/artifacts/evaluation/test.patch",
+      "target": "/opt/benchmark/test.patch",
+      "mode": "runtime"
+    },
+    "tests_dir": {
+      "source": "/artifacts/evaluation/tests/",
+      "target": "/opt/benchmark/tests/",
+      "mode": "runtime"
+    }
+  },
+  "output_artifacts": {
+    "dockerfile": "/artifacts/environment/Dockerfile.final",
+    "oci_archive": "/artifacts/environment/openenv_validation_oci.tar"
+  },
+  "environment": {
+    "ecosystem": "php",
+    "package_manager": "composer",
+    "workspace": "/workspace",
+    "test_command": "vendor/bin/phpunit tests/PhpSpreadsheetTests/Style/ConditionalFormatting/PR3946Test.php"
+  },
+  "notes": "eval.sh and test assets are runtime-mounted, not baked into the image. repo_setup.sh runs before setup_runtime.sh during build. PHP extensions are installed in a single RUN command with non-dom extensions first, then dom-dependent extensions together at the end: docker-php-source extract && docker-php-ext-install fileinfo ctype iconv mbstring zip && docker-php-ext-configure gd --with-freetype --with-jpeg && docker-php-ext-install gd && docker-php-ext-install dom xml xmlreader xmlwriter simplexml && docker-php-source delete. This approach avoids docker-php-ext-install cleaning up dom headers before xmlreader compiles."
+}

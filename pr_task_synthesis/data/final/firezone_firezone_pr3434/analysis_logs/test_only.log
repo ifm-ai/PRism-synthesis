@@ -1,0 +1,36 @@
+>>>>> Start Test Output
+   Compiling firezone-relay v1.0.0 (/workspace/rust/relay)
+    Finished test [unoptimized + debuginfo] target(s) in 20.32s
+     Running unittests src/lib.rs (target/debug/deps/firezone_relay-3f91cb668e0ac14c)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 20 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (target/debug/deps/firezone_relay-706e074b1d4fe57f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/regression.rs (target/debug/deps/regression-c82761feae5c6b35)
+
+running 1 test
+test test_ipv6_allocation_can_bind_ipv6_peer ... [91mMessage { class: SuccessResponse, method: Method(9), transaction_id: TransactionId(0x020202020202020202020202), attributes: [] }[0m
+[92mMessage { class: ErrorResponse, method: Method(9), transaction_id: TransactionId(0x020202020202020202020202), attributes: [Known { inner: ErrorCode(ErrorCode { code: 443, reason_phrase: "Peer Address Family Mismatch" }), padding: Some(Padding([])) }] }[0m
+
+thread 'test_ipv6_allocation_can_bind_ipv6_peer' panicked at relay/tests/regression.rs:495:25:
+assertion failed: edit distance between "Message { class: SuccessResponse, method: Method(9), transaction_id: TransactionId(0x020202020202020202020202), attributes: [] }" and "Message { class: ErrorResponse, method: Method(9), transaction_id: TransactionId(0x020202020202020202020202), attributes: [Known { inner: ErrorCode(ErrorCode { code: 443, reason_phrase: \"Peer Address Family Mismatch\" }), padding: Some(Padding([])) }] }" is 2 and not 0, see diffset above
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    test_ipv6_allocation_can_bind_ipv6_peer
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 7 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p firezone-relay --test regression`
+>>>>> End Test Output
+OPENENV_EXIT_CODE=101

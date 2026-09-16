@@ -1,0 +1,45 @@
+>>>>> Start Test Output
+=== RUN   TestTiffExportParams_HasPyramidField
+2026/06/19 09:50:08 [VIPS.info] found /usr/lib/x86_64-linux-gnu/vips-modules-8.14
+2026/06/19 09:50:08 [VIPS.info] using configure-time prefix
+2026/06/19 09:50:08 [VIPS.info] VIPS_PREFIX = /usr
+2026/06/19 09:50:08 [VIPS.info] VIPS_LIBDIR = /usr/lib/x86_64-linux-gnu
+2026/06/19 09:50:08 [VIPS.info] prefix = /usr
+2026/06/19 09:50:08 [VIPS.info] libdir = /usr/lib/x86_64-linux-gnu
+2026/06/19 09:50:08 [VIPS.info] searching "/usr/lib/x86_64-linux-gnu/vips-modules-8.14"
+2026/06/19 09:50:08 [VIPS.info] loading "/usr/lib/x86_64-linux-gnu/vips-modules-8.14/vips-heif.so"
+2026/06/19 09:50:08 [VIPS.info] loading "/usr/lib/x86_64-linux-gnu/vips-modules-8.14/vips-openslide.so"
+2026/06/19 09:50:08 [VIPS.info] loading "/usr/lib/x86_64-linux-gnu/vips-modules-8.14/vips-poppler.so"
+2026/06/19 09:50:08 [VIPS.info] loading "/usr/lib/x86_64-linux-gnu/vips-modules-8.14/vips-magick.so"
+2026/06/19 09:50:08 [VIPS.info] loading "/usr/lib/x86_64-linux-gnu/vips-modules-8.14/vips-jxl.so"
+2026/06/19 09:50:08 [VIPS.info] searching "/usr/lib/x86_64-linux-gnu/vips-plugins-8.14"
+2026/06/19 09:50:08 [govips.info] vips 8.14.1 started with concurrency=128 cache_max_files=0 cache_max_mem=0 cache_max=0
+2026/06/19 09:50:08 [govips.info] registered image type loader type=gif
+2026/06/19 09:50:08 [govips.info] registered image type loader type=magick
+2026/06/19 09:50:08 [govips.info] registered image type loader type=svg
+2026/06/19 09:50:08 [govips.info] registered image type loader type=webp
+2026/06/19 09:50:08 [govips.info] registered image type loader type=heif
+2026/06/19 09:50:08 [govips.info] registered image type loader type=jpeg
+2026/06/19 09:50:08 [govips.info] registered image type loader type=pdf
+2026/06/19 09:50:08 [govips.info] registered image type loader type=png
+2026/06/19 09:50:08 [govips.info] registered image type loader type=tiff
+2026/06/19 09:50:08 [govips.info] registered image type loader type=heif
+2026/06/19 09:50:08 [govips.info] registered image type loader type=jp2k
+2026/06/19 09:50:08 [govips.info] registered image type loader type=jxl
+--- PASS: TestTiffExportParams_HasPyramidField (0.03s)
+=== RUN   TestTiffExportParams_HasTileField
+2026/06/19 09:50:08 [govips.info] warning libvips already started
+--- PASS: TestTiffExportParams_HasTileField (0.00s)
+=== RUN   TestTiffExportParams_HasTileDimensions
+2026/06/19 09:50:08 [govips.info] warning libvips already started
+--- PASS: TestTiffExportParams_HasTileDimensions (0.00s)
+=== RUN   TestTiffExportParams_DefaultValues
+2026/06/19 09:50:08 [govips.info] warning libvips already started
+--- PASS: TestTiffExportParams_DefaultValues (0.00s)
+=== RUN   TestTiffExportParams_AllFieldsTogether
+2026/06/19 09:50:08 [govips.info] warning libvips already started
+--- PASS: TestTiffExportParams_AllFieldsTogether (0.00s)
+PASS
+ok  	test	0.058s
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

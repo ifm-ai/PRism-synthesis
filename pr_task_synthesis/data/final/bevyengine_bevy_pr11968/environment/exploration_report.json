@@ -1,0 +1,82 @@
+{
+  "pr_summary": "Fix MSAA rendering issue where multiple cameras sharing the same render target only show contributions from first and last camera. The fix changes the internal bookkeeping so that the active texture flag is stored per-target (keyed by normalized render target and HDR settings) rather than per-camera, ensuring all cameras rendering to the same target share a single piece of state for texture swapping.",
+  "runtime_family": "Rust",
+  "package_manager": "cargo",
+  "touched_files": [
+    "crates/bevy_render/src/view/mod.rs"
+  ],
+  "important_build_files": [
+    "Cargo.toml",
+    "crates/bevy_render/Cargo.toml",
+    ".cargo/config.toml",
+    "rustfmt.toml",
+    "clippy.toml",
+    "deny.toml"
+  ],
+  "important_test_files": [
+    "tests/how_to_test_systems.rs",
+    "tests/3d/no_prepass.rs",
+    "tests/window/resizing.rs",
+    "tests/window/minimising.rs",
+    "tools/ci/src/main.rs"
+  ],
+  "candidate_build_commands": [
+    "cargo build",
+    "cargo build --release",
+    "cargo check",
+    "cargo run -p ci -- compile"
+  ],
+  "candidate_test_commands": [
+    "cargo test",
+    "cargo test --workspace",
+    "cargo test -p bevy_render",
+    "cargo run -p ci -- test",
+    "cargo miri test -p bevy_ecs"
+  ],
+  "candidate_smoke_commands": [
+    "cargo check",
+    "cargo check -p bevy_render",
+    "cargo build --example breakout --features bevy_ci_testing"
+  ],
+  "candidate_activation_checks": [
+    "rustc --version",
+    "cargo --version",
+    "rustup show"
+  ],
+  "environment_management": "Rust toolchain managed by rustup. Project uses standard Cargo workspace structure. No special environment manager like conda, poetry, or npm required.",
+  "special_system_dependencies": [
+    "libasound2-dev (ALSA)",
+    "libudev-dev",
+    "libwayland-dev",
+    "libxkbcommon-dev"
+  ],
+  "high_value_files": [
+    "Cargo.toml",
+    "crates/bevy_render/src/view/mod.rs",
+    "crates/bevy_render/Cargo.toml",
+    ".github/workflows/ci.yml",
+    "tools/ci/src/main.rs",
+    "README.md",
+    "CONTRIBUTING.md"
+  ],
+  "patch_file_cues": [
+    "crates/bevy_render/src/view/mod.rs - prepare_view_targets function",
+    "Changes tuple from (a, b, sampled) to (a, b, sampled, main_texture)",
+    "Moves main_texture AtomicUsize from per-entity to per-target cache entry"
+  ],
+  "test_file_cues": [
+    "tests/ directory contains integration tests",
+    "tests/how_to_test_systems.rs - ECS testing patterns",
+    "tests/3d/no_prepass.rs - 3D rendering tests",
+    "tests/window/ - Window-related tests",
+    "Compile-fail tests in crates/bevy_ecs_compile_fail_tests and crates/bevy_reflect_compile_fail_tests"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    ".github/workflows/ci.yml runs on ubuntu-latest, windows-latest, macos-latest",
+    "Linux CI installs libasound2-dev, libudev-dev, libwayland-dev, libxkbcommon-dev",
+    "wgpu dependency supports Linux with Vulkan, DX12, Metal backends",
+    "Project is cross-platform Rust with no Windows/macOS-only code in touched files"
+  ],
+  "notes": "Bevy is a Rust game engine with a Cargo workspace structure. The fix modifies the prepare_view_targets function in bevy_render to fix MSAA texture swapping when multiple cameras share a render target. The project requires Rust 1.76.0+. CI runs on all three major platforms. Linux builds require ALSA, udev, Wayland, and xkbcommon development libraries. Tests can be run via 'cargo test' or the custom CI tool 'cargo run -p ci -- test'. The touched file is in the rendering subsystem and the fix is purely Rust code with no platform-specific dependencies."
+}

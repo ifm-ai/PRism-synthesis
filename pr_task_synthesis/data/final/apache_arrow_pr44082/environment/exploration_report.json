@@ -1,0 +1,80 @@
+{
+  "pr_summary": "Fix misleading performance metrics in Parquet Arrow benchmark suite. The benchmark incorrectly reports identical items_per_second and bytes_per_second values, and calculates byte rate for boolean columns as if each value occupies a full byte instead of using bit-packing. The fix introduces a BytesForItems template function that correctly calculates bytes based on actual storage size: bit-packing for booleans via bit_util::BytesForBits, 2 bytes for Float16, and sizeof(c_type) for fixed-width types. The fix also separates items processed from bytes processed in SetBytesProcessed.",
+  "runtime_family": "C++",
+  "package_manager": "conda",
+  "touched_files": [
+    "cpp/src/parquet/arrow/reader_writer_benchmark.cc"
+  ],
+  "important_build_files": [
+    "cpp/CMakeLists.txt",
+    "cpp/src/parquet/CMakeLists.txt",
+    "ci/conda_env_cpp.txt"
+  ],
+  "important_test_files": [
+    "cpp/src/parquet/arrow/arrow_reader_writer_test.cc",
+    "cpp/src/parquet/arrow/reader_writer_benchmark.cc"
+  ],
+  "candidate_build_commands": [
+    "cd cpp && cmake -B build -DCMAKE_BUILD_TYPE=Release",
+    "cd cpp/build && cmake --build . -j$(nproc)",
+    "conda install -c conda-forge benchmark boost-cpp cmake ninja"
+  ],
+  "candidate_test_commands": [
+    "cd cpp/build && ctest --label-regex unittest --output-on-failure",
+    "./cpp/build/release/parquet-arrow-reader-writer-benchmark --benchmark_filter=BM_WriteColumn"
+  ],
+  "candidate_smoke_commands": [
+    "./cpp/build/release/parquet-arrow-reader-writer-benchmark --benchmark_list_tests",
+    "./cpp/build/release/parquet-arrow-reader-writer-benchmark --benchmark_repetitions=1 --benchmark_min_time=0.1s"
+  ],
+  "candidate_activation_checks": [
+    "which cmake",
+    "which conda",
+    "cmake --version",
+    "pkg-config --exists google-benchmark && echo 'google-benchmark found'"
+  ],
+  "environment_management": "conda",
+  "special_system_dependencies": [
+    "cmake>=3.16",
+    "ninja",
+    "google-benchmark>=1.6.0",
+    "boost-cpp>=1.68.0",
+    "gtest>=1.10.0",
+    "gflags",
+    "glog",
+    "snappy",
+    "lz4-c",
+    "zlib",
+    "brotli",
+    "bzip2",
+    "thrift-cpp>=0.11.0",
+    "rapidjson",
+    "re2"
+  ],
+  "high_value_files": [
+    "cpp/src/parquet/arrow/reader_writer_benchmark.cc",
+    "cpp/CMakeLists.txt",
+    "cpp/src/parquet/CMakeLists.txt",
+    "ci/conda_env_cpp.txt",
+    "ci/scripts/cpp_build.sh",
+    "ci/scripts/cpp_test.sh",
+    "dev/archery/archery/benchmark/google.py",
+    "docs/source/developers/benchmarks.rst"
+  ],
+  "patch_file_cues": [
+    "cpp/src/parquet/arrow/reader_writer_benchmark.cc"
+  ],
+  "test_file_cues": [
+    "cpp/src/parquet/arrow/reader_writer_benchmark.cc",
+    "cpp/src/parquet/arrow/arrow_reader_writer_test.cc"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "cpp/CMakeLists.txt - cross-platform CMake build system",
+    "ci/conda_env_cpp.txt - conda-based dependency management for Linux",
+    ".github/workflows/cpp.yml - CI runs on ubuntu-latest with Linux Docker containers",
+    "ci/scripts/cpp_build.sh - bash script for Linux/Unix builds",
+    "ci/scripts/cpp_test.sh - bash script for Linux/Unix testing"
+  ],
+  "notes": "Apache Arrow is a multi-language project with C++ as the core implementation. The fix targets the Parquet Arrow benchmark suite in C++. The project uses CMake for building C++ code and conda for dependency management. Benchmarks use Google Benchmark framework. The archery Python tool in dev/archery provides benchmark orchestration and comparison utilities. The fix modifies how bytes_per_second and items_per_second are calculated to accurately reflect bit-packing for booleans and proper byte counts for different data types. Platform is Linux-compatible; CI runs on Ubuntu with Docker."
+}

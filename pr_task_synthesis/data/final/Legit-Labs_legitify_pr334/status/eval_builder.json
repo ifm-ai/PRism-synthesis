@@ -1,0 +1,29 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "infrastructure_reason": null,
+  "verification_command": "go test -v -count=1 -timeout=5m -run TestGitlabRepositoryRestrictsOverrideVariables ./test/...",
+  "activation_source": "export GOPATH=/root/go && export PATH=/usr/local/go/bin:${GOPATH}/bin:${PATH}",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "test_patch",
+  "copied_test_patch": true,
+  "supplemental_tests_created": false,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that the policy overriding_defined_variables_isnt_restricted correctly reports violations based on the restrict_user_defined_variables field in GitLab repository data.",
+  "fix_patch_grounding": "The fix.patch adds the policy rule overriding_defined_variables_isnt_restricted in policies/gitlab/repository.rego that returns false (violation) when input.restrict_user_defined_variables is true, exposing the restrict_user_defined_variables field from gitlabcollected.Repository to the Rego policy engine.",
+  "issue_context_used": "The issue requires exposing restrict_user_defined_variables field from gitlabcollected.Repository to the Rego policy engine, and the policy should report violation when the field indicates user-defined variables can be overridden.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": [
+    "go test -v -count=1 -timeout=5m -run TestGitlabRepositoryRestrictsOverrideVariables ./test/..."
+  ],
+  "required_verifier_files": [
+    "eval.sh",
+    "test.patch"
+  ],
+  "notes": "The verifier applies test.patch at runtime to add the TestGitlabRepositoryRestrictsOverrideVariables test. The test verifies that the policy overriding_defined_variables_isnt_restricted exists and behaves correctly: when RestrictUserDefinedVariables=false, the policy reports a violation; when RestrictUserDefinedVariables=true, no violation is reported. The test fails on buggy code (policy missing) and passes on fixed code (policy present and working). The -v flag was added to go test to produce verbose output with individual test names and PASS/FAIL status, ensuring at least 2 non-blank lines in the test output body. A go build ./... step was added after patch application to ensure embedded policies (via //go:embed directives) are recompiled with the fix applied."
+}

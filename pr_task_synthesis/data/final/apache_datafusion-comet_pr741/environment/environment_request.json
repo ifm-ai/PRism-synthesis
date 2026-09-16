@@ -1,0 +1,50 @@
+{
+  "base_image_candidate": "rust:1.79-slim-bookworm",
+  "system_packages": [
+    "git",
+    "curl",
+    "protobuf-compiler",
+    "pkg-config",
+    "libssl-dev"
+  ],
+  "base_setup_commands": [
+    "apt-get update && apt-get install -y git curl protobuf-compiler pkg-config libssl-dev",
+    "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain 1.79 --profile minimal"
+  ],
+  "setup_runtime_commands": [
+    ". /opt/cargo/env",
+    "cd /workspace/native && cargo fetch",
+    "cd /workspace/native && cargo check --message-format=short"
+  ],
+  "activation_commands": [
+    "source /opt/cargo/env"
+  ],
+  "activation_command": "source /opt/cargo/env",
+  "activation_type": "cargo",
+  "activation_validation_command": "bash -c 'source /opt/cargo/env && rustc --version && cargo --version'",
+  "detected_test_command": "cd native && cargo test",
+  "runtime_smoke_command": "cd native && cargo check",
+  "runtime_profile": {
+    "ecosystem": "Rust",
+    "package_manager": "cargo",
+    "env": "rustup",
+    "env_name": "1.79",
+    "prepare_commands": [
+      "source /opt/cargo/env",
+      "cd /workspace/native && cargo fetch",
+      "cd /workspace/native && cargo check"
+    ],
+    "activation_commands": [
+      "source /opt/cargo/env"
+    ],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "cargo test runs dependency resolution automatically",
+    "cache_dirs": [
+      "/opt/cargo/registry",
+      "/opt/cargo/git",
+      "/workspace/native/target"
+    ],
+    "notes": "Rust 1.79 toolchain with cargo. Project requires minimum Rust 1.75. Protobuf compiler required for proto message generation."
+  },
+  "notes": "DataFusion Comet is a Rust workspace with members: core, spark-expr, proto. The fix.patch modifies Rust files for Decimal128 arithmetic optimization. Base image recommendation: rust:1.79-slim-bookworm or equivalent. git and curl are baseline system packages. protobuf-compiler is required for building the proto crate. The test command is 'cd native && cargo test'."
+}

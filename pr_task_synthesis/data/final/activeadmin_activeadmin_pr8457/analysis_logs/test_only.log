@@ -1,0 +1,35 @@
+>>>>> Start Test Output
+warning: parser/current is loading parser/ruby33, which recognizes 3.3.4-compliant syntax, but you are running 3.3.8.
+Please see https://github.com/whitequark/parser#compatibility-with-ruby-mri.
+Run options: include {:full_description=>/calls\ status_tag\ even\ when\ attribute\ is\ nil/}
+
+Randomized with seed 17774
+F
+
+Failures:
+
+  1) ActiveAdmin::DisplayHelper#format_attribute with non-database boolean attribute calls status_tag even when attribute is nil
+     Failure/Error: expect(value.to_s).to eq "<span class=\"status-tag\" data-status=\"unset\">Unknown</span>\n"
+
+       expected: #<Encoding:UTF-8> "<span class=\"status-tag\" data-status=\"unset\">Unknown</span>\n"
+            got: #<Encoding:US-ASCII> ""
+
+       (compared using ==)
+
+       Diff:
+       @@ -1,2 +1 @@
+       -<span class="status-tag" data-status="unset">Unknown</span>
+     # ./spec/helpers/display_helper_spec.rb:238:in `block (4 levels) in <top (required)>'
+
+Finished in 0.17779 seconds (files took 2.17 seconds to load)
+1 example, 1 failure
+
+Failed examples:
+
+rspec ./spec/helpers/display_helper_spec.rb:233 # ActiveAdmin::DisplayHelper#format_attribute with non-database boolean attribute calls status_tag even when attribute is nil
+
+Randomized with seed 17774
+
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1
+EXIT_CODE=1

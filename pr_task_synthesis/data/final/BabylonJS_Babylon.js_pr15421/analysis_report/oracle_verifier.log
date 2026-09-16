@@ -1,0 +1,218 @@
+>>>>> Start Test Output
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151001: [0mIf you have issues related to imports, you should consider setting `esModuleInterop` to `true` in your TypeScript configuration file (usually `tsconfig.json`). See https://blogs.msdn.microsoft.com/typescript/2018/01/31/announcing-typescript-2-7/#easier-ecmascript-module-interoperability for more information.
+FAIL tests/wgsl-shader-fixes.test.ts
+  WGSL Shader Fixes
+    bumpFragment.fx
+      ✓ should use fragmentInputs.vDetailUV instead of bare vDetailUV in TBNUV select (2 ms)
+      ✓ should use fragmentInputs.vDetailUV in textureSample for detail (1 ms)
+      ✓ should use fragmentInputs.vBumpUV in textureSample for bump
+      ✕ should use vec3f construction for detailNormal scaling (whiteout method) (4 ms)
+      ✕ should use vec3f construction for detailNormal scaling (RNM method) (45 ms)
+      ✕ should use vec3f construction for detailNormal in DETAIL-only branch (1 ms)
+    depthPrePass.fx
+      ✓ should use fragmentOutputs.color instead of gl_FragColor
+      ✕ should return fragmentOutputs instead of bare return
+    oitFragment.fx
+      ✕ should use var instead of uvar for halfFloat declaration (1 ms)
+    morphTargetsVertex.fx
+      ✕ should use vec4f construction for tangentUpdated in texture mode
+      ✕ should use vec4f construction for tangentUpdated in non-texture mode
+    default.fragment.fx
+      ✕ should use fragmentInputs.vDecalUV instead of vDecalUV (first occurrence) (1 ms)
+      ✕ should use fragmentInputs.vDecalUV instead of vDecalUV (second occurrence)
+      ✕ should use uniforms.vDetailInfos.y instead of bare vDetailInfos.y (1 ms)
+      ✕ should use uniforms.refractionMatrix and scene.view for refraction calculation
+
+  ● WGSL Shader Fixes › bumpFragment.fx › should use vec3f construction for detailNormal scaling (whiteout method)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      71 |             const fixedPattern = /detailNormal\s*=\s*vec3f\s*\(\s*detailNormal\.xy\s*\*\s*uniforms\.vDetailInfos\.z\s*,\s*detailNormal\.z\s*\)/;
+      72 |
+    > 73 |             expect(buggyPattern.test(content)).toBe(false);
+         |                                                ^
+      74 |             expect(fixedPattern.test(content)).toBe(true);
+      75 |         });
+      76 |
+
+      at Object.<anonymous> (wgsl-shader-fixes.test.ts:73:48)
+
+  ● WGSL Shader Fixes › bumpFragment.fx › should use vec3f construction for detailNormal scaling (RNM method)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      100 |             }
+      101 |
+    > 102 |             expect(foundBuggyPattern).toBe(false);
+          |                                       ^
+      103 |             expect(foundFixedPattern).toBe(true);
+      104 |         });
+      105 |
+
+      at Object.<anonymous> (wgsl-shader-fixes.test.ts:102:39)
+
+  ● WGSL Shader Fixes › bumpFragment.fx › should use vec3f construction for detailNormal in DETAIL-only branch
+
+    expect(received).not.toBeNull()
+
+    Received: null
+
+      117 |
+      118 |             expect(buggyMatches).toBeNull();
+    > 119 |             expect(fixedMatches).not.toBeNull();
+          |                                      ^
+      120 |             expect(fixedMatches!.length).toBeGreaterThanOrEqual(3);
+      121 |         });
+      122 |     });
+
+      at Object.<anonymous> (wgsl-shader-fixes.test.ts:119:38)
+
+  ● WGSL Shader Fixes › depthPrePass.fx › should return fragmentOutputs instead of bare return
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      145 |             const fixedPattern = /return\s+fragmentOutputs\s*;/;
+      146 |
+    > 147 |             expect(buggyPattern.test(content)).toBe(false);
+          |                                                ^
+      148 |             expect(fixedPattern.test(content)).toBe(true);
+      149 |         });
+      150 |     });
+
+      at Object.<anonymous> (wgsl-shader-fixes.test.ts:147:48)
+
+  ● WGSL Shader Fixes › oitFragment.fx › should use var instead of uvar for halfFloat declaration
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      163 |             const fixedPattern = /var\s+halfFloat\s*:\s*i32\s*=\s*packHalf2x16\s*\(\s*vec2f\s*\(\s*fragDepth\s*\)\s*\)/;
+      164 |
+    > 165 |             expect(buggyPattern.test(content)).toBe(false);
+          |                                                ^
+      166 |             expect(fixedPattern.test(content)).toBe(true);
+      167 |         });
+      168 |     });
+
+      at Object.<anonymous> (wgsl-shader-fixes.test.ts:165:48)
+
+  ● WGSL Shader Fixes › morphTargetsVertex.fx › should use vec4f construction for tangentUpdated in texture mode
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      186 |             const fixedPattern = /tangentUpdated\s*=\s*vec4f\s*\(\s*tangentUpdated\.xyz\s*\+/;
+      187 |
+    > 188 |             expect(buggyPattern.test(textureBlock)).toBe(false);
+          |                                                     ^
+      189 |             expect(fixedPattern.test(textureBlock)).toBe(true);
+      190 |         });
+      191 |
+
+      at Object.<anonymous> (wgsl-shader-fixes.test.ts:188:53)
+
+  ● WGSL Shader Fixes › morphTargetsVertex.fx › should use vec4f construction for tangentUpdated in non-texture mode
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      232 |             }
+      233 |
+    > 234 |             expect(foundBuggyPattern).toBe(false);
+          |                                       ^
+      235 |             expect(foundFixedPattern).toBe(true);
+      236 |         });
+      237 |     });
+
+      at Object.<anonymous> (wgsl-shader-fixes.test.ts:234:39)
+
+  ● WGSL Shader Fixes › default.fragment.fx › should use fragmentInputs.vDecalUV instead of vDecalUV (first occurrence)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      256 |             const fixedPattern = /textureSample\(decalSampler,\s*decalSamplerSampler,\s*fragmentInputs\.vDecalUV\s*\+/;
+      257 |
+    > 258 |             expect(buggyPattern.test(firstBlock)).toBe(false);
+          |                                                   ^
+      259 |             expect(fixedPattern.test(firstBlock)).toBe(true);
+      260 |         });
+      261 |
+
+      at Object.<anonymous> (wgsl-shader-fixes.test.ts:258:51)
+
+  ● WGSL Shader Fixes › default.fragment.fx › should use fragmentInputs.vDecalUV instead of vDecalUV (second occurrence)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      268 |             const fixedPattern = /textureSample\(decalSampler,\s*decalSamplerSampler,\s*fragmentInputs\.vDecalUV\s*\+/;
+      269 |
+    > 270 |             expect(buggyPattern.test(secondBlock)).toBe(false);
+          |                                                    ^
+      271 |             expect(fixedPattern.test(secondBlock)).toBe(true);
+      272 |         });
+      273 |
+
+      at Object.<anonymous> (wgsl-shader-fixes.test.ts:270:52)
+
+  ● WGSL Shader Fixes › default.fragment.fx › should use uniforms.vDetailInfos.y instead of bare vDetailInfos.y
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      278 |             const fixedPattern = /mix\s*\(\s*0\.5\s*,\s*detailColor\.r\s*,\s*uniforms\.vDetailInfos\.y\s*\)/;
+      279 |
+    > 280 |             expect(buggyPattern.test(content)).toBe(false);
+          |                                                ^
+      281 |             expect(fixedPattern.test(content)).toBe(true);
+      282 |         });
+      283 |
+
+      at Object.<anonymous> (wgsl-shader-fixes.test.ts:280:48)
+
+  ● WGSL Shader Fixes › default.fragment.fx › should use uniforms.refractionMatrix and scene.view for refraction calculation
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      288 |             const fixedPattern = /var\s+vRefractionUVW\s*:\s*vec3f\s*=\s*\(\s*uniforms\.refractionMatrix\s*\*\s*\(\s*scene\.view\s*\*/;
+      289 |
+    > 290 |             expect(buggyPattern.test(content)).toBe(false);
+          |                                                ^
+      291 |             expect(fixedPattern.test(content)).toBe(true);
+      292 |         });
+      293 |     });
+
+      at Object.<anonymous> (wgsl-shader-fixes.test.ts:290:48)
+
+Test Suites: 1 failed, 1 total
+Tests:       11 failed, 4 passed, 15 total
+Snapshots:   0 total
+Time:        0.5 s
+Ran all test suites.
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

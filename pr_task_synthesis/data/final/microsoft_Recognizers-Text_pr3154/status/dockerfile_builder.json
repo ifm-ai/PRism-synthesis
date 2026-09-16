@@ -1,0 +1,18 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "base_image": "debian:bookworm",
+  "copied_artifacts": [
+    "repo_setup.sh",
+    "setup_runtime.sh"
+  ],
+  "uses_repo_setup_script": true,
+  "repo_materialization_mode": "repo_setup_script",
+  "container_build_plan_written": true,
+  "build_backend_target": "buildah",
+  "buildability_assessment": "buildable",
+  "blocking_risks": [],
+  "warnings": [],
+  "recommended_fixes": [],
+  "notes": "Dockerfile.final created successfully. Uses debian:bookworm base image with apt-get for package management. Copies repo_setup.sh and setup_runtime.sh from build context to /opt/benchmark/. Executes repo_setup.sh first to clone Microsoft Recognizers-Text repository to /workspace, then runs setup_runtime.sh to create Python venv and install all dependencies. Verifier assets (eval.sh, test.patch, hidden tests) are correctly excluded from the image and will be mounted at runtime. WORKDIR set to /workspace. Ready for Buildah validation."
+}

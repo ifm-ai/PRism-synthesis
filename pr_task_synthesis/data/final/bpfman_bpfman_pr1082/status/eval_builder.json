@@ -1,0 +1,34 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "verification_command": "RUST_TEST_THREADS=1 cargo test --quiet",
+  "activation_source": "source $HOME/.cargo/env",
+  "eval_template_version": "v1.0",
+  "verifier_asset_mode": "synthesized_hidden_tests",
+  "copied_test_patch": false,
+  "supplemental_tests_created": true,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests socket directory creation (/run/bpfman-sock, /run/bpfman/csi) and logging initialization (env_logger/journald) that differentiate buggy code (serve() called directly, fails on missing dir) from fixed code (initialize_rpc() called first, creates dirs and inits logging).",
+  "fix_patch_grounding": "The fix adds initialize_rpc() function that calls create_dir_all(RTDIR_SOCK) before serve(), and sets up logging via JournalLog or env_logger::try_init() with debug! output. Buggy code calls serve() directly without directory creation or logging init.",
+  "issue_context_used": "Issue requires socket directory creation for CSI support and proper logging initialization for both journal and env_logger backends.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": [
+    "test_rpc_creates_socket_directory",
+    "test_rpc_creates_csi_directory_when_enabled",
+    "test_cli_logging_initialization",
+    "test_rpc_logging_initialization",
+    "test_rpc_socket_dir_creation_evidence"
+  ],
+  "required_verifier_files": [
+    "eval.sh",
+    "tests/mod.rs",
+    "tests/test_rpc_socket_dir.rs",
+    "tests/test_logging_init.rs"
+  ],
+  "notes": "Tests rewritten to properly discriminate buggy vs fixed: (1) Clean up socket dirs before testing to ensure fresh state, (2) Run actual binary (not --help) to trigger main() code path, (3) Check for 'No such file or directory' error (buggy) vs successful directory creation (fixed), (4) Check for 'Log using env_logger' or 'Log using journald' debug output. Buggy code fails immediately on socket bind; fixed code creates dirs first via initialize_rpc(). All 5 tests FAIL on buggy code and PASS on fixed code."
+}

@@ -1,0 +1,28 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "blocks_full_outer_turn": false,
+  "blocks_reason": null,
+  "repair_cycles_attempted": 0,
+  "workers_used": [
+    "openenv-repository-explorer",
+    "openenv-environment-builder",
+    "openenv-eval-builder",
+    "openenv-test-analyst",
+    "openenv-dockerfile-builder",
+    "openenv-build-validator"
+  ],
+  "iterations": 1,
+  "verifier_asset_mode": "external_tests",
+  "build_backend": "buildah",
+  "container_build_status": "success",
+  "preflight_results": {
+    "test_only_exit_code": 101,
+    "test_with_fix_exit_code": 0,
+    "test_only_passed": false,
+    "test_with_fix_passed": true,
+    "discriminating": true
+  },
+  "hacking_detected": false,
+  "notes": "SWE Builder environment synthesis completed successfully. All required artifacts generated: exploration report, environment specification, eval.sh with hidden tests, Dockerfile.final, and OCI archive. Local preflight verification passed: tests FAIL on buggy code (exit 101) and PASS on fixed code (exit 0). Buildah validation succeeded with OCI archive exported (932 MB). No repair cycles were needed after the initial eval-builder repair to make tests discriminating. The container image is ready for use with runtime-mounted verifier assets."
+}

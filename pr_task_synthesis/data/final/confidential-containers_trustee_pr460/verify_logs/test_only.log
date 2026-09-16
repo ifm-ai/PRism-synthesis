@@ -1,0 +1,107 @@
+/tests/eval.sh: line 15: /root/.cargo/env: No such file or directory
+>>>>> Start Test Output
+    Updating crates.io index
+     Locking 28 packages to latest compatible versions
+      Adding rstest v0.18.2 (available: v0.26.1)
+ Downloading crates ...
+  Downloaded futures-core v0.3.32
+  Downloaded cfg-if v1.0.4
+  Downloaded futures-sink v0.3.32
+  Downloaded futures-task v0.3.32
+  Downloaded futures-io v0.3.32
+  Downloaded futures-macro v0.3.32
+  Downloaded rustc_version v0.4.1
+  Downloaded slab v0.4.12
+  Downloaded futures-channel v0.3.32
+  Downloaded futures-executor v0.3.32
+  Downloaded pin-project-lite v0.2.17
+  Downloaded glob v0.3.3
+  Downloaded quote v1.0.46
+  Downloaded rstest v0.18.2
+  Downloaded semver v1.0.28
+  Downloaded relative-path v1.9.3
+  Downloaded futures-timer v3.0.4
+  Downloaded futures v0.3.32
+  Downloaded rstest_macros v0.18.2
+  Downloaded unicode-ident v1.0.24
+  Downloaded proc-macro2 v1.0.106
+  Downloaded memchr v2.8.2
+  Downloaded regex v1.12.4
+  Downloaded aho-corasick v1.1.4
+  Downloaded futures-util v0.3.32
+  Downloaded syn v2.0.118
+  Downloaded regex-syntax v0.8.11
+  Downloaded regex-automata v0.4.14
+   Compiling proc-macro2 v1.0.106
+   Compiling unicode-ident v1.0.24
+   Compiling quote v1.0.46
+   Compiling syn v2.0.118
+   Compiling futures-core v0.3.32
+   Compiling memchr v2.8.2
+   Compiling futures-sink v0.3.32
+   Compiling semver v1.0.28
+   Compiling rustc_version v0.4.1
+   Compiling futures-channel v0.3.32
+   Compiling aho-corasick v1.1.4
+   Compiling futures-macro v0.3.32
+   Compiling futures-task v0.3.32
+   Compiling regex-syntax v0.8.11
+   Compiling futures-io v0.3.32
+   Compiling pin-project-lite v0.2.17
+   Compiling slab v0.4.12
+   Compiling futures-util v0.3.32
+   Compiling regex-automata v0.4.14
+   Compiling rstest_macros v0.18.2
+   Compiling regex v1.12.4
+   Compiling futures-executor v0.3.32
+   Compiling relative-path v1.9.3
+   Compiling glob v0.3.3
+   Compiling cfg-if v1.0.4
+   Compiling futures v0.3.32
+   Compiling futures-timer v3.0.4
+   Compiling rstest v0.18.2
+   Compiling se-skip-certs-tests v0.1.0 (/tests/tests)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 21.39s
+     Running test_se_skip_certs.rs (/tests/tests/target/debug/deps/test_se_skip_certs-aed6c3d31f070dc7)
+
+running 4 tests
+test test_certificate_verification_uses_skip_certs_unconditionally ... FAILED
+test test_fix_pattern_matches_expected_structure ... FAILED
+test test_no_cfg_not_debug_assertions_in_verification ... FAILED
+test test_se_skip_certs_verification_is_unconditional ... FAILED
+
+failures:
+
+---- test_certificate_verification_uses_skip_certs_unconditionally stdout ----
+
+thread 'test_certificate_verification_uses_skip_certs_unconditionally' (617) panicked at test_se_skip_certs.rs:210:9:
+CertVerifier::new at line 300 must be inside an 'if !skip_certs {' block. In fixed code, certificate verification is ALWAYS conditional on skip_certs.
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- test_fix_pattern_matches_expected_structure stdout ----
+
+thread 'test_fix_pattern_matches_expected_structure' (618) panicked at test_se_skip_certs.rs:275:5:
+Fixed code must NOT contain #[cfg(debug_assertions)] - the guard must be removed
+
+---- test_no_cfg_not_debug_assertions_in_verification stdout ----
+
+thread 'test_no_cfg_not_debug_assertions_in_verification' (619) panicked at test_se_skip_certs.rs:131:13:
+Found #[cfg(not(debug_assertions))] at line 298. The fix.patch removes both #[cfg(debug_assertions)] and #[cfg(not(debug_assertions))] blocks, replacing them with a single unconditional block.
+
+---- test_se_skip_certs_verification_is_unconditional stdout ----
+
+thread 'test_se_skip_certs_verification_is_unconditional' (620) panicked at test_se_skip_certs.rs:78:9:
+DEFAULT_SE_SKIP_CERTS_VERIFICATION must NOT be inside #[cfg(debug_assertions)] block. Found #[cfg(debug_assertions)] at line 280: '#[cfg(debug_assertions)]'. The fix.patch removes this debug-only guard.
+
+
+failures:
+    test_certificate_verification_uses_skip_certs_unconditionally
+    test_fix_pattern_matches_expected_structure
+    test_no_cfg_not_debug_assertions_in_verification
+    test_se_skip_certs_verification_is_unconditional
+
+test result: FAILED. 0 passed; 4 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--test test_se_skip_certs`
+>>>>> End Test Output
+OPENENV_EXIT_CODE=101

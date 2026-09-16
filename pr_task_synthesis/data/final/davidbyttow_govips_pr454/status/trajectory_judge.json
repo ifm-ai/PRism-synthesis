@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "High-quality trajectory: solver correctly localized the problem, made the correct edits to vips/image.go and vips/foreign.go matching fix.patch, and the oracle verifier passed all 5 behavioral tests. This is an excellent example of successful task completion with strong signal from both solver and oracle."
+}

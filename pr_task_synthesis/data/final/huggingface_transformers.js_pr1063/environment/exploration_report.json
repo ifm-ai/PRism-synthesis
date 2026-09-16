@@ -1,0 +1,62 @@
+{
+  "pr_summary": "Fix batch_size calculation in src/models.js to use optional chaining (?.) when accessing dims property. The fix changes `(decoderFeeds[this.main_input_name] ?? decoderFeeds.attention_mask).dims?.[0] ?? 1` to `(decoderFeeds[this.main_input_name] ?? decoderFeeds.attention_mask)?.dims?.[0] ?? 1` to handle cases where the decoder input object is missing the dims property.",
+  "runtime_family": "JavaScript/Node.js",
+  "package_manager": "npm",
+  "touched_files": [
+    "src/models.js"
+  ],
+  "important_build_files": [
+    "package.json",
+    "webpack.config.js",
+    "jest.config.mjs",
+    "jsconfig.json"
+  ],
+  "important_test_files": [
+    "tests/models.test.js",
+    "tests/pipelines.test.js",
+    "tests/tokenizers.test.js",
+    "tests/processors.test.js",
+    "tests/tiny_random.test.js"
+  ],
+  "candidate_build_commands": [
+    "npm install",
+    "npm run build"
+  ],
+  "candidate_test_commands": [
+    "npm run test",
+    "node --experimental-vm-modules node_modules/jest/bin/jest.js --verbose"
+  ],
+  "candidate_smoke_commands": [
+    "node -e \"import('./src/transformers.js').then(m => console.log('OK'))\""
+  ],
+  "candidate_activation_checks": [
+    "node --version",
+    "npm --version"
+  ],
+  "environment_management": "npm (Node.js package manager)",
+  "special_system_dependencies": [
+    "Node.js 18+ (tested on versions 18, 20, 22)",
+    "git-lfs (for downloading test models from HuggingFace)"
+  ],
+  "high_value_files": [
+    "src/models.js",
+    "src/transformers.js",
+    "package.json",
+    "jest.config.mjs"
+  ],
+  "patch_file_cues": [
+    "src/models.js line 1760: batch_size calculation with optional chaining"
+  ],
+  "test_file_cues": [
+    "tests/models.test.js - tests for model loading and inference",
+    "tests/init.js - test initialization utilities"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "CI workflows run on ubuntu-latest",
+    "No Windows or macOS specific dependencies",
+    "Cross-platform JavaScript/Node.js project",
+    "package.json shows no platform-specific requirements"
+  ],
+  "notes": "This is a Hugging Face Transformers.js project - a JavaScript library for running ML models in the browser. The fix is a simple one-line change adding optional chaining to safely access the dims property. The project uses npm for package management, webpack for bundling, and Jest for testing. Tests require git-lfs to download test models from HuggingFace. The project is cross-platform and runs on Linux, macOS, and Windows."
+}

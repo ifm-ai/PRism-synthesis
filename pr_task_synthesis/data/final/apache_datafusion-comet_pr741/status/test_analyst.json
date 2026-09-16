@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "official_verifier": {
+    "execution_mode": "real_execution",
+    "test_only_exit_code": 101,
+    "test_with_fix_exit_code": 0
+  },
+  "non_discriminating": false,
+  "notes": "Tests now properly distinguish buggy vs fixed code. Buggy workspace fails (exit 101) because the test finds 2 unnecessary Decimal256 Cast nodes in the physical plan for low-precision Decimal128(10,2) + Decimal128(10,2) operations. Fixed workspace passes (exit 0) because the optimization fix in planner.rs avoids unnecessary promotion when boundary value (10) is less than DECIMAL128_MAX_PRECISION (38). The test directly covers the fix.patch changes to native/core/src/execution/datafusion/planner.rs which adds conditional guards for Plus/Minus/Multiply/Modulo operations."
+}

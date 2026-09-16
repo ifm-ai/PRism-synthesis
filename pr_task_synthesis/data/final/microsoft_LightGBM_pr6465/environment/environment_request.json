@@ -1,0 +1,80 @@
+{
+  "base_image_candidate": "ubuntu:22.04",
+  "system_packages": [
+    "git",
+    "curl",
+    "cmake",
+    "build-essential",
+    "libomp-dev",
+    "libboost-dev",
+    "ocl-icd-opencl-dev",
+    "openmpi-bin",
+    "libopenmpi-dev"
+  ],
+  "base_setup_commands": [
+    "apt-get update",
+    "apt-get install -y git curl cmake build-essential libomp-dev"
+  ],
+  "setup_runtime_commands": [
+    "Install Miniforge conda if not present",
+    "Create conda environment 'lightgbm-env' with Python 3.11",
+    "Install base dependencies: numpy, scipy, scikit-learn, pandas, pytest, cmake, ninja, setuptools, wheel, pip",
+    "Install additional Python packages: dataclasses, dask, pyarrow, matplotlib, joblib, cloudpickle, psutil",
+    "Initialize git submodules for external libraries",
+    "Build C++ library with CMake: cmake -B build -S . -DUSE_OPENMP=ON",
+    "Build _lightgbm target: cmake --build build --target _lightgbm -j4",
+    "Install Python package with precompiled library: ./build-python.sh install --precompile --no-isolation",
+    "Reinstall from local sdist to ensure correct version"
+  ],
+  "activation_commands": [
+    "source /opt/conda/etc/profile.d/conda.sh && conda activate lightgbm-env"
+  ],
+  "activation_command": "source /opt/conda/etc/profile.d/conda.sh && conda activate lightgbm-env",
+  "activation_type": "conda",
+  "activation_validation_command": "bash -c 'source /opt/conda/etc/profile.d/conda.sh && conda activate lightgbm-env && python -c \"import lightgbm; print(\\\"OK\\\")\"'",
+  "detected_test_command": "pytest tests/python_package_test",
+  "runtime_smoke_command": "python -c \"import lightgbm; print('LightGBM imported successfully')\"",
+  "runtime_profile": {
+    "ecosystem": "python",
+    "package_manager": "conda",
+    "env": "/opt/conda/envs/lightgbm-env",
+    "env_name": "lightgbm-env",
+    "prepare_commands": [
+      "conda create -q -y -n lightgbm-env python=3.11 numpy scipy scikit-learn pandas pytest cmake ninja setuptools wheel pip",
+      "pip install dataclasses dask pyarrow matplotlib joblib cloudpickle psutil",
+      "git submodule update --init --recursive",
+      "cmake -B build -S . -DUSE_OPENMP=ON",
+      "cmake --build build --target _lightgbm -j4",
+      "./build-python.sh install --precompile --no-isolation"
+    ],
+    "activation_commands": [
+      "source /opt/conda/etc/profile.d/conda.sh && conda activate lightgbm-env"
+    ],
+    "base_deps_installed": [
+      "numpy",
+      "scipy",
+      "scikit-learn",
+      "pandas",
+      "pytest",
+      "cmake",
+      "ninja",
+      "setuptools",
+      "wheel",
+      "pip",
+      "dask",
+      "pyarrow",
+      "matplotlib",
+      "joblib",
+      "cloudpickle",
+      "psutil",
+      "dataclasses"
+    ],
+    "test_only_install_strategy": "The test dependencies (pytest, cloudpickle, psutil) are already installed in the base environment",
+    "cache_dirs": [
+      "/opt/conda",
+      "/opt/conda/envs/lightgbm-env"
+    ],
+    "notes": "LightGBM uses conda/mamba for environment management. The Python package wraps a CMake-built C++ library. Git submodules must be initialized for external libraries (fast_double_parser, eigen, fmt, compute)."
+  },
+  "notes": "Base image should be Ubuntu 22.04 or similar. Git and curl are included in baseline system packages. The environment uses conda for Python environment management with pip for additional packages. LightGBM requires CMake to build the C++ library and git submodules for external dependencies. The fix.patch removes --user flags from pip install commands in CI scripts to prevent cross-job contamination."
+}

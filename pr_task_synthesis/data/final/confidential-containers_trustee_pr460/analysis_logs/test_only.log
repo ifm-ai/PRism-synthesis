@@ -1,0 +1,46 @@
+>>>>> Start Test Output
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running test_se_skip_certs.rs (/artifacts/evaluation/tests/target/debug/deps/test_se_skip_certs-aed6c3d31f070dc7)
+
+running 4 tests
+test test_certificate_verification_uses_skip_certs_unconditionally ... FAILED
+test test_fix_pattern_matches_expected_structure ... FAILED
+test test_no_cfg_not_debug_assertions_in_verification ... FAILED
+test test_se_skip_certs_verification_is_unconditional ... FAILED
+
+failures:
+
+---- test_certificate_verification_uses_skip_certs_unconditionally stdout ----
+
+thread 'test_certificate_verification_uses_skip_certs_unconditionally' (4013) panicked at test_se_skip_certs.rs:210:9:
+CertVerifier::new at line 300 must be inside an 'if !skip_certs {' block. In fixed code, certificate verification is ALWAYS conditional on skip_certs.
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- test_fix_pattern_matches_expected_structure stdout ----
+
+thread 'test_fix_pattern_matches_expected_structure' (4014) panicked at test_se_skip_certs.rs:275:5:
+Fixed code must NOT contain #[cfg(debug_assertions)] - the guard must be removed
+
+---- test_no_cfg_not_debug_assertions_in_verification stdout ----
+
+thread 'test_no_cfg_not_debug_assertions_in_verification' (4015) panicked at test_se_skip_certs.rs:131:13:
+Found #[cfg(not(debug_assertions))] at line 298. The fix.patch removes both #[cfg(debug_assertions)] and #[cfg(not(debug_assertions))] blocks, replacing them with a single unconditional block.
+
+---- test_se_skip_certs_verification_is_unconditional stdout ----
+
+thread 'test_se_skip_certs_verification_is_unconditional' (4016) panicked at test_se_skip_certs.rs:78:9:
+DEFAULT_SE_SKIP_CERTS_VERIFICATION must NOT be inside #[cfg(debug_assertions)] block. Found #[cfg(debug_assertions)] at line 280: '#[cfg(debug_assertions)]'. The fix.patch removes this debug-only guard.
+
+
+failures:
+    test_certificate_verification_uses_skip_certs_unconditionally
+    test_fix_pattern_matches_expected_structure
+    test_no_cfg_not_debug_assertions_in_verification
+    test_se_skip_certs_verification_is_unconditional
+
+test result: FAILED. 0 passed; 4 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--test test_se_skip_certs`
+>>>>> End Test Output
+OPENENV_EXIT_CODE=101
+EXIT_CODE=101

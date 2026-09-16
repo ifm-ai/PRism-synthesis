@@ -1,0 +1,24 @@
+{
+  "repo_url": "https://github.com/activeadmin/activeadmin",
+  "base_commit": "18e17e4f5ce67c384c09e337f16206336175ed61",
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    ".github/workflows/*.yml uses ubuntu-latest runner",
+    "Ruby on Rails project - cross-platform",
+    "No Windows or macOS specific dependencies",
+    "CI runs on Linux without platform restrictions"
+  ],
+  "key_files": [
+    "Gemfile",
+    "Gemfile.lock",
+    "activeadmin.gemspec",
+    "Rakefile",
+    "app/helpers/active_admin/display_helper.rb",
+    "spec/helpers/display_helper_spec.rb",
+    ".rspec",
+    "tasks/test.rake"
+  ],
+  "language": "ruby",
+  "test_framework": "rspec",
+  "build_system": "bundler"
+}

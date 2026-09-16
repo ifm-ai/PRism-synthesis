@@ -1,0 +1,534 @@
+Exporting session: ses_10b8d0b36ffejZxjlkg9ZG9wmn
+{
+  "info": {
+    "id": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+    "slug": "playful-canyon",
+    "projectID": "00c57c8bd8f6b9bb191c5a3400d4521659ca14e4",
+    "directory": "/workspace",
+    "title": "New session - 2026-06-23T12:27:15.017Z",
+    "version": "1.4.6",
+    "summary": {
+      "additions": 6,
+      "deletions": 2,
+      "files": 1
+    },
+    "permission": [
+      {
+        "permission": "question",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_enter",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_exit",
+        "pattern": "*",
+        "action": "deny"
+      }
+    ],
+    "time": {
+      "created": 1782217635017,
+      "updated": 1782217677752
+    }
+  },
+  "messages": [
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1782217635042
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "vllm",
+          "modelID": "Qwen/Qwen3.5-397B-A17B-FP8"
+        },
+        "summary": {
+          "diffs": [
+            {
+              "file": "python/llm/dev/benchmark/harness/bigdl_llm.py",
+              "patch": "Index: python/llm/dev/benchmark/harness/bigdl_llm.py\n===================================================================\n--- python/llm/dev/benchmark/harness/bigdl_llm.py\t\n+++ python/llm/dev/benchmark/harness/bigdl_llm.py\t\n@@ -1,59 +1,63 @@\n #\n # Copyright 2016 The BigDL Authors.\n #\n # Licensed under the Apache License, Version 2.0 (the \"License\");\n # you may not use this file except in compliance with the License.\n # You may obtain a copy of the License at\n #\n #     http://www.apache.org/licenses/LICENSE-2.0\n #\n # Unless required by applicable law or agreed to in writing, software\n # distributed under the License is distributed on an \"AS IS\" BASIS,\n # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n # See the License for the specific language governing permissions and\n # limitations under the License.\n #\n \n from bigdl.llm.transformers import AutoModelForCausalLM\n \n import inspect\n from lm_eval.models.huggingface import AutoCausalLM\n from lm_eval import utils\n from functools import partial\n \n \n # wrap  and force the Reorderer to be in a decrease order\n # This is a workaround to avoid frequent memory allocation which may cause OOM\n def force_decrease_order(Reorderer):\n     def DecreaseReorderer(arr, fn):\n         def _collate(x):\n             len, tokens = fn(x)\n             len = - abs(len)\n             return len, tokens\n         return Reorderer(arr, _collate)\n     return DecreaseReorderer\n utils.Reorderer = force_decrease_order(utils.Reorderer)\n \n \n class BigDLLM(AutoCausalLM):\n     AUTO_MODEL_CLASS = AutoModelForCausalLM\n     AutoCausalLM_ARGS = inspect.getfullargspec(AutoCausalLM.__init__).args\n     def __init__(self, *args, **kwargs):\n         if 'device' in kwargs and 'xpu' in kwargs['device']:\n             import intel_extension_for_pytorch\n         self.bigdl_llm_kwargs = {}\n+        \n+        optimize_model = kwargs.pop('optimize_model', None)\n+        use_cache = kwargs.pop('use_cache', None)\n+        \n         keys = list(kwargs.keys())\n         for k in keys:\n             if k not in self.AutoCausalLM_ARGS:\n                 self.bigdl_llm_kwargs[k] = kwargs.pop(k)\n \n-        self.bigdl_llm_kwargs['use_cache'] = kwargs.get('use_cache', True)\n-        self.bigdl_llm_kwargs['optimize_model'] = kwargs.get('optimize_model', True)\n+        self.bigdl_llm_kwargs['use_cache'] = use_cache if use_cache is not None else True\n+        self.bigdl_llm_kwargs['optimize_model'] = optimize_model if optimize_model is not None else True\n         AutoModelForCausalLM.from_pretrained = partial(AutoModelForCausalLM.from_pretrained, **self.bigdl_llm_kwargs)\n         \n         kwargs['trust_remote_code'] = kwargs.get('trust_remote_code', True)\n         super().__init__(*args, **kwargs)\n \n     @property\n     def add_special_tokens(self) -> bool:\n         return False\n",
+              "additions": 6,
+              "deletions": 2,
+              "status": "modified"
+            }
+          ]
+        },
+        "id": "msg_ef472f4e2001whKxU4wL8V0QvQ",
+        "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "\"When configuring a BigDLLM instance, users can pass a flag named `optimize_model` to control whether the underlying BigDL model should apply its internal optimizations. The intended behavior is that, if a caller explicitly sets `optimize_model=False`, the model will be loaded without those optimizations, while the default should remain `True` when the flag is omitted. Currently, the initialization routine removes any unknown keyword arguments before it checks for the presence of `optimize_model`, causing the flag to be lost and the model to always be loaded with optimizations enabled, regardless of user intent. This discrepancy leads to unexpected performance characteristics and makes it impossible for benchmark harnesses to disable the optimization for testing purposes.\n\nThe required change is to ensure that the value supplied for `optimize_model` (and similarly for `use_cache`) is retained and consulted when constructing the underlying model. The initialization logic should first capture these specific flags from the incoming arguments, apply sensible defaults when they are not provided, and then pass the resulting configuration to the model loader. As a result, a user who invokes the class with `optimize_model=False` should see the flag propagated to the underlying model, while callers who omit the flag should receive the default optimized behavior. The solution must preserve existing handling of other unrelated arguments and continue to set a default for `trust_remote_code` if not supplied.\"\n",
+          "id": "prt_ef472f4e3001oxVK3pjn9y6RRM",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef472f4e2001whKxU4wL8V0QvQ"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ef472f4e2001whKxU4wL8V0QvQ",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 10703,
+          "input": 10541,
+          "output": 162,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1782217635235,
+          "completed": 1782217650162
+        },
+        "finish": "tool-calls",
+        "id": "msg_ef472f5a3001rlzRge76mnf26n",
+        "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn"
+      },
+      "parts": [
+        {
+          "snapshot": "810b2c323d0a33ad4855b0c4026ce2116a2891b7",
+          "type": "step-start",
+          "id": "prt_ef4731f00001a3fgMOpGL7pLYr",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef472f5a3001rlzRge76mnf26n"
+        },
+        {
+          "type": "reasoning",
+          "text": "The user is describing a bug in a BigDLLM class where the `optimize_model` and `use_cache` flags are being lost during initialization because unknown keyword arguments are being removed before these flags are checked.\n\nLet me first search for the relevant code to understand the current implementation.\n",
+          "time": {
+            "start": 1782217645826,
+            "end": 1782217645841
+          },
+          "id": "prt_ef4731f02001m5L3BF04HNNvr6",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef472f5a3001rlzRge76mnf26n"
+        },
+        {
+          "type": "text",
+          "text": "\n\nI'll search for the BigDLLM class and its initialization logic to understand the issue.\n\n",
+          "time": {
+            "start": 1782217645842,
+            "end": 1782217645861
+          },
+          "id": "prt_ef4731f12001qW4n2NRtQNaPLH",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef472f5a3001rlzRge76mnf26n"
+        },
+        {
+          "type": "tool",
+          "tool": "grep",
+          "callID": "call_a0aaea6ed6994883ad3e9ce6",
+          "state": {
+            "status": "completed",
+            "input": {
+              "pattern": "class BigDLLM"
+            },
+            "output": "Found 2 matches\n/workspace/python/llm/dev/benchmark/harness/bigdl_llm.py:\n  Line 38: class BigDLLM(AutoCausalLM):\n\n\n/workspace/python/llm/src/bigdl/llm/serving/bigdl_llm_model.py:\n  Line 259: class BigDLLMLOWBITAdapter(BaseModelAdapter):\n",
+            "metadata": {
+              "matches": 2,
+              "truncated": false
+            },
+            "title": "class BigDLLM",
+            "time": {
+              "start": 1782217645853,
+              "end": 1782217649727
+            }
+          },
+          "id": "prt_ef4731f18001moYuN1u8ohEYeC",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef472f5a3001rlzRge76mnf26n"
+        },
+        {
+          "type": "tool",
+          "tool": "grep",
+          "callID": "call_28a1f7cc82ec4a4281cb970c",
+          "state": {
+            "status": "completed",
+            "input": {
+              "pattern": "optimize_model"
+            },
+            "output": "Found 317 matches (showing first 100)\n/workspace/python/llm/example/CPU/QLoRA-FineTuning/qlora_finetuning_cpu.py:\n  Line 63:     #                                              optimize_model=False,\n\n\n/workspace/python/llm/example/CPU/QLoRA-FineTuning/alpaca-qlora/alpaca_qlora_finetuning_cpu.py:\n  Line 175:             optimize_model=False,\n\n  Line 193:         #     optimize_model=False,\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/qwen-vl/chat.py:\n  Line 24: from bigdl.llm import optimize_model\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/mixtral/generate.py:\n  Line 45:                                                  optimize_model=True,\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/internlm-xcomposer/chat.py:\n  Line 24: from bigdl.llm import optimize_model\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/wizardcoder-python/README.md:\n  Line 2: In this directory, you will find examples on how you could use BigDL-LLM `optimize_model` API to accelerate WizardCoder-Python models. For illustration purposes, we utilize the [WizardLM/WizardCoder-Python-7B-V1.0](https://huggingface.co/WizardLM/WizardCoder-Python-7B-V1.0) as a reference WizardCoder-Python model.\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/wizardcoder-python/generate.py:\n  Line 22: from bigdl.llm import optimize_model\n\n  Line 48:     model = optimize_model(model)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/llava/generate.py:\n  Line 59: from bigdl.llm import optimize_model\n\n  Line 296:     model = optimize_model(model)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/solar/README.md:\n  Line 2: In this directory, you will find examples on how you could use BigDL-LLM `optimize_model` API to accelerate SOLAR models. For illustration purposes, we utilize the [upstage/SOLAR-10.7B-Instruct-v1.0](https://huggingface.co/upstage/SOLAR-10.7B-Instruct-v1.0) as a reference SOLAR model.\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/solar/generate.py:\n  Line 22: from bigdl.llm import optimize_model\n\n  Line 49:     model = optimize_model(model)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/flan-t5/generate.py:\n  Line 22: from bigdl.llm import optimize_model\n\n  Line 47:     model = optimize_model(model, modules_to_not_convert=[\"wo\", \"lm_head\"])\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/qwen-vl/README.md:\n  Line 2: In this directory, you will find examples on how you could use BigDL-LLM `optimize_model` API to accelerate Qwen-VL models. For illustration purposes, we utilize the [Qwen/Qwen-VL-Chat](https://huggingface.co/Qwen/Qwen-VL-Chat) as a reference Qwen-VL model.\n\n  Line 8: In the example [chat.py](./chat.py), we show a basic use case for a Qwen-VL model to start a multimodal chat using `chat()` API, with BigDL-LLM 'optimize_model' API.\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/qwen-vl/chat.py:\n  Line 23: from bigdl.llm import optimize_model\n\n  Line 42:     model = optimize_model(model, \n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/chatglm3/README.md:\n  Line 2: In this directory, you will find examples on how you could use BigDL-LLM `optimize_model` API to accelerate ChatGLM3 models. For illustration purposes, we utilize the [THUDM/chatglm3-6b](https://huggingface.co/THUDM/chatglm3-6b) as a reference ChatGLM3 model.\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/chatglm3/generate.py:\n  Line 22: from bigdl.llm import optimize_model\n\n  Line 45:     model = optimize_model(model)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/distil-whisper/recognize.py:\n  Line 20: from bigdl.llm import optimize_model\n\n  Line 54:      model = optimize_model(model)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/mistral/README.md:\n  Line 2: In this directory, you will find examples on how you could use BigDL-LLM `optimize_model` API to accelerate Mistral models. For illustration purposes, we utilize the [mistralai/Mistral-7B-Instruct-v0.1](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.1) and [mistralai/Mistral-7B-v0.1](https://huggingface.co/mistralai/Mistral-7B-v0.1) as reference Mistral models.\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/mistral/generate.py:\n  Line 22: from bigdl.llm import optimize_model\n\n  Line 48:     model = optimize_model(model)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/README.md:\n  Line 2: You can use `optimize_model` API to accelerate general PyTorch models on Intel servers and PCs. This directory contains example scripts to help you quickly get started using BigDL-LLM to run some popular open-source models in the community. Each model has its own dedicated folder, where you can find detailed instructions on how to install and run it.\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/fuyu/generate.py:\n  Line 22: from bigdl.llm import optimize_model\n\n  Line 45:     model = optimize_model(model,\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/openai-whisper/recognize.py:\n  Line 22: from bigdl.llm import optimize_model\n\n  Line 50:     model = optimize_model(model)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/llama2/README.md:\n  Line 2: In this directory, you will find examples on how you could use BigDL-LLM `optimize_model` API to accelerate Llama2 models. For illustration purposes, we utilize the [meta-llama/Llama-2-7b-chat-hf](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf) and [meta-llama/Llama-2-13b-chat-hf](https://huggingface.co/meta-llama/Llama-2-13b-chat-hf) as reference Llama2 models.\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/llama2/generate.py:\n  Line 22: from bigdl.llm import optimize_model\n\n  Line 49:     model = optimize_model(model)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/bluelm/README.md:\n  Line 2: In this directory, you will find examples on how you could use BigDL-LLM `optimize_model` API to accelerate BlueLM models. For illustration purposes, we utilize the [vivo-ai/BlueLM-7B-Chat](https://huggingface.co/vivo-ai/BlueLM-7B-Chat) as a reference BlueLM model.\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/bluelm/generate.py:\n  Line 22: from bigdl.llm import optimize_model\n\n  Line 44:     model = optimize_model(model)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/codeshell/README.md:\n  Line 2: In this directory, you will find examples on how you could use BigDL-LLM `optimize_model` API to accelerate CodeShell models. For illustration purposes, we utilize the [WisdomShell/CodeShell-7B](https://huggingface.co/WisdomShell/CodeShell-7B ) as a reference CodeShell model.\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/codeshell/generate.py:\n  Line 22: from bigdl.llm import optimize_model\n\n  Line 44:     model = optimize_model(model)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/skywork/README.md:\n  Line 2: In this directory, you will find examples on how you could use BigDL-LLM `optimize_model` API to accelerate Skywork models. For illustration purposes, we utilize the [Skywork/Skywork-13B-base](https://huggingface.co/Skywork/Skywork-13B-base) as the reference Skywork model.\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/skywork/generate.py:\n  Line 22: from bigdl.llm import optimize_model\n\n  Line 45:     model = optimize_model(model)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/phi-1_5/README.md:\n  Line 2: In this directory, you will find examples on how you could use BigDL-LLM `optimize_model` API to accelerate phi-1_5 models. For illustration purposes, we utilize the [microsoft/phi-1_5](https://huggingface.co/microsoft/phi-1_5) as a reference phi-1_5 model.\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/phi-1_5/generate.py:\n  Line 22: from bigdl.llm import optimize_model\n\n  Line 46:     model = optimize_model(model)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/chatglm/README.md:\n  Line 2: In this directory, you will find examples on how you could use BigDL-LLM `optimize_model` API to accelerate ChatGLM models. For illustration purposes, we utilize the [THUDM/chatglm-6b](https://huggingface.co/THUDM/chatglm-6b) as a reference ChatGLM model.\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/chatglm/generate.py:\n  Line 22: from bigdl.llm import optimize_model\n\n  Line 45:     model = optimize_model(model)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/bert/extract_feature.py:\n  Line 22: from bigdl.llm import optimize_model\n\n  Line 42:     model = optimize_model(model)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/bert/README.md:\n  Line 2: In this directory, you will find examples on how you could use BigDL-LLM `optimize_model` API to accelerate BERT models. For illustration purposes, we utilize the [bert-large-uncased](https://huggingface.co/bert-large-uncased) as reference BERT models.\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/yi/generate.py:\n  Line 21: from bigdl.llm import optimize_model\n\n  Line 43:     model = optimize_model(model)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/codellama/README.md:\n  Line 2: In this directory, you will find examples on how you could use BigDL-LLM `optimize_model` API to accelerate CodeLlama models. For illustration purposes, we utilize the [codellama/CodeLlama-7b-hf](https://huggingface.co/codellama/CodeLlama-7b-hf) as reference CodeLlama models.\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/codellama/generate.py:\n  Line 22: from bigdl.llm import optimize_model\n\n  Line 45:     model = optimize_model(model)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/mixtral/README.md:\n  Line 2: In this directory, you will find examples on how you could use BigDL-LLM `optimize_model` API to accelerate Mixtral models. For illustration purposes, we utilize the [mistralai/Mixtral-8x7B-Instruct-v0.1](https://huggingface.co/mistralai/Mixtral-8x7B-Instruct-v0.1) as a reference Mixtral model.\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/mixtral/generate.py:\n  Line 22: from bigdl.llm import optimize_model\n\n  Line 48:     model = optimize_model(model)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/bark/README.md:\n  Line 2: In this directory, you will find examples on how you could use BigDL-LLM `optimize_model` API to accelerate Bark models. For illustration purposes, we utilize the [suno/bark](https://huggingface.co/suno/bark) as reference Bark models.\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/bark/synthesize_speech.py:\n  Line 23: from bigdl.llm import optimize_model\n\n  Line 42:     model = optimize_model(model)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/internlm-xcomposer/README.md:\n  Line 2: In this directory, you will find examples on how you could use BigDL-LLM `optimize_model` API to accelerate InternLM_XComposer models. For illustration purposes, we utilize the [internlm/internlm-xcomposer-vl-7b](https://huggingface.co/internlm/internlm-xcomposer-vl-7b) as a reference InternLM_XComposer model.\n\n  Line 8: In the example [chat.py](./chat.py), we show a basic use case for an InternLM_XComposer model to start a multi-turn chat centered around an image using `chat()` API, with BigDL-LLM 'optimize_model' API.\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/internlm-xcomposer/chat.py:\n  Line 23: from bigdl.llm import optimize_model\n\n  Line 43:     model = optimize_model(model,\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/aquila2/README.md:\n  Line 2: In this directory, you will find examples on how you could use BigDL-LLM `optimize_model` API to accelerate Aquila2 models. For illustration purposes, we utilize the [BAAI/AquilaChat2-7B](https://huggingface.co/BAAI/AquilaChat2-7B) as reference Aquila2 models.\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Model/aquila2/generate.py:\n  Line 22: from bigdl.llm import optimize_model\n\n  Line 48:     model = optimize_model(model)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/More-Data-Types/generate.py:\n  Line 22: from bigdl.llm import optimize_model\n\n  Line 55:     model = optimize_model(model, low_bit=low_bit)\n\n\n/workspace/python/llm/example/CPU/PyTorch-Models/Save-Load/generate.py:\n  Line 20: from bigdl.llm import optimize_model\n\n  Line 60:         model = optimize_model(model, low_bit=low_bit)\n\n\n/workspace/python/llm/example/CPU/Applications/streaming-llm/README.md:\n  Line 7: model = AutoModelForCausalLM.from_pretrained(model_name_or_path, load_in_4bit=True, trust_remote_code=True, optimize_model=False)\n\n\n/workspace/python/llm/example/CPU/Applications/streaming-llm/streaming_llm/utils.py:\n  Line 65: # set load_in_4bit=True to get performance boost, set optimize_model=False for now\n\n  Line 66: # TODO align logics of optimize_model and streaming\n\n  Line 70:         optimize_model=False,\n\n\n/workspace/python/llm/example/CPU/Deepspeed-AutoTP/README.md:\n  Line 42: from bigdl.llm import optimize_model\n\n  Line 44: model = optimize_model(model.module.to(f'cpu'), low_bit='sym_int4')\n\n\n/workspace/python/llm/example/CPU/Deepspeed-AutoTP/deepspeed_autotp.py:\n  Line 48: from bigdl.llm import optimize_model\n\n  Line 92:     model = optimize_model(model.module.to(f'cpu'), low_bit='sym_int4')\n\n\n/workspace/python/llm/example/GPU/Speculative-Decoding/chatglm3/speculative.py:\n  Line 50:                                       optimize_model=True,\n\n\n/workspace/python/llm/example/GPU/Speculative-Decoding/mistral/speculative.py:\n  Line 63:                                                  optimize_model=True,\n\n\n/workspace/python/llm/example/GPU/Speculative-Decoding/llama2/speculative.py:\n  Line 72:                                                  optimize_model=True,\n\n\n/workspace/python/llm/example/GPU/Speculative-Decoding/qwen/speculative.py:\n  Line 62:                                                  optimize_model=True,\n\n\n/workspace/python/llm/example/GPU/Speculative-Decoding/baichuan2/speculative.py:\n  Line 51:                                                  optimize_model=True,\n\n\n/workspace/python/llm/example/GPU/QLoRA-FineTuning/alpaca-qlora/alpaca_qlora_finetuning.py:\n  Line 192:             optimize_model=False,\n\n  Line 203:                 optimize_model=False,\n\n  Line 233:         #     optimize_model=False,\n\n\n/workspace/python/llm/example/GPU/QLoRA-FineTuning/qlora_finetuning.py:\n  Line 57:     #                                             optimize_model=False,\n\n\n/workspace/python/llm/example/GPU/HF-Transformers-AutoModels/Model/flan-t5/generate.py:\n  Line 47:                                                   optimize_model=False,\n\n\n/workspace/python/llm/example/GPU/HF-Transformers-AutoModels/Model/whisper/recognize.py:\n  Line 47:                                                       optimize_model=False,\n\n\n/workspace/python/llm/example/GPU/HF-Transformers-AutoModels/Model/chatglm3/streamchat.py:\n  Line 45:                                       optimize_model=True)\n\n\n/workspace/python/llm/example/GPU/HF-Transformers-AutoModels/Model/chatglm3/generate.py:\n  Line 46:                                       optimize_model=True,\n\n\n/workspace/python/llm/example/GPU/HF-Transformers-AutoModels/Model/mistral/generate.py:\n  Line 45:                                                  optimize_model=True,\n\n\n/workspace/python/llm/example/GPU/HF-Transformers-AutoModels/Model/starcoder/generate.py:\n  Line 44:                                                  optimize_model=False,\n\n\n/workspace/python/llm/example/GPU/HF-Transformers-AutoModels/Model/voiceassistant/generate.py:\n  Line 91:     whisper =  AutoModelForSpeechSeq2Seq.from_pretrained(whisper_model_path, load_in_4bit=True, optimize_model=False, use_cache=True)\n\n\n(Results truncated: showing 100 of 317 matches (217 hidden). Consider using a more specific path or pattern.)",
+            "metadata": {
+              "matches": 317,
+              "truncated": true
+            },
+            "title": "optimize_model",
+            "time": {
+              "start": 1782217645856,
+              "end": 1782217649734
+            }
+          },
+          "id": "prt_ef4731f1e0014Wmp3fLSMFTzZT",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef472f5a3001rlzRge76mnf26n"
+        },
+        {
+          "type": "tool",
+          "tool": "grep",
+          "callID": "call_7e3d0f742d3e4e4bad0b2cdb",
+          "state": {
+            "status": "completed",
+            "input": {
+              "pattern": "use_cache"
+            },
+            "output": "Found 454 matches (showing first 100)\n/workspace/python/llm/example/CPU/QLoRA-FineTuning/qlora_finetuning_cpu.py:\n  Line 105:     model.config.use_cache = False  # silence the warnings. Please re-enable for inference!\n\n\n/workspace/python/llm/example/CPU/QLoRA-FineTuning/alpaca-qlora/alpaca_qlora_finetuning_cpu.py:\n  Line 354:     model.config.use_cache = False\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/wizardcoder-python/generate.py:\n  Line 59:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 60:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/solar/generate.py:\n  Line 60:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 61:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/flan-t5/generate.py:\n  Line 61:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 62:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/whisper/recognize.py:\n  Line 64:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 65:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/chatglm3/generate.py:\n  Line 58:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 59:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/redpajama/generate.py:\n  Line 57:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 58:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/mistral/generate.py:\n  Line 56:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 57:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/starcoder/generate.py:\n  Line 56:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 57:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/phoenix/generate.py:\n  Line 56:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 57:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/baichuan/generate.py:\n  Line 57:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 58:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/llama2/generate.py:\n  Line 61:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 62:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/mpt/generate.py:\n  Line 56:         # enabling `use_cache=True` allows the model to utilize the previous\n\n  Line 59:         # it is important to set use_cache=True for MPT models\n\n  Line 62:             use_cache=True, \n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/bluelm/generate.py:\n  Line 57:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 58:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/codeshell/generate.py:\n  Line 57:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 58:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/dolly_v2/generate.py:\n  Line 65:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 66:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/skywork/generate.py:\n  Line 56:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 57:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/phi-1_5/generate.py:\n  Line 28: generation_config = GenerationConfig(use_cache = True)\n\n  Line 59:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 60:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n  Line 63:         # Note that phi-1_5 uses GenerationConfig to enable 'use_cache'\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/chatglm2/generate.py:\n  Line 58:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 59:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/chatglm/generate.py:\n  Line 58:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 59:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/qwen/generate.py:\n  Line 65:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 66:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/replit/generate.py:\n  Line 56:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 57:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/yi/generate.py:\n  Line 62:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 63:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/vicuna/generate.py:\n  Line 54:         # enabling `use_cache=True` allows the model to utilize the previous\n\n  Line 57:         # it is important to set use_cache=True for vicuna-v1.3 models\n\n  Line 59:                                 use_cache=True,\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/codellama/generate.py:\n  Line 56:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 57:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/dolly_v1/generate.py:\n  Line 62:         # enabling `use_cache=True` allows the model to utilize the previous\n\n  Line 65:         # it is important to set use_cache=True for Dolly v1 models\n\n  Line 67:                                 use_cache=True,\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/moss/generate.py:\n  Line 57:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 58:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/internlm/generate.py:\n  Line 58:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 59:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/mixtral/generate.py:\n  Line 47:                                                  use_cache=True)\n\n  Line 62:         # to enhance decoding speed, but has `\"use_cache\": false` in its model config,\n\n  Line 63:         # it is important to set `use_cache=True` explicitly in the `generate` function\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/falcon/falcon-40b-instruct/modelling_RW.py:\n  Line 283:         use_cache: bool = False,\n\n  Line 319:         if use_cache is True:\n\n  Line 437:         use_cache: bool = False,\n\n  Line 453:             use_cache=use_cache,\n\n  Line 468:         if use_cache:\n\n  Line 608:         use_cache: Optional[bool] = None,\n\n  Line 628:         use_cache = use_cache if use_cache is not None else self.config.use_cache\n\n  Line 654:         presents = () if use_cache else None\n\n  Line 687:                 if use_cache:\n\n  Line 689:                         \"`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`...\"\n\n  Line 691:                     use_cache = False\n\n  Line 696:                         return module(*inputs, use_cache=use_cache, output_attentions=output_attentions)\n\n  Line 713:                     use_cache=use_cache,\n\n  Line 719:             if use_cache is True:\n\n  Line 723:                 all_self_attentions = all_self_attentions + (outputs[2 if use_cache else 1],)\n\n  Line 782:             \"use_cache\": kwargs.get(\"use_cache\"),\n\n  Line 794:         use_cache: Optional[bool] = None,\n\n  Line 824:             use_cache=use_cache,\n\n  Line 903:         use_cache: Optional[bool] = None,\n\n  Line 933:             use_cache=use_cache,\n\n  Line 1026:         use_cache: Optional[bool] = None,\n\n  Line 1056:             use_cache=use_cache,\n\n\n/workspace/python/llm/example/CPU/HF-Transformers-AutoModels/Model/falcon/falcon-7b-instruct/modelling_RW.py:\n  Line 277:         use_cache: bool = False,\n\n  Line 324:         if use_cache is True:\n\n  Line 444:         use_cache: bool = False,\n\n  Line 459:             use_cache=use_cache,\n\n  Line 479:         if use_cache:\n\n  Line 620:         use_cache: Optional[bool] = None,\n\n  Line 640:         use_cache = use_cache if use_cache is not None else self.config.use_cache\n\n  Line 666:         presents = () if use_cache else None\n\n  Line 705:                 if use_cache:\n\n  Line 707:                         \"`use_cache=True` is incompatible with gradient checkpointing. Setting `use_cache=False`...\"\n\n  Line 709:                     use_cache = False\n\n  Line 714:                         return module(*inputs, use_cache=use_cache, output_attentions=output_attentions)\n\n  Line 733:                     use_cache=use_cache,\n\n  Line 739:             if use_cache is True:\n\n\n(Results truncated: showing 100 of 454 matches (354 hidden). Consider using a more specific path or pattern.)",
+            "metadata": {
+              "matches": 454,
+              "truncated": true
+            },
+            "title": "use_cache",
+            "time": {
+              "start": 1782217645858,
+              "end": 1782217649732
+            }
+          },
+          "id": "prt_ef4731f21001HPvVzKo6CNLQr9",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef472f5a3001rlzRge76mnf26n"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "810b2c323d0a33ad4855b0c4026ce2116a2891b7",
+          "type": "step-finish",
+          "tokens": {
+            "total": 10703,
+            "input": 10541,
+            "output": 162,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_ef4732e48001efFp4yVdUNdP1b",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef472f5a3001rlzRge76mnf26n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ef472f4e2001whKxU4wL8V0QvQ",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 18550,
+          "input": 18447,
+          "output": 103,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1782217650165,
+          "completed": 1782217660347
+        },
+        "finish": "tool-calls",
+        "id": "msg_ef4732ff50014UV8Hb540cRxUJ",
+        "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn"
+      },
+      "parts": [
+        {
+          "snapshot": "810b2c323d0a33ad4855b0c4026ce2116a2891b7",
+          "type": "step-start",
+          "id": "prt_ef473562400134gCX43xJJR5ay",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef4732ff50014UV8Hb540cRxUJ"
+        },
+        {
+          "type": "text",
+          "text": "\n\nLet me look at the BigDLLM class in the benchmark harness and the model adapter:\n\n",
+          "time": {
+            "start": 1782217659942,
+            "end": 1782217659955
+          },
+          "id": "prt_ef4735626001GaQdvqcTiK5kuD",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef4732ff50014UV8Hb540cRxUJ"
+        },
+        {
+          "type": "tool",
+          "tool": "read",
+          "callID": "call_157da404ba19410f808f7b2f",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/workspace/python/llm/dev/benchmark/harness/bigdl_llm.py"
+            },
+            "output": "<path>/workspace/python/llm/dev/benchmark/harness/bigdl_llm.py</path>\n<type>file</type>\n<content>\n1: #\n2: # Copyright 2016 The BigDL Authors.\n3: #\n4: # Licensed under the Apache License, Version 2.0 (the \"License\");\n5: # you may not use this file except in compliance with the License.\n6: # You may obtain a copy of the License at\n7: #\n8: #     http://www.apache.org/licenses/LICENSE-2.0\n9: #\n10: # Unless required by applicable law or agreed to in writing, software\n11: # distributed under the License is distributed on an \"AS IS\" BASIS,\n12: # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n13: # See the License for the specific language governing permissions and\n14: # limitations under the License.\n15: #\n16: \n17: from bigdl.llm.transformers import AutoModelForCausalLM\n18: \n19: import inspect\n20: from lm_eval.models.huggingface import AutoCausalLM\n21: from lm_eval import utils\n22: from functools import partial\n23: \n24: \n25: # wrap  and force the Reorderer to be in a decrease order\n26: # This is a workaround to avoid frequent memory allocation which may cause OOM\n27: def force_decrease_order(Reorderer):\n28:     def DecreaseReorderer(arr, fn):\n29:         def _collate(x):\n30:             len, tokens = fn(x)\n31:             len = - abs(len)\n32:             return len, tokens\n33:         return Reorderer(arr, _collate)\n34:     return DecreaseReorderer\n35: utils.Reorderer = force_decrease_order(utils.Reorderer)\n36: \n37: \n38: class BigDLLM(AutoCausalLM):\n39:     AUTO_MODEL_CLASS = AutoModelForCausalLM\n40:     AutoCausalLM_ARGS = inspect.getfullargspec(AutoCausalLM.__init__).args\n41:     def __init__(self, *args, **kwargs):\n42:         if 'device' in kwargs and 'xpu' in kwargs['device']:\n43:             import intel_extension_for_pytorch\n44:         self.bigdl_llm_kwargs = {}\n45:         keys = list(kwargs.keys())\n46:         for k in keys:\n47:             if k not in self.AutoCausalLM_ARGS:\n48:                 self.bigdl_llm_kwargs[k] = kwargs.pop(k)\n49: \n50:         self.bigdl_llm_kwargs['use_cache'] = kwargs.get('use_cache', True)\n51:         self.bigdl_llm_kwargs['optimize_model'] = kwargs.get('optimize_model', True)\n52:         AutoModelForCausalLM.from_pretrained = partial(AutoModelForCausalLM.from_pretrained, **self.bigdl_llm_kwargs)\n53:         \n54:         kwargs['trust_remote_code'] = kwargs.get('trust_remote_code', True)\n55:         super().__init__(*args, **kwargs)\n56: \n57:     @property\n58:     def add_special_tokens(self) -> bool:\n59:         return False\n\n(End of file - total 59 lines)\n</content>",
+            "metadata": {
+              "preview": "#\n# Copyright 2016 The BigDL Authors.\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this file except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#     http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\n\nfrom bigdl.llm.transformers import AutoModelForCausalLM\n\nimport inspect\nfrom lm_eval.models.huggingface import AutoCausalLM",
+              "truncated": false,
+              "loaded": []
+            },
+            "title": "python/llm/dev/benchmark/harness/bigdl_llm.py",
+            "time": {
+              "start": 1782217659951,
+              "end": 1782217659964
+            }
+          },
+          "id": "prt_ef473562c001Uzw8TTtwetay2s",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef4732ff50014UV8Hb540cRxUJ"
+        },
+        {
+          "type": "tool",
+          "tool": "read",
+          "callID": "call_c37fcda7cbf845e8a7e0ff7c",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/workspace/python/llm/src/bigdl/llm/serving/bigdl_llm_model.py"
+            },
+            "output": "<path>/workspace/python/llm/src/bigdl/llm/serving/bigdl_llm_model.py</path>\n<type>file</type>\n<content>\n1: #\n2: # Copyright 2016 The BigDL Authors.\n3: #\n4: # Licensed under the Apache License, Version 2.0 (the \"License\");\n5: # you may not use this file except in compliance with the License.\n6: # You may obtain a copy of the License at\n7: #\n8: #     http://www.apache.org/licenses/LICENSE-2.0\n9: #\n10: # Unless required by applicable law or agreed to in writing, software\n11: # distributed under the License is distributed on an \"AS IS\" BASIS,\n12: # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n13: # See the License for the specific language governing permissions and\n14: # limitations under the License.\n15: #\n16: \n17: from fastchat.model.model_adapter import register_model_adapter, BaseModelAdapter, ChatGLMAdapter\n18: from fastchat.modules.gptq import GptqConfig, load_gptq_quantized\n19: import accelerate\n20: from fastchat.modules.awq import AWQConfig, load_awq_quantized\n21: from fastchat.model.model_adapter import (\n22:     get_model_adapter,\n23:     raise_warning_for_incompatible_cpu_offloading_configuration,\n24: )\n25: from fastchat.model.monkey_patch_non_inplace import (\n26:     replace_llama_attn_with_non_inplace_operations,\n27: )\n28: from fastchat.constants import CPU_ISA\n29: from fastchat.utils import get_gpu_memory\n30: import torch\n31: import warnings\n32: from transformers import AutoTokenizer\n33: from typing import Dict, List, Optional\n34: import math\n35: import psutil\n36: from bigdl.llm.utils.common import invalidInputError\n37: \n38: is_fastchat_patched = False\n39: _mapping_fastchat = None\n40: \n41: \n42: def _get_patch_map():\n43:     global _mapping_fastchat\n44: \n45:     if _mapping_fastchat is None:\n46:         _mapping_fastchat = []\n47: \n48:     from fastchat.model import model_adapter\n49:     _mapping_fastchat += [\n50:         [BaseModelAdapter, \"load_model\", load_model_base, None],\n51:         [ChatGLMAdapter, \"load_model\", load_model_chatglm, None],\n52:         [model_adapter, \"load_model\", load_model, None],\n53:     ]\n54: \n55:     return _mapping_fastchat\n56: \n57: \n58: def load_model_base(self, model_path: str, from_pretrained_kwargs: dict):\n59:     revision = from_pretrained_kwargs.get(\"revision\", \"main\")\n60:     print(\"Customized bigdl-llm loader\")\n61:     tokenizer = AutoTokenizer.from_pretrained(\n62:         model_path,\n63:         use_fast=self.use_fast_tokenizer,\n64:         revision=revision,\n65:     )\n66:     from bigdl.llm.transformers import AutoModelForCausalLM\n67:     model = AutoModelForCausalLM.from_pretrained(\n68:         model_path, low_cpu_mem_usage=True, **from_pretrained_kwargs\n69:     )\n70:     return model, tokenizer\n71: \n72: \n73: def load_model_chatglm(self, model_path: str, from_pretrained_kwargs: dict):\n74:     revision = from_pretrained_kwargs.get(\"revision\", \"main\")\n75:     print(\"Customized bigdl-llm loader\")\n76:     tokenizer = AutoTokenizer.from_pretrained(\n77:         model_path, trust_remote_code=True, revision=revision\n78:     )\n79:     from bigdl.llm.transformers import AutoModel\n80:     model = AutoModel.from_pretrained(\n81:         model_path, trust_remote_code=True, load_in_4bit=True, **from_pretrained_kwargs\n82:     )\n83:     return model, tokenizer\n84: \n85: \n86: def load_model(\n87:     model_path: str,\n88:     device: str = \"cuda\",\n89:     num_gpus: int = 1,\n90:     max_gpu_memory: Optional[str] = None,\n91:     load_8bit: bool = False,\n92:     cpu_offloading: bool = False,\n93:     gptq_config: Optional[GptqConfig] = None,\n94:     awq_config: Optional[AWQConfig] = None,\n95:     revision: str = \"main\",\n96:     debug: bool = False,\n97: ):\n98:     \"\"\"Load a model from Hugging Face.\"\"\"\n99:     # get model adapter\n100:     adapter = get_model_adapter(model_path)\n101: \n102:     # Handle device mapping\n103:     cpu_offloading = raise_warning_for_incompatible_cpu_offloading_configuration(\n104:         device, load_8bit, cpu_offloading\n105:     )\n106:     if device == \"cpu\":\n107:         kwargs = {\"torch_dtype\": \"auto\"}\n108:         if CPU_ISA in [\"avx512_bf16\", \"amx\"]:\n109:             try:\n110:                 import intel_extension_for_pytorch as ipex\n111: \n112:                 kwargs = {\"torch_dtype\": torch.bfloat16}\n113:             except ImportError:\n114:                 warnings.warn(\n115:                     \"Intel Extension for PyTorch is not installed, \"\n116:                     \"it can be installed to accelerate cpu inference\"\n117:                 )\n118:     elif device == \"cuda\":\n119:         kwargs = {\"torch_dtype\": torch.float16}\n120:         if num_gpus != 1:\n121:             kwargs[\"device_map\"] = \"auto\"\n122:             if max_gpu_memory is None:\n123:                 kwargs[\n124:                     \"device_map\"\n125:                 ] = \"sequential\"  # This is important for not the same VRAM sizes\n126:                 available_gpu_memory = get_gpu_memory(num_gpus)\n127:                 kwargs[\"max_memory\"] = {\n128:                     i: str(int(available_gpu_memory[i] * 0.85)) + \"GiB\"\n129:                     for i in range(num_gpus)\n130:                 }\n131:             else:\n132:                 kwargs[\"max_memory\"] = {\n133:                     i: max_gpu_memory for i in range(num_gpus)}\n134:     elif device == \"mps\":\n135:         kwargs = {\"torch_dtype\": torch.float16}\n136:         # Avoid bugs in mps backend by not using in-place operations.\n137:         replace_llama_attn_with_non_inplace_operations()\n138:     elif device == \"xpu\":\n139:         kwargs = {}\n140:         # Try to load ipex, while it looks unused, it links into torch for xpu support\n141:         try:\n142:             import intel_extension_for_pytorch as ipex\n143:         except ImportError:\n144:             warnings.warn(\n145:                 \"Intel Extension for PyTorch is not installed, but is required for xpu inference.\"\n146:             )\n147:     else:\n148:         invalidInputError(False, f\"Invalid device: {device}\")\n149: \n150:     if cpu_offloading:\n151:         # raises an error on incompatible platforms\n152:         from transformers import BitsAndBytesConfig\n153: \n154:         if \"max_memory\" in kwargs:\n155:             kwargs[\"max_memory\"][\"cpu\"] = (\n156:                 str(math.floor(psutil.virtual_memory().available / 2**20)) + \"Mib\"\n157:             )\n158:         kwargs[\"quantization_config\"] = BitsAndBytesConfig(\n159:             load_in_8bit_fp32_cpu_offload=cpu_offloading\n160:         )\n161:         kwargs[\"load_in_8bit\"] = load_8bit\n162:     elif load_8bit:\n163:         if num_gpus != 1:\n164:             warnings.warn(\n165:                 \"8-bit quantization is not supported for multi-gpu inference.\"\n166:             )\n167:         else:\n168:             model, tokenizer = adapter.load_compress_model(\n169:                 model_path=model_path,\n170:                 device=device,\n171:                 torch_dtype=kwargs[\"torch_dtype\"],\n172:                 revision=revision,\n173:             )\n174:             if debug:\n175:                 print(model)\n176:             return model, tokenizer\n177:     elif awq_config and awq_config.wbits < 16:\n178:         invalidInputError(awq_config.wbits != 4,\n179:                           \"Currently we only support 4-bit inference for AWQ.\")\n180:         model, tokenizer = load_awq_quantized(model_path, awq_config, device)\n181:         if num_gpus != 1:\n182:             device_map = accelerate.infer_auto_device_map(\n183:                 model,\n184:                 max_memory=kwargs[\"max_memory\"],\n185:                 no_split_module_classes=[\n186:                     \"OPTDecoderLayer\",\n187:                     \"LlamaDecoderLayer\",\n188:                     \"BloomBlock\",\n189:                     \"MPTBlock\",\n190:                     \"DecoderLayer\",\n191:                 ],\n192:             )\n193:             model = accelerate.dispatch_model(\n194:                 model, device_map=device_map, offload_buffers=True\n195:             )\n196:         else:\n197:             model.to(device)\n198:         return model, tokenizer\n199:     elif gptq_config and gptq_config.wbits < 16:\n200:         model, tokenizer = load_gptq_quantized(model_path, gptq_config)\n201:         if num_gpus != 1:\n202:             device_map = accelerate.infer_auto_device_map(\n203:                 model,\n204:                 max_memory=kwargs[\"max_memory\"],\n205:                 no_split_module_classes=[\"LlamaDecoderLayer\"],\n206:             )\n207:             model = accelerate.dispatch_model(\n208:                 model, device_map=device_map, offload_buffers=True\n209:             )\n210:         else:\n211:             model.to(device)\n212:         return model, tokenizer\n213:     kwargs[\"revision\"] = revision\n214: \n215:     # Load model\n216:     model, tokenizer = adapter.load_model(model_path, kwargs)\n217: \n218:     if (\n219:         device == \"cpu\"\n220:         and kwargs[\"torch_dtype\"] is torch.bfloat16\n221:         and CPU_ISA is not None\n222:     ):\n223:         model = ipex.optimize(model, dtype=kwargs[\"torch_dtype\"])\n224: \n225:     if (device == \"cuda\" and num_gpus == 1 and not cpu_offloading) or device in (\n226:         \"mps\",\n227:         \"xpu\",\n228:     ):\n229:         model.to(device)\n230: \n231:     if debug:\n232:         print(model)\n233: \n234:     return model, tokenizer\n235: \n236: \n237: class BigDLLLMAdapter(BaseModelAdapter):\n238:     \"Model adapter for bigdl-llm backend models\"\n239: \n240:     def match(self, model_path: str):\n241:         return \"bigdl\" in model_path\n242: \n243:     def load_model(self, model_path: str, from_pretrained_kwargs: dict):\n244:         revision = from_pretrained_kwargs.get(\"revision\", \"main\")\n245:         tokenizer = AutoTokenizer.from_pretrained(\n246:             model_path, use_fast=False, revision=revision, trust_remote_code=True\n247:         )\n248:         print(\"Customized bigdl-llm loader\")\n249:         from bigdl.llm.transformers import AutoModelForCausalLM\n250:         model = AutoModelForCausalLM.from_pretrained(\n251:             model_path,\n252:             load_in_4bit=True,\n253:             low_cpu_mem_usage=True,\n254:             **from_pretrained_kwargs,\n255:         )\n256:         return model, tokenizer\n257: \n258: \n259: class BigDLLMLOWBITAdapter(BaseModelAdapter):\n260:     \"Model adapter for bigdl-llm backend low-bit models\"\n261: \n262:     def match(self, model_path: str):\n263:         return \"bigdl-lowbit\" in model_path\n264: \n265:     def load_model(self, model_path: str, from_pretrained_kwargs: dict):\n266:         revision = from_pretrained_kwargs.get(\"revision\", \"main\")\n267:         tokenizer = AutoTokenizer.from_pretrained(\n268:             model_path, use_fast=False, revision=revision\n269:         )\n270:         print(\"Customized bigdl-llm loader\")\n271:         from bigdl.llm.transformers import AutoModelForCausalLM\n272:         model = AutoModelForCausalLM.load_low_bit(model_path)\n273:         return model, tokenizer\n274: \n275: \n276: def patch_fastchat():\n277:     global is_fastchat_patched\n278:     if is_fastchat_patched:\n279:         return\n280:     register_model_adapter(BigDLLMLOWBITAdapter)\n281:     register_model_adapter(BigDLLLMAdapter)\n282:     mapping_fastchat = _get_patch_map()\n283: \n284:     for mapping_iter in mapping_fastchat:\n285:         if mapping_iter[3] is None:\n286:             mapping_iter[3] = getattr(mapping_iter[0], mapping_iter[1], None)\n287:         setattr(mapping_iter[0], mapping_iter[1], mapping_iter[2])\n288: \n289:     is_fastchat_patched = True\n\n(End of file - total 289 lines)\n</content>",
+            "metadata": {
+              "preview": "#\n# Copyright 2016 The BigDL Authors.\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this file except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#     http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\n\nfrom fastchat.model.model_adapter import register_model_adapter, BaseModelAdapter, ChatGLMAdapter\nfrom fastchat.modules.gptq import GptqConfig, load_gptq_quantized\nimport accelerate\nfrom fastchat.modules.awq import AWQConfig, load_awq_quantized",
+              "truncated": false,
+              "loaded": []
+            },
+            "title": "python/llm/src/bigdl/llm/serving/bigdl_llm_model.py",
+            "time": {
+              "start": 1782217659954,
+              "end": 1782217659968
+            }
+          },
+          "id": "prt_ef4735630001hdx1BZSPeAWGVm",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef4732ff50014UV8Hb540cRxUJ"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "810b2c323d0a33ad4855b0c4026ce2116a2891b7",
+          "type": "step-finish",
+          "tokens": {
+            "total": 18550,
+            "input": 18447,
+            "output": 103,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_ef4735641001mKZTX5PXatqt2N",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef4732ff50014UV8Hb540cRxUJ"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ef472f4e2001whKxU4wL8V0QvQ",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 23612,
+          "input": 22984,
+          "output": 628,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1782217660350,
+          "completed": 1782217677534
+        },
+        "finish": "tool-calls",
+        "id": "msg_ef47357be001Am5B61ASDLxMtC",
+        "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn"
+      },
+      "parts": [
+        {
+          "snapshot": "810b2c323d0a33ad4855b0c4026ce2116a2891b7",
+          "type": "step-start",
+          "id": "prt_ef47399300010k9cj0SlF2h3Fn",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef47357be001Am5B61ASDLxMtC"
+        },
+        {
+          "type": "text",
+          "text": "\n\nNow I can see the issue. In `/workspace/python/llm/dev/benchmark/harness/bigdl_llm.py`, the `__init__` method:\n\n1. Lines 46-48: It pops unknown kwargs (including `optimize_model` and `use_cache`) into `self.bigdl_llm_kwargs`\n2. Lines 50-51: It then sets defaults for `use_cache` and `optimize_model` using `kwargs.get()`, but since they were already popped, they're no longer in `kwargs`\n\nThe fix is to capture these specific flags before removing unknown kwargs, then apply defaults only if they weren't provided.\n\n",
+          "time": {
+            "start": 1782217677106,
+            "end": 1782217677139
+          },
+          "id": "prt_ef4739932001LXX7b0C19IaXXH",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef47357be001Am5B61ASDLxMtC"
+        },
+        {
+          "type": "tool",
+          "tool": "edit",
+          "callID": "call_29f87a397f6b46c8ba229b5f",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/workspace/python/llm/dev/benchmark/harness/bigdl_llm.py",
+              "oldString": "    def __init__(self, *args, **kwargs):\n        if 'device' in kwargs and 'xpu' in kwargs['device']:\n            import intel_extension_for_pytorch\n        self.bigdl_llm_kwargs = {}\n        keys = list(kwargs.keys())\n        for k in keys:\n            if k not in self.AutoCausalLM_ARGS:\n                self.bigdl_llm_kwargs[k] = kwargs.pop(k)\n\n        self.bigdl_llm_kwargs['use_cache'] = kwargs.get('use_cache', True)\n        self.bigdl_llm_kwargs['optimize_model'] = kwargs.get('optimize_model', True)\n        AutoModelForCausalLM.from_pretrained = partial(AutoModelForCausalLM.from_pretrained, **self.bigdl_llm_kwargs)\n        \n        kwargs['trust_remote_code'] = kwargs.get('trust_remote_code', True)\n        super().__init__(*args, **kwargs)",
+              "newString": "    def __init__(self, *args, **kwargs):\n        if 'device' in kwargs and 'xpu' in kwargs['device']:\n            import intel_extension_for_pytorch\n        self.bigdl_llm_kwargs = {}\n        \n        optimize_model = kwargs.pop('optimize_model', None)\n        use_cache = kwargs.pop('use_cache', None)\n        \n        keys = list(kwargs.keys())\n        for k in keys:\n            if k not in self.AutoCausalLM_ARGS:\n                self.bigdl_llm_kwargs[k] = kwargs.pop(k)\n\n        self.bigdl_llm_kwargs['use_cache'] = use_cache if use_cache is not None else True\n        self.bigdl_llm_kwargs['optimize_model'] = optimize_model if optimize_model is not None else True\n        AutoModelForCausalLM.from_pretrained = partial(AutoModelForCausalLM.from_pretrained, **self.bigdl_llm_kwargs)\n        \n        kwargs['trust_remote_code'] = kwargs.get('trust_remote_code', True)\n        super().__init__(*args, **kwargs)"
+            },
+            "output": "Edit applied successfully.",
+            "metadata": {
+              "diagnostics": {},
+              "diff": "Index: /workspace/python/llm/dev/benchmark/harness/bigdl_llm.py\n===================================================================\n--- /workspace/python/llm/dev/benchmark/harness/bigdl_llm.py\n+++ /workspace/python/llm/dev/benchmark/harness/bigdl_llm.py\n@@ -41,15 +41,19 @@\n def __init__(self, *args, **kwargs):\n     if 'device' in kwargs and 'xpu' in kwargs['device']:\n         import intel_extension_for_pytorch\n     self.bigdl_llm_kwargs = {}\n+    \n+    optimize_model = kwargs.pop('optimize_model', None)\n+    use_cache = kwargs.pop('use_cache', None)\n+    \n     keys = list(kwargs.keys())\n     for k in keys:\n         if k not in self.AutoCausalLM_ARGS:\n             self.bigdl_llm_kwargs[k] = kwargs.pop(k)\n \n-    self.bigdl_llm_kwargs['use_cache'] = kwargs.get('use_cache', True)\n-    self.bigdl_llm_kwargs['optimize_model'] = kwargs.get('optimize_model', True)\n+    self.bigdl_llm_kwargs['use_cache'] = use_cache if use_cache is not None else True\n+    self.bigdl_llm_kwargs['optimize_model'] = optimize_model if optimize_model is not None else True\n     AutoModelForCausalLM.from_pretrained = partial(AutoModelForCausalLM.from_pretrained, **self.bigdl_llm_kwargs)\n     \n     kwargs['trust_remote_code'] = kwargs.get('trust_remote_code', True)\n     super().__init__(*args, **kwargs)\n",
+              "filediff": {
+                "file": "/workspace/python/llm/dev/benchmark/harness/bigdl_llm.py",
+                "patch": "Index: /workspace/python/llm/dev/benchmark/harness/bigdl_llm.py\n===================================================================\n--- /workspace/python/llm/dev/benchmark/harness/bigdl_llm.py\n+++ /workspace/python/llm/dev/benchmark/harness/bigdl_llm.py\n@@ -41,15 +41,19 @@\n def __init__(self, *args, **kwargs):\n     if 'device' in kwargs and 'xpu' in kwargs['device']:\n         import intel_extension_for_pytorch\n     self.bigdl_llm_kwargs = {}\n+    \n+    optimize_model = kwargs.pop('optimize_model', None)\n+    use_cache = kwargs.pop('use_cache', None)\n+    \n     keys = list(kwargs.keys())\n     for k in keys:\n         if k not in self.AutoCausalLM_ARGS:\n             self.bigdl_llm_kwargs[k] = kwargs.pop(k)\n \n-    self.bigdl_llm_kwargs['use_cache'] = kwargs.get('use_cache', True)\n-    self.bigdl_llm_kwargs['optimize_model'] = kwargs.get('optimize_model', True)\n+    self.bigdl_llm_kwargs['use_cache'] = use_cache if use_cache is not None else True\n+    self.bigdl_llm_kwargs['optimize_model'] = optimize_model if optimize_model is not None else True\n     AutoModelForCausalLM.from_pretrained = partial(AutoModelForCausalLM.from_pretrained, **self.bigdl_llm_kwargs)\n     \n     kwargs['trust_remote_code'] = kwargs.get('trust_remote_code', True)\n     super().__init__(*args, **kwargs)\n",
+                "additions": 6,
+                "deletions": 2
+              },
+              "truncated": false
+            },
+            "title": "python/llm/dev/benchmark/harness/bigdl_llm.py",
+            "time": {
+              "start": 1782217677144,
+              "end": 1782217677146
+            }
+          },
+          "id": "prt_ef473994d001mAxECP8TzMwJor",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef47357be001Am5B61ASDLxMtC"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "c868a29ca08b286a546584321e9c8408325323b2",
+          "type": "step-finish",
+          "tokens": {
+            "total": 23612,
+            "input": 22984,
+            "output": 628,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_ef473995b002lWWT5KUb8nirFL",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef47357be001Am5B61ASDLxMtC"
+        },
+        {
+          "type": "patch",
+          "hash": "810b2c323d0a33ad4855b0c4026ce2116a2891b7",
+          "files": [
+            "/workspace/python/llm/dev/benchmark/harness/bigdl_llm.py"
+          ],
+          "id": "prt_ef4739adc001ztMEwfMteo1bOA",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef47357be001Am5B61ASDLxMtC"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ef472f4e2001whKxU4wL8V0QvQ",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 23741,
+          "input": 23631,
+          "output": 110,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1782217677536,
+          "completed": 1782217687137
+        },
+        "finish": "stop",
+        "id": "msg_ef4739ae0001JI5sL8VCn7PEeT",
+        "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn"
+      },
+      "parts": [
+        {
+          "snapshot": "c868a29ca08b286a546584321e9c8408325323b2",
+          "type": "step-start",
+          "id": "prt_ef473bf01001LQw05RCA7GrsUg",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef4739ae0001JI5sL8VCn7PEeT"
+        },
+        {
+          "type": "text",
+          "text": "\n\nThe fix ensures that:\n\n1. `optimize_model` and `use_cache` are captured and removed from kwargs before processing other unknown arguments\n2. Defaults (`True`) are only applied when these flags are not provided (i.e., when they are `None`)\n3. If a user explicitly passes `optimize_model=False` or `use_cache=False`, those values are preserved and passed to the model loader\n4. Other unrelated arguments continue to be handled as before\n5. `trust_remote_code` default handling remains unchanged",
+          "time": {
+            "start": 1782217686787,
+            "end": 1782217686807
+          },
+          "id": "prt_ef473bf0300143VIK6VlIjM5WO",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef4739ae0001JI5sL8VCn7PEeT"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "c868a29ca08b286a546584321e9c8408325323b2",
+          "type": "step-finish",
+          "tokens": {
+            "total": 23741,
+            "input": 23631,
+            "output": 110,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_ef473bf18001SZ6hBzUu5Xss3X",
+          "sessionID": "ses_10b8d0b36ffejZxjlkg9ZG9wmn",
+          "messageID": "msg_ef4739ae0001JI5sL8VCn7PEeT"
+        }
+      ]
+    }
+  ]
+}

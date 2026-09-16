@@ -1,0 +1,54 @@
+{
+ "version": "v2",
+ "total_duration": 10868.429,
+ "total_turns": 1,
+ "outcome": "success",
+ "success_turn": 1,
+ "setup": {
+  "root_agent_setup": 0.0
+ },
+ "preflight_check": {
+  "preflight_check_environment": 0.06
+ },
+ "turns": [
+  {
+   "turn": 1,
+   "operations": {
+    "snapshot_sessions": 1.19,
+    "agent_turn_run": 6509.65,
+    "collect_turn_trajectories": 16.41,
+    "audit_artifacts": 0.45,
+    "quality_gate_checks": 0.09,
+    "audit_image_build": 1248.37,
+    "image_build_breakdown": {
+     "buildah_bud": 886.96,
+     "apptainer_build": 349.04,
+     "workspace_check": 0.14
+    },
+    "eval_verification": 106.74
+   },
+   "outcome": "success",
+   "duration": 7882
+  }
+ ],
+ "analyzer_builder": {
+  "opencode_install": 1.16,
+  "solver_run": 1069.68,
+  "trajectory_snapshot_sessions": 1.11,
+  "trajectory_judge": 77.2,
+  "collect_turn_trajectories": 2.91,
+  "trajectory_decision": 0.06,
+  "instruction_tuning": 0.02,
+  "analyzer_builder": 1178.87
+ },
+ "harbor_export": {
+  "ecr_push": 1806.39,
+  "export_harbor_task": 1806.63
+ },
+ "manager_block_streak": 0,
+ "manager_block_last_reason": "",
+ "quality_gate_failures": 0,
+ "extra_attr": {
+  "run_retry": 3
+ }
+}

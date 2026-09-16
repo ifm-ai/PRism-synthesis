@@ -1,0 +1,29 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "infrastructure_reason": null,
+  "verification_command": "pytest /artifacts/evaluation/tests/test_logprobs_attribute_safety.py -v",
+  "activation_source": "source /workspace/python/.venv/bin/activate",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "hidden_tests",
+  "copied_test_patch": false,
+  "supplemental_tests_created": true,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that the _get_metadata_from_chat_choice method safely handles missing logprobs attribute by returning None instead of raising AttributeError, covering both regular Choice and ChunkChoice objects.",
+  "fix_patch_grounding": "The fix at line 201 in open_ai_chat_completion_base.py changes `choice.logprobs` to `getattr(choice, 'logprobs', None)` to safely access the logprobs attribute that may be absent in Azure OpenAI responses.",
+  "issue_context_used": "The issue describes that Azure OpenAI responses may not include the logprobs field, causing AttributeError; the tests verify that metadata extraction handles this gracefully by returning None.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": [
+    "pytest /artifacts/evaluation/tests/test_logprobs_attribute_safety.py -v"
+  ],
+  "required_verifier_files": [
+    "eval.sh",
+    "tests/test_logprobs_attribute_safety.py"
+  ],
+  "notes": "Created 5 hidden tests using pytest with unittest.mock to verify the logprobs attribute safety fix. Tests cover: (1) Choice with logprobs present, (2) Choice without logprobs attribute (key bug case), (3) Choice with logprobs=None, (4) ChunkChoice with logprobs, (5) ChunkChoice without logprobs. The tests correctly fail on buggy code and pass when fix is applied."
+}

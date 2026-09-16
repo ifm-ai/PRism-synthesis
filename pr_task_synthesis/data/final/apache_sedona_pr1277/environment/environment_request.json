@@ -1,0 +1,73 @@
+{
+  "base_image_candidate": "debian:bookworm",
+  "system_packages": [
+    "git",
+    "curl",
+    "openjdk-17-jdk-headless",
+    "maven",
+    "libgeos-dev",
+    "libgeos-c1v5",
+    "python3",
+    "python3-pip",
+    "python3-venv",
+    "python3-dev"
+  ],
+  "base_setup_commands": [
+    "apt-get update",
+    "apt-get install -y git curl openjdk-17-jdk-headless maven libgeos-dev libgeos-c1v5 python3 python3-pip python3-venv python3-dev",
+    "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64",
+    "export PATH=$JAVA_HOME/bin:$PATH"
+  ],
+  "setup_runtime_commands": [
+    "cd ${WORKSPACE:-/workspace}/python",
+    "python3 -m venv .venv",
+    "source .venv/bin/activate",
+    "pip install --upgrade pip setuptools wheel",
+    "pip install -e .",
+    "pip install pytest",
+    "deactivate"
+  ],
+  "activation_commands": [
+    "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64",
+    "export PATH=$JAVA_HOME/bin:$PATH",
+    "source ${WORKSPACE:-/workspace}/python/.venv/bin/activate"
+  ],
+  "activation_command": "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 && export PATH=$JAVA_HOME/bin:$PATH && source ${WORKSPACE:-/workspace}/python/.venv/bin/activate",
+  "activation_type": "venv",
+  "activation_validation_command": "bash -c 'export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 && source ${WORKSPACE:-/workspace}/python/.venv/bin/activate && python --version && echo ACTIVATION_OK'",
+  "detected_test_command": {
+    "python": "python -m pytest",
+    "java": "mvn test"
+  },
+  "runtime_smoke_command": "python -c 'import sedona; print(\"Sedona imported successfully\")'",
+  "runtime_profile": {
+    "ecosystem": "multi",
+    "package_manager": "maven+pip",
+    "env": "venv",
+    "env_name": "python/.venv",
+    "prepare_commands": [
+      "python3 -m venv ${WORKSPACE:-/workspace}/python/.venv",
+      "source ${WORKSPACE:-/workspace}/python/.venv/bin/activate",
+      "pip install -e ${WORKSPACE:-/workspace}/python",
+      "pip install pytest"
+    ],
+    "activation_commands": [
+      "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64",
+      "source ${WORKSPACE:-/workspace}/python/.venv/bin/activate"
+    ],
+    "base_deps_installed": [
+      "apache-sedona (editable)",
+      "attrs",
+      "shapely",
+      "numpy",
+      "pytest"
+    ],
+    "test_only_install_strategy": "pip install pyspark for Spark-related tests",
+    "cache_dirs": [
+      "${WORKSPACE:-/workspace}/python/.venv",
+      "/root/.m2/repository"
+    ],
+    "notes": "Multi-ecosystem project (Java/Scala + Python). Java/Scala built with Maven JDK 17. Python uses venv with GEOS C extension. Pyspark not installed by default - install as needed for Spark tests."
+  },
+  "notes": "Apache Sedona is a spatial computing engine for Spark/Flink. Requires JDK 17 (compatible with Java 8 target), Maven for Java/Scala builds, and GEOS library for Python C extensions. The Python module builds a C extension (geomserde_speedup) that requires libgeos-dev. Git and curl are included in baseline packages. The environment supports building and testing common, flink, and spark modules."
+}

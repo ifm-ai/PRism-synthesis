@@ -1,0 +1,88 @@
+{
+  "pr_summary": "Add robust timestamp parsing for the osu! editor that allows users to jump to arbitrary points in a beatmap by typing timestamps. The feature supports various timestamp formats (mm:ss, mm:ss:ms, bare milliseconds) and optional selection clauses in parentheses. The fix introduces a lenient regex for editor input, adds a TimestampControl UI component with textbox input, and modifies HandleTimestamp to optionally notify on errors.",
+  "runtime_family": ".NET 8.0 (C#)",
+  "package_manager": "NuGet (via dotnet CLI)",
+  "touched_files": [
+    "osu.Game.Tests/Editing/EditorTimestampParserTest.cs",
+    "osu.Game/Online/Chat/MessageFormatter.cs",
+    "osu.Game/OsuGame.cs",
+    "osu.Game/Rulesets/Edit/EditorTimestampParser.cs",
+    "osu.Game/Screens/Edit/Components/TimeInfoContainer.cs",
+    "osu.Game/Screens/Edit/Editor.cs"
+  ],
+  "important_build_files": [
+    "osu.sln",
+    "osu.Desktop.slnf",
+    "osu.Android.slnf",
+    "osu.iOS.slnf",
+    "global.json",
+    "Directory.Build.props",
+    "osu.Game.Tests/osu.Game.Tests.csproj",
+    "osu.Desktop/osu.Desktop.csproj"
+  ],
+  "important_test_files": [
+    "osu.Game.Tests/Editing/EditorTimestampParserTest.cs",
+    "osu.Game.Tests/Chat/MessageFormatterTests.cs",
+    "osu.Game.Tests/NonVisual/FormatUtilsTest.cs",
+    "osu.Game.Tests/Visual/Editing/"
+  ],
+  "candidate_build_commands": [
+    "dotnet restore osu.Desktop.slnf",
+    "dotnet build -c Debug -warnaserror osu.Desktop.slnf",
+    "dotnet build -c Release osu.Desktop"
+  ],
+  "candidate_test_commands": [
+    "dotnet test osu.Game.Tests/osu.Game.Tests.csproj",
+    "dotnet test osu.Game.Tests/bin/Debug/net8.0/osu.Game.Tests.dll -- NUnit.ConsoleOut=0",
+    "dotnet test --filter \"FullyQualifiedName~EditorTimestampParserTest\""
+  ],
+  "candidate_smoke_commands": [
+    "dotnet --version",
+    "dotnet restore osu.Desktop.slnf",
+    "dotnet build osu.Desktop -c Debug --no-restore"
+  ],
+  "candidate_activation_checks": [
+    "dotnet --version (should be 8.0.x)",
+    "dotnet workload list (for mobile workloads if targeting Android/iOS)"
+  ],
+  "environment_management": "No dedicated environment manager (poetry/conda/uv). Uses .NET SDK with global.json specifying version 8.0.100. NuGet packages are restored via 'dotnet restore'.",
+  "special_system_dependencies": [
+    ".NET 8.0 SDK",
+    "For Android builds: JDK 11, .NET MAUI Android workload",
+    "For iOS builds: Xcode, .NET MAUI iOS workload",
+    "For code quality: dotnet tools (resharper, nvika, codefilesanity)"
+  ],
+  "high_value_files": [
+    "osu.Game/Rulesets/Edit/EditorTimestampParser.cs",
+    "osu.Game/Screens/Edit/Editor.cs",
+    "osu.Game/Screens/Edit/Components/TimeInfoContainer.cs",
+    "osu.Game/Online/Chat/MessageFormatter.cs",
+    "osu.Game.Tests/Editing/EditorTimestampParserTest.cs",
+    "osu.Game.Tests/Chat/MessageFormatterTests.cs",
+    "global.json",
+    "osu.Desktop.slnf",
+    ".github/workflows/ci.yml"
+  ],
+  "patch_file_cues": [
+    "EditorTimestampParser.cs - adds TIME_REGEX_STRICT and time_regex_lenient, modifies TryParse to handle bare milliseconds and various timestamp formats",
+    "TimeInfoContainer.cs - adds TimestampControl UI component with OsuTextBox for user input",
+    "Editor.cs - modifies HandleTimestamp to accept notifyOnError parameter and return bool",
+    "MessageFormatter.cs - changes TIME_REGEX to TIME_REGEX_STRICT for chat context",
+    "OsuGame.cs - passes notifyOnError: true when calling HandleTimestamp",
+    "EditorTimestampParserTest.cs - new test file with comprehensive test cases for timestamp parsing"
+  ],
+  "test_file_cues": [
+    "osu.Game.Tests/Editing/EditorTimestampParserTest.cs - NUnit test fixture with TestCaseSource covering valid/invalid timestamp formats",
+    "Tests use EditorTimestampParser.TryParse static method",
+    "Test cases cover: bare milliseconds (1, 99, 320000), mm:ss format (1:2, 1:02), mm:ss:ms format (1:02:3, 1:02:300), selection clauses (1,2,3), invalid formats (1:92, 1:002, 1:02:3000)"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "CI workflow (.github/workflows/ci.yml) runs tests on ubuntu-latest, windows-latest, and macos-latest",
+    "Primary solution file (osu.Desktop.slnf) targets desktop .NET which is cross-platform",
+    "Fix and test files are pure C# with no platform-specific APIs",
+    "No Windows-only APIs (Win32, COM, MSVC) in touched files",
+    "No macOS-only frameworks (CoreFoundation, Metal) in touched files"
+  ],
+  "notes": "This is a .NET 8.0 C# project (osu!lazer rhythm game). The fix adds timestamp parsing functionality to the beatmap editor. Tests use NUnit framework. The project uses solution filters (.slnf) to reduce build scope. Main test project is osu.Game.Tests which references osu.Game. For Linux containers, only the base .NET 8.0 SDK is required; Android/iOS workloads are only needed for mobile builds. The fix/test path is fully cross-platform and runnable in a Linux x86-64 container."
+}

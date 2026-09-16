@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "python:3.11-slim",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Python 3.11 virtual environment at /opt/benchmark/venv with azure-ai-ml package and test dependencies installed",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "sdk/ml/azure-ai-ml/tests/finetuning_job/unittests/test_azure_openai_finetuning_job_schema.py::TestAzureOpenAIFineTuningJobSchema::test_azure_openai_finetuning_job_full\nsdk/ml/azure-ai-ml/tests/finetuning_job/unittests/test_custom_model_finetuning_job_schema.py::TestCustomModelFineTuningJobSchema::test_custom_model_finetuning_job_full\nsdk/ml/azure-ai-ml/tests/finetuning_job/unittests/test_finetuning_job_convesion.py::TestCustomModelFineTuningJob::test_custom_model_finetuning_job_conversion[ChatCompletion]\nsdk/ml/azure-ai-ml/tests/finetuning_job/unittests/test_finetuning_job_convesion.py::TestCustomModelFineTuningJob::test_custom_model_finetuning_job_conversion[TextCompletion]\nsdk/ml/azure-ai-ml/tests/finetuning_job/unittests/test_finetuning_job_convesion.py::TestCustomModelFineTuningJob::test_custom_model_finetuning_job_conversion[TextClassification]",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "source /opt/benchmark/venv/bin/activate",
+  "notes": "Environment successfully created and verified. The setup script installs all required dependencies including azure-ai-ml from local source, azure-devtools, azure-sdk-tools, and pytest. Marshmallow is pinned to <3.20 for compatibility. Test runner reachability confirmed with 14 tests discovered in the finetuning unittests directory."
+}

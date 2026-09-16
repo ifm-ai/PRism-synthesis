@@ -1,0 +1,9 @@
+{
+  "status": "success",
+  "blocks_outer_progress": false,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "route_to": null,
+  "notes": "Build succeeded on retry (attempt 2). Initial failure was transient network error during Android SDK download. OCI archive exported successfully to /artifacts/environment/openenv_validation_oci.tar. Container includes all required components: JDK 17, Android SDK 34, Build Tools 29.0.3, NDK 26.1.10909125, Gradle 8.6. Ready for verifier execution."
+}

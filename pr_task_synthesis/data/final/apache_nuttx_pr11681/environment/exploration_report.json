@@ -1,0 +1,119 @@
+{
+  "pr_summary": "Implement comprehensive board support package (BSP) for the Nucleo-H745ZI development board in Apache NuttX RTOS. The fix adds drivers for ADC, GPIO, PWM, quadrature encoder, and USB subsystems. The core bug fix initializes the 'setbits' variable to 0 in stm32_adc.c to prevent undefined behavior during ADC clock configuration. The fix also adds a new pysim_cm7 configuration for simulator-based testing.",
+  "runtime_family": "C/C++ embedded RTOS (Apache NuttX)",
+  "package_manager": "none",
+  "touched_files": [
+    "arch/arm/src/stm32h7/stm32_adc.c",
+    "boards/arm/stm32h7/nucleo-h745zi/configs/pysim_cm7/defconfig",
+    "boards/arm/stm32h7/nucleo-h745zi/include/board.h",
+    "boards/arm/stm32h7/nucleo-h745zi/src/Makefile",
+    "boards/arm/stm32h7/nucleo-h745zi/src/nucleo-h745zi.h",
+    "boards/arm/stm32h7/nucleo-h745zi/src/stm32_adc.c",
+    "boards/arm/stm32h7/nucleo-h745zi/src/stm32_bringup.c",
+    "boards/arm/stm32h7/nucleo-h745zi/src/stm32_gpio.c",
+    "boards/arm/stm32h7/nucleo-h745zi/src/stm32_pwm.c",
+    "boards/arm/stm32h7/nucleo-h745zi/src/stm32_qencoder.c",
+    "boards/arm/stm32h7/nucleo-h745zi/src/stm32_usb.c"
+  ],
+  "important_build_files": [
+    "Makefile",
+    "CMakeLists.txt",
+    "tools/Unix.mk",
+    "tools/Win.mk",
+    "tools/configure.sh",
+    "arch/arm/src/Make.defs",
+    "arch/arm/src/cmake/Toolchain.cmake",
+    "boards/arm/stm32h7/nucleo-h745zi/src/Makefile",
+    "boards/arm/stm32h7/nucleo-h745zi/CMakeLists.txt"
+  ],
+  "important_test_files": [
+    "tools/ci/testrun/script/test_os/test_os.py",
+    "tools/ci/testrun/script/test_example/test_example.py",
+    "tools/ci/testrun/pytest.ini",
+    "tools/ci/testrun/env/requirements.txt",
+    "Documentation/applications/testing/ostest/",
+    "Documentation/applications/testing/cxxtest/",
+    "Documentation/applications/testing/drivertest/"
+  ],
+  "candidate_build_commands": [
+    "tools/configure.sh nucleo-h745zi:pysim_cm7 && make",
+    "tools/configure.sh nucleo-h745zi:nsh_cm7 && make",
+    "cmake -S . -B build -DBOARD_CONFIG=boards/arm/stm32h7/nucleo-h745zi/configs/pysim_cm7 && cmake --build build",
+    "make distclean && tools/configure.sh nucleo-h745zi:pysim_cm7 && make -j$(nproc)"
+  ],
+  "candidate_test_commands": [
+    "cd tools/ci/testrun && pytest script/test_os/test_os.py",
+    "cd tools/ci/testrun && pytest script/test_example/",
+    "make ostest",
+    "make drivertest"
+  ],
+  "candidate_smoke_commands": [
+    "make --version",
+    "arm-none-eabi-gcc --version",
+    "python3 --version",
+    "cmake --version",
+    "test -f nuttx && echo 'Build successful'"
+  ],
+  "candidate_activation_checks": [
+    "test -f .config && echo 'NuttX configured'",
+    "test -f nuttx && echo 'NuttX binary exists'",
+    "test -d tools/kconfig-frontends/bin && echo 'Kconfig tools available'",
+    "which arm-none-eabi-gcc || echo 'ARM GCC not in PATH'"
+  ],
+  "environment_management": {
+    "type": "manual",
+    "details": "NuttX uses traditional Make-based build system with Kconfig for configuration. No modern package manager. Toolchain must be installed separately (ARM GCC for stm32h7 builds, or use simulator configuration for host-based testing). Python packages for testing are managed via pip/requirements.txt in tools/ci/testrun/env/."
+  },
+  "special_system_dependencies": [
+    "ARM GCC toolchain (arm-none-eabi-gcc) for stm32h7 builds",
+    "OR QEMU for simulator-based testing",
+    "kconfiglib Python package",
+    "Build essentials: make, gcc, g++, cmake",
+    "libncurses5-dev for mconf",
+    "bison, flex for kconfig-frontends",
+    "Python 3 with pytest, pexpect, pyserial for testing"
+  ],
+  "high_value_files": [
+    "arch/arm/src/stm32h7/stm32_adc.c",
+    "boards/arm/stm32h7/nucleo-h745zi/configs/pysim_cm7/defconfig",
+    "boards/arm/stm32h7/nucleo-h745zi/src/stm32_bringup.c",
+    "boards/arm/stm32h7/nucleo-h745zi/src/stm32_adc.c",
+    "boards/arm/stm32h7/nucleo-h745zi/src/stm32_gpio.c",
+    "boards/arm/stm32h7/nucleo-h745zi/src/stm32_pwm.c",
+    "boards/arm/stm32h7/nucleo-h745zi/src/stm32_qencoder.c",
+    "boards/arm/stm32h7/nucleo-h745zi/src/stm32_usb.c",
+    "boards/arm/stm32h7/nucleo-h745zi/include/board.h",
+    "CMakeLists.txt",
+    "tools/ci/docker/linux/Dockerfile"
+  ],
+  "patch_file_cues": [
+    "stm32_adc.c: Fix uninitialized variable 'setbits = 0' to prevent undefined behavior",
+    "pysim_cm7/defconfig: New simulator configuration for nucleo-h745zi board",
+    "board.h: Add GPIO definitions for Ethernet, ADC, TIM1, TIM3, TIM4, and OTGFS",
+    "Makefile: Add conditional compilation for ADC, USB, GPIO, PWM, QENCODER, and RESET drivers",
+    "nucleo-h745zi.h: Add function prototypes for stm32_adc_setup, stm32_gpio_initialize, stm32_pwm_setup, stm32_qencoder_initialize, stm32_usbhost_initialize",
+    "stm32_adc.c (board-level): New ADC driver implementation for nucleo-h745zi",
+    "stm32_gpio.c: New GPIO driver implementation",
+    "stm32_pwm.c: New PWM driver implementation",
+    "stm32_qencoder.c: New quadrature encoder driver implementation",
+    "stm32_usb.c: New USB host/device driver implementation",
+    "stm32_bringup.c: Add initialization calls for USB, ADC, GPIO, PWM, and QENCODER"
+  ],
+  "test_file_cues": [
+    "pysim_cm7 configuration enables simulator-based testing without hardware",
+    "CONFIG_ARCH_SIM would be used for pure simulation (not present in pysim_cm7)",
+    "tools/ci/testrun/ contains pytest-based test framework",
+    "Documentation/applications/testing/ contains test application documentation",
+    "ostest, cxxtest, drivertest are standard NuttX test applications"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "CI workflow .github/workflows/build.yml runs on ubuntu-latest",
+    "Dockerfile at tools/ci/docker/linux/Dockerfile is Ubuntu 22.04 based",
+    "NuttX supports cross-compilation for ARM targets on Linux hosts",
+    "pysim_cm7 configuration enables simulator-based testing on Linux",
+    "No Windows-specific or macOS-specific code in fix.patch touched files",
+    "ARM cross-compilation toolchain runs on Linux x86-64"
+  ],
+  "notes": "Apache NuttX is a POSIX-compliant RTOS for embedded systems. The fix adds board support for Nucleo-H745ZI with STM32H7 MCU. The pysim_cm7 configuration allows simulator-based testing without physical hardware. The core bug fix is initializing 'setbits = 0' in stm32_adc.c to prevent undefined behavior. The project uses Kconfig for configuration and supports both Make and CMake build systems. Testing can be done via pytest framework in tools/ci/testrun/ or by running NuttX test applications like ostest. The ARM toolchain is required for actual hardware builds, but simulator configs allow host-based testing."
+}

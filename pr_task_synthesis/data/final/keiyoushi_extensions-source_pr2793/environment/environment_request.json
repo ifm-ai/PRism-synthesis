@@ -1,0 +1,77 @@
+{
+  "base_image_candidate": "ubuntu:22.04",
+  "system_packages": [
+    "git",
+    "curl",
+    "wget",
+    "unzip",
+    "apt-transport-https"
+  ],
+  "base_setup_commands": [
+    "apt-get update -qq",
+    "apt-get install -y -qq git curl wget unzip apt-transport-https"
+  ],
+  "setup_runtime_commands": [
+    "mkdir -p /opt/benchmark /opt/android-sdk/cmdline-tools /root/.gradle",
+    "wget -q --show-progress https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.11+9/OpenJDK17U-jdk_x64_linux_hotspot_17.0.11_9.tar.gz -O /tmp/temurin17.tar.gz",
+    "tar -xzf /tmp/temurin17.tar.gz -C /opt/benchmark/",
+    "mv /opt/benchmark/jdk-* /opt/benchmark/temurin-17",
+    "export JAVA_HOME=/opt/benchmark/temurin-17",
+    "export PATH=$JAVA_HOME/bin:$PATH",
+    "wget -q --show-progress https://services.gradle.org/distributions/gradle-8.7-bin.zip -O /tmp/gradle-8.7-bin.zip",
+    "unzip -q /tmp/gradle-8.7-bin.zip -d /opt/benchmark/",
+    "export GRADLE_HOME=/opt/benchmark/gradle-8.7",
+    "export PATH=$GRADLE_HOME/bin:$PATH",
+    "wget -q --show-progress https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -O /tmp/android-cmdline.zip",
+    "unzip -q /tmp/android-cmdline.zip -d /opt/android-sdk/cmdline-tools",
+    "mv /opt/android-sdk/cmdline-tools/cmdline-tools /opt/android-sdk/cmdline-tools/latest",
+    "export ANDROID_HOME=/opt/android-sdk",
+    "export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH",
+    "yes | sdkmanager --licenses || true",
+    "sdkmanager platform-tools platforms;android-34 build-tools;34.0.0 || true",
+    "cat > /root/.gradle/gradle.properties << EOF\norg.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8\norg.gradle.parallel=true\norg.gradle.caching=true\nandroid.useAndroidX=true\nandroid.enableJetifier=true\nEOF"
+  ],
+  "activation_commands": [
+    "export JAVA_HOME=/opt/benchmark/temurin-17",
+    "export GRADLE_HOME=/opt/benchmark/gradle-8.7",
+    "export ANDROID_HOME=/opt/android-sdk",
+    "export PATH=$JAVA_HOME/bin:$GRADLE_HOME/bin:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+  ],
+  "activation_command": "export JAVA_HOME=/opt/benchmark/temurin-17 && export GRADLE_HOME=/opt/benchmark/gradle-8.7 && export ANDROID_HOME=/opt/android-sdk && export PATH=$JAVA_HOME/bin:$GRADLE_HOME/bin:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH",
+  "activation_type": "system",
+  "activation_validation_command": "java -version && gradle --version 2>&1 | head -1 && echo $ANDROID_HOME",
+  "detected_test_command": "./gradlew -p src assembleRelease",
+  "runtime_smoke_command": "./gradlew tasks",
+  "runtime_profile": {
+    "ecosystem": "JVM",
+    "package_manager": "gradle",
+    "env": {
+      "JAVA_HOME": "/opt/benchmark/temurin-17",
+      "GRADLE_HOME": "/opt/benchmark/gradle-8.7",
+      "ANDROID_HOME": "/opt/android-sdk"
+    },
+    "env_name": "gradle-android-jdk17",
+    "prepare_commands": [
+      "Install JDK 17 (Temurin)",
+      "Install Gradle 8.7",
+      "Install Android SDK command-line tools",
+      "Install Android SDK platform-tools, platforms;android-34, build-tools;34.0.0",
+      "Configure Gradle properties"
+    ],
+    "activation_commands": [
+      "export JAVA_HOME=/opt/benchmark/temurin-17",
+      "export GRADLE_HOME=/opt/benchmark/gradle-8.7",
+      "export ANDROID_HOME=/opt/android-sdk",
+      "export PATH=$JAVA_HOME/bin:$GRADLE_HOME/bin:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
+    ],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "none - build verification via APK assembly",
+    "cache_dirs": [
+      "/root/.gradle/caches",
+      "/root/.gradle/wrapper",
+      "/opt/android-sdk"
+    ],
+    "notes": "Gradle 8.7 is pre-installed. Android SDK requires command-line tools for headless CI builds. sdkmanager may require network access."
+  },
+  "notes": "Base image ubuntu:22.04 provides a stable foundation. git and curl are explicitly included in system_packages. JDK 17 (Temurin) and Gradle 8.7 are pre-installed. Android SDK is needed for Android extension builds. No special activation is needed beyond setting environment variables (activation_type: system). Note: sdkmanager network access may be constrained in some environments."
+}

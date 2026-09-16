@@ -1,0 +1,44 @@
+{
+  "verifier_alignment": {
+    "blocks_outer_progress": false,
+    "target_overlap": "direct",
+    "patch_touched_files": ["terraform/environments/bootstrap/member-bootstrap/iam.tf"],
+    "required_files_audit": {
+      "suggested_required_verifier_files": ["eval.sh", "tests/iam_policy_test.go", "tests/go.mod", "tests/go.sum"],
+      "all_files_present": true,
+      "path_traversal_violations": []
+    }
+  },
+  "eval_audit": {
+    "uses_set_e": false,
+    "uses_set_uo_pipefail": true,
+    "captures_exit_code": true,
+    "exit_code_variable": "RC",
+    "openenv_exit_code_set": true,
+    "sources_setup_runtime": false,
+    "inline_activation": true,
+    "hardcoded_workspace": true,
+    "test_runner": "go test"
+  },
+  "hacking_checklist": {
+    "H1_no_git_diff_in_oracle": true,
+    "H2_no_grep_oracle": true,
+    "H3_no_file_exists_oracle": true,
+    "H4_no_unconditional_exit": true,
+    "H5_openenv_exit_code_set": true,
+    "H5b_rc_not_literal": true,
+    "H5c_rc_captured": true,
+    "H6_no_fix_in_testOnly": true,
+    "H7_real_test_runner": true,
+    "H8_testOnly_fails": true,
+    "H9_testWithFix_passes": true,
+    "H10_setup_runtime_handled": true
+  },
+  "preflight_results": {
+    "test_only_exit_code": 1,
+    "test_only_status": "correctly_fails",
+    "test_with_fix_exit_code": 0,
+    "test_with_fix_status": "correctly_passes"
+  },
+  "notes": "Verifier preflight completed successfully. All hacking checks pass. Tests correctly fail on buggy code and pass on fixed code. Eval.sh is properly structured with correct exit code handling."
+}

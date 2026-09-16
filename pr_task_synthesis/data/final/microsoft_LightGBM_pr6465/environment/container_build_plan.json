@@ -1,0 +1,54 @@
+{
+  "build_backend": "buildah",
+  "base_image": "ubuntu:22.04",
+  "dockerfile_path": "/artifacts/environment/Dockerfile.final",
+  "build_context_files": [
+    "/artifacts/environment/repo_setup.sh",
+    "/artifacts/environment/setup_runtime.sh"
+  ],
+  "build_stages": [
+    {
+      "stage": "base",
+      "description": "Ubuntu 22.04 base with system packages",
+      "commands": [
+        "apt-get update",
+        "apt-get install -y git curl cmake build-essential libomp-dev libboost-dev ocl-icd-opencl-dev openmpi-bin libopenmpi-dev ca-certificates"
+      ]
+    },
+    {
+      "stage": "repo_materialization",
+      "description": "Clone LightGBM repository using repo_setup.sh",
+      "script": "/opt/benchmark/repo_setup.sh",
+      "target_dir": "/workspace"
+    },
+    {
+      "stage": "runtime_setup",
+      "description": "Create conda environment and build LightGBM from source",
+      "script": "/opt/benchmark/setup_runtime.sh",
+      "env_name": "lightgbm-env",
+      "python_version": "3.11"
+    }
+  ],
+  "runtime_environment": {
+    "type": "conda",
+    "env_name": "lightgbm-env",
+    "conda_dir": "/opt/conda",
+    "activation": "source /opt/conda/etc/profile.d/conda.sh && conda activate lightgbm-env"
+  },
+  "workdir": "/workspace",
+  "excluded_from_image": [
+    "/artifacts/evaluation/eval.sh",
+    "/artifacts/evaluation/test.patch",
+    "/artifacts/evaluation/tests/"
+  ],
+  "runtime_mounts": {
+    "eval_sh": "mounted at runtime, not baked into image",
+    "test_assets": "mounted at runtime, not baked into image"
+  },
+  "validation": {
+    "method": "buildah bud",
+    "export_format": "oci",
+    "output_archive": "/artifacts/environment/openenv_validation_oci.tar"
+  },
+  "notes": "Dockerfile is designed for Buildah compatibility. Verifier assets (eval.sh, tests) are runtime-mounted, not baked into the image."
+}

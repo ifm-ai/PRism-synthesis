@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "High-quality trajectory: solver correctly localized the issue through search, understood the optional chaining problem, and applied a valid fix. Oracle verifier passed all tests. Both solver and oracle signals are strong."
+}

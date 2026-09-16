@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "python:3.11-slim",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Python 3.11 venv at /opt/benchmark/venv with MPI-enabled packages (mpi4py, h5py), JAX, and pz-rail base dependencies",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "tests/hub/test_import.py::test_import\n\n================================ tests coverage ================================\n_______________ coverage: platform linux, python 3.11.2-final-0 ________________\n\nCoverage HTML written to dir htmlcov\n1 test collected in 2.89s",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "source /opt/benchmark/venv/bin/activate",
+  "notes": "Environment successfully created and verified. Test runner (pytest) is reachable and can collect tests. The pz-rail package is installed in editable mode from /workspace. MPI and HDF5 system libraries are available for mpi4py and h5py."
+}

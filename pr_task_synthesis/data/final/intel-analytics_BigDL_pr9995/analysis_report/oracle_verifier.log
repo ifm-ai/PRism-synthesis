@@ -1,0 +1,154 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /tests/tests
+plugins: anyio-4.14.0
+collecting ... collected 7 items
+
+../tests/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_optimize_model_false_is_retained FAILED [ 14%]
+../tests/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_use_cache_false_is_retained FAILED [ 28%]
+../tests/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_both_flags_false_are_retained FAILED [ 42%]
+../tests/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_default_values_when_not_provided FAILED [ 57%]
+../tests/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_mixed_flag_values FAILED [ 71%]
+../tests/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_BehavioralSimulation::test_fixed_pattern_retains_flags PASSED [ 85%]
+../tests/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_BehavioralSimulation::test_buggy_pattern_loses_flags PASSED [100%]
+
+=================================== FAILURES ===================================
+______ TestBigDLLM_RuntimeBehavior.test_optimize_model_false_is_retained _______
+
+self = <test_bigdl_llm_kwargs.TestBigDLLM_RuntimeBehavior object at 0x7fa0ddcc29d0>
+
+    def test_optimize_model_false_is_retained(self):
+        """
+        Test that optimize_model=False is retained in bigdl_llm_kwargs.
+    
+        This test reads the actual source and executes the kwargs handling logic.
+    
+        Expected behavior with FIXED code:
+        - optimize_model=False should be retained
+    
+        Expected behavior with BUGGY code:
+        - optimize_model=False is lost, defaults to True
+        """
+        kwargs = {'optimize_model': False, 'use_cache': True}
+>       result = extract_and_execute_full_kwargs_logic(kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/tests/test_bigdl_llm_kwargs.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tests/tests/test_bigdl_llm_kwargs.py:80: in extract_and_execute_full_kwargs_logic
+    exec(exec_line, namespace)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   ???
+E   NameError: name 'use_cache' is not defined
+
+<string>:1: NameError
+_________ TestBigDLLM_RuntimeBehavior.test_use_cache_false_is_retained _________
+
+self = <test_bigdl_llm_kwargs.TestBigDLLM_RuntimeBehavior object at 0x7fa0df435e90>
+
+    def test_use_cache_false_is_retained(self):
+        """
+        Test that use_cache=False is retained in bigdl_llm_kwargs.
+    
+        Expected behavior with FIXED code:
+        - use_cache=False should be retained
+    
+        Expected behavior with BUGGY code:
+        - use_cache=False is lost, defaults to True
+        """
+        kwargs = {'optimize_model': True, 'use_cache': False}
+>       result = extract_and_execute_full_kwargs_logic(kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/tests/test_bigdl_llm_kwargs.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tests/tests/test_bigdl_llm_kwargs.py:80: in extract_and_execute_full_kwargs_logic
+    exec(exec_line, namespace)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   ???
+E   NameError: name 'use_cache' is not defined
+
+<string>:1: NameError
+________ TestBigDLLM_RuntimeBehavior.test_both_flags_false_are_retained ________
+
+self = <test_bigdl_llm_kwargs.TestBigDLLM_RuntimeBehavior object at 0x7fa0ddd0c5d0>
+
+    def test_both_flags_false_are_retained(self):
+        """
+        Test that both optimize_model=False and use_cache=False are retained.
+    
+        This is the key test case that exercises the exact bug scenario.
+        """
+        kwargs = {'optimize_model': False, 'use_cache': False}
+>       result = extract_and_execute_full_kwargs_logic(kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/tests/test_bigdl_llm_kwargs.py:138: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tests/tests/test_bigdl_llm_kwargs.py:80: in extract_and_execute_full_kwargs_logic
+    exec(exec_line, namespace)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   ???
+E   NameError: name 'use_cache' is not defined
+
+<string>:1: NameError
+______ TestBigDLLM_RuntimeBehavior.test_default_values_when_not_provided _______
+
+self = <test_bigdl_llm_kwargs.TestBigDLLM_RuntimeBehavior object at 0x7fa0ddd0fa50>
+
+    def test_default_values_when_not_provided(self):
+        """
+        Test that default values (True) are used when flags are not provided.
+    
+        This test ensures the fix doesn't break the default behavior.
+        """
+        kwargs = {'other_arg': 'value'}
+>       result = extract_and_execute_full_kwargs_logic(kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/tests/test_bigdl_llm_kwargs.py:152: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tests/tests/test_bigdl_llm_kwargs.py:80: in extract_and_execute_full_kwargs_logic
+    exec(exec_line, namespace)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   ???
+E   NameError: name 'use_cache' is not defined
+
+<string>:1: NameError
+______________ TestBigDLLM_RuntimeBehavior.test_mixed_flag_values ______________
+
+self = <test_bigdl_llm_kwargs.TestBigDLLM_RuntimeBehavior object at 0x7fa0ddd0d510>
+
+    def test_mixed_flag_values(self):
+        """
+        Test with one flag True and one flag False.
+        """
+        kwargs = {'optimize_model': True, 'use_cache': False}
+>       result = extract_and_execute_full_kwargs_logic(kwargs)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tests/tests/test_bigdl_llm_kwargs.py:164: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tests/tests/test_bigdl_llm_kwargs.py:80: in extract_and_execute_full_kwargs_logic
+    exec(exec_line, namespace)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   ???
+E   NameError: name 'use_cache' is not defined
+
+<string>:1: NameError
+=========================== short test summary info ============================
+FAILED ../tests/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_optimize_model_false_is_retained
+FAILED ../tests/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_use_cache_false_is_retained
+FAILED ../tests/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_both_flags_false_are_retained
+FAILED ../tests/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_default_values_when_not_provided
+FAILED ../tests/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_mixed_flag_values
+========================= 5 failed, 2 passed in 0.04s ==========================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

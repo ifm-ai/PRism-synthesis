@@ -1,0 +1,58 @@
+{
+  "base_image": "python:3.11-slim",
+  "build_context_files": [
+    "setup_runtime.sh",
+    "repo_setup.sh"
+  ],
+  "system_packages": [
+    "git",
+    "curl",
+    "python3.11-venv"
+  ],
+  "build_steps": [
+    {
+      "step": 1,
+      "action": "base_image",
+      "description": "Start from python:3.11-slim"
+    },
+    {
+      "step": 2,
+      "action": "system_packages",
+      "description": "Install git, curl, python3.11-venv via apt-get"
+    },
+    {
+      "step": 3,
+      "action": "copy_scripts",
+      "description": "Copy setup_runtime.sh and repo_setup.sh to /opt/benchmark"
+    },
+    {
+      "step": 4,
+      "action": "run_repo_setup",
+      "description": "Execute repo_setup.sh to clone and materialize /workspace from Azure SDK for Python repo"
+    },
+    {
+      "step": 5,
+      "action": "run_setup_runtime",
+      "description": "Execute setup_runtime.sh to create venv at /opt/benchmark/venv and install all Python dependencies"
+    },
+    {
+      "step": 6,
+      "action": "set_workdir",
+      "description": "Set WORKDIR to /workspace"
+    }
+  ],
+  "runtime_profile": {
+    "ecosystem": "Python",
+    "package_manager": "pip",
+    "venv_path": "/opt/benchmark/venv",
+    "activation_command": "source /opt/benchmark/venv/bin/activate"
+  },
+  "verification_assets": {
+    "eval_sh_path": "runtime-mounted",
+    "test_patch_path": "runtime-mounted",
+    "mount_strategy": "eval.sh and test.patch are mounted at runtime from /artifacts/evaluation/, not baked into image"
+  },
+  "build_backend": "buildah",
+  "export_artifact": "/artifacts/environment/openenv_validation_oci.tar",
+  "notes": "The Dockerfile uses a two-stage setup: repo_setup.sh materializes the workspace from git, then setup_runtime.sh creates the Python venv and installs dependencies. Verifier assets (eval.sh, test.patch) are runtime-mounted, not baked into the image."
+}

@@ -1,0 +1,18 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "platform_constraint": "none",
+  "blocks_reason": null,
+  "high_value_files": [
+    "FracturedJson/NumberListAlignment.cs",
+    "FracturedJson/FracturedJsonOptions.cs",
+    "FracturedJson/Formatter.cs",
+    "FracturedJson/Formatting/TableTemplate.cs",
+    "Tests/NumberFormattingTests.cs",
+    "Tests/UniversalJsonTests.cs"
+  ],
+  "notes": "Cross-platform .NET JSON formatter library. Fix introduces NumberListAlignment enum to replace DontJustifyNumbers boolean. Project builds and tests on Linux with .NET SDK 6.0+.",
+  "project_type": "dotnet",
+  "test_framework": "MSTest",
+  "build_system": "dotnet"
+}

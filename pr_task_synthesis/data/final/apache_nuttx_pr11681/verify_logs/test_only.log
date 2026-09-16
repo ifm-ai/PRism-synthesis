@@ -1,0 +1,198 @@
+WARNING: Skipping mount /etc/localtime [binds]: /etc/localtime doesn't exist in container
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.10.12, pytest-6.2.5, py-1.11.0, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /tests/tests
+plugins: json-0.4.0, ordering-0.6, repeat-0.9.1
+collecting ... collected 25 items
+
+../tests/tests/test_fix_verification.py::TestCoreBugFix::test_setbits_initialization FAILED [  4%]
+../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_adc_driver_exists FAILED [  8%]
+../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_gpio_driver_exists FAILED [ 12%]
+../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_pwm_driver_exists FAILED [ 16%]
+../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_qencoder_driver_exists FAILED [ 20%]
+../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_usb_driver_exists FAILED [ 24%]
+../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_defconfig_exists FAILED [ 28%]
+../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_adc_config FAILED [ 32%]
+../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_gpio_config FAILED [ 36%]
+../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_pwm_config FAILED [ 40%]
+../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_qencoder_config FAILED [ 44%]
+../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_usb_config FAILED [ 48%]
+../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_adc_init FAILED [ 52%]
+../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_gpio_init FAILED [ 56%]
+../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_pwm_init FAILED [ 60%]
+../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_qencoder_init FAILED [ 64%]
+../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_usb_init FAILED [ 68%]
+../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_adc FAILED [ 72%]
+../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_gpio FAILED [ 76%]
+../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_pwm FAILED [ 80%]
+../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_qencoder FAILED [ 84%]
+../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_usb FAILED [ 88%]
+../tests/tests/test_fix_verification.py::TestBoardHeaderUpdates::test_board_h_has_adc_definitions FAILED [ 92%]
+../tests/tests/test_fix_verification.py::TestBoardHeaderUpdates::test_board_h_has_tim_definitions FAILED [ 96%]
+../tests/tests/test_fix_verification.py::TestBoardHeaderUpdates::test_board_h_has_otg_definitions FAILED [100%]
+
+=================================== FAILURES ===================================
+__________________ TestCoreBugFix.test_setbits_initialization __________________
+/tests/tests/test_fix_verification.py:45: in test_setbits_initialization
+    assert match is not None, (
+E   AssertionError: Core bug fix not found: 'uint32_t setbits = 0;' initialization is missing in stm32_adc.c. This causes undefined behavior.
+E   assert None is not None
+__________________ TestNewDriverFiles.test_adc_driver_exists ___________________
+/tests/tests/test_fix_verification.py:60: in test_adc_driver_exists
+    assert os.path.exists(adc_driver), f"ADC driver not found: {adc_driver}"
+E   AssertionError: ADC driver not found: /workspace/boards/arm/stm32h7/nucleo-h745zi/src/stm32_adc.c
+E   assert False
+E    +  where False = <function exists at 0x7f33ef509ea0>('/workspace/boards/arm/stm32h7/nucleo-h745zi/src/stm32_adc.c')
+E    +    where <function exists at 0x7f33ef509ea0> = <module 'posixpath' from '/usr/lib/python3.10/posixpath.py'>.exists
+E    +      where <module 'posixpath' from '/usr/lib/python3.10/posixpath.py'> = os.path
+__________________ TestNewDriverFiles.test_gpio_driver_exists __________________
+/tests/tests/test_fix_verification.py:75: in test_gpio_driver_exists
+    assert os.path.exists(gpio_driver), f"GPIO driver not found: {gpio_driver}"
+E   AssertionError: GPIO driver not found: /workspace/boards/arm/stm32h7/nucleo-h745zi/src/stm32_gpio.c
+E   assert False
+E    +  where False = <function exists at 0x7f33ef509ea0>('/workspace/boards/arm/stm32h7/nucleo-h745zi/src/stm32_gpio.c')
+E    +    where <function exists at 0x7f33ef509ea0> = <module 'posixpath' from '/usr/lib/python3.10/posixpath.py'>.exists
+E    +      where <module 'posixpath' from '/usr/lib/python3.10/posixpath.py'> = os.path
+__________________ TestNewDriverFiles.test_pwm_driver_exists ___________________
+/tests/tests/test_fix_verification.py:89: in test_pwm_driver_exists
+    assert os.path.exists(pwm_driver), f"PWM driver not found: {pwm_driver}"
+E   AssertionError: PWM driver not found: /workspace/boards/arm/stm32h7/nucleo-h745zi/src/stm32_pwm.c
+E   assert False
+E    +  where False = <function exists at 0x7f33ef509ea0>('/workspace/boards/arm/stm32h7/nucleo-h745zi/src/stm32_pwm.c')
+E    +    where <function exists at 0x7f33ef509ea0> = <module 'posixpath' from '/usr/lib/python3.10/posixpath.py'>.exists
+E    +      where <module 'posixpath' from '/usr/lib/python3.10/posixpath.py'> = os.path
+________________ TestNewDriverFiles.test_qencoder_driver_exists ________________
+/tests/tests/test_fix_verification.py:103: in test_qencoder_driver_exists
+    assert os.path.exists(qencoder_driver), f"QEncoder driver not found: {qencoder_driver}"
+E   AssertionError: QEncoder driver not found: /workspace/boards/arm/stm32h7/nucleo-h745zi/src/stm32_qencoder.c
+E   assert False
+E    +  where False = <function exists at 0x7f33ef509ea0>('/workspace/boards/arm/stm32h7/nucleo-h745zi/src/stm32_qencoder.c')
+E    +    where <function exists at 0x7f33ef509ea0> = <module 'posixpath' from '/usr/lib/python3.10/posixpath.py'>.exists
+E    +      where <module 'posixpath' from '/usr/lib/python3.10/posixpath.py'> = os.path
+__________________ TestNewDriverFiles.test_usb_driver_exists ___________________
+/tests/tests/test_fix_verification.py:118: in test_usb_driver_exists
+    assert os.path.exists(usb_driver), f"USB driver not found: {usb_driver}"
+E   AssertionError: USB driver not found: /workspace/boards/arm/stm32h7/nucleo-h745zi/src/stm32_usb.c
+E   assert False
+E    +  where False = <function exists at 0x7f33ef509ea0>('/workspace/boards/arm/stm32h7/nucleo-h745zi/src/stm32_usb.c')
+E    +    where <function exists at 0x7f33ef509ea0> = <module 'posixpath' from '/usr/lib/python3.10/posixpath.py'>.exists
+E    +      where <module 'posixpath' from '/usr/lib/python3.10/posixpath.py'> = os.path
+_______________ TestPysimConfig.test_pysim_cm7_defconfig_exists ________________
+/tests/tests/test_fix_verification.py:136: in test_pysim_cm7_defconfig_exists
+    assert os.path.exists(defconfig), f"pysim_cm7 defconfig not found: {defconfig}"
+E   AssertionError: pysim_cm7 defconfig not found: /workspace/boards/arm/stm32h7/nucleo-h745zi/configs/pysim_cm7/defconfig
+E   assert False
+E    +  where False = <function exists at 0x7f33ef509ea0>('/workspace/boards/arm/stm32h7/nucleo-h745zi/configs/pysim_cm7/defconfig')
+E    +    where <function exists at 0x7f33ef509ea0> = <module 'posixpath' from '/usr/lib/python3.10/posixpath.py'>.exists
+E    +      where <module 'posixpath' from '/usr/lib/python3.10/posixpath.py'> = os.path
+________________ TestPysimConfig.test_pysim_cm7_has_adc_config _________________
+/tests/tests/test_fix_verification.py:144: in test_pysim_cm7_has_adc_config
+    with open(defconfig, "r") as f:
+E   FileNotFoundError: [Errno 2] No such file or directory: '/workspace/boards/arm/stm32h7/nucleo-h745zi/configs/pysim_cm7/defconfig'
+________________ TestPysimConfig.test_pysim_cm7_has_gpio_config ________________
+/tests/tests/test_fix_verification.py:156: in test_pysim_cm7_has_gpio_config
+    with open(defconfig, "r") as f:
+E   FileNotFoundError: [Errno 2] No such file or directory: '/workspace/boards/arm/stm32h7/nucleo-h745zi/configs/pysim_cm7/defconfig'
+________________ TestPysimConfig.test_pysim_cm7_has_pwm_config _________________
+/tests/tests/test_fix_verification.py:167: in test_pysim_cm7_has_pwm_config
+    with open(defconfig, "r") as f:
+E   FileNotFoundError: [Errno 2] No such file or directory: '/workspace/boards/arm/stm32h7/nucleo-h745zi/configs/pysim_cm7/defconfig'
+______________ TestPysimConfig.test_pysim_cm7_has_qencoder_config ______________
+/tests/tests/test_fix_verification.py:178: in test_pysim_cm7_has_qencoder_config
+    with open(defconfig, "r") as f:
+E   FileNotFoundError: [Errno 2] No such file or directory: '/workspace/boards/arm/stm32h7/nucleo-h745zi/configs/pysim_cm7/defconfig'
+________________ TestPysimConfig.test_pysim_cm7_has_usb_config _________________
+/tests/tests/test_fix_verification.py:189: in test_pysim_cm7_has_usb_config
+    with open(defconfig, "r") as f:
+E   FileNotFoundError: [Errno 2] No such file or directory: '/workspace/boards/arm/stm32h7/nucleo-h745zi/configs/pysim_cm7/defconfig'
+____________ TestBringupIntegration.test_bringup_includes_adc_init _____________
+/tests/tests/test_fix_verification.py:208: in test_bringup_includes_adc_init
+    assert "stm32_adc_setup" in content, "ADC setup not called in bringup"
+E   AssertionError: ADC setup not called in bringup
+E   assert 'stm32_adc_setup' in '/****************************************************************************\n * boards/arm/stm32h7/nucleo-h745zi/sr...M32H7_CORTEXM7\n  stm32_rptun_init("cm4");\n#  else\n  stm32_rptun_init("cm7");\n#  endif\n#endif\n\n  return OK;\n}\n'
+____________ TestBringupIntegration.test_bringup_includes_gpio_init ____________
+/tests/tests/test_fix_verification.py:219: in test_bringup_includes_gpio_init
+    assert "stm32_gpio_initialize" in content, "GPIO init not called in bringup"
+E   AssertionError: GPIO init not called in bringup
+E   assert 'stm32_gpio_initialize' in '/****************************************************************************\n * boards/arm/stm32h7/nucleo-h745zi/sr...M32H7_CORTEXM7\n  stm32_rptun_init("cm4");\n#  else\n  stm32_rptun_init("cm7");\n#  endif\n#endif\n\n  return OK;\n}\n'
+____________ TestBringupIntegration.test_bringup_includes_pwm_init _____________
+/tests/tests/test_fix_verification.py:230: in test_bringup_includes_pwm_init
+    assert "stm32_pwm_setup" in content, "PWM setup not called in bringup"
+E   AssertionError: PWM setup not called in bringup
+E   assert 'stm32_pwm_setup' in '/****************************************************************************\n * boards/arm/stm32h7/nucleo-h745zi/sr...M32H7_CORTEXM7\n  stm32_rptun_init("cm4");\n#  else\n  stm32_rptun_init("cm7");\n#  endif\n#endif\n\n  return OK;\n}\n'
+__________ TestBringupIntegration.test_bringup_includes_qencoder_init __________
+/tests/tests/test_fix_verification.py:241: in test_bringup_includes_qencoder_init
+    assert "stm32_qencoder_initialize" in content, "QEncoder init not called"
+E   AssertionError: QEncoder init not called
+E   assert 'stm32_qencoder_initialize' in '/****************************************************************************\n * boards/arm/stm32h7/nucleo-h745zi/sr...M32H7_CORTEXM7\n  stm32_rptun_init("cm4");\n#  else\n  stm32_rptun_init("cm7");\n#  endif\n#endif\n\n  return OK;\n}\n'
+____________ TestBringupIntegration.test_bringup_includes_usb_init _____________
+/tests/tests/test_fix_verification.py:252: in test_bringup_includes_usb_init
+    assert "stm32_usbhost_initialize" in content, "USB init not called in bringup"
+E   AssertionError: USB init not called in bringup
+E   assert 'stm32_usbhost_initialize' in '/****************************************************************************\n * boards/arm/stm32h7/nucleo-h745zi/sr...M32H7_CORTEXM7\n  stm32_rptun_init("cm4");\n#  else\n  stm32_rptun_init("cm7");\n#  endif\n#endif\n\n  return OK;\n}\n'
+________________ TestMakefileUpdates.test_makefile_includes_adc ________________
+/tests/tests/test_fix_verification.py:267: in test_makefile_includes_adc
+    assert "stm32_adc.c" in content
+E   AssertionError: assert 'stm32_adc.c' in '############################################################################\n# boards/arm/stm32h7/nucleo-h745zi/src/....c\nendif\n\nifeq ($(CONFIG_BOARDCTL),y)\nCSRCS += stm32_appinitialize.c\nendif\n\ninclude $(TOPDIR)/boards/Board.mk\n'
+_______________ TestMakefileUpdates.test_makefile_includes_gpio ________________
+/tests/tests/test_fix_verification.py:279: in test_makefile_includes_gpio
+    assert "stm32_gpio.c" in content
+E   AssertionError: assert 'stm32_gpio.c' in '############################################################################\n# boards/arm/stm32h7/nucleo-h745zi/src/....c\nendif\n\nifeq ($(CONFIG_BOARDCTL),y)\nCSRCS += stm32_appinitialize.c\nendif\n\ninclude $(TOPDIR)/boards/Board.mk\n'
+________________ TestMakefileUpdates.test_makefile_includes_pwm ________________
+/tests/tests/test_fix_verification.py:291: in test_makefile_includes_pwm
+    assert "stm32_pwm.c" in content
+E   AssertionError: assert 'stm32_pwm.c' in '############################################################################\n# boards/arm/stm32h7/nucleo-h745zi/src/....c\nendif\n\nifeq ($(CONFIG_BOARDCTL),y)\nCSRCS += stm32_appinitialize.c\nendif\n\ninclude $(TOPDIR)/boards/Board.mk\n'
+_____________ TestMakefileUpdates.test_makefile_includes_qencoder ______________
+/tests/tests/test_fix_verification.py:303: in test_makefile_includes_qencoder
+    assert "stm32_qencoder.c" in content
+E   AssertionError: assert 'stm32_qencoder.c' in '############################################################################\n# boards/arm/stm32h7/nucleo-h745zi/src/....c\nendif\n\nifeq ($(CONFIG_BOARDCTL),y)\nCSRCS += stm32_appinitialize.c\nendif\n\ninclude $(TOPDIR)/boards/Board.mk\n'
+________________ TestMakefileUpdates.test_makefile_includes_usb ________________
+/tests/tests/test_fix_verification.py:315: in test_makefile_includes_usb
+    assert "stm32_usb.c" in content
+E   AssertionError: assert 'stm32_usb.c' in '############################################################################\n# boards/arm/stm32h7/nucleo-h745zi/src/....c\nendif\n\nifeq ($(CONFIG_BOARDCTL),y)\nCSRCS += stm32_appinitialize.c\nendif\n\ninclude $(TOPDIR)/boards/Board.mk\n'
+___________ TestBoardHeaderUpdates.test_board_h_has_adc_definitions ____________
+/tests/tests/test_fix_verification.py:331: in test_board_h_has_adc_definitions
+    assert "GPIO_ADC" in content, "ADC definitions missing from board.h"
+E   AssertionError: ADC definitions missing from board.h
+E   assert 'GPIO_ADC' in '/****************************************************************************\n * boards/arm/stm32h7/nucleo-h745zi/in..._cplusplus)\n}\n#endif\n\n#endif /* __ASSEMBLY__ */\n#endif /* __BOARDS_ARM_STM32H7_NUCLEO_H745ZI_INCLUDE_BOARD_H */\n'
+___________ TestBoardHeaderUpdates.test_board_h_has_tim_definitions ____________
+/tests/tests/test_fix_verification.py:342: in test_board_h_has_tim_definitions
+    assert "GPIO_TIM" in content, "TIM definitions missing from board.h"
+E   AssertionError: TIM definitions missing from board.h
+E   assert 'GPIO_TIM' in '/****************************************************************************\n * boards/arm/stm32h7/nucleo-h745zi/in..._cplusplus)\n}\n#endif\n\n#endif /* __ASSEMBLY__ */\n#endif /* __BOARDS_ARM_STM32H7_NUCLEO_H745ZI_INCLUDE_BOARD_H */\n'
+___________ TestBoardHeaderUpdates.test_board_h_has_otg_definitions ____________
+/tests/tests/test_fix_verification.py:353: in test_board_h_has_otg_definitions
+    assert "GPIO_OTGFS" in content, "OTGFS definitions missing from board.h"
+E   AssertionError: OTGFS definitions missing from board.h
+E   assert 'GPIO_OTGFS' in '/****************************************************************************\n * boards/arm/stm32h7/nucleo-h745zi/in..._cplusplus)\n}\n#endif\n\n#endif /* __ASSEMBLY__ */\n#endif /* __BOARDS_ARM_STM32H7_NUCLEO_H745ZI_INCLUDE_BOARD_H */\n'
+=========================== short test summary info ============================
+FAILED ../tests/tests/test_fix_verification.py::TestCoreBugFix::test_setbits_initialization
+FAILED ../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_adc_driver_exists
+FAILED ../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_gpio_driver_exists
+FAILED ../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_pwm_driver_exists
+FAILED ../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_qencoder_driver_exists
+FAILED ../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_usb_driver_exists
+FAILED ../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_defconfig_exists
+FAILED ../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_adc_config
+FAILED ../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_gpio_config
+FAILED ../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_pwm_config
+FAILED ../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_qencoder_config
+FAILED ../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_usb_config
+FAILED ../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_adc_init
+FAILED ../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_gpio_init
+FAILED ../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_pwm_init
+FAILED ../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_qencoder_init
+FAILED ../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_usb_init
+FAILED ../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_adc
+FAILED ../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_gpio
+FAILED ../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_pwm
+FAILED ../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_qencoder
+FAILED ../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_usb
+FAILED ../tests/tests/test_fix_verification.py::TestBoardHeaderUpdates::test_board_h_has_adc_definitions
+FAILED ../tests/tests/test_fix_verification.py::TestBoardHeaderUpdates::test_board_h_has_tim_definitions
+FAILED ../tests/tests/test_fix_verification.py::TestBoardHeaderUpdates::test_board_h_has_otg_definitions
+============================== 25 failed in 0.11s ==============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

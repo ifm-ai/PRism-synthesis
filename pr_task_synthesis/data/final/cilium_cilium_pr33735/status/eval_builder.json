@@ -1,0 +1,30 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "infrastructure_reason": null,
+  "verification_command": "cd /workspace/pkg/clustermesh/common && go test -v -timeout 60s -run \"TestChannelBufferFixAtLine270|TestGetClusterConfigNoDeadlock\" .",
+  "activation_source": "export PATH=/usr/local/go/bin:/root/go/bin:$PATH && export GOPATH=/root/go && export GOROOT=/usr/local/go",
+  "eval_template_version": "v2.0-repaired",
+  "verifier_asset_mode": "external_tests_with_copy",
+  "copied_test_patch": false,
+  "supplemental_tests_created": true,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests verify both source code fix (buffered channel at line 270) and behavioral fix (no deadlock on context timeout) by running tests in the package directory where they can access remote_cluster.go",
+  "fix_patch_grounding": "The tests verify the fix at line 270 in pkg/clustermesh/common/remote_cluster.go: changing make(chan types.CiliumClusterConfig) to make(chan types.CiliumClusterConfig, 1) to prevent deadlock when background controller sends after context timeout",
+  "issue_context_used": "Tests verify that the clustermesh subsystem does not deadlock when stopping remote cluster config fetching due to context timeout",
+  "verification_mode": "behavioral",
+  "test_entrypoints": [
+    "TestChannelBufferFixAtLine270",
+    "TestGetClusterConfigNoDeadlock"
+  ],
+  "required_verifier_files": [
+    "eval.sh",
+    "tests/channel_deadlock_test.go"
+  ],
+  "notes": "Repaired eval.sh to copy test files to /workspace/pkg/clustermesh/common/ before running, then clean up after execution. This ensures tests can access remote_cluster.go source file for verification. Tests run in package directory using 'go test -run' pattern."
+}

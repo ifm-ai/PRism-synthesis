@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "debian:bookworm",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Multi-ecosystem (Java/Scala + Python) environment for Apache Sedona spatial computing. JDK 17, Maven, Python 3.11 venv with GEOS C extension support.",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "pytest 9.1.0\nTest runner is callable. Some tests require pyspark which is not installed by default.\nImport errors for Spark-dependent tests are expected without pyspark.",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 && export PATH=$JAVA_HOME/bin:$PATH && source ${WORKSPACE:-/workspace}/python/.venv/bin/activate",
+  "notes": "Environment successfully created. Python venv at python/.venv with sedona package installed in editable mode. Java/Maven ready for JVM module builds. GEOS library installed for C extension. Pyspark not included by default - add for Spark-specific tests."
+}

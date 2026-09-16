@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "CSHS-CWRA_RavenPy_pr360"
+description = "OpenEnv: CSHS-CWRA/RavenPy PR #360"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/CSHS-CWRA/RavenPy.git"
+git_pr_id = "360"
+git_base_commit = "e60d7043d1a873172b0993f3f98e68d4ec6c1af9"
+task_id = "CSHS-CWRA_RavenPy_pr360"
+repo_full_name = "CSHS-CWRA/RavenPy"
+domain = "SCIENTIFIC_COMPUTING_MATH"
+primary_language = "Python"
+runtime_family = "Python"
+complexity = "medium"
+star_category = "stars_6_50"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

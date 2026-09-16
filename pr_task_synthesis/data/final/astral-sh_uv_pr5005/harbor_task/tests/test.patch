@@ -1,0 +1,88 @@
+diff --git a/crates/uv/tests/help.rs b/crates/uv/tests/help.rs
+index 1b43cb9d6..a42f7c7e9 100644
+--- a/crates/uv/tests/help.rs
++++ b/crates/uv/tests/help.rs
+--- a/crates/uv/tests/help.rs	2026-06-20 12:40:01.655323514 +0000
++++ b/crates/uv/tests/help.rs	2026-06-20 12:40:10.271453783 +0000
+@@ -42,6 +42,9 @@
+           --python-fetch <PYTHON_FETCH>
+               Whether to automatically download Python when required [possible values: automatic,
+               manual]
++          --isolated
++              Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
++              parent directories
+       -n, --no-cache
+               Avoid reading from or writing to the cache [env: UV_NO_CACHE=]
+           --cache-dir [CACHE_DIR]
+@@ -98,6 +101,9 @@
+           --python-fetch <PYTHON_FETCH>
+               Whether to automatically download Python when required [possible values: automatic,
+               manual]
++          --isolated
++              Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
++              parent directories
+       -n, --no-cache
+               Avoid reading from or writing to the cache [env: UV_NO_CACHE=]
+           --cache-dir [CACHE_DIR]
+@@ -153,6 +159,9 @@
+           --python-fetch <PYTHON_FETCH>
+               Whether to automatically download Python when required [possible values: automatic,
+               manual]
++          --isolated
++              Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
++              parent directories
+       -n, --no-cache
+               Avoid reading from or writing to the cache [env: UV_NO_CACHE=]
+           --cache-dir [CACHE_DIR]
+@@ -249,6 +258,10 @@
+               - manual:    Do not automatically fetch managed Python installations; require explicit
+                 installation
+ 
++          --isolated
++              Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
++              parent directories
++
+       -n, --no-cache
+               Avoid reading from or writing to the cache
+               
+@@ -362,6 +375,10 @@
+               - manual:    Do not automatically fetch managed Python installations; require explicit
+                 installation
+ 
++          --isolated
++              Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
++              parent directories
++
+       -n, --no-cache
+               Avoid reading from or writing to the cache
+               
+@@ -429,6 +446,9 @@
+           --python-fetch <PYTHON_FETCH>
+               Whether to automatically download Python when required [possible values: automatic,
+               manual]
++          --isolated
++              Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
++              parent directories
+       -n, --no-cache
+               Avoid reading from or writing to the cache [env: UV_NO_CACHE=]
+           --cache-dir [CACHE_DIR]
+@@ -481,6 +501,9 @@
+           --python-fetch <PYTHON_FETCH>
+               Whether to automatically download Python when required [possible values: automatic,
+               manual]
++          --isolated
++              Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
++              parent directories
+       -n, --no-cache
+               Avoid reading from or writing to the cache [env: UV_NO_CACHE=]
+           --cache-dir [CACHE_DIR]
+@@ -590,6 +613,9 @@
+           --python-fetch <PYTHON_FETCH>
+               Whether to automatically download Python when required [possible values: automatic,
+               manual]
++          --isolated
++              Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
++              parent directories
+       -n, --no-cache
+               Avoid reading from or writing to the cache [env: UV_NO_CACHE=]
+           --cache-dir [CACHE_DIR]

@@ -1,0 +1,24 @@
+{
+  "schema_version": "v1",
+  "filter_label": "keep_verifier_repair",
+  "keep_for_rl": "keep",
+  "is_good_rl_example": true,
+  "overall_score": 3.25,
+  "primary_scores": {
+    "environment_readiness": 4,
+    "dependency_completeness": 4,
+    "verifier_integrity": 2,
+    "instruction_verifier_alignment": 3,
+    "trajectory_progress_value": 4
+  },
+  "dominant_struggle_patterns": [
+    "solver_oracle_disagreement",
+    "oracle_failure_non_actionable"
+  ],
+  "needs_instruction_tuning": false,
+  "needs_verifier_repair": true,
+  "score_warnings": [
+    "verifier_integrity: expected ~4, judge reported 2"
+  ],
+  "decision_source": "computed"
+}

@@ -1,0 +1,9 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "route_to": null,
+  "notes": "Buildah validation completed successfully. Container spec builds correctly with updated setup_runtime.sh that includes the docs gem group (yard gem now installed). OCI archive exported."
+}

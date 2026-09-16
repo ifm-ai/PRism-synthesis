@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "apache_datafusion-comet_pr741"
+description = "OpenEnv: apache/datafusion-comet PR #741"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/apache/datafusion-comet.git"
+git_pr_id = "741"
+git_base_commit = "c4a06f07c330b2853bc8766605b7ac6cacc69c08"
+task_id = "apache_datafusion-comet_pr741"
+repo_full_name = "apache/datafusion-comet"
+domain = "SCIENTIFIC_COMPUTING_MATH"
+primary_language = "Scala"
+runtime_family = "Rust"
+complexity = "medium"
+star_category = "stars_501_1000"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

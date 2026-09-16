@@ -1,0 +1,25 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "platform_constraint": null,
+  "platform_constraint_evidence": "Kubernetes-based project running on Linux containers. No Windows/macOS-specific dependencies detected.",
+  "runtime_family": "kubernetes",
+  "package_manager": "poetry",
+  "build_system": "make",
+  "test_framework": "kubectl_apply_validation",
+  "touched_files": [
+    "Makefile_calibrate_kubehound",
+    "redis/log-notebook/kubehound-stix.json",
+    "redis/log-notebook/manual.py",
+    "traces/kubehound-verify/1-ce-module-load.yaml",
+    "traces/kubehound-verify/1-ce-net-mitm.yaml",
+    "traces/kubehound-verify/1-ce-var-log-symlink.yaml",
+    "traces/kubehound-verify/attacks/CE_MODULE_LOAD.yaml",
+    "traces/kubehound-verify/attacks/CE_NET_MITM.yaml",
+    "traces/kubehound-verify/attacks/CE_VAR_LOG_SYMLINK.yaml",
+    "traces/kubehound-verify/attacks/Dockerfile",
+    "vector/gkevalues.yaml"
+  ],
+  "target_file": "test/cti-stix-visualizer.yaml",
+  "issue_summary": "Add a Kubernetes Service resource to test/cti-stix-visualizer.yaml to expose the STIX visualizer deployment with ClusterIP type, port 80 -> targetPort 3000, selector app: stix-visualizer, in namespace redpanda"
+}

@@ -1,0 +1,63 @@
+{
+  "base_image": "nvidia/cuda:12.0.1-devel-ubuntu22.04",
+  "build_stages": [
+    {
+      "name": "base",
+      "description": "Single-stage build from NVIDIA CUDA development image",
+      "from": "nvidia/cuda:12.0.1-devel-ubuntu22.04"
+    }
+  ],
+  "key_installation_steps": [
+    {
+      "step": 1,
+      "action": "copy_scripts",
+      "description": "Copy setup_runtime.sh and repo_setup.sh to /opt/benchmark/"
+    },
+    {
+      "step": 2,
+      "action": "materialize_repo",
+      "description": "Execute repo_setup.sh to clone NVIDIA DALI repository to /workspace"
+    },
+    {
+      "step": 3,
+      "action": "setup_runtime",
+      "description": "Execute setup_runtime.sh to install system packages and create Python venv"
+    }
+  ],
+  "system_packages": [
+    "cmake",
+    "build-essential",
+    "ninja-build",
+    "pkg-config",
+    "wget",
+    "ca-certificates",
+    "gnupg",
+    "lsb-release",
+    "python3-full",
+    "python3-venv",
+    "git",
+    "curl"
+  ],
+  "runtime_environment": {
+    "python_venv": "/opt/benchmark/dali_venv",
+    "cuda_home": "/usr/local/cuda",
+    "workspace": "/workspace"
+  },
+  "final_image_structure": {
+    "WORKDIR": "/workspace",
+    "artifacts": {
+      "/opt/benchmark/setup_runtime.sh": "Runtime setup script (executable)",
+      "/opt/benchmark/repo_setup.sh": "Repository materialization script (executable)",
+      "/opt/benchmark/dali_venv/": "Python virtual environment with pytest, numpy",
+      "/workspace/": "NVIDIA DALI source repository (from git)"
+    },
+    "environment_variables": {
+      "DEBIAN_FRONTEND": "noninteractive",
+      "CUDA_HOME": "/usr/local/cuda",
+      "PATH": "$CUDA_HOME/bin:$PATH",
+      "LD_LIBRARY_PATH": "$CUDA_HOME/lib64:$LD_LIBRARY_PATH"
+    }
+  },
+  "build_backend": "buildah",
+  "notes": "Single-stage Dockerfile for NVIDIA DALI benchmark environment. The CUDA toolkit is provided by the base image. eval.sh and test files are runtime-mounted verifier assets, not baked into the image."
+}

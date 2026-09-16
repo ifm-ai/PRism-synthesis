@@ -1,0 +1,96 @@
+{
+  "build_plan_version": "1.0",
+  "base_image": "ubuntu:22.04",
+  "build_context_files": [
+    "repo_setup.sh",
+    "setup_runtime.sh"
+  ],
+  "stages": [
+    {
+      "stage_name": "base",
+      "from": "ubuntu:22.04",
+      "description": "Base Ubuntu 22.04 image with non-interactive mode"
+    },
+    {
+      "stage_name": "system_packages",
+      "type": "RUN",
+      "description": "Install base system packages: python3, python3-venv, python3-pip, python3-dev, git, curl"
+    },
+    {
+      "stage_name": "python_alternatives",
+      "type": "RUN",
+      "description": "Set Python and pip as default alternatives"
+    },
+    {
+      "stage_name": "opt_benchmark_dir",
+      "type": "RUN",
+      "description": "Create /opt/benchmark directory for scripts"
+    },
+    {
+      "stage_name": "copy_repo_setup",
+      "type": "COPY",
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh",
+      "description": "Copy repo_setup.sh from build context"
+    },
+    {
+      "stage_name": "copy_setup_runtime",
+      "type": "COPY",
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh",
+      "description": "Copy setup_runtime.sh from build context"
+    },
+    {
+      "stage_name": "run_repo_setup",
+      "type": "RUN",
+      "command": "/opt/benchmark/repo_setup.sh",
+      "description": "Materialize /workspace by cloning ARM-software/Tool-Solutions repository"
+    },
+    {
+      "stage_name": "run_setup_runtime",
+      "type": "RUN",
+      "command": "/opt/benchmark/setup_runtime.sh",
+      "description": "Create Python virtualenv at /opt/benchmark/mlcommons-venv and install ML dependencies"
+    },
+    {
+      "stage_name": "workdir",
+      "type": "WORKDIR",
+      "path": "/workspace",
+      "description": "Set working directory to /workspace"
+    }
+  ],
+  "final_workdir": "/workspace",
+  "virtualenv_path": "/opt/benchmark/mlcommons-venv",
+  "activation_command": "source /opt/benchmark/mlcommons-venv/bin/activate",
+  "runtime_mounts": {
+    "eval_sh": {
+      "source": "/artifacts/evaluation/eval.sh",
+      "target": "/opt/benchmark/eval.sh",
+      "note": "Runtime-mounted verifier asset, not baked into image"
+    },
+    "tests": {
+      "source": "/artifacts/evaluation/tests/",
+      "target": "/opt/benchmark/evaluation/tests/",
+      "note": "Runtime-mounted hidden tests, not baked into image"
+    }
+  },
+  "excluded_from_image": [
+    "/artifacts/evaluation/eval.sh",
+    "/artifacts/evaluation/tests/",
+    "/artifacts/evaluation/test.patch",
+    "/workspace (not copied, materialized by repo_setup.sh)"
+  ],
+  "key_packages_installed": [
+    "numpy==1.25.2",
+    "scipy==1.10.1",
+    "librosa==0.10.0",
+    "torch==2.2.0",
+    "torchvision==0.17.0",
+    "torchaudio==2.2.0",
+    "transformers==4.32.1",
+    "opencv-python-headless==4.8.0.74"
+  ],
+  "build_backend": "buildah",
+  "output_artifact": "/artifacts/environment/openenv_validation_oci.tar",
+  "notes": "This Dockerfile creates the MLCommons RNNT speech recognition benchmark environment. The eval.sh verifier script and hidden tests are runtime-mounted, not baked into the image. The /workspace directory is materialized by running repo_setup.sh during the build, which clones the ARM-software/Tool-Solutions repository."
+}

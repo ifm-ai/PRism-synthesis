@@ -1,0 +1,17 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "blocks_full_outer_turn": false,
+  "blocks_reason": null,
+  "repair_cycles_attempted": 1,
+  "workers_used": [
+    "openenv-eval-builder",
+    "openenv-test-analyst",
+    "openenv-build-validator"
+  ],
+  "iterations": 1,
+  "verifier_asset_mode": "local",
+  "build_backend": "buildah",
+  "container_build_status": "success",
+  "notes": "Remediation complete. External verifier reported 'no recognizable test-runner signal' for testWithFix. Fixed by updating eval.sh to emit explicit 'TEST RESULT: PASSED' or 'TEST RESULT: FAILED' summary lines between the Start/End Test Output markers. Re-ran test-analyst to confirm output format is valid with clear signals. Re-ran build-validator to confirm container spec still builds successfully. All artifacts are now consistent and ready for external verification."
+}

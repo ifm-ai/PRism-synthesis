@@ -1,0 +1,276 @@
+{
+ "version": "v2",
+ "total_duration": 13973.948,
+ "total_turns": 12,
+ "outcome": "success",
+ "success_turn": 12,
+ "setup": {
+  "root_agent_setup": 0.0
+ },
+ "preflight_check": {
+  "preflight_check_environment": 0.06
+ },
+ "turns": [
+  {
+   "turn": 1,
+   "operations": {
+    "snapshot_sessions": 1.16,
+    "agent_turn_run": 3576.77,
+    "collect_turn_trajectories": 19.03,
+    "audit_artifacts": 0.46
+   },
+   "outcome": "incomplete_artifacts",
+   "duration": 3597
+  },
+  {
+   "turn": 2,
+   "operations": {
+    "snapshot_sessions": 1.01,
+    "agent_turn_run": 202.55,
+    "collect_turn_trajectories": 2.98,
+    "audit_artifacts": 0.42,
+    "quality_gate_checks": 0.09
+   },
+   "outcome": "quality_gate_failed",
+   "duration": 207.039,
+   "quality_gate_signals": [
+    [
+     "H4:hardcoded-exit-before-emit",
+     "  \u2022 Remove hardcoded exit 0/exit 1 before emit_result section."
+    ],
+    [
+     "H5:exit-code-not-from-RC",
+     "  \u2022 OPENENV_EXIT_CODE must be set as: RC=$?; echo OPENENV_EXIT_CODE=$RC"
+    ],
+    [
+     "H6:no-test-runner-invocation",
+     " \u2022 No test runner invocation identified"
+    ]
+   ]
+  },
+  {
+   "turn": 3,
+   "operations": {
+    "snapshot_sessions": 0.99,
+    "agent_turn_run": 198.71,
+    "collect_turn_trajectories": 4.99,
+    "audit_artifacts": 0.43,
+    "quality_gate_checks": 0.09
+   },
+   "outcome": "quality_gate_failed",
+   "duration": 205.216,
+   "quality_gate_signals": [
+    [
+     "H5b:RC-literal-not-from-exit-status",
+     "  \u2022 eval.sh must invoke a real test runner (pytest/mvn/gradle/etc)."
+    ],
+    [
+     "H6:no-test-runner-invocation",
+     " \u2022 No test runner invocation identified"
+    ]
+   ]
+  },
+  {
+   "turn": 4,
+   "operations": {
+    "snapshot_sessions": 0.97,
+    "agent_turn_run": 519.83,
+    "collect_turn_trajectories": 6.04,
+    "audit_artifacts": 0.43,
+    "quality_gate_checks": 0.09
+   },
+   "outcome": "quality_gate_failed",
+   "duration": 527.363,
+   "quality_gate_signals": [
+    [
+     "H5b:RC-literal-not-from-exit-status",
+     "  \u2022 eval.sh must invoke a real test runner (pytest/mvn/gradle/etc)."
+    ],
+    [
+     "H6:no-test-runner-invocation",
+     " \u2022 No test runner invocation identified"
+    ]
+   ]
+  },
+  {
+   "turn": 5,
+   "operations": {
+    "snapshot_sessions": 1.01,
+    "agent_turn_run": 235.39,
+    "collect_turn_trajectories": 5.16,
+    "audit_artifacts": 0.43,
+    "quality_gate_checks": 0.09
+   },
+   "outcome": "quality_gate_failed",
+   "duration": 242.095,
+   "quality_gate_signals": [
+    [
+     "H5b:RC-literal-not-from-exit-status",
+     "  \u2022 eval.sh must invoke a real test runner (pytest/mvn/gradle/etc)."
+    ],
+    [
+     "H6:no-test-runner-invocation",
+     " \u2022 No test runner invocation identified"
+    ]
+   ]
+  },
+  {
+   "turn": 6,
+   "operations": {
+    "snapshot_sessions": 0.99,
+    "agent_turn_run": 396.74,
+    "collect_turn_trajectories": 5.05,
+    "audit_artifacts": 0.42,
+    "quality_gate_checks": 0.09
+   },
+   "outcome": "quality_gate_failed",
+   "duration": 403.3,
+   "quality_gate_signals": [
+    [
+     "H5b:RC-literal-not-from-exit-status",
+     "  \u2022 eval.sh must invoke a real test runner (pytest/mvn/gradle/etc)."
+    ],
+    [
+     "H6:no-test-runner-invocation",
+     " \u2022 No test runner invocation identified"
+    ]
+   ]
+  },
+  {
+   "turn": 7,
+   "operations": {
+    "snapshot_sessions": 0.99,
+    "agent_turn_run": 1067.84,
+    "collect_turn_trajectories": 9.0,
+    "audit_artifacts": 0.46,
+    "quality_gate_checks": 0.09
+   },
+   "outcome": "quality_gate_failed",
+   "duration": 1078.383,
+   "quality_gate_signals": [
+    [
+     "H5b:RC-literal-not-from-exit-status",
+     "  \u2022 eval.sh must invoke a real test runner (pytest/mvn/gradle/etc)."
+    ]
+   ]
+  },
+  {
+   "turn": 8,
+   "operations": {
+    "snapshot_sessions": 1.0,
+    "agent_turn_run": 415.52,
+    "collect_turn_trajectories": 4.98,
+    "audit_artifacts": 0.44,
+    "quality_gate_checks": 0.09
+   },
+   "outcome": "quality_gate_failed",
+   "duration": 422.028,
+   "quality_gate_signals": [
+    [
+     "H4:hardcoded-exit-before-emit",
+     "  \u2022 Remove hardcoded exit 0/exit 1 before emit_result section."
+    ],
+    [
+     "H5:exit-code-not-from-RC",
+     "  \u2022 OPENENV_EXIT_CODE must be set as: RC=$?; echo OPENENV_EXIT_CODE=$RC"
+    ]
+   ]
+  },
+  {
+   "turn": 9,
+   "operations": {
+    "snapshot_sessions": 0.99,
+    "agent_turn_run": 329.81,
+    "collect_turn_trajectories": 4.96,
+    "audit_artifacts": 0.44,
+    "quality_gate_checks": 0.09,
+    "audit_image_build": 336.71,
+    "image_build_breakdown": {
+     "buildah_bud": 192.18,
+     "apptainer_build": 138.24,
+     "workspace_check": 0.12
+    },
+    "eval_verification": 7.31
+   },
+   "outcome": "eval_verification_failed",
+   "duration": 680
+  },
+  {
+   "turn": 10,
+   "operations": {
+    "snapshot_sessions": 1.15,
+    "agent_turn_run": 1837.04,
+    "collect_turn_trajectories": 10.26,
+    "audit_artifacts": 0.42,
+    "quality_gate_checks": 0.08,
+    "audit_image_build": 433.72,
+    "image_build_breakdown": {
+     "buildah_bud": 284.18,
+     "apptainer_build": 142.74,
+     "workspace_check": 0.12
+    },
+    "eval_verification": 7.76
+   },
+   "outcome": "eval_verification_failed",
+   "duration": 2290
+  },
+  {
+   "turn": 11,
+   "operations": {
+    "snapshot_sessions": 1.11,
+    "agent_turn_run": 747.52,
+    "collect_turn_trajectories": 5.97,
+    "audit_artifacts": 0.43,
+    "quality_gate_checks": 0.09,
+    "audit_image_build": 454.5,
+    "image_build_breakdown": {
+     "buildah_bud": 295.36,
+     "apptainer_build": 151.56,
+     "workspace_check": 0.14
+    },
+    "eval_verification": 10.35
+   },
+   "outcome": "eval_verification_failed",
+   "duration": 1219
+  },
+  {
+   "turn": 12,
+   "operations": {
+    "snapshot_sessions": 1.1,
+    "agent_turn_run": 2482.16,
+    "collect_turn_trajectories": 8.94,
+    "audit_artifacts": 0.42,
+    "quality_gate_checks": 0.09,
+    "audit_image_build": 414.67,
+    "image_build_breakdown": {
+     "buildah_bud": 267.46,
+     "apptainer_build": 140.22,
+     "workspace_check": 0.15
+    },
+    "eval_verification": 8.15
+   },
+   "outcome": "success",
+   "duration": 2915
+  }
+ ],
+ "analyzer_builder": {
+  "opencode_install": 1.11,
+  "solver_run": 102.95,
+  "trajectory_snapshot_sessions": 1.16,
+  "trajectory_judge": 62.75,
+  "collect_turn_trajectories": 2.89,
+  "trajectory_decision": 0.03,
+  "instruction_tuning": 0.03,
+  "analyzer_builder": 181.73
+ },
+ "harbor_export": {
+  "ecr_push": 2.82,
+  "export_harbor_task": 3.04
+ },
+ "manager_block_streak": 0,
+ "manager_block_last_reason": "",
+ "quality_gate_failures": 7,
+ "extra_attr": {
+  "run_retry": 3
+ }
+}

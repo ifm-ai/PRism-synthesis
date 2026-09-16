@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "partial",
+  "oracle_outcome": "fail",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "This is a high-value RL training example: solver correctly localized the problem and made valid edits to the target file, but the implementation pattern differs from the reference solution. The verifier is an implementation_pattern checker that requires specific code patterns. The solver's approach (using torch.is_complex branch) is functionally valid but doesn't match the fix.patch pattern (torch.view_as_real). Environment was ready, instruction was clear, and the solver demonstrated correct problem localization - this trajectory should be kept for RL training to teach proper localization behavior even when implementation patterns vary."
+}

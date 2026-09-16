@@ -1,0 +1,154 @@
+WARNING: Skipping mount /etc/localtime [binds]: /etc/localtime doesn't exist in container
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.14.6, pytest-9.1.0, pluggy-1.6.0 -- /opt/conda/envs/bioconda/bin/python
+cachedir: .pytest_cache
+rootdir: /tests/tests
+plugins: anyio-4.13.0
+collecting ... collected 8 items
+
+../tests/tests/test_fix_verification.py::TestMetaYaml::test_additional_platforms_linux_aarch64 FAILED [ 12%]
+../tests/tests/test_fix_verification.py::TestMetaYaml::test_build_number_is_7 FAILED [ 25%]
+../tests/tests/test_fix_verification.py::TestMetaYaml::test_run_exports_present FAILED [ 37%]
+../tests/tests/test_fix_verification.py::TestMetaYaml::test_license_is_gpl3_only FAILED [ 50%]
+../tests/tests/test_fix_verification.py::TestMetaYaml::test_license_file_present FAILED [ 62%]
+../tests/tests/test_fix_verification.py::TestMetaYaml::test_license_family_present FAILED [ 75%]
+../tests/tests/test_fix_verification.py::TestBuildSh::test_set_xeu_not_set_eu FAILED [ 87%]
+../tests/tests/test_fix_verification.py::TestBuildSh::test_parallel_make_with_cpu_count FAILED [100%]
+
+=================================== FAILURES ===================================
+_____________ TestMetaYaml.test_additional_platforms_linux_aarch64 _____________
+
+self = <test_fix_verification.TestMetaYaml object at 0x7fca8329e5d0>
+meta_content = '{% set version = "4.3.0" %}\n\npackage:\n  name: cancerit-allelecount\n  version: {{ version }}\n\nsource:\n  url: ht...e: https://github.com/cancerit/alleleCount\n  license: GPLv3\n  summary: Support code for NGS copy number algorithms\n'
+
+    def test_additional_platforms_linux_aarch64(self, meta_content):
+        """Verify linux-aarch64 is in additional-platforms."""
+        # Check for the additional-platforms section with linux-aarch64
+>       assert 'additional-platforms' in meta_content, \
+            "Missing 'additional-platforms' in meta.yaml"
+E       AssertionError: Missing 'additional-platforms' in meta.yaml
+E       assert 'additional-platforms' in '{% set version = "4.3.0" %}\n\npackage:\n  name: cancerit-allelecount\n  version: {{ version }}\n\nsource:\n  url: https://github.com/cancerit/alleleCount/archive/v{{ version }}.tar.gz\n  sha256: 5363ae12c2385c962728336a4498b1a29c9eaa3d4a24492d0debf897771cfd3c\n\nbuild:\n  number: 6\n  skip: True # [osx]\n\nrequirements:\n  build:\n    - make\n    - {{ compiler(\'c\') }}\n    - wget\n  host:\n    - htslib\n    - zlib\n    - bzip2\n    - xz\n  run:\n    - zlib\n    - htslib\n    - bzip2\n    - xz\n\ntest:\n  commands:\n    - \'alleleCounter -h\'\n\nabout:\n  home: https://github.com/cancerit/alleleCount\n  license: GPLv3\n  summary: Support code for NGS copy number algorithms\n'
+
+/tests/tests/test_fix_verification.py:41: AssertionError
+_____________________ TestMetaYaml.test_build_number_is_7 ______________________
+
+self = <test_fix_verification.TestMetaYaml object at 0x7fca8329ed50>
+meta_content = '{% set version = "4.3.0" %}\n\npackage:\n  name: cancerit-allelecount\n  version: {{ version }}\n\nsource:\n  url: ht...e: https://github.com/cancerit/alleleCount\n  license: GPLv3\n  summary: Support code for NGS copy number algorithms\n'
+
+    def test_build_number_is_7(self, meta_content):
+        """Verify build number is 7 (fixed version)."""
+        # Look for build number in the build section
+        # The fix changes number from 6 to 7
+        pattern = r'build:\s*\n\s*number:\s*7'
+>       assert re.search(pattern, meta_content), \
+            "Expected build number 7, not found in meta.yaml"
+E       AssertionError: Expected build number 7, not found in meta.yaml
+E       assert None
+E        +  where None = <function search at 0x7fca850c78a0>('build:\\s*\\n\\s*number:\\s*7', '{% set version = "4.3.0" %}\n\npackage:\n  name: cancerit-allelecount\n  version: {{ version }}\n\nsource:\n  url: https://github.com/cancerit/alleleCount/archive/v{{ version }}.tar.gz\n  sha256: 5363ae12c2385c962728336a4498b1a29c9eaa3d4a24492d0debf897771cfd3c\n\nbuild:\n  number: 6\n  skip: True # [osx]\n\nrequirements:\n  build:\n    - make\n    - {{ compiler(\'c\') }}\n    - wget\n  host:\n    - htslib\n    - zlib\n    - bzip2\n    - xz\n  run:\n    - zlib\n    - htslib\n    - bzip2\n    - xz\n\ntest:\n  commands:\n    - \'alleleCounter -h\'\n\nabout:\n  home: https://github.com/cancerit/alleleCount\n  license: GPLv3\n  summary: Support code for NGS copy number algorithms\n')
+E        +    where <function search at 0x7fca850c78a0> = re.search
+
+/tests/tests/test_fix_verification.py:56: AssertionError
+____________________ TestMetaYaml.test_run_exports_present _____________________
+
+self = <test_fix_verification.TestMetaYaml object at 0x7fca831c1a70>
+meta_content = '{% set version = "4.3.0" %}\n\npackage:\n  name: cancerit-allelecount\n  version: {{ version }}\n\nsource:\n  url: ht...e: https://github.com/cancerit/alleleCount\n  license: GPLv3\n  summary: Support code for NGS copy number algorithms\n'
+
+    def test_run_exports_present(self, meta_content):
+        """Verify run_exports is present in build section."""
+>       assert 'run_exports' in meta_content, \
+            "Missing 'run_exports' in build section"
+E       AssertionError: Missing 'run_exports' in build section
+E       assert 'run_exports' in '{% set version = "4.3.0" %}\n\npackage:\n  name: cancerit-allelecount\n  version: {{ version }}\n\nsource:\n  url: https://github.com/cancerit/alleleCount/archive/v{{ version }}.tar.gz\n  sha256: 5363ae12c2385c962728336a4498b1a29c9eaa3d4a24492d0debf897771cfd3c\n\nbuild:\n  number: 6\n  skip: True # [osx]\n\nrequirements:\n  build:\n    - make\n    - {{ compiler(\'c\') }}\n    - wget\n  host:\n    - htslib\n    - zlib\n    - bzip2\n    - xz\n  run:\n    - zlib\n    - htslib\n    - bzip2\n    - xz\n\ntest:\n  commands:\n    - \'alleleCounter -h\'\n\nabout:\n  home: https://github.com/cancerit/alleleCount\n  license: GPLv3\n  summary: Support code for NGS copy number algorithms\n'
+
+/tests/tests/test_fix_verification.py:61: AssertionError
+____________________ TestMetaYaml.test_license_is_gpl3_only ____________________
+
+self = <test_fix_verification.TestMetaYaml object at 0x7fca831c1cd0>
+meta_content = '{% set version = "4.3.0" %}\n\npackage:\n  name: cancerit-allelecount\n  version: {{ version }}\n\nsource:\n  url: ht...e: https://github.com/cancerit/alleleCount\n  license: GPLv3\n  summary: Support code for NGS copy number algorithms\n'
+
+    def test_license_is_gpl3_only(self, meta_content):
+        """Verify license is GPL-3.0-only (not GPLv3)."""
+        # The fix changes 'license: GPLv3' to 'license: GPL-3.0-only'
+>       assert 'license: GPL-3.0-only' in meta_content, \
+            "Expected license 'GPL-3.0-only', not found in meta.yaml"
+E       AssertionError: Expected license 'GPL-3.0-only', not found in meta.yaml
+E       assert 'license: GPL-3.0-only' in '{% set version = "4.3.0" %}\n\npackage:\n  name: cancerit-allelecount\n  version: {{ version }}\n\nsource:\n  url: https://github.com/cancerit/alleleCount/archive/v{{ version }}.tar.gz\n  sha256: 5363ae12c2385c962728336a4498b1a29c9eaa3d4a24492d0debf897771cfd3c\n\nbuild:\n  number: 6\n  skip: True # [osx]\n\nrequirements:\n  build:\n    - make\n    - {{ compiler(\'c\') }}\n    - wget\n  host:\n    - htslib\n    - zlib\n    - bzip2\n    - xz\n  run:\n    - zlib\n    - htslib\n    - bzip2\n    - xz\n\ntest:\n  commands:\n    - \'alleleCounter -h\'\n\nabout:\n  home: https://github.com/cancerit/alleleCount\n  license: GPLv3\n  summary: Support code for NGS copy number algorithms\n'
+
+/tests/tests/test_fix_verification.py:72: AssertionError
+____________________ TestMetaYaml.test_license_file_present ____________________
+
+self = <test_fix_verification.TestMetaYaml object at 0x7fca831ef0b0>
+meta_content = '{% set version = "4.3.0" %}\n\npackage:\n  name: cancerit-allelecount\n  version: {{ version }}\n\nsource:\n  url: ht...e: https://github.com/cancerit/alleleCount\n  license: GPLv3\n  summary: Support code for NGS copy number algorithms\n'
+
+    def test_license_file_present(self, meta_content):
+        """Verify license_file is specified."""
+>       assert 'license_file: LICENCE' in meta_content, \
+            "Missing 'license_file: LICENCE' in meta.yaml"
+E       AssertionError: Missing 'license_file: LICENCE' in meta.yaml
+E       assert 'license_file: LICENCE' in '{% set version = "4.3.0" %}\n\npackage:\n  name: cancerit-allelecount\n  version: {{ version }}\n\nsource:\n  url: https://github.com/cancerit/alleleCount/archive/v{{ version }}.tar.gz\n  sha256: 5363ae12c2385c962728336a4498b1a29c9eaa3d4a24492d0debf897771cfd3c\n\nbuild:\n  number: 6\n  skip: True # [osx]\n\nrequirements:\n  build:\n    - make\n    - {{ compiler(\'c\') }}\n    - wget\n  host:\n    - htslib\n    - zlib\n    - bzip2\n    - xz\n  run:\n    - zlib\n    - htslib\n    - bzip2\n    - xz\n\ntest:\n  commands:\n    - \'alleleCounter -h\'\n\nabout:\n  home: https://github.com/cancerit/alleleCount\n  license: GPLv3\n  summary: Support code for NGS copy number algorithms\n'
+
+/tests/tests/test_fix_verification.py:83: AssertionError
+___________________ TestMetaYaml.test_license_family_present ___________________
+
+self = <test_fix_verification.TestMetaYaml object at 0x7fca831d28b0>
+meta_content = '{% set version = "4.3.0" %}\n\npackage:\n  name: cancerit-allelecount\n  version: {{ version }}\n\nsource:\n  url: ht...e: https://github.com/cancerit/alleleCount\n  license: GPLv3\n  summary: Support code for NGS copy number algorithms\n'
+
+    def test_license_family_present(self, meta_content):
+        """Verify license_family is specified."""
+>       assert 'license_family: GPL3' in meta_content, \
+            "Missing 'license_family: GPL3' in meta.yaml"
+E       AssertionError: Missing 'license_family: GPL3' in meta.yaml
+E       assert 'license_family: GPL3' in '{% set version = "4.3.0" %}\n\npackage:\n  name: cancerit-allelecount\n  version: {{ version }}\n\nsource:\n  url: https://github.com/cancerit/alleleCount/archive/v{{ version }}.tar.gz\n  sha256: 5363ae12c2385c962728336a4498b1a29c9eaa3d4a24492d0debf897771cfd3c\n\nbuild:\n  number: 6\n  skip: True # [osx]\n\nrequirements:\n  build:\n    - make\n    - {{ compiler(\'c\') }}\n    - wget\n  host:\n    - htslib\n    - zlib\n    - bzip2\n    - xz\n  run:\n    - zlib\n    - htslib\n    - bzip2\n    - xz\n\ntest:\n  commands:\n    - \'alleleCounter -h\'\n\nabout:\n  home: https://github.com/cancerit/alleleCount\n  license: GPLv3\n  summary: Support code for NGS copy number algorithms\n'
+
+/tests/tests/test_fix_verification.py:88: AssertionError
+_____________________ TestBuildSh.test_set_xeu_not_set_eu ______________________
+
+self = <test_fix_verification.TestBuildSh object at 0x7fca8329ead0>
+build_sh_content = '#!/bin/bash\nset -eu\nexport LIBRARY_PATH=${PREFIX}/lib\nexport INCPATH=${PREFIX}/include\n#export HTSLIB_VERSION=1.7...ix=${PREFIX}#g\' Makefile\nmake OPTINC="-I$PREFIX/include -L$PREFIX/lib"\nmkdir -p $PREFIX/bin\ncp bin/* $PREFIX/bin\n'
+
+    def test_set_xeu_not_set_eu(self, build_sh_content):
+        """Verify build.sh uses 'set -xeu' (with -x for debugging)."""
+        # The fix changes 'set -eu' to 'set -xeu'
+        lines = build_sh_content.split('\n')
+        set_line = None
+        for line in lines:
+            stripped = line.strip()
+            if stripped.startswith('set -'):
+                set_line = stripped
+                break
+    
+        assert set_line is not None, "Could not find 'set -' line in build.sh"
+>       assert 'xeu' in set_line or '-x' in set_line, \
+            f"Expected 'set -xeu' but found '{set_line}'. The fix adds -x for verbose debugging."
+E       AssertionError: Expected 'set -xeu' but found 'set -eu'. The fix adds -x for verbose debugging.
+E       assert ('xeu' in 'set -eu' or '-x' in 'set -eu')
+
+/tests/tests/test_fix_verification.py:112: AssertionError
+________________ TestBuildSh.test_parallel_make_with_cpu_count _________________
+
+self = <test_fix_verification.TestBuildSh object at 0x7fca8329f110>
+build_sh_content = '#!/bin/bash\nset -eu\nexport LIBRARY_PATH=${PREFIX}/lib\nexport INCPATH=${PREFIX}/include\n#export HTSLIB_VERSION=1.7...ix=${PREFIX}#g\' Makefile\nmake OPTINC="-I$PREFIX/include -L$PREFIX/lib"\nmkdir -p $PREFIX/bin\ncp bin/* $PREFIX/bin\n'
+
+    def test_parallel_make_with_cpu_count(self, build_sh_content):
+        """Verify build.sh uses parallel make with -j ${CPU_COUNT}."""
+        # The fix adds -j ${CPU_COUNT} to the make command
+        # Look for the make command with parallel flag
+>       assert '-j ${CPU_COUNT}' in build_sh_content or '-j${CPU_COUNT}' in build_sh_content, \
+            "build.sh should use parallel make with '-j ${CPU_COUNT}'"
+E       AssertionError: build.sh should use parallel make with '-j ${CPU_COUNT}'
+E       assert ('-j ${CPU_COUNT}' in '#!/bin/bash\nset -eu\nexport LIBRARY_PATH=${PREFIX}/lib\nexport INCPATH=${PREFIX}/include\n#export HTSLIB_VERSION=1.7\n#wget --ca-certificate=$PREFIX/ssl/cert.pem -O htslib-${HTSLIB_VERSION}.tar.bz2 https://github.com/samtools/htslib/releases/download/${HTSLIB_VERSION}/htslib-${HTSLIB_VERSION}.tar.bz2\n#tar -xjvpf htslib-${HTSLIB_VERSION}.tar.bz2\n#cd htslib-${HTSLIB_VERSION}\n#patch -p0 < $SRC_DIR/patches/htslibcramindex.diff\n#./configure --prefix=${PREFIX} --enable-libcurl --with-libdeflate --enable-plugins --enable-gcs --enable-s3\n#make install\n#cd ../c\ncd $SRC_DIR/c\nmkdir bin\n#Inject CC\nsed -i \'s/CC = gcc /compiler = ${CC} /g\' Makefile\nsed -i \'s/$(CC) /$(compiler) /g\' Makefile\n#Force HTSLIb locations\nsed -i \'s#HTSLOC?=$(HTSLIB)#HTSLOC=${PREFIX}/lib#g\' Makefile\nsed -i \'s#prefix=?/usr/local#prefix=${PREFIX}#g\' Makefile\nmake OPTINC="-I$PREFIX/include -L$PREFIX/lib"\nmkdir -p $PREFIX/bin\ncp bin/* $PREFIX/bin\n' or '-j${CPU_COUNT}' in '#!/bin/bash\nset -eu\nexport LIBRARY_PATH=${PREFIX}/lib\nexport INCPATH=${PREFIX}/include\n#export HTSLIB_VERSION=1.7\n#wget --ca-certificate=$PREFIX/ssl/cert.pem -O htslib-${HTSLIB_VERSION}.tar.bz2 https://github.com/samtools/htslib/releases/download/${HTSLIB_VERSION}/htslib-${HTSLIB_VERSION}.tar.bz2\n#tar -xjvpf htslib-${HTSLIB_VERSION}.tar.bz2\n#cd htslib-${HTSLIB_VERSION}\n#patch -p0 < $SRC_DIR/patches/htslibcramindex.diff\n#./configure --prefix=${PREFIX} --enable-libcurl --with-libdeflate --enable-plugins --enable-gcs --enable-s3\n#make install\n#cd ../c\ncd $SRC_DIR/c\nmkdir bin\n#Inject CC\nsed -i \'s/CC = gcc /compiler = ${CC} /g\' Makefile\nsed -i \'s/$(CC) /$(compiler) /g\' Makefile\n#Force HTSLIb locations\nsed -i \'s#HTSLOC?=$(HTSLIB)#HTSLOC=${PREFIX}/lib#g\' Makefile\nsed -i \'s#prefix=?/usr/local#prefix=${PREFIX}#g\' Makefile\nmake OPTINC="-I$PREFIX/include -L$PREFIX/lib"\nmkdir -p $PREFIX/bin\ncp bin/* $PREFIX/bin\n')
+
+/tests/tests/test_fix_verification.py:122: AssertionError
+=========================== short test summary info ============================
+FAILED ../tests/tests/test_fix_verification.py::TestMetaYaml::test_additional_platforms_linux_aarch64
+FAILED ../tests/tests/test_fix_verification.py::TestMetaYaml::test_build_number_is_7
+FAILED ../tests/tests/test_fix_verification.py::TestMetaYaml::test_run_exports_present
+FAILED ../tests/tests/test_fix_verification.py::TestMetaYaml::test_license_is_gpl3_only
+FAILED ../tests/tests/test_fix_verification.py::TestMetaYaml::test_license_file_present
+FAILED ../tests/tests/test_fix_verification.py::TestMetaYaml::test_license_family_present
+FAILED ../tests/tests/test_fix_verification.py::TestBuildSh::test_set_xeu_not_set_eu
+FAILED ../tests/tests/test_fix_verification.py::TestBuildSh::test_parallel_make_with_cpu_count
+============================== 8 failed in 0.04s ===============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

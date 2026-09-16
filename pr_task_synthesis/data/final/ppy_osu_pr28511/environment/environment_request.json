@@ -1,0 +1,51 @@
+{
+  "base_image_candidate": "mcr.microsoft.com/dotnet/sdk:8.0",
+  "system_packages": [
+    "git",
+    "curl",
+    "wget",
+    "apt-transport-https"
+  ],
+  "base_setup_commands": [
+    "apt-get update -qq",
+    "apt-get install -y -qq git curl wget apt-transport-https",
+    "wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O /tmp/packages-microsoft-prod.deb",
+    "dpkg -i /tmp/packages-microsoft-prod.deb",
+    "rm -f /tmp/packages-microsoft-prod.deb",
+    "apt-get update -qq",
+    "apt-get install -y -qq dotnet-sdk-8.0"
+  ],
+  "setup_runtime_commands": [
+    "export DOTNET_ROOT=/usr/share/dotnet",
+    "export PATH=$PATH:$DOTNET_ROOT",
+    "dotnet --version"
+  ],
+  "activation_commands": [
+    "export DOTNET_ROOT=/usr/share/dotnet",
+    "export PATH=$PATH:$DOTNET_ROOT"
+  ],
+  "activation_command": "export DOTNET_ROOT=/usr/share/dotnet && export PATH=$PATH:$DOTNET_ROOT",
+  "activation_type": "system",
+  "activation_validation_command": "bash -c 'export DOTNET_ROOT=/usr/share/dotnet && export PATH=$PATH:$DOTNET_ROOT && dotnet --version && echo ACTIVATION_OK'",
+  "detected_test_command": "dotnet run --project /tmp/timestamp_test/TimestampTest.csproj",
+  "runtime_smoke_command": "dotnet --version && dotnet --info",
+  "runtime_profile": {
+    "ecosystem": ".NET",
+    "package_manager": "NuGet (via dotnet CLI) - offline mode using BCL only",
+    "env": "system",
+    "env_name": "dotnet-sdk-8.0",
+    "prepare_commands": [
+      "export DOTNET_ROOT=/usr/share/dotnet",
+      "export PATH=$PATH:$DOTNET_ROOT"
+    ],
+    "activation_commands": [
+      "export DOTNET_ROOT=/usr/share/dotnet",
+      "export PATH=$PATH:$DOTNET_ROOT"
+    ],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "Test runner uses only .NET BCL (Base Class Library) - no external NuGet packages required. Uses dotnet run with a console app that mimics test output format for H6 recognition.",
+    "cache_dirs": [],
+    "notes": ".NET SDK 8.0 is installed at system level. No virtual environment needed. Test execution uses dotnet run with a self-contained console app that requires only BCL types (System, System.Globalization). No external NuGet packages are needed, making it fully offline-capable."
+  },
+  "notes": "Base image mcr.microsoft.com/dotnet/sdk:8.0 already includes .NET 8.0 SDK, git, and curl. The setup_runtime.sh script is idempotent and will skip installation if dotnet is already available. This is a cross-platform C# project targeting .NET 8.0. Test execution uses a BCL-only console app (no NUnit) for offline compatibility. The test app references the workspace osu.Game project to test EditorTimestampParser directly."
+}

@@ -1,0 +1,104 @@
+{
+  "build_context": {
+    "base_image": "debian:bookworm",
+    "platform": "linux/amd64",
+    "dockerfile": "Dockerfile.final",
+    "build_args": [],
+    "labels": {
+      "org.openenv.project": "apache-sedona",
+      "org.openenv.runtime": "jdk17-maven-python-venv",
+      "org.openenv.description": "Apache Sedona spatial computing engine benchmark environment"
+    }
+  },
+  "build_context_files": {
+    "repo_setup_script": {
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh",
+      "purpose": "Materialize /workspace from git repository"
+    },
+    "setup_runtime_script": {
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh",
+      "purpose": "Create Python venv and install base dependencies"
+    }
+  },
+  "system_packages": [
+    "git",
+    "curl",
+    "openjdk-17-jdk-headless",
+    "maven",
+    "build-essential",
+    "libgeos-dev",
+    "libgeos-c1v5",
+    "python3",
+    "python3-pip",
+    "python3-venv",
+    "python3-dev"
+  ],
+  "environment_variables": {
+    "DEBIAN_FRONTEND": "noninteractive",
+    "JAVA_HOME": "/usr/lib/jvm/java-17-openjdk-amd64",
+    "PATH": "/usr/lib/jvm/java-17-openjdk-amd64/bin:$PATH"
+  },
+  "build_steps": [
+    {
+      "step": 1,
+      "action": "FROM",
+      "description": "Use debian:bookworm as base image"
+    },
+    {
+      "step": 2,
+      "action": "ENV",
+      "description": "Set environment variables for noninteractive mode and Java"
+    },
+    {
+      "step": 3,
+      "action": "RUN",
+      "description": "Install system packages via apt-get"
+    },
+    {
+      "step": 4,
+      "action": "COPY",
+      "description": "Copy repo_setup.sh and setup_runtime.sh to /opt/benchmark/"
+    },
+    {
+      "step": 5,
+      "action": "RUN",
+      "description": "Execute repo_setup.sh to clone repository to /workspace"
+    },
+    {
+      "step": 6,
+      "action": "RUN",
+      "description": "Execute setup_runtime.sh to create Python venv and install dependencies"
+    },
+    {
+      "step": 7,
+      "action": "WORKDIR",
+      "description": "Set working directory to /workspace"
+    }
+  ],
+  "runtime_mounts": {
+    "note": "The following are runtime-mounted, not baked into the image",
+    "excluded_from_image": [
+      "/artifacts/evaluation/eval.sh",
+      "/artifacts/evaluation/test.patch",
+      "/artifacts/evaluation/tests/"
+    ]
+  },
+  "repo_materialization": {
+    "mode": "git_clone_during_build",
+    "repository": "https://github.com/apache/sedona.git",
+    "commit": "6954eecfb50d5b1b4b0b08be32bb95bee1aa4d01",
+    "script": "/opt/benchmark/repo_setup.sh"
+  },
+  "python_environment": {
+    "type": "venv",
+    "location": "/workspace/python/.venv",
+    "packages_installed": [
+      "apache-sedona (editable)",
+      "pytest"
+    ]
+  },
+  "build_backend": "buildah",
+  "export_artifact": "/artifacts/environment/openenv_validation_oci.tar"
+}

@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "apache_flink-cdc_pr3515"
+description = "OpenEnv: apache/flink-cdc PR #3515"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/apache/flink-cdc.git"
+git_pr_id = "3515"
+git_base_commit = "e2bb917ad02c5fd8ee3ec898842d9f0c1aac5f5c"
+task_id = "apache_flink-cdc_pr3515"
+repo_full_name = "apache/flink-cdc"
+domain = "DATA_ENGINEERING_ETL"
+primary_language = "Java"
+runtime_family = "java"
+complexity = "medium"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

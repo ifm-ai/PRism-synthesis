@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "rust:1.79-slim-bookworm",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Rust 1.79 toolchain with cargo, protobuf-compiler for proto generation, git and curl as baseline packages. Workspace at /workspace/native with members: core, spark-expr, proto.",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "Finished `test` profile [unoptimized + debuginfo] target(s) in 0.22s\n     Running unittests src/lib.rs (target/debug/deps/comet-ce42df9517c57f6f)\ncommon::bit::tests::test_bit_reader_get_aligned: test\ncommon::bit::tests::test_bit_reader_get_byte_offset: test\ncommon::bit::tests::test_bit_reader_get_value: test",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "source /opt/cargo/env",
+  "notes": "Environment successfully created. Rust 1.79 installed via rustup. Protobuf-compiler installed. Setup script verified against probe directory. Test runner (cargo test) is reachable and can list tests. The project compiles and tests are discoverable."
+}

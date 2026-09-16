@@ -1,0 +1,10 @@
+{
+  "status": "complete",
+  "solver_outcome": "partial",
+  "oracle_outcome": "fail",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "Solver made meaningful progress on both issues but localized the duplicate attribute fix to the wrong file (shader-processor.js instead of shader-utils.js). The sampler uniform conditional compilation was correctly implemented. This is a valuable RL example showing partial progress with a file localization error."
+}

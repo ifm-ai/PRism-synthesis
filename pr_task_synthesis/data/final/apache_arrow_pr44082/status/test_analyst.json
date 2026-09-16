@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "official_verifier": {
+    "execution_mode": "real_execution",
+    "test_only_exit_code": 1,
+    "test_with_fix_exit_code": 0
+  },
+  "non_discriminating": false,
+  "notes": "H6:no-test-runner-invocation fix verified. eval.sh now uses 'python3 -m pytest' as the test runner invocation. Two-run preflight passed: testOnly=1 (8 tests failed on buggy code), testWithFix=0 (8 tests passed on fixed code). Verifier alignment is direct - tests cover BytesForItems template, specializations, and SetBytesProcessed changes from fix.patch. No hacking flags detected."
+}

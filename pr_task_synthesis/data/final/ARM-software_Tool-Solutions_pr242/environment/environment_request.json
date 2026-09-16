@@ -1,0 +1,94 @@
+{
+  "base_image_candidate": "ubuntu:22.04",
+  "system_packages": [
+    "python3",
+    "python3-venv",
+    "python3-pip",
+    "python3-dev",
+    "git",
+    "curl",
+    "protobuf-compiler",
+    "libprotoc-dev",
+    "libbz2-dev",
+    "libcgal-dev",
+    "libffi-dev",
+    "libfreetype6-dev",
+    "libhdf5-dev",
+    "libjpeg-dev",
+    "liblzma-dev",
+    "libncurses5-dev",
+    "libncursesw5-dev",
+    "libpng-dev",
+    "libreadline-dev",
+    "libsqlite3-dev",
+    "libssl-dev",
+    "libxml2-dev",
+    "libxslt-dev",
+    "zlib1g-dev"
+  ],
+  "base_setup_commands": [
+    "apt-get update -qq && apt-get install -y -qq python3 python3-venv python3-pip python3-dev git curl",
+    "update-alternatives --install /usr/bin/python python /usr/bin/python3 1",
+    "update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1"
+  ],
+  "setup_runtime_commands": [
+    "python3 -m venv /opt/benchmark/mlcommons-venv",
+    "source /opt/benchmark/mlcommons-venv/bin/activate",
+    "pip install --no-cache-dir --upgrade pip",
+    "pip install --no-cache-dir 'setuptools>=41.0.0' six mock wheel cython",
+    "pip install --no-cache-dir pybind11[global]==2.6.2 pyangbind pythran",
+    "pip install --no-cache-dir numpy==1.25.2 scipy==1.10.1",
+    "pip install --no-cache-dir hypothesis pyyaml pytest matplotlib",
+    "pip install --no-cache-dir 'pillow>=9.0' lmdb ck==1.55.5 absl-py pycocotools typing_extensions",
+    "pip install --no-cache-dir transformers==4.32.1 pandas",
+    "pip install --no-cache-dir scikit-build && pip uninstall -y enum34 2>/dev/null || true",
+    "pip install --no-cache-dir opencv-python-headless==4.8.0.74",
+    "pip install --no-cache-dir 'librosa==0.10.0'",
+    "pip install --no-cache-dir requests tqdm boto3 iopath unidecode inflect toml",
+    "pip install --no-cache-dir future onnx==1.15.0",
+    "pip install --no-cache-dir sox",
+    "pip install --no-cache-dir torch==2.2.0 torchvision==0.17.0 torchaudio==2.2.0"
+  ],
+  "activation_commands": [
+    "source /opt/benchmark/mlcommons-venv/bin/activate"
+  ],
+  "activation_command": "source /opt/benchmark/mlcommons-venv/bin/activate",
+  "activation_type": "venv",
+  "activation_validation_command": "bash -c 'source /opt/benchmark/mlcommons-venv/bin/activate && python -c \"import sys; print(sys.prefix)\"'",
+  "detected_test_command": "cd /workspace/docker/pytorch-aarch64/examples && python classify_image.py",
+  "runtime_smoke_command": "python -c \"import librosa; print(librosa.__version__); import torch; print(torch.__version__)\"",
+  "runtime_profile": {
+    "ecosystem": "Python",
+    "package_manager": "pip",
+    "env": "venv",
+    "env_name": "mlcommons-venv",
+    "env_path": "/opt/benchmark/mlcommons-venv",
+    "prepare_commands": [
+      "python3 -m venv /opt/benchmark/mlcommons-venv",
+      "source /opt/benchmark/mlcommons-venv/bin/activate",
+      "pip install --no-cache-dir --upgrade pip",
+      "pip install -r requirements.txt 2>/dev/null || pip install numpy scipy librosa torch"
+    ],
+    "activation_commands": [
+      "source /opt/benchmark/mlcommons-venv/bin/activate"
+    ],
+    "base_deps_installed": [
+      "numpy>=1.25.2",
+      "scipy==1.10.1",
+      "librosa==0.10.0",
+      "torch==2.2.0",
+      "torchvision==0.17.0",
+      "torchaudio==2.2.0",
+      "transformers==4.32.1",
+      "opencv-python-headless==4.8.0.74"
+    ],
+    "test_only_install_strategy": "pip install --no-cache-dir pytest hypothesis",
+    "cache_dirs": [
+      "/opt/benchmark/mlcommons-venv",
+      "/root/.cache/pip",
+      "/root/.cache/torch"
+    ],
+    "notes": "Python 3.10+ virtualenv with MLCommons RNNT speech recognition dependencies. librosa==0.10.0 is the key dependency with API compatibility fixes. PyTorch 2.2.0 for inference. The actual AArch64 Docker build compiles PyTorch from source with ARM optimizations, but standard wheels work for x86_64 testing."
+  },
+  "notes": "MLCommons RNNT speech recognition benchmark environment. The fix addresses librosa API compatibility issues where function signatures changed in newer versions (requiring keyword arguments like sr=, orig_sr=, target_sr=, top_db=, n_fft=). Also fixes torch.stft return_complex handling and numpy array dtype for coco.py. Base image is ubuntu:22.04 with Python 3.10+. The virtual environment is at /opt/benchmark/mlcommons-venv. Git and curl are included in system packages. The repo uses pip with virtualenv, not conda. Note: pillow 6.1 from original Dockerfile is incompatible with Python 3.11, so pillow>=9.0 is used instead."
+}

@@ -1,0 +1,87 @@
+{
+  "pr_summary": "Fix AttributeError when accessing logprobs attribute from Azure OpenAI chat completion choices. The issue is that Azure OpenAI responses may not include the logprobs field, causing an AttributeError when the code tries to access choice.logprobs directly. The fix uses getattr(choice, 'logprobs', None) to safely access the attribute.",
+  "runtime_family": "python",
+  "package_manager": "poetry",
+  "touched_files": [
+    "python/semantic_kernel/connectors/ai/open_ai/services/open_ai_chat_completion_base.py"
+  ],
+  "important_build_files": [
+    "python/pyproject.toml",
+    "python/poetry.lock"
+  ],
+  "important_test_files": [
+    "python/tests/unit/ai/open_ai/services/test_openai_chat_completion.py",
+    "python/tests/unit/ai/open_ai/services/test_azure_chat_completion.py",
+    "python/tests/conftest.py"
+  ],
+  "candidate_build_commands": [
+    "cd python && poetry install",
+    "cd python && pip install -e ."
+  ],
+  "candidate_test_commands": [
+    "cd python && pytest tests/unit/ai/open_ai/services/test_openai_chat_completion.py -v",
+    "cd python && pytest tests/unit/ai/open_ai/services/test_azure_chat_completion.py -v",
+    "cd python && pytest tests/unit/ai/open_ai/ -v"
+  ],
+  "candidate_smoke_commands": [
+    "cd python && python -c 'import semantic_kernel; print(semantic_kernel.__version__)'",
+    "cd python && python -c 'from semantic_kernel.connectors.ai.open_ai.services.open_ai_chat_completion_base import OpenAIChatCompletionBase; print(\"Import successful\")'"
+  ],
+  "candidate_activation_checks": [
+    "python --version",
+    "poetry --version",
+    "pip list | grep semantic-kernel"
+  ],
+  "environment_management": {
+    "type": "poetry",
+    "python_version": "^3.8",
+    "dev_dependencies": [
+      "pytest",
+      "pytest-asyncio",
+      "pytest-cov",
+      "black",
+      "ruff",
+      "pre-commit"
+    ],
+    "main_dependencies": [
+      "aiohttp",
+      "numpy",
+      "openai",
+      "aiofiles",
+      "python-dotenv",
+      "regex",
+      "openapi_core",
+      "prance",
+      "pydantic",
+      "motor"
+    ]
+  },
+  "special_system_dependencies": [],
+  "high_value_files": [
+    "python/pyproject.toml",
+    "python/semantic_kernel/connectors/ai/open_ai/services/open_ai_chat_completion_base.py",
+    "python/tests/unit/ai/open_ai/services/test_openai_chat_completion.py",
+    "python/tests/unit/ai/open_ai/services/test_azure_chat_completion.py"
+  ],
+  "patch_file_cues": {
+    "method_modified": "_get_metadata_from_chat_choice",
+    "line_changed": 201,
+    "change_type": "attribute_access_safety",
+    "attribute": "logprobs",
+    "technique": "getattr_with_default"
+  },
+  "test_file_cues": {
+    "unit_tests_exist": true,
+    "azure_specific_tests_exist": true,
+    "test_framework": "pytest",
+    "async_tests": true,
+    "mocking_used": "unittest.mock.AsyncMock"
+  },
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "python/pyproject.toml - standard Python package with no platform-specific constraints",
+    "python/semantic_kernel/connectors/ai/open_ai/services/open_ai_chat_completion_base.py - pure Python code using openai library",
+    "tests use pytest with standard mocking - cross-platform compatible"
+  ],
+  "notes": "This is a Python project using Poetry for dependency management. The fix is a simple one-line change to use getattr() for safe attribute access. The project requires Python 3.8+ and uses pytest for testing with pytest-asyncio for async test support. The modified file is in the OpenAI connector services, specifically handling chat completion metadata extraction. Tests exist for both OpenAI and Azure OpenAI chat completion services."
+}

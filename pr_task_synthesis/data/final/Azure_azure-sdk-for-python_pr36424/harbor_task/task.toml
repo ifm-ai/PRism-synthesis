@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "Azure_azure-sdk-for-python_pr36424"
+description = "OpenEnv: Azure/azure-sdk-for-python PR #36424"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/Azure/azure-sdk-for-python.git"
+git_pr_id = "36424"
+git_base_commit = "2e524a847bef14cdc6a640ab3b4b633013880126"
+task_id = "Azure_azure-sdk-for-python_pr36424"
+repo_full_name = "Azure/azure-sdk-for-python"
+domain = "ML_DEEP_LEARNING"
+primary_language = "Python"
+runtime_family = "Python"
+complexity = "medium"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

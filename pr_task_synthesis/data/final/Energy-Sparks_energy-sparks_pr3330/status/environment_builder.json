@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "ruby:3.1-bookworm",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Ruby 3.1 with bundler 2.3.7, bundle path /opt/benchmark/vendor/bundle, 282 gems installed including rspec and prime for testing",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "RSpec 3.12\n  - rspec-core 3.12.2\n  - rspec-expectations 3.12.3\n  - rspec-mocks 3.12.6\n  - rspec-rails 6.1.0\n  - rspec-support 3.12.1",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "export BUNDLE_PATH=/opt/benchmark/vendor/bundle && export BUNDLE_APP_CONFIG=/opt/benchmark/.bundle && export PATH=$PATH:/opt/benchmark/vendor/bundle/ruby/3.1.0/bin",
+  "notes": "Fixed setup_runtime.sh to explicitly cd to /workspace before running bundle install and added prime gem injection (if not already present in Gemfile) to satisfy the distribution/statsample dependency requirement for Ruby 3.x. The prime gem was extracted from the Ruby 3.1 standard library and must be declared as an explicit dependency. Bundle install completed successfully with 282 gems installed including prime 0.1.4. RSpec is reachable via bundle exec rspec."
+}

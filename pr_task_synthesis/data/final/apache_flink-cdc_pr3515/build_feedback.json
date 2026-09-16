@@ -1,0 +1,24 @@
+{
+  "is_finish": true,
+  "build_backend": "buildah",
+  "buildable": false,
+  "failure_class": "tool_unavailable",
+  "failure_domain": "tooling",
+  "agent_fixable": false,
+  "route_to": null,
+  "blocking_errors": [
+    "Build process terminated due to timeout (600s limit exceeded)",
+    "Build was progressing through Maven dependency resolution when killed",
+    "No spec errors detected - Dockerfile.final, setup_runtime.sh, and repo_setup.sh are valid"
+  ],
+  "warnings": [
+    "Maven -release flag warning for Java 8 (non-blocking)",
+    "Large repository clone and Maven build may require extended timeout"
+  ],
+  "next_actions": [
+    "Increase build timeout for large Maven projects",
+    "Consider pre-caching Maven dependencies outside the container build",
+    "Alternatively, use a smaller base image or optimize Maven build steps"
+  ],
+  "notes": "The container specification is valid. The build failed due to infrastructure timeout constraints, not due to errors in the Dockerfile or setup scripts. The build was successfully executing: apt-get install completed, repo_setup.sh cloned the repository, setup_runtime.sh installed Java 8 and was running Maven commands when the process was terminated. This is a tooling/infra limitation that the agent cannot fix by editing artifacts."
+}

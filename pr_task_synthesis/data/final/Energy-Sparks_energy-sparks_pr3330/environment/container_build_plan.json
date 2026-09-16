@@ -1,0 +1,111 @@
+{
+  "base_image": "ruby:3.1-bookworm",
+  "build_context_files": [
+    "repo_setup.sh",
+    "setup_runtime.sh"
+  ],
+  "system_packages": [
+    "git",
+    "curl",
+    "postgresql-client",
+    "libpq-dev",
+    "nodejs",
+    "npm",
+    "build-essential",
+    "libssl-dev",
+    "zlib1g-dev",
+    "libreadline-dev",
+    "libsqlite3-dev",
+    "libxml2-dev",
+    "libxslt1-dev",
+    "ruby-dev"
+  ],
+  "base_setup_commands": [
+    "apt-get update -qq && apt-get install -y -qq git curl postgresql-client libpq-dev nodejs npm build-essential libssl-dev zlib1g-dev libreadline-dev libsqlite3-dev libxml2-dev libxslt1-dev ruby-dev && rm -rf /var/lib/apt/lists/*",
+    "gem install bundler --no-document",
+    "gem install prime --no-document"
+  ],
+  "copied_artifacts": [
+    {
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh",
+      "purpose": "Repository materialization script"
+    },
+    {
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh",
+      "purpose": "Runtime dependency installation script"
+    }
+  ],
+  "build_steps": [
+    {
+      "step": 1,
+      "action": "FROM",
+      "description": "Use Ruby 3.1 with Debian Bookworm base image"
+    },
+    {
+      "step": 2,
+      "action": "RUN",
+      "description": "Install system packages via apt-get"
+    },
+    {
+      "step": 3,
+      "action": "RUN",
+      "description": "Install bundler and prime gems"
+    },
+    {
+      "step": 4,
+      "action": "RUN",
+      "description": "Create /opt/benchmark directory"
+    },
+    {
+      "step": 5,
+      "action": "COPY",
+      "description": "Copy repo_setup.sh and setup_runtime.sh to /opt/benchmark/"
+    },
+    {
+      "step": 6,
+      "action": "RUN",
+      "description": "Make scripts executable"
+    },
+    {
+      "step": 7,
+      "action": "RUN",
+      "description": "Execute repo_setup.sh to materialize /workspace from git repository"
+    },
+    {
+      "step": 8,
+      "action": "RUN",
+      "description": "Execute setup_runtime.sh to install Ruby bundler dependencies"
+    },
+    {
+      "step": 9,
+      "action": "WORKDIR",
+      "description": "Set working directory to /workspace"
+    }
+  ],
+  "runtime_mounted_assets": [
+    {
+      "asset": "eval.sh",
+      "source": "/artifacts/evaluation/eval.sh",
+      "mount_location": "/opt/benchmark/eval.sh",
+      "purpose": "Verifier script - NOT baked into image"
+    },
+    {
+      "asset": "test.patch",
+      "source": "/artifacts/evaluation/test.patch",
+      "mount_location": "/opt/benchmark/test.patch",
+      "purpose": "Test patch for applying test files - NOT baked into image"
+    }
+  ],
+  "environment_variables": {
+    "BUNDLE_PATH": "/opt/benchmark/vendor/bundle",
+    "BUNDLE_APP_CONFIG": "/opt/benchmark/.bundle",
+    "PATH": "$PATH:/opt/benchmark/vendor/bundle/ruby/3.1.0/bin"
+  },
+  "working_directory": "/workspace",
+  "repo_materialization_mode": "git_clone_during_build",
+  "ecosystem": "ruby",
+  "package_manager": "bundler",
+  "notes": "Image built with Ruby 3.1, bundler for dependency management, and Node.js/npm for JavaScript assets. Repository is cloned during build using repo_setup.sh. Runtime verifier assets (eval.sh, test.patch) are mounted at runtime, not baked into the image."
+}

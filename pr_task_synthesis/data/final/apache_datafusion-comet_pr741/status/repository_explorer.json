@@ -1,0 +1,50 @@
+{
+  "status": "success",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "CI runs on ubuntu-latest container with amd64/rust image",
+    "Linux shared library output (.so) in Makefile targets",
+    "Cross-compilation support for Linux x86_64 and aarch64",
+    "No Windows-specific dependencies or MSVC requirements",
+    "Project builds and tests successfully on Linux containers"
+  ],
+  "build_system": "Cargo (Rust) + Maven (Java/Scala)",
+  "test_command": "cd native && cargo test",
+  "key_paths": {
+    "rust_source": "/workspace/native",
+    "rust_core": "/workspace/native/core",
+    "rust_spark_expr": "/workspace/native/spark-expr",
+    "touched_files": [
+      "/workspace/native/core/src/execution/datafusion/planner.rs",
+      "/workspace/native/spark-expr/src/scalar_funcs.rs"
+    ],
+    "jvm_source": "/workspace/common",
+    "spark_integration": "/workspace/spark",
+    "test_suites": [
+      "/workspace/spark/src/test/scala/org/apache/comet/CometExpressionSuite.scala",
+      "/workspace/spark/src/test/scala/org/apache/comet/exec/CometExecSuite.scala"
+    ],
+    "build_files": [
+      "/workspace/native/Cargo.toml",
+      "/workspace/native/core/Cargo.toml",
+      "/workspace/native/spark-expr/Cargo.toml",
+      "/workspace/pom.xml",
+      "/workspace/Makefile"
+    ],
+    "ci_workflows": [
+      "/workspace/.github/workflows/pr_build.yml",
+      "/workspace/.github/actions/rust-test/action.yaml",
+      "/workspace/.github/actions/setup-builder/action.yaml"
+    ]
+  },
+  "high_value_files": [
+    "/workspace/native/core/src/execution/datafusion/planner.rs",
+    "/workspace/native/spark-expr/src/scalar_funcs.rs",
+    "/workspace/native/Cargo.toml",
+    "/workspace/.github/workflows/pr_build.yml",
+    "/workspace/.github/actions/rust-test/action.yaml",
+    "/workspace/Makefile"
+  ],
+  "notes": "Repository exploration complete. The project is a cross-platform Rust + Java/Scala project that builds and tests on Linux x86-64 containers. The fix.patch modifies Rust code for Decimal128 arithmetic optimization. No platform blockers identified - the FIX/TEST PATH is fully runnable in a Linux x86-64 container."
+}

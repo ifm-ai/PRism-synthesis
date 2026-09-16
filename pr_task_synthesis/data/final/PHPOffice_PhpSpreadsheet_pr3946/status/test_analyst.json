@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "official_verifier": {
+    "execution_mode": "container_preflight",
+    "test_only_exit_code": 2,
+    "test_with_fix_exit_code": 0
+  },
+  "non_discriminating": false,
+  "notes": "Local preflight verification completed using buildah containers. testOnly (buggy code) FAILED with exit code 2 (Error: Typed property Conditional::$text must not be accessed before initialization). testWithFix (fixed code) PASSED with exit code 0 (OK: 1 test, 1 assertion). The verifier correctly discriminates between buggy and fixed states. eval.sh is correctly structured: applies test.patch via git apply, invokes vendor/bin/phpunit as real test runner, captures exit code with RC=$?, and emits OPENENV_EXIT_CODE. Test in test.patch correctly validates the fix in fix.patch (Conditional::$text initialization for CONDITION_CONTAINSTEXT). Container build validation succeeded with php:8.2-cli base image, PHP and Composer installed and verified."
+}

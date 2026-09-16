@@ -1,9 +1,0 @@
-{
-  "status": "success",
-  "blocks_outer_progress": false,
-  "build_backend": "buildah",
-  "buildable": true,
-  "failure_class": "success",
-  "route_to": null,
-  "notes": "Container image successfully built and exported to OCI archive. Build required one retry due to transient network failure during PyTorch download."
-}

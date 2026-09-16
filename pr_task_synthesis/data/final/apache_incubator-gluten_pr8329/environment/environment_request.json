@@ -1,0 +1,67 @@
+{
+  "base_image_candidate": "eclipse-temurin:17-jdk-jammy",
+  "system_packages": [
+    "git",
+    "curl",
+    "maven",
+    "scala",
+    "python3",
+    "python3-pytest"
+  ],
+  "base_setup_commands": [
+    "apt-get update && apt-get install -y git curl maven scala python3 python3-pytest",
+    "ln -sf /usr/bin/py.test /usr/bin/pytest",
+    "export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64",
+    "export MAVEN_HOME=/usr/share/maven",
+    "export SCALA_HOME=/usr/share/scala"
+  ],
+  "setup_runtime_commands": [
+    "export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64",
+    "export PATH=$JAVA_HOME/bin:$PATH",
+    "export MAVEN_HOME=/usr/share/maven",
+    "export MAVEN_OPTS=\"-Xmx2g -XX:MaxMetaspaceSize=512m\"",
+    "export SCALA_HOME=/usr/share/scala",
+    "apt-get update -qq && apt-get install -y python3-pytest -qq",
+    "ln -sf /usr/bin/py.test /usr/bin/pytest 2>/dev/null || true"
+  ],
+"activation_commands": [
+    "export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64 && export PATH=$JAVA_HOME/bin:$PATH && export MAVEN_HOME=/usr/share/maven && export MAVEN_OPTS=\"-Xmx2g -XX:MaxMetaspaceSize=512m\""
+  ],
+  "activation_command": "export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64 && export PATH=$JAVA_HOME/bin:$PATH && export MAVEN_HOME=/usr/share/maven",
+  "activation_validation_command": "bash -c 'export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64 && export PATH=$JAVA_HOME/bin:$PATH && java -version && mvn --version'",
+  "detected_test_command": "mvn test",
+  "runtime_smoke_command": "mvn -v && java -version",
+  "runtime_profile": {
+    "ecosystem": "Java/Scala",
+    "package_manager": "Maven",
+    "env": {
+      "JAVA_HOME": "/usr/lib/jvm/temurin-17-jdk-amd64",
+      "MAVEN_HOME": "/usr/share/maven",
+      "MAVEN_OPTS": "-Xmx2g -XX:MaxMetaspaceSize=512m",
+      "SCALA_HOME": "/usr/share/scala"
+    },
+    "env_name": "system-jdk17-maven",
+    "prepare_commands": [
+      "export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64",
+      "export PATH=$JAVA_HOME/bin:$PATH",
+      "export MAVEN_HOME=/usr/share/maven",
+      "export MAVEN_OPTS=\"-Xmx2g -XX:MaxMetaspaceSize=512m\""
+    ],
+    "activation_commands": [
+      "export JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64 && export PATH=$JAVA_HOME/bin:$PATH && export MAVEN_HOME=/usr/share/maven"
+    ],
+    "base_deps_installed": [
+      "temurin-17-jdk",
+      "maven",
+      "scala"
+    ],
+    "test_only_install_strategy": "system-level",
+    "cache_dirs": [
+      "/root/.m2",
+      "/root/.ivy2",
+      "/root/.cache/coursier"
+    ],
+    "notes": "System-level Java/Maven/Scala installation. No virtual environment needed. The fix modifies .idea/vcs.xml (IDE configuration), not runtime code. Environment supports Maven builds and ScalaTest execution. pytest installed via apt python3-pytest with symlink from py.test to pytest for command availability."
+  },
+  "notes": "Apache Gluten is a Java/Scala Maven project. The fix.patch modifies .idea/vcs.xml (IntelliJ IDEA VCS configuration for issue reference links). Java 17 JDK is pre-installed via eclipse-temurin:17-jdk-jammy base image (Ubuntu 22.04-based with full apt package manager support). Maven and Scala are installed via apt. The environment is ready for Maven builds and ScalaTest execution. git and curl are included in system_packages. Fixed from invalid eclipse-temurin:17-ubi9 to valid eclipse-temurin:17-jdk-jammy. pytest installed via apt python3-pytest with symlink from py.test to pytest for command availability."
+}

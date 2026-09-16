@@ -1,0 +1,48 @@
+{
+  "repository_name": "K8sStormCenter/HoneyCluster",
+  "runtime_family": "kubernetes",
+  "package_manager": "poetry",
+  "build_system": "make",
+  "test_framework": "kubectl_apply_validation",
+  "programming_languages": ["yaml", "python"],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": "Kubernetes-based project that runs on Linux containers. No Windows/macOS-specific dependencies.",
+  "key_files": {
+    "target_file": "test/cti-stix-visualizer.yaml",
+    "build_files": ["Makefile", "Makefile_calibrate_kubehound"],
+    "python_deps": ["redis/log-notebook/pyproject.toml"]
+  },
+  "touched_files": [
+    "Makefile_calibrate_kubehound",
+    "redis/log-notebook/kubehound-stix.json",
+    "redis/log-notebook/manual.py",
+    "traces/kubehound-verify/1-ce-module-load.yaml",
+    "traces/kubehound-verify/1-ce-net-mitm.yaml",
+    "traces/kubehound-verify/1-ce-var-log-symlink.yaml",
+    "traces/kubehound-verify/attacks/CE_MODULE_LOAD.yaml",
+    "traces/kubehound-verify/attacks/CE_NET_MITM.yaml",
+    "traces/kubehound-verify/attacks/CE_VAR_LOG_SYMLINK.yaml",
+    "traces/kubehound-verify/attacks/Dockerfile",
+    "vector/gkevalues.yaml"
+  ],
+  "pr_summary": {
+    "issue": "Add a Kubernetes Service resource to test/cti-stix-visualizer.yaml",
+    "requirements": {
+      "apiVersion": "v1",
+      "kind": "Service",
+      "metadata.name": "stix-visualizer",
+      "metadata.namespace": "redpanda",
+      "spec.selector": {"app": "stix-visualizer"},
+      "spec.ports": [{"protocol": "TCP", "port": 80, "targetPort": 3000}],
+      "type": "ClusterIP"
+    }
+  },
+  "dependency_management": {
+    "kubernetes_manifests": "kubectl apply",
+    "python": "poetry"
+  },
+  "test_configuration": {
+    "method": "kubectl apply validation",
+    "target": "test/cti-stix-visualizer.yaml"
+  }
+}

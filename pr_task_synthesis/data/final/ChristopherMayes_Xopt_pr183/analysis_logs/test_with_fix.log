@@ -1,0 +1,20 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.13.14, pytest-9.1.0, pluggy-1.6.0 -- /opt/conda/envs/xopt-dev/bin/python
+cachedir: .pytest_cache
+rootdir: /workspace
+configfile: setup.cfg
+plugins: cov-7.1.0, anyio-4.14.0, jaxtyping-0.3.7
+collecting ... collected 1 item
+
+tests/generators/ga/test_cnsga.py::test_cnsga_baddf PASSED               [100%]
+
+=============================== warnings summary ===============================
+xopt/pydantic.py:434
+  /workspace/xopt/pydantic.py:434: PydanticDeprecatedSince212: Using `@model_validator` with mode='after' on a classmethod is deprecated. Instead, use an instance method. See the documentation at https://docs.pydantic.dev/2.13/concepts/validators/#model-after-validator. Deprecated in Pydantic V2.12 to be removed in V3.0.
+    @model_validator(mode="after")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+========================= 1 passed, 1 warning in 2.13s =========================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

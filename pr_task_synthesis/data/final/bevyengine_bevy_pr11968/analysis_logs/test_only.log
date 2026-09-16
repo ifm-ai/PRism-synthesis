@@ -1,0 +1,38 @@
+>>>>> Start Test Output
+   Compiling fix_verifier v0.1.0 (/tmp/tmp.UpvPggcdWg/fix_verifier)
+    Finished `release` profile [optimized] target(s) in 0.28s
+     Running tests/verify_fix.rs (target/release/deps/verify_fix-04d808c248f181fe)
+
+running 1 test
+test test_msaa_multi_camera_fix ... === MSAA Multi-Camera Fix Verification ===
+
+Source file: /workspace/crates/bevy_render/src/view/mod.rs
+
+Verification Results:
+------------------------------------------------------------
+[FAIL] Tuple destructuring: Buggy pattern found (missing main_texture)
+[FAIL] main_texture creation: Pattern not found in closure
+[FAIL] main_texture clone: Buggy pattern found (direct construction)
+------------------------------------------------------------
+
+RESULT: Some checks FAILED
+
+The MSAA multi-camera fix is NOT correctly applied.
+Expected behavior: Multiple cameras sharing a render target should
+share the main_texture state for correct MSAA texture swapping.
+
+thread 'test_msaa_multi_camera_fix' (12979) panicked at tests/verify_fix.rs:139:5:
+MSAA multi-camera fix verification failed
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    test_msaa_multi_camera_fix
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `--test verify_fix`
+>>>>> End Test Output
+OPENENV_EXIT_CODE=101

@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "datahub-project_datahub_pr11254"
+description = "OpenEnv: datahub-project/datahub PR #11254"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/datahub-project/datahub.git"
+git_pr_id = "11254"
+git_base_commit = "b85b4843b658cf3a02e10e4b4db06dcef734ac04"
+task_id = "datahub-project_datahub_pr11254"
+repo_full_name = "datahub-project/datahub"
+domain = "DATA_ENGINEERING_ETL"
+primary_language = "Java"
+runtime_family = "Python"
+complexity = "easy"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

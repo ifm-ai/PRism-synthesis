@@ -1,0 +1,51 @@
+>>>>> Start Test Output
+[1m============================= test session starts ==============================[0m
+platform linux -- Python 3.11.15, pytest-9.1.0, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /workspace
+configfile: pyproject.toml
+plugins: cov-7.1.0, xdist-3.8.0
+[1mcollecting ... [0mcollected 1 item
+
+tests/test_commands.py::test_custom_ouputs [32mPASSED[0m[33m                        [100%][0m
+
+[33m=============================== warnings summary ===============================[0m
+ravenpy/config/base.py:7
+  /workspace/ravenpy/config/base.py:7: DeprecationWarning: 'pymbolic.primitives.Expression' is deprecated. Use 'ExpressionNode' instead. 'pymbolic.primitives.Expression' will continue to work until 2026.
+    from pymbolic.primitives import Expression, Variable
+
+../opt/benchmark/venv/lib/python3.11/site-packages/pydantic/dataclasses.py:313
+../opt/benchmark/venv/lib/python3.11/site-packages/pydantic/dataclasses.py:313
+../opt/benchmark/venv/lib/python3.11/site-packages/pydantic/dataclasses.py:313
+../opt/benchmark/venv/lib/python3.11/site-packages/pydantic/dataclasses.py:313
+  /opt/benchmark/venv/lib/python3.11/site-packages/pydantic/dataclasses.py:313: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    return create_dataclass if _cls is None else create_dataclass(_cls)
+
+ravenpy/config/emulators/gr4jcn.py:28
+  /workspace/ravenpy/config/emulators/gr4jcn.py:28: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @dataclass(config=SymConfig)
+
+ravenpy/config/emulators/hbvec.py:17
+  /workspace/ravenpy/config/emulators/hbvec.py:17: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @dataclass(config=SymConfig)
+
+ravenpy/config/emulators/hmets.py:16
+  /workspace/ravenpy/config/emulators/hmets.py:16: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @dataclass(config=SymConfig)
+
+ravenpy/config/emulators/mohyse.py:16
+  /workspace/ravenpy/config/emulators/mohyse.py:16: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.13/migration/
+    @dataclass(config=SymConfig)
+
+tests/test_commands.py::test_custom_ouputs
+  /workspace/ravenpy/config/base.py:147: PydanticDeprecatedSince211: Accessing the 'model_fields' attribute on the instance is deprecated. Instead, you should access this attribute from the model class. Deprecated in Pydantic V2.11 to be removed in V3.0.
+    for key, field in self.model_fields.items():
+
+tests/test_commands.py::test_custom_ouputs
+  /workspace/ravenpy/config/base.py:228: PydanticDeprecatedSince211: Accessing the 'model_fields' attribute on the instance is deprecated. Instead, you should access this attribute from the model class. Deprecated in Pydantic V2.11 to be removed in V3.0.
+    for field in self.model_fields.keys():
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+[33m======================== [32m1 passed[0m, [33m[1m11 warnings[0m[33m in 0.01s[0m[33m ========================[0m
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

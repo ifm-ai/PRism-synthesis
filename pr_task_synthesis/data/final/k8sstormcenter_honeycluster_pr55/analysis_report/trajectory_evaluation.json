@@ -1,0 +1,54 @@
+{
+  "schema_version": "2.0",
+  "solver_outcome": "pass",
+  "oracle_outcome": "fail",
+  "scores": {
+    "environment_readiness": 4,
+    "dependency_completeness": 4,
+    "verifier_integrity": 4,
+    "instruction_verifier_alignment": 2,
+    "trajectory_progress_value": 4
+  },
+  "struggle_patterns": [
+    {
+      "pattern": "instruction_verifier_mismatch",
+      "phase": "verification",
+      "evidence": "The instruction describes adding a Service resource to test/cti-stix-visualizer.yaml, but the oracle verifier tests changes to redis/log-notebook/kubehound-stix.json (bundle ID prefixes and new bundle types).",
+      "score_impacts": [{"dimension": "instruction_verifier_alignment", "delta": -2}]
+    }
+  ],
+  "phase_signals": {
+    "tests_executed": true,
+    "first_meaningful_edit_made": true,
+    "touched_relevant_files": true,
+    "solver_time_budget_exhausted": false,
+    "oracle_verifier_executed": true,
+    "oracle_verifier_passed": false
+  },
+  "signal_strength": {
+    "solver_signal": "strong",
+    "oracle_signal": "weak"
+  },
+  "verifier_diagnosis": {
+    "verifier_coverage_class": "behavioral",
+    "solver_approach_valid": true,
+    "repair_priority": "medium"
+  },
+  "needs_verifier_change": true,
+  "needs_instruction_change": true,
+  "instruction_tuning_advice": {
+    "priority": "high",
+    "missing_spec_type": "behavioral_outcome",
+    "tuning_context": "The instruction describes adding a Kubernetes Service resource but the fix.patch and verifier focus on STIX bundle ID changes in a JSON file - these are two separate tasks that need clarification.",
+    "anti_contamination_constraints": []
+  },
+  "filter_label": "keep_instruction_update",
+  "summary": "The solver correctly implemented the instructed task by adding a Service resource to test/cti-stix-visualizer.yaml with all required fields. However, the oracle verifier tests different changes (STIX bundle ID prefixes in redis/log-notebook/kubehound-stix.json) from the fix.patch, creating an instruction-verifier mismatch. The solver approach was valid and touched the correct file, but the verifier tests an unrelated aspect of the multi-change fix.patch.",
+  "evidence": [
+    "Solver added Service resource to test/cti-stix-visualizer.yaml with correct apiVersion: v1, kind: Service, metadata.name: stix-visualizer, metadata.namespace: redpanda, spec.type: ClusterIP, and correct port configuration",
+    "Oracle verifier ran pytest on test_kubehound_stix_bundles.py which validates bundle ID prefixes (bundle--kubehound-attempt-* vs bundle--kubehound-attack-*) in redis/log-notebook/kubehound-stix.json",
+    "Fix.patch contains changes to multiple files including both test/cti-stix-visualizer.yaml (not shown in patch) and redis/log-notebook/kubehound-stix.json (bundle ID changes)",
+    "Solver correctly localized the problem from the instruction and made exactly one edit that matches all instruction requirements",
+    "Analysis feedback shows verifier_alignment.status: aligned but target_overlap is direct with patch_touched_files showing redis/log-notebook/kubehound-stix.json, not the Service file"
+  ]
+}

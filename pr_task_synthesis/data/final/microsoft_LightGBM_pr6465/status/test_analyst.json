@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "official_verifier": {
+    "execution_mode": "real_execution",
+    "test_only_exit_code": 1,
+    "test_with_fix_exit_code": 0
+  },
+  "non_discriminating": false,
+  "notes": "Verifier correctly discriminates between buggy and fixed workspaces. Tests fail on /workspace (which has --user flags in CI scripts) with exit code 1, and pass on /workspace_fixed (which has no --user flags) with exit code 0. The hidden tests verify that .ci/test.sh and .ci/test_windows.ps1 do not contain --user flags in pip install commands, which directly aligns with the fix.patch changes."
+}

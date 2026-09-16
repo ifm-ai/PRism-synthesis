@@ -1,0 +1,84 @@
+{
+  "base_image": "node:18-bookworm",
+  "build_steps": [
+    {
+      "step": 1,
+      "action": "FROM",
+      "description": "Use Node.js 18.x bookworm base image"
+    },
+    {
+      "step": 2,
+      "action": "RUN",
+      "description": "Install system packages: git, curl, xvfb, npm, google-chrome-stable"
+    },
+    {
+      "step": 3,
+      "action": "RUN",
+      "description": "Create /opt/benchmark directory for build scripts"
+    },
+    {
+      "step": 4,
+      "action": "COPY",
+      "description": "Copy repo_setup.sh from build context to /opt/benchmark/repo_setup.sh"
+    },
+    {
+      "step": 5,
+      "action": "COPY",
+      "description": "Copy setup_runtime.sh from build context to /opt/benchmark/setup_runtime.sh"
+    },
+    {
+      "step": 6,
+      "action": "RUN",
+      "description": "Execute repo_setup.sh to clone PlayCanvas engine repository"
+    },
+    {
+      "step": 7,
+      "action": "RUN",
+      "description": "Execute setup_runtime.sh to install npm dependencies"
+    },
+    {
+      "step": 8,
+      "action": "WORKDIR",
+      "description": "Set working directory to /workspace"
+    }
+  ],
+  "repo_setup_integration": {
+    "script_path": "/opt/benchmark/repo_setup.sh",
+    "source": "/artifacts/environment/repo_setup.sh",
+    "purpose": "Clone PlayCanvas engine repository at specific commit",
+    "target_directory": "/workspace",
+    "commit": "1aac7ee7bcc6491e655804b94db4478743bb4e6b"
+  },
+  "runtime_setup_integration": {
+    "script_path": "/opt/benchmark/setup_runtime.sh",
+    "source": "/artifacts/environment/setup_runtime.sh",
+    "purpose": "Install npm dependencies with clean-install",
+    "environment_variables": {
+      "CHROME_BIN": "/usr/bin/google-chrome-stable"
+    }
+  },
+  "verifier_packaging": {
+    "note": "Verifier assets (eval.sh, tests/) are NOT baked into the image. They are mounted at runtime by the orchestrator.",
+    "eval_sh": {
+      "mode": "runtime-mounted",
+      "note": "Not copied into image - mounted at runtime"
+    },
+    "tests": {
+      "mode": "runtime-mounted",
+      "note": "Not copied into image - mounted at runtime"
+    },
+    "fix_patch": {
+      "note": "NOT included in buggy image - only for fixed image variant"
+    }
+  },
+  "system_packages": [
+    "git",
+    "curl",
+    "xvfb",
+    "google-chrome-stable",
+    "npm"
+  ],
+  "activation_command": "export CHROME_BIN=/usr/bin/google-chrome-stable",
+  "test_command": "NODE_OPTIONS=\"--no-warnings\" npm test -- --require test/fixtures.mjs",
+  "notes": "Dockerfile built for PlayCanvas WebGL engine benchmark. Chrome and xvfb required for Karma browser tests. ESM modules supported via Node.js 18.x."
+}

@@ -1,0 +1,121 @@
+Hidden tests directory: /artifacts/evaluation/tests
+total 28
+drwxr-xr-x 4 root root 4096 Jun 25 14:58 .
+drwxr-xr-x 3 root root 4096 Jun 25 14:48 ..
+drwxr-xr-x 3 root root 4096 Jun 25 14:58 .pytest_cache
+drwxr-xr-x 2 root root 4096 Jun 25 14:58 __pycache__
+-rw-r--r-- 1 root root 8537 Jun 25 14:58 test_tensorflow_layers_instantiation.py
+=== Running hidden verifier tests ===
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.1, pluggy-1.6.0 -- /opt/benchmark/gudhi_env/bin/python
+cachedir: .pytest_cache
+rootdir: /artifacts/evaluation/tests
+collecting ... collected 9 items
+
+../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_grid_perslay_weight_instantiation FAILED [ 11%]
+../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_gaussian_mixture_perslay_weight_instantiation FAILED [ 22%]
+../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_power_perslay_weight_instantiation FAILED [ 33%]
+../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_gaussian_perslay_phi_instantiation FAILED [ 44%]
+../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_tent_perslay_phi_instantiation FAILED [ 55%]
+../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_flat_perslay_phi_instantiation FAILED [ 66%]
+../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_perslay_instantiation FAILED [ 77%]
+../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestTensorFlowLayerDynamicArgument::test_layer_instantiation_no_dynamic_error FAILED [ 88%]
+../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerBehavior::test_power_perslay_weight_call FAILED [100%]
+
+=================================== FAILURES ===================================
+_____ TestPerslayLayerInstantiation.test_grid_perslay_weight_instantiation _____
+/artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py:61: in test_grid_perslay_weight_instantiation
+    layer = GridPerslayWeight(grid=grid, grid_bnds=grid_bnds)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/python/gudhi/tensorflow/perslay.py:25: in __init__
+    super().__init__(dynamic=True, **kwargs)
+/opt/benchmark/gudhi_env/lib/python3.11/site-packages/keras/src/layers/layer.py:294: in __init__
+    raise ValueError(
+E   ValueError: Unrecognized keyword arguments passed to GridPerslayWeight: {'dynamic': True}
+_ TestPerslayLayerInstantiation.test_gaussian_mixture_perslay_weight_instantiation _
+/artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py:68: in test_gaussian_mixture_perslay_weight_instantiation
+    layer = GaussianMixturePerslayWeight(gaussians=gaussians)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/python/gudhi/tensorflow/perslay.py:63: in __init__
+    super().__init__(dynamic=True, **kwargs)
+/opt/benchmark/gudhi_env/lib/python3.11/site-packages/keras/src/layers/layer.py:294: in __init__
+    raise ValueError(
+E   ValueError: Unrecognized keyword arguments passed to GaussianMixturePerslayWeight: {'dynamic': True}
+____ TestPerslayLayerInstantiation.test_power_perslay_weight_instantiation _____
+/artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py:74: in test_power_perslay_weight_instantiation
+    layer = PowerPerslayWeight(constant=1.0, power=0.5)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/python/gudhi/tensorflow/perslay.py:98: in __init__
+    super().__init__(dynamic=True, **kwargs)
+/opt/benchmark/gudhi_env/lib/python3.11/site-packages/keras/src/layers/layer.py:294: in __init__
+    raise ValueError(
+E   ValueError: Unrecognized keyword arguments passed to PowerPerslayWeight: {'dynamic': True}
+____ TestPerslayLayerInstantiation.test_gaussian_perslay_phi_instantiation _____
+/artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py:80: in test_gaussian_perslay_phi_instantiation
+    layer = GaussianPerslayPhi(
+src/python/gudhi/tensorflow/perslay.py:132: in __init__
+    super().__init__(dynamic=True, **kwargs)
+/opt/benchmark/gudhi_env/lib/python3.11/site-packages/keras/src/layers/layer.py:294: in __init__
+    raise ValueError(
+E   ValueError: Unrecognized keyword arguments passed to GaussianPerslayPhi: {'dynamic': True}
+______ TestPerslayLayerInstantiation.test_tent_perslay_phi_instantiation _______
+/artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py:91: in test_tent_perslay_phi_instantiation
+    layer = TentPerslayPhi(samples=samples)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/python/gudhi/tensorflow/perslay.py:175: in __init__
+    super().__init__(dynamic=True, **kwargs)
+/opt/benchmark/gudhi_env/lib/python3.11/site-packages/keras/src/layers/layer.py:294: in __init__
+    raise ValueError(
+E   ValueError: Unrecognized keyword arguments passed to TentPerslayPhi: {'dynamic': True}
+______ TestPerslayLayerInstantiation.test_flat_perslay_phi_instantiation _______
+/artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py:98: in test_flat_perslay_phi_instantiation
+    layer = FlatPerslayPhi(samples=samples, theta=np.float32(100.0))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/python/gudhi/tensorflow/perslay.py:210: in __init__
+    super().__init__(dynamic=True, **kwargs)
+/opt/benchmark/gudhi_env/lib/python3.11/site-packages/keras/src/layers/layer.py:294: in __init__
+    raise ValueError(
+E   ValueError: Unrecognized keyword arguments passed to FlatPerslayPhi: {'dynamic': True}
+___________ TestPerslayLayerInstantiation.test_perslay_instantiation ___________
+/artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py:105: in test_perslay_instantiation
+    phi = GaussianPerslayPhi(
+src/python/gudhi/tensorflow/perslay.py:132: in __init__
+    super().__init__(dynamic=True, **kwargs)
+/opt/benchmark/gudhi_env/lib/python3.11/site-packages/keras/src/layers/layer.py:294: in __init__
+    raise ValueError(
+E   ValueError: Unrecognized keyword arguments passed to GaussianPerslayPhi: {'dynamic': True}
+_ TestTensorFlowLayerDynamicArgument.test_layer_instantiation_no_dynamic_error _
+/artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py:173: in test_layer_instantiation_no_dynamic_error
+    layer = layer_factory()
+            ^^^^^^^^^^^^^^^
+/artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py:145: in <lambda>
+    lambda: GridPerslayWeight(
+src/python/gudhi/tensorflow/perslay.py:25: in __init__
+    super().__init__(dynamic=True, **kwargs)
+/opt/benchmark/gudhi_env/lib/python3.11/site-packages/keras/src/layers/layer.py:294: in __init__
+    raise ValueError(
+E   ValueError: Unrecognized keyword arguments passed to GridPerslayWeight: {'dynamic': True}
+___________ TestPerslayLayerBehavior.test_power_perslay_weight_call ____________
+/artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py:191: in test_power_perslay_weight_call
+    weight = PowerPerslayWeight(constant=1.0, power=0.0)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/python/gudhi/tensorflow/perslay.py:98: in __init__
+    super().__init__(dynamic=True, **kwargs)
+/opt/benchmark/gudhi_env/lib/python3.11/site-packages/keras/src/layers/layer.py:294: in __init__
+    raise ValueError(
+E   ValueError: Unrecognized keyword arguments passed to PowerPerslayWeight: {'dynamic': True}
+=========================== short test summary info ============================
+FAILED ../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_grid_perslay_weight_instantiation
+FAILED ../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_gaussian_mixture_perslay_weight_instantiation
+FAILED ../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_power_perslay_weight_instantiation
+FAILED ../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_gaussian_perslay_phi_instantiation
+FAILED ../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_tent_perslay_phi_instantiation
+FAILED ../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_flat_perslay_phi_instantiation
+FAILED ../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_perslay_instantiation
+FAILED ../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestTensorFlowLayerDynamicArgument::test_layer_instantiation_no_dynamic_error
+FAILED ../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerBehavior::test_power_perslay_weight_call
+============================== 9 failed in 3.09s ===============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1
+EXIT_CODE=1

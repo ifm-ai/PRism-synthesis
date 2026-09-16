@@ -1,0 +1,31 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "infrastructure_reason": null,
+  "verification_command": "python -m pytest /artifacts/evaluation/tests/test_fix_verification.py -v",
+  "activation_source": "source /opt/conda/etc/profile.d/conda.sh && conda activate bioconda",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "hidden_tests",
+  "copied_test_patch": false,
+  "supplemental_tests_created": true,
+  "extra_test_dependencies_installed": true,
+  "extra_test_dependency_commands": [
+    "pip install -q pytest pyyaml"
+  ],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that the cancerit-allelecount recipe fix is correctly applied by verifying meta.yaml has linux-aarch64 in additional-platforms, build number 7, run_exports, GPL-3.0-only license fields, and build.sh uses set -xeu and parallel make with -j ${CPU_COUNT}.",
+  "fix_patch_grounding": "The tests verify the concrete changes from fix.patch: build.sh changes set -eu to set -xeu and adds -j ${CPU_COUNT} to make; meta.yaml adds linux-aarch64 to additional-platforms, updates build number to 7, adds run_exports with pin_subpackage, and updates license fields to GPL-3.0-only with license_file and license_family.",
+  "issue_context_used": "The issue describes making the recipe work on linux-aarch64 platform, which requires updating additional-platforms metadata, adding parallel make for efficient ARM builds, and proper license/run_exports metadata for conda packaging standards.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": [
+    "python -m pytest $TESTS_DIR/test_fix_verification.py -v"
+  ],
+  "required_verifier_files": [
+    "eval.sh",
+    "tests/test_fix_verification.py"
+  ],
+  "notes": "Hidden tests created under /artifacts/evaluation/tests/ since test.patch was not present. Tests use text-based verification to handle Jinja2 templating in conda recipes. All 8 tests fail on buggy workspace and pass on fixed workspace."
+}

@@ -1,0 +1,70 @@
+{
+  "pr_summary": "Fix JSON serialization of the `v` component in Ethereum signature to emit hex-encoded format instead of plain integer. The fix modifies `crates/primitives/src/signature/sig.rs` to wrap the `v` value in `crate::U64::from()` for both human-readable (JSON) and non-human-readable (binary) serialization paths.",
+  "runtime_family": "rust",
+  "package_manager": "cargo",
+  "touched_files": [
+    "crates/primitives/src/signature/sig.rs"
+  ],
+  "important_build_files": [
+    "Cargo.toml",
+    "crates/primitives/Cargo.toml",
+    "rustfmt.toml",
+    "clippy.toml"
+  ],
+  "important_test_files": [
+    "crates/primitives/src/signature/sig.rs",
+    "tests/core-sol/"
+  ],
+  "candidate_build_commands": [
+    "cargo build --workspace",
+    "cargo build --workspace --all-features",
+    "cargo check --all-features"
+  ],
+  "candidate_test_commands": [
+    "cargo test --workspace",
+    "cargo test --workspace --all-features",
+    "cargo test --package alloy-primitives --features serde",
+    "cargo test --package alloy-primitives --features serde serialize_v_hex"
+  ],
+  "candidate_smoke_commands": [
+    "cargo check --package alloy-primitives --features serde",
+    "cargo build --package alloy-primitives --features serde"
+  ],
+  "candidate_activation_checks": [
+    "rustc --version",
+    "cargo --version",
+    "rustup show"
+  ],
+  "environment_management": "rustup (Rust toolchain manager)",
+  "special_system_dependencies": [],
+  "high_value_files": [
+    "crates/primitives/src/signature/sig.rs",
+    "crates/primitives/Cargo.toml",
+    "Cargo.toml",
+    ".github/workflows/ci.yml"
+  ],
+  "patch_file_cues": [
+    "crates/primitives/src/signature/sig.rs - serde::Serialize implementation for Signature",
+    "Lines 419-422: NonEip155 v serialization fix",
+    "Lines 430-432: tuple serialization v element fix",
+    "Lines 558-560: deserialize v as U64 instead of u64",
+    "Lines 736-746: new test serialize_v_hex added to verify hex encoding"
+  ],
+  "test_file_cues": [
+    "crates/primitives/src/signature/sig.rs contains inline #[cfg(test)] mod tests block",
+    "Test function serialize_v_hex tests JSON roundtrip with hex-encoded v",
+    "Test function serialize_v_only tests yParity serialization",
+    "Test function test_bincode_roundtrip tests binary serialization",
+    "Tests require 'serde' feature flag",
+    "Integration tests in tests/core-sol/"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    ".github/workflows/ci.yml runs on ubuntu-latest and windows-latest - cross-platform support",
+    "No Windows-specific code (cfg(windows)) found in crates/primitives",
+    "No macOS-specific code found",
+    "No win32/win64/uwp/msvc targets in Cargo.toml",
+    "Pure Rust implementation with no platform-specific dependencies"
+  ],
+  "notes": "This is a Rust workspace project (alloy-rs/core) for Ethereum primitives. The fix targets the serde serialization of Signature's v component. Tests are inline in the source file under #[cfg(test)] modules. The MSRV is Rust 1.65. The project supports no_std environments. Key feature for testing is 'serde' which enables JSON serialization tests. The fix ensures v is serialized as hex (e.g., '0x1b') instead of decimal integer (e.g., 27)."
+}

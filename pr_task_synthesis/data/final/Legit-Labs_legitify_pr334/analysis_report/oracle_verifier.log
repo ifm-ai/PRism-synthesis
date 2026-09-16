@@ -1,0 +1,14 @@
+>>>>> Start Test Output
+=== RUN   TestGitlabRepositoryRestrictsOverrideVariables
+=== RUN   TestGitlabRepositoryRestrictsOverrideVariables/Repository_Restricts_User-Defined_Variables
+    helpers.go:43: expected policy overriding_defined_variables_isnt_restricted to exist in results
+=== RUN   TestGitlabRepositoryRestrictsOverrideVariables/Repository_Restricts_User-Defined_Variables#01
+    helpers.go:43: did not expect expect policy overriding_defined_variables_isnt_restricted to exist in results
+--- FAIL: TestGitlabRepositoryRestrictsOverrideVariables (0.03s)
+    --- FAIL: TestGitlabRepositoryRestrictsOverrideVariables/Repository_Restricts_User-Defined_Variables (0.01s)
+    --- FAIL: TestGitlabRepositoryRestrictsOverrideVariables/Repository_Restricts_User-Defined_Variables#01 (0.01s)
+FAIL
+FAIL	github.com/Legit-Labs/legitify/test	0.085s
+FAIL
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

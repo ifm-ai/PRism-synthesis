@@ -1,0 +1,859 @@
+diff --git a/apis/python/src/tiledb/vector_search/index.py b/apis/python/src/tiledb/vector_search/index.py
+index 3a4f767c..38872938 100644
+--- a/apis/python/src/tiledb/vector_search/index.py
++++ b/apis/python/src/tiledb/vector_search/index.py
+@@ -258,6 +258,18 @@ class Index:
+         **kwargs
+             Extra kwargs passed here are passed to the `query_internal` implementation of the concrete index class.
+         """
++
++        def flip_results(results):
++            # Modify results in-place, replacing each element with its reciprocal (1 / result)
++            # This is called for inner product results, as the internal query functions return 1 / inner product
++            # We need to handle potential division by zero
++            with np.errstate(divide="ignore", invalid="ignore"):
++                np.reciprocal(results, out=results)
++            # Replace inf (result of 1/0) with a large finite number
++            results[np.isinf(results)] = np.finfo(results.dtype).max
++            # Replace NaN (0/0) with 0
++            results[np.isnan(results)] = 0
++
+         if queries.ndim != 2:
+             raise TypeError(
+                 f"Expected queries to have 2 dimensions (i.e. [[...], etc.]), but it had {queries.ndim} dimensions"
+@@ -280,8 +292,7 @@ class Index:
+                 raise TypeError(
+                     "Cannot pass driver_mode=Mode.LOCAL to query() - use driver_mode=None to query locally."
+                 )
+-
+-            return self._query_with_driver(
++            results, indexes = self._query_with_driver(
+                 queries,
+                 k,
+                 driver_mode,
+@@ -289,6 +300,9 @@ class Index:
+                 driver_access_credentials_name,
+                 **kwargs,
+             )
++            if self.distance_metric == vspy.DistanceMetric.INNER_PRODUCT:
++                flip_results(results)
++            return results, indexes
+ 
+         if self.open_for_remote_query_execution:
+             raise ValueError(
+@@ -298,11 +312,16 @@ class Index:
+         with tiledb.scope_ctx(ctx_or_config=self.config):
+             if not self.has_updates:
+                 if self.query_base_array:
+-                    return self.query_internal(queries, k, **kwargs)
++                    results, indexes = self.query_internal(queries, k, **kwargs)
++                    if self.distance_metric == vspy.DistanceMetric.INNER_PRODUCT:
++                        flip_results(results)
++                    return results, indexes
+                 else:
+-                    return np.full((queries.shape[0], k), MAX_FLOAT32), np.full(
+-                        (queries.shape[0], k), MAX_UINT64
+-                    )
++                    results = np.full((queries.shape[0], k), MAX_FLOAT32)
++                    indexes = np.full((queries.shape[0], k), MAX_UINT64)
++                    if self.distance_metric == vspy.DistanceMetric.INNER_PRODUCT:
++                        flip_results(results)
++                    return results, indexes
+ 
+         # Query with updates
+         # Perform the queries in parallel
+@@ -341,7 +360,8 @@ class Index:
+         sort_index = np.argsort(internal_results_d, axis=1)
+         internal_results_d = np.take_along_axis(internal_results_d, sort_index, axis=1)
+         internal_results_i = np.take_along_axis(internal_results_i, sort_index, axis=1)
+-
++        if self.distance_metric == vspy.DistanceMetric.INNER_PRODUCT:
++            flip_results(internal_results_d)
+         # Merge update results
+         if addition_results_d is None:
+             return internal_results_d[:, 0:k], internal_results_i[:, 0:k]
+@@ -359,6 +379,9 @@ class Index:
+                 res_id += 1
+             query_id += 1
+ 
++        if self.distance_metric == vspy.DistanceMetric.INNER_PRODUCT:
++            flip_results(addition_results_d)
++
+         results_d = np.hstack((internal_results_d, addition_results_d))
+         results_i = np.hstack((internal_results_i, addition_results_i))
+         sort_index = np.argsort(results_d, axis=1)
+diff --git a/apis/python/src/tiledb/vector_search/ingestion.py b/apis/python/src/tiledb/vector_search/ingestion.py
+index a980be79..9d7ff34f 100644
+--- a/apis/python/src/tiledb/vector_search/ingestion.py
++++ b/apis/python/src/tiledb/vector_search/ingestion.py
+@@ -25,6 +25,7 @@ from tiledb.vector_search.storage_formats import STORAGE_VERSION
+ from tiledb.vector_search.storage_formats import validate_storage_version
+ from tiledb.vector_search.utils import add_to_group
+ from tiledb.vector_search.utils import is_type_erased_index
++from tiledb.vector_search.utils import normalize_vectors
+ from tiledb.vector_search.utils import to_temporal_policy
+ 
+ 
+@@ -84,6 +85,7 @@ def ingest(
+     write_centroids_resources: Optional[Mapping[str, Any]] = None,
+     partial_index_resources: Optional[Mapping[str, Any]] = None,
+     distance_metric: vspy.DistanceMetric = vspy.DistanceMetric.L2,
++    normalized: bool = False,
+     **kwargs,
+ ):
+     """
+@@ -1249,6 +1251,7 @@ def ingest(
+         config: Optional[Mapping[str, Any]] = None,
+         verbose: bool = False,
+         trace_id: Optional[str] = None,
++        distance_metric: vspy.DistanceMetric = vspy.DistanceMetric.L2,
+     ) -> np.ndarray:
+         logger = setup(config, verbose)
+         logger.debug(
+@@ -1678,6 +1681,7 @@ def ingest(
+         config: Optional[Mapping[str, Any]] = None,
+         verbose: bool = False,
+         trace_id: Optional[str] = None,
++        distance_metric: vspy.DistanceMetric = vspy.DistanceMetric.L2,
+     ):
+         import os
+         import random
+@@ -1880,9 +1884,17 @@ def ingest(
+             verbose=verbose,
+             trace_id=trace_id,
+         )
++
+         if additions_vectors is None:
+             return
+ 
++        if (
++            index_type == "IVF_FLAT"
++            and distance_metric == vspy.DistanceMetric.COSINE
++            and not normalized
++        ):
++            additions_vectors = normalize_vectors(additions_vectors)
++
+         logger.debug(f"Ingesting additions {partial_write_array_index_uri}")
+         ivf_index(
+             dtype=vector_type,
+@@ -2074,6 +2086,56 @@ def ingest(
+             parts_array.close()
+             ids_array.close()
+ 
++    def normalize_source_vectors(
++        source_uri: str,
++        normalized_uri: str,
++        source_type: str,
++        vector_type: np.dtype,
++        dimensions: int,
++        source_start_pos: int,
++        source_end_pos: int,
++        batch: int,
++        config: Optional[Mapping[str, Any]] = None,
++        verbose: bool = False,
++        trace_id: Optional[str] = None,
++    ):
++        """
++        Reads a batch of vectors from the source data, normalizes them, and writes them to the output array.
++        """
++        logger = setup(config, verbose)
++        logger.debug(f"Normalizing vectors from {source_uri} to {normalized_uri}")
++        logger.debug(f"Processing range: {source_start_pos} to {source_end_pos}")
++
++        with tiledb.scope_ctx(ctx_or_config=config):
++            for start in range(source_start_pos, source_end_pos, batch):
++                end = min(start + batch, source_end_pos)
++
++                # Read from the source data
++                vectors = read_input_vectors(
++                    source_uri=source_uri,
++                    source_type=source_type,
++                    vector_type=vector_type,
++                    dimensions=dimensions,
++                    start_pos=start,
++                    end_pos=end,
++                    config=config,
++                    verbose=verbose,
++                    trace_id=trace_id,
++                )
++
++                # Normalize the vectors
++                normalized_vectors = normalize_vectors(vectors)
++
++                # Write to the normalized array
++                with tiledb.open(
++                    normalized_uri, mode="w", timestamp=index_timestamp
++                ) as A:
++                    A[0:dimensions, start:end] = np.transpose(normalized_vectors)
++
++        logger.debug(
++            f"Finished normalizing vectors for range {source_start_pos} to {source_end_pos}"
++        )
++
+     # --------------------------------------------------------------------
+     # DAG
+     # --------------------------------------------------------------------
+@@ -2333,6 +2395,54 @@ def ingest(
+                     **kwargs,
+                 )
+             else:
++                # If the distance metric is cosine, we need to create a node that everything depends on
++                # Which reads the vectors and normalizes them, then swaps source_uri for normalized_uri
++                # This is because the cosine distance metric requires normalized vectors
++                normalization_nodes = []
++                if distance_metric == vspy.DistanceMetric.COSINE and not normalized:
++                    group = tiledb.Group(index_group_uri, "w")
++                    normalized_uri = create_array(
++                        group=group,
++                        size=size,
++                        dimensions=dimensions,
++                        vector_type=vector_type,
++                        array_name="normalized_vectors",
++                    )
++                    group.close()
++
++                    # Create normalization nodes
++                    for start in range(
++                        0, size, input_vectors_batch_size_during_sampling
++                    ):
++                        end = min(
++                            start + input_vectors_batch_size_during_sampling, size
++                        )
++
++                        normalization_nodes.append(
++                            submit(
++                                normalize_source_vectors,
++                                source_uri=source_uri,
++                                normalized_uri=normalized_uri,
++                                source_type=source_type,
++                                vector_type=vector_type,
++                                dimensions=dimensions,
++                                source_start_pos=start,
++                                source_end_pos=end,
++                                batch=input_vectors_per_work_item_during_sampling,
++                                config=config,
++                                verbose=verbose,
++                                trace_id=trace_id,
++                                name=f"normalize-vectors-{start}-{end}",
++                                resources=random_sample_resources,
++                                image_name=DEFAULT_IMG_NAME,
++                                **kwargs,
++                            )
++                        )
++
++                    # Update source_uri and source_type for subsequent operations
++                    source_uri = normalized_uri
++                    source_type = "TILEDB_ARRAY"
++
+                 random_sample_nodes = []
+                 if training_sampling_policy == TrainingSamplingPolicy.RANDOM:
+                     # Create an empty array to write the sampled vectors to.
+@@ -2394,6 +2504,10 @@ def ingest(
+                         raise ValueError(
+                             f"The random sampling ran into an issue: num_sampled ({num_sampled}) != training_sample_size ({training_sample_size})"
+                         )
++                # Add dependencies for normalization
++                for node in normalization_nodes:
++                    for random_sample_node in random_sample_nodes:
++                        random_sample_node.depends_on(node)
+ 
+                 if training_sample_size <= CENTRALISED_KMEANS_MAX_SAMPLE_SIZE:
+                     centroids_node = submit(
+@@ -2419,6 +2533,11 @@ def ingest(
+ 
+                     for random_sample_node in random_sample_nodes:
+                         centroids_node.depends_on(random_sample_node)
++
++                    # if random sample nodes is empty then we need to depend on the normalization nodes
++                    if not random_sample_nodes:
++                        for node in normalization_nodes:
++                            centroids_node.depends_on(node)
+                 else:
+                     uri = (
+                         training_source_uri
+@@ -2440,6 +2559,7 @@ def ingest(
+                         config=config,
+                         verbose=verbose,
+                         trace_id=trace_id,
++                        # distance_metric=
+                         name="init-centroids",
+                         resources=copy_centroids_resources,
+                         image_name=DEFAULT_IMG_NAME,
+@@ -2449,6 +2569,11 @@ def ingest(
+                     for random_sample_node in random_sample_nodes:
+                         internal_centroids_node.depends_on(random_sample_node)
+ 
++                    # if random sample nodes is empty then we need to depend on the normalization nodes
++                    if not random_sample_nodes:
++                        for node in normalization_nodes:
++                            internal_centroids_node.depends_on(node)
++
+                     for it in range(5):
+                         kmeans_workers = []
+                         task_id = 0
+@@ -2910,6 +3035,16 @@ def ingest(
+             storage_version=storage_version,
+         )
+ 
++        if (
++            index_type == "IVF_FLAT"
++            and distance_metric == vspy.DistanceMetric.COSINE
++            and not normalized
++        ):
++            if input_vectors is not None:
++                input_vectors = normalize_vectors(input_vectors)
++            if training_input_vectors is not None:
++                training_input_vectors = normalize_vectors(training_input_vectors)
++
+         if training_input_vectors is not None:
+             training_source_uri = write_input_vectors(
+                 group=temp_data_group,
+@@ -2920,7 +3055,6 @@ def ingest(
+                 array_name=TRAINING_INPUT_VECTORS_ARRAY_NAME,
+             )
+             training_source_type = "TILEDB_ARRAY"
+-
+         if input_vectors is not None:
+             source_uri = write_input_vectors(
+                 group=temp_data_group,
+diff --git a/apis/python/src/tiledb/vector_search/ivf_flat_index.py b/apis/python/src/tiledb/vector_search/ivf_flat_index.py
+index 2be026f3..d4486c9b 100644
+--- a/apis/python/src/tiledb/vector_search/ivf_flat_index.py
++++ b/apis/python/src/tiledb/vector_search/ivf_flat_index.py
+@@ -39,6 +39,8 @@ from tiledb.vector_search.utils import MAX_FLOAT32
+ from tiledb.vector_search.utils import MAX_INT32
+ from tiledb.vector_search.utils import MAX_UINT64
+ from tiledb.vector_search.utils import add_to_group
++from tiledb.vector_search.utils import normalize_vector
++from tiledb.vector_search.utils import normalize_vectors
+ 
+ TILE_SIZE_BYTES = 64000000  # 64MB
+ INDEX_TYPE = "IVF_FLAT"
+@@ -245,6 +247,9 @@ class IVFFlatIndex(index.Index):
+         if queries.ndim == 1:
+             queries = np.array([queries])
+ 
++        if self.distance_metric == vspy.DistanceMetric.COSINE:
++            queries = normalize_vectors(queries)
++
+         if nthreads == -1:
+             nthreads = multiprocessing.cpu_count()
+ 
+@@ -264,6 +269,7 @@ class IVFFlatIndex(index.Index):
+                     nthreads=nthreads,
+                     ctx=self.ctx,
+                     use_nuv_implementation=use_nuv_implementation,
++                    distance_metric=self.distance_metric,
+                 )
+             else:
+                 d, i = ivf_query(
+@@ -280,6 +286,7 @@ class IVFFlatIndex(index.Index):
+                     ctx=self.ctx,
+                     use_nuv_implementation=use_nuv_implementation,
+                     timestamp=self.base_array_timestamp,
++                    distance_metric=self.distance_metric,
+                 )
+ 
+             return np.transpose(np.array(d)), np.transpose(np.array(i))
+@@ -295,8 +302,41 @@ class IVFFlatIndex(index.Index):
+                 num_partitions=num_partitions,
+                 num_workers=num_workers,
+                 config=self.config,
++                distance_metric=self.distance_metric,
+             )
+ 
++    def update(self, vector: np.array, external_id: np.uint64, timestamp: int = None):
++        if self.distance_metric == vspy.DistanceMetric.COSINE:
++            vector = normalize_vector(vector)
++        super().update(vector, external_id, timestamp)
++
++    def update_batch(
++        self, vectors: np.ndarray, external_ids: np.array, timestamp: int = None
++    ):
++        if self.distance_metric == vspy.DistanceMetric.COSINE:
++            vectors = normalize_vectors(vectors)
++        super().update_batch(vectors, external_ids, timestamp)
++
++    def query(
++        self,
++        queries: np.ndarray,
++        k: int,
++        driver_mode: Mode = None,
++        driver_resources: Optional[str] = None,
++        driver_access_credentials_name: Optional[str] = None,
++        **kwargs,
++    ):
++        if self.distance_metric == vspy.DistanceMetric.COSINE:
++            queries = normalize_vectors(queries)
++        return super().query(
++            queries,
++            k,
++            driver_mode,
++            driver_resources,
++            driver_access_credentials_name,
++            **kwargs,
++        )
++
+     def _taskgraph_query(
+         self,
+         queries: np.ndarray,
+@@ -309,6 +349,7 @@ class IVFFlatIndex(index.Index):
+         num_partitions: int = -1,
+         num_workers: int = -1,
+         config: Optional[Mapping[str, Any]] = None,
++        distance_metric: vspy.DistanceMetric = vspy.DistanceMetric.L2,
+     ):
+         """
+         Query an IVF_FLAT index using TileDB cloud taskgraphs
+@@ -519,8 +560,10 @@ def create(
+         If not provided, use the latest stable storage version.
+     """
+     validate_storage_version(storage_version)
+-
+-    if distance_metric != vspy.DistanceMetric.L2:
++    if (
++        distance_metric != vspy.DistanceMetric.L2
++        and distance_metric != vspy.DistanceMetric.COSINE
++    ):
+         raise ValueError(
+             f"Distance metric {distance_metric} is not supported in IVF_FLAT"
+         )
+diff --git a/apis/python/src/tiledb/vector_search/module.cc b/apis/python/src/tiledb/vector_search/module.cc
+index 20ac766c..e7f50c2d 100644
+--- a/apis/python/src/tiledb/vector_search/module.cc
++++ b/apis/python/src/tiledb/vector_search/module.cc
+@@ -165,16 +165,46 @@ static void declare_qv_query_heap_infinite_ram(
+          std::vector<Id_Type>& ids,
+          size_t nprobe,
+          size_t k_nn,
+-         size_t nthreads) -> py::tuple {
++         size_t nthreads,
++         DistanceMetric distance_metric = DistanceMetric::L2) -> py::tuple {
+         auto mat = ColMajorPartitionedMatrixWrapper<T, Id_Type, Id_Type>(
+             parts, ids, indices);
+ 
+         auto top_centroids = detail::ivf::ivf_top_centroids(
+             centroids, query_vectors, nprobe, nthreads);
+-        auto r = detail::ivf::qv_query_heap_infinite_ram(
+-            top_centroids, mat, query_vectors, nprobe, k_nn, nthreads);
+-
+-        return make_python_pair(std::move(r));
++        if (distance_metric == DistanceMetric::L2) {
++          auto r = detail::ivf::qv_query_heap_infinite_ram(
++              top_centroids,
++              mat,
++              query_vectors,
++              nprobe,
++              k_nn,
++              nthreads,
++              sum_of_squares_distance{});
++          return make_python_pair(std::move(r));
++        } else if (distance_metric == DistanceMetric::INNER_PRODUCT) {
++          auto r = detail::ivf::qv_query_heap_infinite_ram(
++              top_centroids,
++              mat,
++              query_vectors,
++              nprobe,
++              k_nn,
++              nthreads,
++              inner_product_distance{});
++          return make_python_pair(std::move(r));
++        } else if (distance_metric == DistanceMetric::COSINE) {
++          auto r = detail::ivf::qv_query_heap_infinite_ram(
++              top_centroids,
++              mat,
++              query_vectors,
++              nprobe,
++              k_nn,
++              nthreads,
++              cosine_distance_normalized{});
++          return make_python_pair(std::move(r));
++        } else {
++          throw std::runtime_error("Invalid distance metric");
++        }
+       },
+       py::keep_alive<1, 2>());
+ }
+@@ -195,24 +225,59 @@ static void declare_qv_query_heap_finite_ram(
+          size_t k_nn,
+          size_t upper_bound,
+          size_t nthreads,
+-         uint64_t timestamp)
++         uint64_t timestamp,
++         DistanceMetric distance_metric = DistanceMetric::L2)
+           -> py::tuple {  // std::tuple<ColMajorMatrix<float>,
+                           // ColMajorMatrix<size_t>> { //
+                           // TODO change return type
+-        auto r = detail::ivf::qv_query_heap_finite_ram<T, Id_Type>(
+-            ctx,
+-            parts_uri,
+-            centroids,
+-            query_vectors,
+-            indices,
+-            ids_uri,
+-            nprobe,
+-            k_nn,
+-            upper_bound,
+-            nthreads,
+-            timestamp);
+-
+-        return make_python_pair(std::move(r));
++        if (distance_metric == DistanceMetric::L2) {
++          auto r = detail::ivf::qv_query_heap_finite_ram<T, Id_Type>(
++              ctx,
++              parts_uri,
++              centroids,
++              query_vectors,
++              indices,
++              ids_uri,
++              nprobe,
++              k_nn,
++              upper_bound,
++              nthreads,
++              timestamp,
++              sum_of_squares_distance{});
++          return make_python_pair(std::move(r));
++        } else if (distance_metric == DistanceMetric::INNER_PRODUCT) {
++          auto r = detail::ivf::qv_query_heap_finite_ram<T, Id_Type>(
++              ctx,
++              parts_uri,
++              centroids,
++              query_vectors,
++              indices,
++              ids_uri,
++              nprobe,
++              k_nn,
++              upper_bound,
++              nthreads,
++              timestamp,
++              inner_product_distance{});
++          return make_python_pair(std::move(r));
++        } else if (distance_metric == DistanceMetric::COSINE) {
++          auto r = detail::ivf::qv_query_heap_finite_ram<T, Id_Type>(
++              ctx,
++              parts_uri,
++              centroids,
++              query_vectors,
++              indices,
++              ids_uri,
++              nprobe,
++              k_nn,
++              upper_bound,
++              nthreads,
++              timestamp,
++              cosine_distance_normalized{});
++          return make_python_pair(std::move(r));
++        } else {
++          throw std::runtime_error("Invalid distance metric");
++        }
+       },
+       py::keep_alive<1, 2>());
+ }
+@@ -229,7 +294,8 @@ static void declare_nuv_query_heap_infinite_ram(
+          std::vector<Id_Type>& ids,
+          size_t nprobe,
+          size_t k_nn,
+-         size_t nthreads)
++         size_t nthreads,
++         DistanceMetric distance_metric = DistanceMetric::L2)
+           -> std::tuple<
+               ColMajorMatrix<float>,
+               ColMajorMatrix<uint64_t>> {  // TODO change return type
+@@ -240,14 +306,39 @@ static void declare_nuv_query_heap_infinite_ram(
+             detail::ivf::partition_ivf_flat_index<Id_Type>(
+                 centroids, query_vectors, nprobe, nthreads);
+ 
+-        auto r = detail::ivf::nuv_query_heap_infinite_ram(
+-            mat,
+-            active_partitions,
+-            query_vectors,
+-            active_queries,
+-            k_nn,
+-            nthreads);
+-        return r;
++        if (distance_metric == DistanceMetric::L2) {
++          auto r = detail::ivf::nuv_query_heap_infinite_ram(
++              mat,
++              active_partitions,
++              query_vectors,
++              active_queries,
++              k_nn,
++              nthreads,
++              sum_of_squares_distance{});
++          return r;
++        } else if (distance_metric == DistanceMetric::INNER_PRODUCT) {
++          auto r = detail::ivf::nuv_query_heap_infinite_ram(
++              mat,
++              active_partitions,
++              query_vectors,
++              active_queries,
++              k_nn,
++              nthreads,
++              inner_product_distance{});
++          return r;
++        } else if (distance_metric == DistanceMetric::COSINE) {
++          auto r = detail::ivf::nuv_query_heap_infinite_ram(
++              mat,
++              active_partitions,
++              query_vectors,
++              active_queries,
++              k_nn,
++              nthreads,
++              cosine_distance_normalized{});
++          return r;
++        } else {
++          throw std::runtime_error("Invalid distance metric");
++        }
+       },
+       py::keep_alive<1, 2>());
+ }
+@@ -267,7 +358,8 @@ static void declare_nuv_query_heap_finite_ram(
+          size_t k_nn,
+          size_t upper_bound,
+          size_t nthreads,
+-         uint64_t timestamp)
++         uint64_t timestamp,
++         DistanceMetric distance_metric = DistanceMetric::L2)
+           -> std::tuple<
+               ColMajorMatrix<float>,
+               ColMajorMatrix<uint64_t>> {  // TODO change return type
+@@ -288,10 +380,39 @@ static void declare_nuv_query_heap_finite_ram(
+             upper_bound,
+             temporal_policy);
+ 
+-        auto r = detail::ivf::nuv_query_heap_finite_ram_reg_blocked(
+-            mat, query_vectors, active_queries, k_nn, upper_bound, nthreads);
+-
+-        return r;
++        if (distance_metric == DistanceMetric::L2) {
++          auto r = detail::ivf::nuv_query_heap_finite_ram_reg_blocked(
++              mat,
++              query_vectors,
++              active_queries,
++              k_nn,
++              upper_bound,
++              nthreads,
++              sum_of_squares_distance{});
++          return r;
++        } else if (distance_metric == DistanceMetric::INNER_PRODUCT) {
++          auto r = detail::ivf::nuv_query_heap_finite_ram_reg_blocked(
++              mat,
++              query_vectors,
++              active_queries,
++              k_nn,
++              upper_bound,
++              nthreads,
++              inner_product_distance{});
++          return r;
++        } else if (distance_metric == DistanceMetric::COSINE) {
++          auto r = detail::ivf::nuv_query_heap_finite_ram_reg_blocked(
++              mat,
++              query_vectors,
++              active_queries,
++              k_nn,
++              upper_bound,
++              nthreads,
++              cosine_distance_normalized{});
++          return r;
++        } else {
++          throw std::runtime_error("Invalid distance metric");
++        }
+       },
+       py::keep_alive<1, 2>());
+ }
+@@ -594,6 +715,8 @@ static void declare_vq_query_heap(py::module& m, const std::string& suffix) {
+           auto r = detail::flat::vq_query_heap(
+               data, query_vectors, ids, k, nthreads, cosine_distance{});
+           return r;
++        } else {
++          throw std::runtime_error("Invalid distance metric");
+         }
+       });
+ }
+@@ -622,6 +745,8 @@ static void declare_vq_query_heap_pyarray(
+           auto r = detail::flat::vq_query_heap(
+               data, query_vectors, ids, k, nthreads, cosine_distance{});
+           return r;
++        } else {
++          throw std::runtime_error("Invalid distance metric");
+         }
+       });
+ }
+@@ -757,6 +882,8 @@ PYBIND11_MODULE(_tiledbvspy, m) {
+           auto r = detail::flat::vq_query_heap(
+               data, query_vectors, k, nthreads, cosine_distance{});
+           return r;
++        } else {
++          throw std::runtime_error("Invalid distance metric");
+         }
+       });
+ 
+@@ -780,6 +907,8 @@ PYBIND11_MODULE(_tiledbvspy, m) {
+           auto r = detail::flat::vq_query_heap(
+               data, query_vectors, k, nthreads, cosine_distance{});
+           return r;
++        } else {
++          throw std::runtime_error("Invalid distance metric");
+         }
+       });
+ 
+@@ -803,6 +932,8 @@ PYBIND11_MODULE(_tiledbvspy, m) {
+           auto r = detail::flat::vq_query_heap(
+               data, query_vectors, k, nthreads, cosine_distance{});
+           return r;
++        } else {
++          throw std::runtime_error("Invalid distance metric");
+         }
+       });
+ 
+diff --git a/apis/python/src/tiledb/vector_search/module.py b/apis/python/src/tiledb/vector_search/module.py
+index acb4ea86..5a425b63 100644
+--- a/apis/python/src/tiledb/vector_search/module.py
++++ b/apis/python/src/tiledb/vector_search/module.py
+@@ -274,6 +274,7 @@ def ivf_query_ram(
+     nthreads: int,
+     ctx: "Ctx" = None,
+     use_nuv_implementation: bool = False,
++    distance_metric: vspy.DistanceMetric = vspy.DistanceMetric.L2,
+ ):
+     """
+     Run IVF vector query using infinite RAM
+@@ -314,6 +315,7 @@ def ivf_query_ram(
+             nprobe,
+             k_nn,
+             nthreads,
++            distance_metric,
+         ]
+     )
+ 
+@@ -353,6 +355,7 @@ def ivf_query(
+     ctx: "Ctx" = None,
+     use_nuv_implementation: bool = False,
+     timestamp: int = 0,
++    distance_metric: vspy.DistanceMetric = vspy.DistanceMetric.L2,
+ ):
+     """
+     Run IVF vector query using a memory budget
+@@ -400,6 +403,7 @@ def ivf_query(
+             memory_budget,
+             nthreads,
+             timestamp,
++            distance_metric,
+         ]
+     )
+ 
+diff --git a/apis/python/src/tiledb/vector_search/utils.py b/apis/python/src/tiledb/vector_search/utils.py
+index a0fe0a3d..03366ac6 100644
+--- a/apis/python/src/tiledb/vector_search/utils.py
++++ b/apis/python/src/tiledb/vector_search/utils.py
+@@ -104,3 +104,38 @@ def write_ivecs(uri, data, ctx_or_config=None):
+ 
+ def write_fvecs(uri, data, ctx_or_config=None):
+     _write_vecs_t(uri, data, np.float32, ctx_or_config)
++
++
++def normalize_vector(vector: np.array) -> np.array:
++    """
++    Normalize a single vector to unit length.
++
++    Args:
++    vector (np.array): Input vector to be normalized.
++
++    Returns:
++    np.array: Normalized vector.
++    """
++    if vector.dtype == object:
++        return np.array([normalize_vector(v) for v in vector])
++
++    norm = np.linalg.norm(vector)
++    if norm == 0:
++        return vector
++    return vector / norm
++
++
++def normalize_vectors(vectors: np.ndarray) -> np.ndarray:
++    """
++    Normalize an array of vectors to unit length while preserving the original array structure.
++
++    Args:
++    vectors (np.ndarray): Input array of vectors to be normalized.
++
++    Returns:
++    np.ndarray: Array of normalized vectors with the same structure as the input.
++    """
++    normalized = np.empty_like(vectors)
++    for i, v in enumerate(vectors):
++        normalized[i] = normalize_vector(v)
++    return normalized
+diff --git a/src/include/api/vamana_index.h b/src/include/api/vamana_index.h
+index e52f5df0..44f4fc3f 100644
+--- a/src/include/api/vamana_index.h
++++ b/src/include/api/vamana_index.h
+@@ -64,13 +64,13 @@
+  *   - id_type: uint32 or uint64
+  *   - adjacency_row_index_type: uint32 or uint64
+  */
++
+ class IndexVamana {
+  public:
+   IndexVamana(const IndexVamana&) = delete;
+   IndexVamana(IndexVamana&&) = default;
+   IndexVamana& operator=(const IndexVamana&) = delete;
+   IndexVamana& operator=(IndexVamana&&) = default;
+-
+   /**
+    * @brief Create an index with the given configuration. The index in this
+    * state must next be trained. The sequence for creating an index in this
+diff --git a/src/include/scoring.h b/src/include/scoring.h
+index 5ee88a08..becbe357 100644
+--- a/src/include/scoring.h
++++ b/src/include/scoring.h
+@@ -260,22 +260,22 @@ struct inner_product_distance {
+ #ifdef __AVX2__
+   template <feature_vector V, feature_vector U>
+   constexpr inline float operator()(const V& a, const U& b) const {
+-    return -avx2_inner_product(a, b);
++    return 1.0 / avx2_inner_product(a, b);
+   }
+ 
+   template <feature_vector V>
+   constexpr inline float operator()(const V& a) const {
+-    return -avx2_inner_product(a);
++    return 1.0 / avx2_inner_product(a);
+   }
+ #else
+   template <feature_vector V, feature_vector U>
+   constexpr inline float operator()(const V& a, const U& b) const {
+-    return -unroll4_inner_product(a, b);
++    return 1.0 / unroll4_inner_product(a, b);
+   }
+ 
+   template <feature_vector V>
+   constexpr inline float operator()(const V& a) const {
+-    return -unroll4_inner_product(a);
++    return 1.0 / unroll4_inner_product(a);
+   }
+ #endif
+ };
+@@ -296,12 +296,20 @@ struct cosine_distance {
+   template <feature_vector V, feature_vector U>
+   inline float operator()(const V& a, const U& b) const {
+     float mag = sqrt(l2_distance(a) * l2_distance(b));
+-    return 1 - (-inner_product(a, b)) / (mag == 0 ? 1 : mag);
++    return 1 - (1.0 / inner_product(a, b)) / (mag == 0 ? 1 : mag);
++  }
++};
++
++struct cosine_distance_normalized {
++  template <feature_vector V, feature_vector U>
++  inline float operator()(const V& a, const U& b) const {
++    return 1 - (1.0 / inner_product(a, b));
+   }
+ };
+ 
+ }  // namespace _cosine_distance
+ using cosine_distance = _cosine_distance::cosine_distance;
++using cosine_distance_normalized = _cosine_distance::cosine_distance_normalized;
+ 
+ enum class DistanceMetric : uint32_t { L2 = 0, INNER_PRODUCT = 1, COSINE = 2 };
+ 

@@ -1,0 +1,10 @@
+>>>>> Start Test Output
+=== RUN   TestChannelBufferFixAtLine270
+    channel_deadlock_test.go:51: Line 270: Found buffered channel (fix applied): cfgch := make(chan types.CiliumClusterConfig, 1)
+    channel_deadlock_test.go:80: Channel send completed without blocking
+--- PASS: TestChannelBufferFixAtLine270 (0.00s)
+PASS
+ok  	github.com/cilium/cilium/pkg/clustermesh/common	0.030s
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0
+EXIT_CODE=0

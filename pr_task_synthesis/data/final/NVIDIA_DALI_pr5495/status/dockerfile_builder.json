@@ -1,0 +1,18 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image": "nvidia/cuda:12.0.1-devel-ubuntu22.04",
+  "copied_artifacts": [
+    "setup_runtime.sh",
+    "repo_setup.sh"
+  ],
+  "uses_repo_setup_script": true,
+  "repo_materialization_mode": "git_clone_via_script",
+  "container_build_plan_written": true,
+  "build_backend_target": "buildah",
+  "buildability_assessment": "buildable",
+  "blocking_risks": [],
+  "warnings": [],
+  "recommended_fixes": [],
+  "notes": "Dockerfile.final ordering fixed: setup_runtime.sh now runs BEFORE repo_setup.sh to ensure git and system packages are installed before repo_setup.sh attempts to clone the repository. Single-stage build from nvidia/cuda:12.0.1-devel-ubuntu22.04. repo_setup.sh clones NVIDIA DALI repository to /workspace. setup_runtime.sh installs system packages (cmake, build-essential, ninja-build, python3-venv) and creates Python venv at /opt/benchmark/dali_venv with pytest and numpy. eval.sh and test files are intentionally NOT baked into the image as they are runtime-mounted verifier assets. Final WORKDIR is /workspace. Build context files (setup_runtime.sh, repo_setup.sh) are present in /artifacts/environment/. Ready for Buildah validation."
+}

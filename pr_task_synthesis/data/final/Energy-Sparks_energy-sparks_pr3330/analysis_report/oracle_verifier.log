@@ -1,0 +1,22 @@
+>>>>> Start Test Output
+warning: parser/current is loading parser/ruby31, which recognizes 3.1.4-compliant syntax, but you are running 3.1.7.
+Please see https://github.com/whitequark/parser#compatibility-with-ruby-mri.
+Knapsack adapter is off!
+/opt/benchmark/vendor/bundle/ruby/3.1.0/gems/pg-1.5.4/lib/pg/text_decoder/timestamp.rb:9:in `initialize': PG::Coder.new(hash) is deprecated. Please use keyword arguments instead! Called from /opt/benchmark/vendor/bundle/ruby/3.1.0/gems/activerecord-6.1.7.6/lib/active_record/connection_adapters/postgresql_adapter.rb:883:in `new' (StructuredWarnings::StandardWarning)
+/opt/benchmark/vendor/bundle/ruby/3.1.0/gems/pg-1.5.4/lib/pg/text_decoder/timestamp.rb:9:in `initialize': PG::Coder.new(hash) is deprecated. Please use keyword arguments instead! Called from /opt/benchmark/vendor/bundle/ruby/3.1.0/gems/activerecord-6.1.7.6/lib/active_record/connection_adapters/postgresql_adapter.rb:883:in `new' (StructuredWarnings::StandardWarning)
+
+Randomized with seed 29419
+
+Schools::UsageController
+  GET #show
+    handles invalid parameters
+    responds successfully
+
+Finished in 0.78077 seconds (files took 4.61 seconds to load)
+2 examples, 0 failures
+
+Randomized with seed 29419
+
+Coverage report generated for RSpec to /workspace/coverage. 1739 / 25475 LOC (6.83%) covered.
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

@@ -1,0 +1,65 @@
+{
+  "base_image_candidate": "python:3.11-slim",
+  "system_packages": [
+    "git",
+    "curl",
+    "python3-pip",
+    "g++"
+  ],
+  "base_setup_commands": [
+    "apt-get update -qq && apt-get install -y -qq git curl python3-pip g++"
+  ],
+  "setup_runtime_commands": [
+    "python3 -m venv /opt/benchmark/venv",
+    "source /opt/benchmark/venv/bin/activate",
+    "pip install --upgrade pip setuptools wheel",
+    "pip install torch==2.4.0 --index-url https://download.pytorch.org/whl/cpu",
+    "pip install transformers>=4.31.0,<5.0.0 accelerate>=0.26.0 safetensors datasets peft>=0.5.0,<0.9.0 tqdm numpy<2.0.0 sentencepiece rouge gekko",
+    "pip install pytest parameterized",
+    "BUILD_CUDA_EXT=0 DISABLE_QIGEN=1 pip install -e ."
+  ],
+  "activation_commands": [
+    "source /opt/benchmark/venv/bin/activate"
+  ],
+  "activation_command": "source /opt/benchmark/venv/bin/activate",
+  "activation_type": "venv",
+  "activation_validation_command": "bash -c 'source /opt/benchmark/venv/bin/activate && python -c \"import auto_gptq; print(\\\"OK\\\")\"'",
+  "detected_test_command": "python -m pytest tests/test_q4.py -v",
+  "runtime_smoke_command": "python -c \"import auto_gptq; print(auto_gptq.__version__)\"",
+  "runtime_profile": {
+    "ecosystem": "Python",
+    "package_manager": "pip",
+    "env": "venv",
+    "env_name": "/opt/benchmark/venv",
+    "prepare_commands": [
+      "python3 -m venv /opt/benchmark/venv",
+      "pip install --upgrade pip setuptools wheel"
+    ],
+    "activation_commands": [
+      "source /opt/benchmark/venv/bin/activate"
+    ],
+    "base_deps_installed": [
+      "torch==2.4.0+cpu",
+      "transformers>=4.31.0,<5.0.0",
+      "accelerate>=0.26.0",
+      "safetensors",
+      "datasets",
+      "peft>=0.5.0,<0.9.0",
+      "tqdm",
+      "numpy<2.0.0",
+      "sentencepiece",
+      "rouge",
+      "gekko",
+      "pytest",
+      "parameterized"
+    ],
+    "test_only_install_strategy": "Test dependencies (pytest, parameterized) are installed in the base environment",
+    "cache_dirs": [
+      "/opt/benchmark/venv",
+      "~/.cache/pip",
+      "~/.cache/huggingface"
+    ],
+    "notes": "CPU-only PyTorch installed for testing. CUDA extensions require GPU hardware and are skipped with BUILD_CUDA_EXT=0. Marlin kernel tests require NVIDIA GPU with compute capability 8.0+."
+  },
+  "notes": "AutoGPTQ is an LLM quantization library. The environment uses CPU-only PyTorch for basic testing since no GPU is available. Marlin kernel tests (TestsQ4Marlin) require CUDA GPU with compute capability 8.0+ (Ampere). The fix adds marlin_utils.py for persisting and reloading Marlin-format quantized models. git and curl are included in system packages. The test runner (pytest) is reachable and can collect tests."
+}

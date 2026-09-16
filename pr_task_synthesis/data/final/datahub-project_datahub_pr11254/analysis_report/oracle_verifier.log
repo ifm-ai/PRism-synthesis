@@ -1,0 +1,22 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /tests/tests
+plugins: docker-3.2.5, anyio-4.14.0, cov-7.1.0
+collecting ... collected 2 items
+
+../tests/tests/test_clustering_key.py::test_clustering_key_fix_present FAILED [ 50%]
+../tests/tests/test_clustering_key.py::test_clustering_key_behavior PASSED [100%]
+
+=================================== FAILURES ===================================
+_______________________ test_clustering_key_fix_present ________________________
+/tests/tests/test_clustering_key.py:37: in test_clustering_key_fix_present
+    assert 'custom_properties = {}' in source_code, \
+E   AssertionError: Fix should initialize custom_properties = {}
+E   assert 'custom_properties = {}' in 'import itertools\nimport logging\nfrom typing import Dict, Iterable, List, Optional, Union\n\nfrom datahub.configuration.pattern_utils import is_schema_allowed\nfrom datahub.emitter.mce_builder import (\n    make_data_platform_urn,\n    make_dataset_urn_with_platform_instance,\n    make_schema_field_urn,\n    make_tag_urn,\n)\nfrom datahub.emitter.mcp import MetadataChangeProposalWrapper\nfrom datahub.ingestion.api.source import SourceReport\nfrom datahub.ingestion.api.workunit import MetadataWorkUnit\nfrom datahub.ingestion.glossary.classification_mixin import (\n    ClassificationHandler,\n    classification_workunit_processor,\n)\nfrom datahub.ingestion.source.common.subtypes import (\n    DatasetContainerSubTypes,\n    DatasetSubTypes,\n)\nfrom datahub.ingestion.source.snowflake.constants import (\n    GENERIC_PERMISSION_ERROR_KEY,\n    SNOWFLAKE_DATABASE,\n    SnowflakeObjectDomain,\n)\nfrom datahub.ingestion.source.snowflake.snowflake_config import (\n    SnowflakeV2Config,\n    TagOption,\n)\nfrom datahub.ingestion.source.snowflake.snowflake_connection import (\n    SnowflakeConnection,\n    SnowflakePermissionError,\n)\nfrom datahub.ingestion.source.snowflake.snowflake_d...owflakeColumn]:\n        schema_name = snowflake_schema.name\n        columns = self.data_dictionary.get_columns_for_schema(\n            schema_name,\n            db_name,\n            cache_exclude_all_objects=itertools.chain(\n                snowflake_schema.tables, snowflake_schema.views\n            ),\n        )\n\n        # Access to table but none of its columns - is this possible ?\n        return columns.get(table_name, [])\n\n    def get_pk_constraints_for_table(\n        self, table_name: str, schema_name: str, db_name: str\n    ) -> Optional[SnowflakePK]:\n        constraints = self.data_dictionary.get_pk_constraints_for_schema(\n            schema_name, db_name\n        )\n\n        # Access to table but none of its constraints - is this possible ?\n        return constraints.get(table_name)\n\n    def get_fk_constraints_for_table(\n        self, table_name: str, schema_name: str, db_name: str\n    ) -> List[SnowflakeFK]:\n        constraints = self.data_dictionary.get_fk_constraints_for_schema(\n            schema_name, db_name\n        )\n\n        # Access to table but none of its constraints - is this possible ?\n        return constraints.get(table_name, [])\n'
+=========================== short test summary info ============================
+FAILED ../tests/tests/test_clustering_key.py::test_clustering_key_fix_present
+========================= 1 failed, 1 passed in 0.02s ==========================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

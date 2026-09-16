@@ -1,0 +1,22 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": "CI workflow runs on ubuntu-20.04 and windows-latest; Marlin kernel requires CUDA compute capability 8.0+ (Ampere GPUs); No macOS-specific code found; Linux is primary platform for CUDA ML workloads",
+  "language": "Python",
+  "build_system": "setuptools with CUDA extensions",
+  "test_framework": "unittest (with parameterized)",
+  "key_dependencies": [
+    "torch>=1.13.0",
+    "transformers>=4.31.0",
+    "accelerate>=0.26.0",
+    "safetensors",
+    "datasets",
+    "peft>=0.5.0",
+    "tqdm",
+    "numpy",
+    "sentencepiece"
+  ],
+  "test_command": "python -m pytest tests/test_q4.py::TestQ4Marlin -v || python -m unittest tests.test_q4.TestQ4Marlin",
+  "notes": "Repository is AutoGPTQ, an LLM quantization library. The fix adds Marlin format serialization support. Tests require CUDA GPU. Marlin kernel specifically needs Ampere GPUs (compute capability 8.0/8.6). Package installs via pip with optional CUDA extension compilation."
+}

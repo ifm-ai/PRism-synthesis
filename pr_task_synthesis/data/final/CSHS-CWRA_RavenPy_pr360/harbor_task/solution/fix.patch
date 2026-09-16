@@ -1,0 +1,74 @@
+diff --git a/ravenpy/config/commands.py b/ravenpy/config/commands.py
+index 1970116..6ee7dc4 100644
+--- a/ravenpy/config/commands.py
++++ b/ravenpy/config/commands.py
+@@ -163,7 +163,7 @@ class EvaluationPeriod(LineCommand):
+     end: dt.date
+ 
+ 
+-class CustomOutput(FlatCommand):
++class CustomOutput(LineCommand):
+     """
+     Create custom output file to track a single variable, parameter or forcing function over time at a number of
+     basins, HRUs, or across the watershed.
+@@ -796,7 +796,10 @@ class Gauge(FlatCommand):
+             forcings.difference_update(data)
+ 
+         if len(data) == 0:
+-            raise ValueError("No data found in netCDF files.")
++            raise ValueError(
++                "No data found in netCDF files. Check that variable names follow CF conventions, "
++                "or if not, provide `alt_names` mapping Raven data types to variable names."
++            )
+ 
+         # Default Gauge name
+         attrs["name"] = attrs.get("name", f"Gauge_{idx}")
+diff --git a/ravenpy/config/utils.py b/ravenpy/config/utils.py
+index 16fbb3f..a4a36be 100644
+--- a/ravenpy/config/utils.py
++++ b/ravenpy/config/utils.py
+@@ -60,7 +60,9 @@ def nc_specs(
+     else:
+         raise ValueError("NetCDF file not found.")
+ 
+-    if isinstance(alt_names, str):
++    if alt_names is None:
++        alt_names = ()
++    elif isinstance(alt_names, str):
+         alt_names = (alt_names,)
+ 
+     attrs = {
+diff --git a/ravenpy/ravenpy.py b/ravenpy/ravenpy.py
+index 456aa90..34878b8 100644
+--- a/ravenpy/ravenpy.py
++++ b/ravenpy/ravenpy.py
+@@ -283,14 +283,14 @@ def run(
+         )
+ 
+     # Confirm configdir exists
+-    configdir = Path(configdir)
++    configdir = Path(configdir).absolute()
+     if not configdir.exists():
+         raise OSError("Workdir should include configuration files.")
+ 
+     # Create outputdir
+     outputdir = Path(outputdir or "output")
+     if not outputdir.is_absolute():
+-        outputdir = configdir / outputdir
++        outputdir = (configdir / outputdir).absolute()
+ 
+     if overwrite and outputdir.exists():
+         shutil.rmtree(str(outputdir))
+diff --git a/ravenpy/utilities/coords.py b/ravenpy/utilities/coords.py
+index d945404..502661c 100644
+--- a/ravenpy/utilities/coords.py
++++ b/ravenpy/utilities/coords.py
+@@ -120,7 +120,7 @@ def units_transform(source, target, context="hydro"):
+     context : str, optional
+         Context of unit conversion. Default: "hydro".
+     """
+-    from xclim.core.units import convert_units_to, units
++    from xclim.core.units import convert_units_to
+ 
+     b = convert_units_to(0 * source, target, context)
+     a = convert_units_to(1 * source, target, context) - b

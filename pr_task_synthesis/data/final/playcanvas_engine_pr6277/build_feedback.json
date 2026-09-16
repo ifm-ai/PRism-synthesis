@@ -1,0 +1,15 @@
+{
+  "is_finish": true,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "failure_domain": null,
+  "route_to": null,
+  "blocking_errors": [],
+  "warnings": [],
+  "next_actions": [
+    "proceed_to_verifier_packaging",
+    "run_verification_tests"
+  ],
+  "notes": "Build validation completed successfully. Dockerfile.final builds without errors. All build steps executed: base image pulled (node:18-bookworm), system packages installed (git, curl, xvfb, npm, chromium), scripts copied and executed (repo_setup.sh cloned PlayCanvas repository, setup_runtime.sh installed npm dependencies). OCI archive exported to /artifacts/environment/openenv_validation_oci.tar. The eval.sh format fix does not affect the Dockerfile as eval.sh is runtime-mounted, not baked into the image."
+}

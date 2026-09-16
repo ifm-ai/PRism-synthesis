@@ -1,0 +1,75 @@
+diff --git a/src/platform/graphics/shader-utils.js b/src/platform/graphics/shader-utils.js
+index ef9a20cae..1f6235f38 100644
+--- a/src/platform/graphics/shader-utils.js
++++ b/src/platform/graphics/shader-utils.js
+@@ -241,12 +241,17 @@ class ShaderUtils {
+             const startOfAttribName = vsCode.lastIndexOf(' ', endOfLine);
+             const attribName = vsCode.substring(startOfAttribName + 1, endOfLine);
+ 
+-            const semantic = _attrib2Semantic[attribName];
+-            if (semantic !== undefined) {
+-                attribs[attribName] = semantic;
++            // if the attribute already exists in the semantic map
++            if (attribs[attribName]) {
++                Debug.warn(`Attribute [${attribName}] already exists when extracting the attributes from the vertex shader, ignoring.`, { vsCode });
+             } else {
+-                attribs[attribName] = "ATTR" + attrs;
+-                attrs++;
++                const semantic = _attrib2Semantic[attribName];
++                if (semantic !== undefined) {
++                    attribs[attribName] = semantic;
++                } else {
++                    attribs[attribName] = "ATTR" + attrs;
++                    attrs++;
++                }
+             }
+ 
+             found = vsCode.indexOf("attribute", found + 1);
+diff --git a/src/scene/shader-lib/chunks/particle/vert/particle_cpu.js b/src/scene/shader-lib/chunks/particle/vert/particle_cpu.js
+index a3cda526e..8960ac586 100644
+--- a/src/scene/shader-lib/chunks/particle/vert/particle_cpu.js
++++ b/src/scene/shader-lib/chunks/particle/vert/particle_cpu.js
+@@ -5,6 +5,7 @@ attribute vec4 particle_vertexData3;  // XYZ = particle local pos, W = velocity.
+ attribute float particle_vertexData4; // particle id
+ 
+ // type depends on useMesh property. Start with X = velocity.z, Y = particle ID and for mesh particles proceeds with Z = mesh UV.x, W = mesh UV.y
++// Note: This generates a duplicate attribute warning, as the scanning we do is very simple.
+ #ifndef USE_MESH
+ attribute vec2 particle_vertexData5;
+ #else
+@@ -30,9 +31,12 @@ uniform vec3 wrapBounds;
+ uniform vec3 emitterScale;
+ uniform vec3 faceTangent;
+ uniform vec3 faceBinorm;
+-uniform highp sampler2D internalTex0;
+-uniform highp sampler2D internalTex1;
+-uniform highp sampler2D internalTex2;
++
++#ifdef PARTICLE_GPU
++    uniform highp sampler2D internalTex0;
++    uniform highp sampler2D internalTex1;
++    uniform highp sampler2D internalTex2;
++#endif
+ uniform vec3 emitterPos;
+ 
+ varying vec4 texCoordsAlphaLife;
+diff --git a/src/scene/shader-lib/chunks/particle/vert/particle_init.js b/src/scene/shader-lib/chunks/particle/vert/particle_init.js
+index 66f3d74f7..91634d6a1 100644
+--- a/src/scene/shader-lib/chunks/particle/vert/particle_init.js
++++ b/src/scene/shader-lib/chunks/particle/vert/particle_init.js
+@@ -34,9 +34,12 @@ uniform float seed;
+ uniform float delta;
+ uniform sampler2D particleTexOUT;
+ uniform sampler2D particleTexIN;
+-uniform highp sampler2D internalTex0;
+-uniform highp sampler2D internalTex1;
+-uniform highp sampler2D internalTex2;
++
++#ifdef PARTICLE_GPU
++    uniform highp sampler2D internalTex0;
++    uniform highp sampler2D internalTex1;
++    uniform highp sampler2D internalTex2;
++#endif
+ 
+ #ifndef CAMERAPLANES
+ #define CAMERAPLANES

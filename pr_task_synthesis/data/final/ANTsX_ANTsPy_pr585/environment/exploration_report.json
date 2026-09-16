@@ -1,0 +1,76 @@
+{
+  "pr_summary": "Implement a new boolean parameter `singleprecision` on the high-level `apply_transforms` function in ANTsPy. When True, the underlying transformation should be performed in single precision (float32), but the function must still return an ANTsImage whose pixeltype matches the supplied moving image. The returned image must preserve the physical space of the fixed image.",
+  "runtime_family": "Python",
+  "package_manager": "pip",
+  "touched_files": [
+    "ants/registration/apply_transforms.py"
+  ],
+  "important_build_files": [
+    "setup.py",
+    "requirements.txt",
+    "environment.yml",
+    "ants/lib/CMakeLists.txt",
+    "scripts/configure_ITK.sh",
+    "scripts/configure_ANTsPy.sh"
+  ],
+  "important_test_files": [
+    "tests/test_registation.py",
+    "tests/test_core_ants_transform.py",
+    "tests/run_tests.sh"
+  ],
+  "candidate_build_commands": [
+    "python3 setup.py install",
+    "pip install antspyx",
+    "pip install -e ."
+  ],
+  "candidate_test_commands": [
+    "bash tests/run_tests.sh",
+    "python3 tests/test_registation.py",
+    "python3 -m pytest tests/"
+  ],
+  "candidate_smoke_commands": [
+    "python3 -c \"import ants; print(ants.__version__)\"",
+    "python3 -c \"import ants; img = ants.image_read(ants.get_ants_data('r16')); print(img.shape)\""
+  ],
+  "candidate_activation_checks": [
+    "python3 -c \"import ants\"",
+    "python3 -c \"from ants.registration.apply_transforms import apply_transforms\""
+  ],
+  "environment_management": "conda (environment.yml provided), pip",
+  "special_system_dependencies": [
+    "cmake (>=3.10.0)",
+    "ITK (built from source via scripts/configure_ITK.sh)",
+    "ANTs core C++ library (built from source via scripts/configure_ANTsPy.sh)",
+    "libblas-dev",
+    "liblapack-dev",
+    "gfortran",
+    "libpng-dev",
+    "python3-dev"
+  ],
+  "high_value_files": [
+    "ants/registration/apply_transforms.py",
+    "tests/test_registation.py",
+    "tests/test_core_ants_transform.py",
+    "setup.py",
+    "scripts/configure_ITK.sh",
+    "scripts/configure_ANTsPy.sh"
+  ],
+  "patch_file_cues": [
+    "ants/registration/apply_transforms.py - adds singleprecision parameter",
+    "The fix modifies the apply_transforms function to support float32 computation"
+  ],
+  "test_file_cues": [
+    "tests/test_registation.py - TestModule_apply_transforms class",
+    "tests/test_core_ants_transform.py - whitespace fixes in test patch",
+    "Tests verify pixeltype preservation, physical space consistency, and sum similarity"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "CI workflows (ci-pytest.yml) run on ubuntu-20.04",
+    "Shell scripts (configure_ITK.sh, configure_ANTsPy.sh) are bash scripts for Linux/Unix",
+    "setup.py uses platform.system() checks but supports Linux, macOS, and Windows",
+    "No Windows-only or macOS-only restrictions for the fix/test path",
+    "The touched file (ants/registration/apply_transforms.py) is pure Python, cross-platform"
+  ],
+  "notes": "ANTsPy is a Python wrapper around the C++ ANTs medical image processing library. The project requires building ITK and ANTs C++ libraries from source during installation. The test suite uses unittest framework. The fix adds a singleprecision parameter to apply_transforms() function. The repository supports Linux, macOS, and Windows, but CI testing primarily targets Linux (ubuntu-20.04). The project uses conda for CI environment management but can be installed via pip."
+}

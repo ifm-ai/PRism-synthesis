@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "partial",
+  "oracle_outcome": "fail",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "Solver made meaningful progress by correctly identifying lv_gif.c and initializing header fields, but missed the type change in lv_gif.h. The oracle verifier correctly detected the incomplete fix via compilation test. This is a valid keep case - the trajectory shows good localization and partial implementation, and the verifier is working correctly."
+}

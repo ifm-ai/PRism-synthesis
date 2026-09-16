@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "lvgl_lvgl_pr6472"
+description = "OpenEnv: lvgl/lvgl PR #6472"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/lvgl/lvgl.git"
+git_pr_id = "6472"
+git_base_commit = "1e2b1988aa205d096939c7401a3b971e4814af8d"
+task_id = "lvgl_lvgl_pr6472"
+repo_full_name = "lvgl/lvgl"
+domain = "DOCUMENT_IMAGE_VIDEO_PROCESSING"
+primary_language = "C"
+runtime_family = "C"
+complexity = "easy"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

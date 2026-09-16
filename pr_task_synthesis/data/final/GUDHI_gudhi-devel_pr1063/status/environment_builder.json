@@ -1,0 +1,16 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "python:3.11-slim",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Python 3.11 venv at /opt/benchmark/gudhi_env with TensorFlow 2.21.0, NumPy, Cython, pybind11, pytest, scikit-learn",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "==================================== ERRORS ====================================\n____________ ERROR collecting src/python/test/test_alpha_complex.py ____________\nImportError while importing test module '/workspace/src/python/test/test_alpha_complex.py'.\nHint: make sure your test modules/packages have valid Python names.",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "source /opt/benchmark/gudhi_env/bin/activate",
+  "notes": "Test runner (pytest) is callable. Import errors are expected because gudhi package requires CMake build. TensorFlow layers tests will work once gudhi is built and installed."
+}

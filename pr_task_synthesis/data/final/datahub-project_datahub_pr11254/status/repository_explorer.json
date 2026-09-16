@@ -1,0 +1,25 @@
+{
+  "status": "success",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "blocks_reason": null,
+  "high_value_files": [
+    "metadata-ingestion/src/datahub/ingestion/source/snowflake/snowflake_schema_gen.py",
+    "metadata-ingestion/tests/integration/snowflake/common.py",
+    "metadata-ingestion/tests/integration/snowflake/snowflake_golden.json",
+    "metadata-ingestion/tests/integration/snowflake/snowflake_privatelink_golden.json",
+    "metadata-ingestion/build.gradle",
+    "metadata-ingestion/setup.py"
+  ],
+  "notes": "Repository explored successfully. This is a DataHub metadata ingestion project. The fix involves adding CLUSTERING_KEY custom property handling in the Snowflake schema generator. Tests are pytest-based integration tests in batch 2. The platform is Linux-compatible (CI runs on ubuntu-latest). No blocking issues detected.",
+  "project_type": "Python package (metadata-ingestion) within Gradle monorepo (DataHub)",
+  "test_framework": "pytest with Gradle orchestration, integration tests batched (batch 0, 1, 2)",
+  "dependency_files": [
+    "metadata-ingestion/setup.py",
+    "metadata-ingestion/setup.cfg",
+    "metadata-ingestion/pyproject.toml",
+    "build.gradle",
+    "settings.gradle",
+    "metadata-ingestion/build.gradle"
+  ]
+}

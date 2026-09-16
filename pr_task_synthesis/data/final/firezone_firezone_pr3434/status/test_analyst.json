@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "official_verifier": {
+    "execution_mode": "real_execution",
+    "test_only_exit_code": 101,
+    "test_with_fix_exit_code": 0
+  },
+  "non_discriminating": false,
+  "notes": "Verifier is properly discriminating. Test test_ipv6_allocation_can_bind_ipv6_peer fails on buggy workspace (exit 101, Peer Address Family Mismatch) and passes on fixed workspace (exit 0). The test exercises the can_relay_to() function modified by fix.patch. No hacking signals detected."
+}

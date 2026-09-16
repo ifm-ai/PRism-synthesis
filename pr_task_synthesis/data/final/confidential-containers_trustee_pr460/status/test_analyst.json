@@ -1,0 +1,30 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "official_verifier": {
+    "execution_mode": "real_execution",
+    "test_only_exit_code": 101,
+    "test_with_fix_exit_code": 0
+  },
+  "non_discriminating": false,
+  "local_test_only_exit_code": 101,
+  "local_test_with_fix_exit_code": 0,
+  "test_only_passed": false,
+  "test_with_fix_passed": true,
+  "verifier_alignment": {
+    "status": "aligned",
+    "blocks_outer_progress": false,
+    "target_overlap": "direct",
+    "patch_touched_files": ["deps/verifier/src/se/ibmse.rs"],
+    "test_target_files": ["tests/test_se_skip_certs.rs"],
+    "required_files_audit": {
+      "declared": ["eval.sh", "tests/Cargo.toml", "tests/test_se_skip_certs.rs"],
+      "flagged_unnecessary": [],
+      "path_traversal_violations": [],
+      "suggested_required_verifier_files": ["eval.sh", "tests/Cargo.toml", "tests/test_se_skip_certs.rs"],
+      "has_issues": false
+    }
+  },
+  "notes": "Verifier is now discriminating: tests FAIL on buggy code (exit 101) and PASS on fixed code (exit 0). The repaired tests verify the source code structure of ibmse.rs, checking that SE_SKIP_CERTS_VERIFICATION handling is unconditionally compiled (not guarded by #[cfg(debug_assertions)]). The tests correctly detect the presence/absence of the debug-only guard that the fix.patch removes."
+}

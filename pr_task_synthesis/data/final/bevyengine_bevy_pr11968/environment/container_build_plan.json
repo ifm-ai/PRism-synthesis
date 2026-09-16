@@ -1,0 +1,81 @@
+{
+  "base_image": "debian:bookworm",
+  "build_steps": [
+    {
+      "step": 1,
+      "action": "FROM",
+      "description": "Start from debian:bookworm base image"
+    },
+    {
+      "step": 2,
+      "action": "ENV",
+      "description": "Set DEBIAN_FRONTEND=noninteractive to prevent interactive prompts"
+    },
+    {
+      "step": 3,
+      "action": "RUN",
+      "description": "Install system packages: git, curl, pkg-config, libasound2-dev, libudev-dev, libwayland-dev, libxkbcommon-dev, ca-certificates, build-essential, libssl-dev"
+    },
+    {
+      "step": 4,
+      "action": "COPY",
+      "description": "Copy setup_runtime.sh and repo_setup.sh from build context to /opt/benchmark/"
+    },
+    {
+      "step": 5,
+      "action": "RUN",
+      "description": "Make build scripts executable"
+    },
+    {
+      "step": 6,
+      "action": "RUN",
+      "description": "Execute repo_setup.sh to materialize /workspace with Bevy repository"
+    },
+    {
+      "step": 7,
+      "action": "RUN",
+      "description": "Execute setup_runtime.sh to install Rust toolchain via rustup"
+    },
+    {
+      "step": 8,
+      "action": "ENV",
+      "description": "Set Rust environment variables: RUSTUP_HOME, CARGO_HOME, PATH"
+    },
+    {
+      "step": 9,
+      "action": "WORKDIR",
+      "description": "Set working directory to /workspace"
+    }
+  ],
+  "copy_operations": [
+    {
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh",
+      "purpose": "Runtime setup script for Rust toolchain installation"
+    },
+    {
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh",
+      "purpose": "Repository materialization script for Bevy project"
+    }
+  ],
+  "final_workdir": "/workspace",
+  "environment_variables": {
+    "DEBIAN_FRONTEND": "noninteractive",
+    "RUSTUP_HOME": "/opt/rustup",
+    "CARGO_HOME": "/opt/cargo",
+    "PATH": "$CARGO_HOME/bin:$PATH"
+  },
+  "runtime_profile": {
+    "ecosystem": "rust",
+    "package_manager": "cargo",
+    "activation_command": "export RUSTUP_HOME=/opt/rustup && export CARGO_HOME=/opt/cargo && export PATH=\"$CARGO_HOME/bin:$PATH\""
+  },
+  "excluded_from_image": [
+    "/artifacts/evaluation/eval.sh",
+    "/artifacts/evaluation/tests/",
+    "/artifacts/evaluation/test.patch",
+    "/workspace (not copied, materialized by repo_setup.sh)"
+  ],
+  "notes": "Evaluation assets (eval.sh, tests) are runtime-mounted verifier assets, not baked into the image. The /workspace directory is materialized during build by repo_setup.sh, not copied from the build context."
+}

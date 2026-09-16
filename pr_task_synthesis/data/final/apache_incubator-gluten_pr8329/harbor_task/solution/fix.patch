@@ -1,0 +1,13 @@
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+index 95553a5ff..da48af121 100644
+--- a/.idea/vcs.xml
++++ b/.idea/vcs.xml
+@@ -20,7 +20,7 @@
+     <option name="links">
+       <list>
+         <IssueNavigationLink>
+-          <option name="issueRegexp" value="#(\d+)|GLUTEN-(\d+)" />
++          <option name="issueRegexp" value="(?:#|GLUTEN-)(\d+)" />
+           <!--
+             GitHub share the sequence number of issues and pull requests, and it will redirect to
+             the right place when the the sequence number not match kind.

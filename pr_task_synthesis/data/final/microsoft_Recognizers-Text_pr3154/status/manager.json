@@ -1,0 +1,13 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_full_outer_turn": false,
+  "blocks_reason": null,
+  "repair_cycles_attempted": 1,
+  "workers_used": 2,
+  "iterations": 1,
+  "verifier_asset_mode": "synthesized",
+  "build_backend": "buildah",
+  "container_build_status": "success",
+  "notes": "Remediation completed successfully. External verifier reported testWithFix failed with exit code 1. Root cause: eval.sh had hardcoded /workspace paths, preventing it from working with /workspace_fixed. Fix applied by openenv-eval-builder: updated eval.sh to use ${WORKSPACE:-/workspace} for all workspace references. Local preflight now confirms: testOnly fails with exit code 1 (5 tests failed on unaccented 'anos' forms), testWithFix passes with exit code 0 (all 11 tests passed). hacking_detected: false. Verifier alignment: aligned (direct target overlap, clean required files audit). Workers invoked: openenv-eval-builder (fixed eval.sh workspace path handling), openenv-test-analyst (re-verified local preflight). No Dockerfile or build changes needed as eval.sh is mounted at runtime."
+}

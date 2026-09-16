@@ -1,0 +1,16 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "python:3.11-slim",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Python 3.11 with Poetry package manager. Virtual environment created via 'poetry env use python3.11'. Dependencies installed via 'poetry install --with dev' and pip install -e . for full pytorch-ie dependencies.",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "tests/core/test_document.py::test_is_optional_type PASSED\nplatform linux -- Python 3.11.2, pytest-9.1.1, pluggy-1.6.0\ncachedir: .pytest_cache\nrootdir: /workspace\nconfigfile: pyproject.toml",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "source $(poetry env info --path)/bin/activate",
+  "notes": "Environment specification complete. Poetry virtualenv created and dependencies installed successfully. Test runner verified reachable - pytest can collect and run tests. The pytorch_ie package and all dependencies (torch, transformers, pytorch-lightning, etc.) are now installed and importable."
+}

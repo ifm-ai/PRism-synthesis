@@ -1,0 +1,810 @@
+-- The C compiler identification is GNU 12.2.0
+-- The CXX compiler identification is GNU 12.2.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test FLAG_SUPPORTED_FOR_C__FSANITIZE=LEAK
+-- Performing Test FLAG_SUPPORTED_FOR_C__FSANITIZE=LEAK - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__FSANITIZE=UNDEFINED
+-- Performing Test FLAG_SUPPORTED_FOR_C__FSANITIZE=UNDEFINED - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__DLV_CONF_PATH=/WORKSPACE/TESTS/SRC/LV_TEST_CONF.H
+-- Performing Test FLAG_SUPPORTED_FOR_C__DLV_CONF_PATH=/WORKSPACE/TESTS/SRC/LV_TEST_CONF.H - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__DLV_BUILD_TEST
+-- Performing Test FLAG_SUPPORTED_FOR_C__DLV_BUILD_TEST - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__DLV_TEST_OPTION=5
+-- Performing Test FLAG_SUPPORTED_FOR_C__DLV_TEST_OPTION=5 - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__DLVGL_CI_USING_SYS_HEAP
+-- Performing Test FLAG_SUPPORTED_FOR_C__DLVGL_CI_USING_SYS_HEAP - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WNO_UNUSED_BUT_SET_VARIABLE
+-- Performing Test FLAG_SUPPORTED_FOR_C__WNO_UNUSED_BUT_SET_VARIABLE - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__PEDANTIC_ERRORS
+-- Performing Test FLAG_SUPPORTED_FOR_C__PEDANTIC_ERRORS - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WALL
+-- Performing Test FLAG_SUPPORTED_FOR_C__WALL - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WFORMAT_SECURITY
+-- Performing Test FLAG_SUPPORTED_FOR_C__WFORMAT_SECURITY - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WCLOBBERED
+-- Performing Test FLAG_SUPPORTED_FOR_C__WCLOBBERED - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WDEPRECATED
+-- Performing Test FLAG_SUPPORTED_FOR_C__WDEPRECATED - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WDOUBLE_PROMOTION
+-- Performing Test FLAG_SUPPORTED_FOR_C__WDOUBLE_PROMOTION - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WEMPTY_BODY
+-- Performing Test FLAG_SUPPORTED_FOR_C__WEMPTY_BODY - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WEXTRA
+-- Performing Test FLAG_SUPPORTED_FOR_C__WEXTRA - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WMAYBE_UNINITIALIZED
+-- Performing Test FLAG_SUPPORTED_FOR_C__WMAYBE_UNINITIALIZED - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WMISSING_PROTOTYPES
+-- Performing Test FLAG_SUPPORTED_FOR_C__WMISSING_PROTOTYPES - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WPOINTER_ARITH
+-- Performing Test FLAG_SUPPORTED_FOR_C__WPOINTER_ARITH - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WMULTICHAR
+-- Performing Test FLAG_SUPPORTED_FOR_C__WMULTICHAR - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WPEDANTIC
+-- Performing Test FLAG_SUPPORTED_FOR_C__WPEDANTIC - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WRETURN_TYPE
+-- Performing Test FLAG_SUPPORTED_FOR_C__WRETURN_TYPE - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WSHADOW
+-- Performing Test FLAG_SUPPORTED_FOR_C__WSHADOW - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WSHIFT_NEGATIVE_VALUE
+-- Performing Test FLAG_SUPPORTED_FOR_C__WSHIFT_NEGATIVE_VALUE - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WSIZEOF_POINTER_MEMACCESS
+-- Performing Test FLAG_SUPPORTED_FOR_C__WSIZEOF_POINTER_MEMACCESS - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WTYPE_LIMITS
+-- Performing Test FLAG_SUPPORTED_FOR_C__WTYPE_LIMITS - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WUNDEF
+-- Performing Test FLAG_SUPPORTED_FOR_C__WUNDEF - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WUNINITIALIZED
+-- Performing Test FLAG_SUPPORTED_FOR_C__WUNINITIALIZED - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WUNREACHABLE_CODE
+-- Performing Test FLAG_SUPPORTED_FOR_C__WUNREACHABLE_CODE - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WERROR=FLOAT_CONVERSION
+-- Performing Test FLAG_SUPPORTED_FOR_C__WERROR=FLOAT_CONVERSION - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WERROR=STRICT_ALIASING
+-- Performing Test FLAG_SUPPORTED_FOR_C__WERROR=STRICT_ALIASING - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WNO_DOUBLE_PROMOTION
+-- Performing Test FLAG_SUPPORTED_FOR_C__WNO_DOUBLE_PROMOTION - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WNO_UNREACHABLE_CODE
+-- Performing Test FLAG_SUPPORTED_FOR_C__WNO_UNREACHABLE_CODE - Success
+-- Performing Test FLAG_SUPPORTED_FOR_C__WNO_MISSING_PROTOTYPES
+-- Performing Test FLAG_SUPPORTED_FOR_C__WNO_MISSING_PROTOTYPES - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__DLV_CONF_PATH=/WORKSPACE/TESTS/SRC/LV_TEST_CONF.H
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__DLV_CONF_PATH=/WORKSPACE/TESTS/SRC/LV_TEST_CONF.H - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__DLV_BUILD_TEST
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__DLV_BUILD_TEST - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__DLV_TEST_OPTION=5
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__DLV_TEST_OPTION=5 - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__DLVGL_CI_USING_SYS_HEAP
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__DLVGL_CI_USING_SYS_HEAP - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_UNUSED_BUT_SET_VARIABLE
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_UNUSED_BUT_SET_VARIABLE - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__FSANITIZE=LEAK
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__FSANITIZE=LEAK - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__FSANITIZE=UNDEFINED
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__FSANITIZE=UNDEFINED - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__PEDANTIC_ERRORS
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__PEDANTIC_ERRORS - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WALL
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WALL - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WFORMAT_SECURITY
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WFORMAT_SECURITY - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WCLOBBERED
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WCLOBBERED - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WDEPRECATED
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WDEPRECATED - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WDOUBLE_PROMOTION
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WDOUBLE_PROMOTION - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WEMPTY_BODY
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WEMPTY_BODY - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WEXTRA
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WEXTRA - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WMAYBE_UNINITIALIZED
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WMAYBE_UNINITIALIZED - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WMISSING_PROTOTYPES
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WMISSING_PROTOTYPES - Failed
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WPOINTER_ARITH
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WPOINTER_ARITH - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WMULTICHAR
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WMULTICHAR - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WPEDANTIC
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WPEDANTIC - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WRETURN_TYPE
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WRETURN_TYPE - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WSHADOW
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WSHADOW - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WSHIFT_NEGATIVE_VALUE
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WSHIFT_NEGATIVE_VALUE - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WSIZEOF_POINTER_MEMACCESS
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WSIZEOF_POINTER_MEMACCESS - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WTYPE_LIMITS
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WTYPE_LIMITS - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WUNDEF
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WUNDEF - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WUNINITIALIZED
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WUNINITIALIZED - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WUNREACHABLE_CODE
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WUNREACHABLE_CODE - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WERROR=FLOAT_CONVERSION
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WERROR=FLOAT_CONVERSION - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WERROR=STRICT_ALIASING
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WERROR=STRICT_ALIASING - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_DOUBLE_PROMOTION
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_DOUBLE_PROMOTION - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_UNREACHABLE_CODE
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_UNREACHABLE_CODE - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_SHADOW
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_SHADOW - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_UNUSED_PARAMETER
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_UNUSED_PARAMETER - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_C__11_EXTENSIONS
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_C__11_EXTENSIONS - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_MISSING_PROTOTYPES
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_MISSING_PROTOTYPES - Failed
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_DEPRECATED_COPY_WITH_USER_PROVIDED_DTOR
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_DEPRECATED_COPY_WITH_USER_PROVIDED_DTOR - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_FLOAT_CONVERSION
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_FLOAT_CONVERSION - Success
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_PEDANTIC
+-- Performing Test FLAG_SUPPORTED_FOR_CXX__WNO_PEDANTIC - Success
+-- The ASM compiler identification is GNU
+-- Found assembler: /usr/bin/cc
+-- Found Ruby: /usr/bin/ruby (found suitable version "3.1.2", minimum required is "1.8.0") 
+-- Found JPEG: /usr/lib/x86_64-linux-gnu/libjpeg.so (found version "62") 
+-- Found ZLIB: /usr/lib/x86_64-linux-gnu/libz.so (found version "1.2.13") 
+-- Found PNG: /usr/lib/x86_64-linux-gnu/libpng.so (found version "1.6.39") 
+-- Found Freetype: /usr/lib/x86_64-linux-gnu/libfreetype.so (found version "2.12.1") 
+-- Could NOT find Libinput (missing: Libinput_LIBRARY Libinput_INCLUDE_DIR) 
+-- Could NOT find OpenGL (missing: OPENGL_opengl_LIBRARY OPENGL_glx_LIBRARY OPENGL_INCLUDE_DIR) 
+-- Could NOT find GLEW (missing: GLEW_INCLUDE_DIRS GLEW_LIBRARIES) 
+CMake Warning at CMakeLists.txt:346 (find_package):
+  By not providing "Findglfw3.cmake" in CMAKE_MODULE_PATH this project has
+  asked CMake to find a package configuration file provided by "glfw3", but
+  CMake did not find one.
+
+  Could not find a package configuration file provided by "glfw3" with any of
+  the following names:
+
+    glfw3Config.cmake
+    glfw3-config.cmake
+
+  Add the installation prefix of "glfw3" to CMAKE_PREFIX_PATH or set
+  "glfw3_DIR" to a directory containing one of the above files.  If "glfw3"
+  provides a separate development package or SDK, be sure it has been
+  installed.
+
+
+OpenGL, GLEW or glfw3 not found, defaulting to 0
+libinput not found, defaulting to 0
+-- Found PkgConfig: /usr/bin/pkg-config (found version "1.8.1") 
+-- Checking for modules 'pkg_check_modules;xkbcommon'
+--   Package 'pkg_check_modules', required by 'virtual:world', not found
+--   Package 'xkbcommon', required by 'virtual:world', not found
+xkbcommon not found, defaulting to 0
+-- Checking for modules 'pkg_check_modules;libdrm'
+--   Package 'pkg_check_modules', required by 'virtual:world', not found
+--   Package 'libdrm', required by 'virtual:world', not found
+-- Could NOT find Libdrm (missing: Libdrm_LIBRARY Libdrm_INCLUDE_DIR) 
+libdrm not found, defaulting to 0
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /workspace/tests/build_test_sysheap
+[1/599] Building C object CMakeFiles/lvgl.dir/workspace/src/core/lv_group.c.o
+[2/599] Building C object CMakeFiles/lvgl.dir/workspace/src/core/lv_obj.c.o
+[3/599] Building C object CMakeFiles/lvgl.dir/workspace/src/core/lv_obj_class.c.o
+[4/599] Building C object CMakeFiles/lvgl.dir/workspace/src/core/lv_obj_draw.c.o
+[5/599] Building C object CMakeFiles/lvgl.dir/workspace/src/core/lv_obj_event.c.o
+[6/599] Building C object CMakeFiles/lvgl.dir/workspace/src/core/lv_obj_id_builtin.c.o
+[7/599] Building C object CMakeFiles/lvgl.dir/workspace/src/core/lv_obj_pos.c.o
+[8/599] Building C object CMakeFiles/lvgl.dir/workspace/src/core/lv_obj_property.c.o
+[9/599] Building C object CMakeFiles/lvgl.dir/workspace/src/core/lv_obj_scroll.c.o
+[10/599] Building C object CMakeFiles/lvgl.dir/workspace/src/core/lv_obj_style_gen.c.o
+[11/599] Building C object CMakeFiles/lvgl.dir/workspace/src/core/lv_obj_tree.c.o
+[12/599] Building C object CMakeFiles/lvgl.dir/workspace/src/display/lv_display.c.o
+[13/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/lv_draw.c.o
+[14/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/lv_draw_arc.c.o
+[15/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/lv_draw_buf.c.o
+[16/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/lv_draw_image.c.o
+[17/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/lv_draw_label.c.o
+[18/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/lv_draw_line.c.o
+[19/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/lv_draw_mask.c.o
+[20/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/lv_draw_rect.c.o
+[21/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/lv_draw_triangle.c.o
+[22/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/lv_image_decoder.c.o
+[23/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/pxp/lv_draw_buf_pxp.c.o
+[24/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/pxp/lv_draw_pxp.c.o
+[25/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/pxp/lv_draw_pxp_fill.c.o
+[26/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/pxp/lv_draw_pxp_img.c.o
+[27/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/pxp/lv_draw_pxp_layer.c.o
+[28/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/pxp/lv_pxp_cfg.c.o
+[29/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/pxp/lv_pxp_osa.c.o
+[30/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/pxp/lv_pxp_utils.c.o
+[31/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/vglite/lv_draw_buf_vglite.c.o
+[32/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/vglite/lv_draw_vglite.c.o
+[33/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/vglite/lv_draw_vglite_arc.c.o
+[34/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/vglite/lv_draw_vglite_border.c.o
+[35/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/vglite/lv_draw_vglite_fill.c.o
+[36/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/vglite/lv_draw_vglite_img.c.o
+[37/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/vglite/lv_draw_vglite_label.c.o
+[38/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/vglite/lv_draw_vglite_layer.c.o
+[39/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/vglite/lv_draw_vglite_line.c.o
+[40/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/vglite/lv_draw_vglite_triangle.c.o
+[41/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/vglite/lv_vglite_buf.c.o
+[42/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/vglite/lv_vglite_matrix.c.o
+[43/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/vglite/lv_vglite_path.c.o
+[44/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/nxp/vglite/lv_vglite_utils.c.o
+[45/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/renesas/dave2d/lv_draw_dave2d.c.o
+[46/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/renesas/dave2d/lv_draw_dave2d_arc.c.o
+[47/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/renesas/dave2d/lv_draw_dave2d_border.c.o
+[48/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/renesas/dave2d/lv_draw_dave2d_fill.c.o
+[49/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/renesas/dave2d/lv_draw_dave2d_image.c.o
+[50/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/renesas/dave2d/lv_draw_dave2d_label.c.o
+[51/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/renesas/dave2d/lv_draw_dave2d_line.c.o
+[52/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/renesas/dave2d/lv_draw_dave2d_mask_rectangle.c.o
+[53/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/renesas/dave2d/lv_draw_dave2d_triangle.c.o
+[54/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/renesas/dave2d/lv_draw_dave2d_utils.c.o
+[55/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sdl/lv_draw_sdl.c.o
+[56/599] Building ASM object CMakeFiles/lvgl.dir/workspace/src/draw/sw/blend/helium/lv_blend_helium.S.o
+[57/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/blend/lv_draw_sw_blend.c.o
+[58/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/blend/lv_draw_sw_blend_to_al88.c.o
+[59/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/blend/lv_draw_sw_blend_to_l8.c.o
+[60/599] Building ASM object CMakeFiles/lvgl.dir/workspace/src/draw/sw/blend/neon/lv_blend_neon.S.o
+[61/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/lv_draw_sw.c.o
+[62/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/lv_draw_sw_arc.c.o
+[63/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/lv_draw_sw_border.c.o
+[64/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/lv_draw_sw_fill.c.o
+[65/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/lv_draw_sw_img.c.o
+[66/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/lv_draw_sw_letter.c.o
+[67/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/lv_draw_sw_line.c.o
+[68/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/lv_draw_sw_mask_rect.c.o
+[69/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/lv_draw_sw_triangle.c.o
+[70/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/vg_lite/lv_draw_buf_vg_lite.c.o
+[71/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/vg_lite/lv_draw_vg_lite.c.o
+[72/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/vg_lite/lv_draw_vg_lite_arc.c.o
+[73/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/vg_lite/lv_draw_vg_lite_border.c.o
+[74/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/vg_lite/lv_draw_vg_lite_box_shadow.c.o
+[75/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/vg_lite/lv_draw_vg_lite_fill.c.o
+[76/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/vg_lite/lv_draw_vg_lite_img.c.o
+[77/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/vg_lite/lv_draw_vg_lite_label.c.o
+[78/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/vg_lite/lv_draw_vg_lite_layer.c.o
+[79/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/vg_lite/lv_draw_vg_lite_line.c.o
+[80/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/vg_lite/lv_draw_vg_lite_mask_rect.c.o
+[81/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/vg_lite/lv_draw_vg_lite_triangle.c.o
+[82/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/vg_lite/lv_draw_vg_lite_vector.c.o
+[83/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/vg_lite/lv_vg_lite_decoder.c.o
+[84/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/vg_lite/lv_vg_lite_grad.c.o
+[85/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/vg_lite/lv_vg_lite_math.c.o
+[86/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/vg_lite/lv_vg_lite_path.c.o
+[87/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/display/drm/lv_linux_drm.c.o
+[88/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/display/ili9341/lv_ili9341.c.o
+[89/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/display/renesas_glcdc/lv_renesas_glcdc.c.o
+[90/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/display/st7735/lv_st7735.c.o
+[91/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/display/st7789/lv_st7789.c.o
+[92/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/display/st7796/lv_st7796.c.o
+[93/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/evdev/lv_evdev.c.o
+[94/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/glfw/lv_glfw_mouse.c.o
+[95/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/glfw/lv_glfw_window.c.o
+[96/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/glfw/lv_opengles_debug.c.o
+[97/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/libinput/lv_libinput.c.o
+[98/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/libinput/lv_xkb.c.o
+[99/599] Building C object CMakeFiles/lvgl.dir/workspace/src/core/lv_obj_style.c.o
+[100/599] Building C object CMakeFiles/lvgl.dir/workspace/src/core/lv_refr.c.o
+[101/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/lv_draw_vector.c.o
+[102/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/blend/lv_draw_sw_blend_to_argb8888.c.o
+[103/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/blend/lv_draw_sw_blend_to_rgb565.c.o
+[104/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/blend/lv_draw_sw_blend_to_rgb888.c.o
+[105/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/lv_draw_sw_box_shadow.c.o
+[106/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/lv_draw_sw_gradient.c.o
+[107/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/lv_draw_sw_mask.c.o
+[108/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/lv_draw_sw_transform.c.o
+[109/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/sw/lv_draw_sw_vector.c.o
+[110/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/vg_lite/lv_vg_lite_pending.c.o
+[111/599] Building C object CMakeFiles/lvgl.dir/workspace/src/draw/vg_lite/lv_vg_lite_utils.c.o
+[112/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/display/fb/lv_linux_fbdev.c.o
+[113/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/display/lcd/lv_lcd_generic_mipi.c.o
+[114/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/glfw/lv_glfw_mouse_private.c.o
+[115/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/glfw/lv_opengles_driver.c.o
+[116/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/nuttx/lv_nuttx_cache.c.o
+[117/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/nuttx/lv_nuttx_entry.c.o
+[118/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/nuttx/lv_nuttx_fbdev.c.o
+[119/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/nuttx/lv_nuttx_image_cache.c.o
+[120/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/nuttx/lv_nuttx_lcd.c.o
+[121/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/nuttx/lv_nuttx_libuv.c.o
+[122/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/nuttx/lv_nuttx_profiler.c.o
+[123/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/nuttx/lv_nuttx_touchscreen.c.o
+[124/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/sdl/lv_sdl_keyboard.c.o
+[125/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/sdl/lv_sdl_mouse.c.o
+[126/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/sdl/lv_sdl_mousewheel.c.o
+[127/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/sdl/lv_sdl_window.c.o
+[128/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/windows/lv_windows_context.c.o
+[129/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/windows/lv_windows_display.c.o
+[130/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/windows/lv_windows_input.c.o
+[131/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/x11/lv_x11_display.c.o
+[132/599] Building C object CMakeFiles/lvgl.dir/workspace/src/drivers/x11/lv_x11_input.c.o
+[133/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_binfont_loader.c.o
+[134/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font.c.o
+[135/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_dejavu_16_persian_hebrew.c.o
+[136/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_fmt_txt.c.o
+[137/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_10.c.o
+[138/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_12.c.o
+[139/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_14.c.o
+[140/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_16.c.o
+[141/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_18.c.o
+[142/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_20.c.o
+[143/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_22.c.o
+[144/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_24.c.o
+[145/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_26.c.o
+[146/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_28.c.o
+[147/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_28_compressed.c.o
+[148/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_30.c.o
+[149/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_32.c.o
+[150/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_34.c.o
+[151/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_36.c.o
+[152/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_38.c.o
+[153/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_40.c.o
+[154/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_42.c.o
+[155/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_44.c.o
+[156/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_46.c.o
+[157/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_48.c.o
+[158/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_montserrat_8.c.o
+[159/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_simsun_14_cjk.c.o
+[160/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_simsun_16_cjk.c.o
+[161/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_unscii_16.c.o
+[162/599] Building C object CMakeFiles/lvgl.dir/workspace/src/font/lv_font_unscii_8.c.o
+[163/599] Building C object CMakeFiles/lvgl.dir/workspace/src/indev/lv_indev_scroll.c.o
+[164/599] Building C object CMakeFiles/lvgl.dir/workspace/src/layouts/flex/lv_flex.c.o
+[165/599] Building C object CMakeFiles/lvgl.dir/workspace/src/layouts/grid/lv_grid.c.o
+[166/599] Building C object CMakeFiles/lvgl.dir/workspace/src/layouts/lv_layout.c.o
+[167/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/barcode/code128.c.o
+[168/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/barcode/lv_barcode.c.o
+[169/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/bmp/lv_bmp.c.o
+[170/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/ffmpeg/lv_ffmpeg.c.o
+[171/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/freetype/lv_freetype.c.o
+[172/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/freetype/lv_freetype_glyph.c.o
+[173/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/freetype/lv_freetype_image.c.o
+[174/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/freetype/lv_freetype_outline.c.o
+[175/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/freetype/lv_ftsystem.c.o
+[176/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/fsdrv/lv_fs_cbfs.c.o
+[177/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/fsdrv/lv_fs_fatfs.c.o
+[178/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/fsdrv/lv_fs_littlefs.c.o
+[179/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/fsdrv/lv_fs_memfs.c.o
+[180/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/fsdrv/lv_fs_posix.c.o
+[181/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/fsdrv/lv_fs_stdio.c.o
+[182/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/fsdrv/lv_fs_win32.c.o
+[183/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/gif/gifdec.c.o
+[184/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/gif/lv_gif.c.o
+[185/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/libpng/lv_libpng.c.o
+[186/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/qrcode/lv_qrcode.c.o
+[187/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/rle/lv_rle.c.o
+[188/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/rlottie/lv_rlottie.c.o
+[189/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/cache/_lv_cache_lru_rb.c.o
+[190/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/cache/lv_cache.c.o
+[191/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/cache/lv_cache_entry.c.o
+[192/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/cache/lv_image_cache.c.o
+[193/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/cache/lv_image_header_cache.c.o
+[194/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_array.c.o
+[195/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_async.c.o
+[196/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_color_op.c.o
+[197/599] Building C object CMakeFiles/lvgl.dir/workspace/src/indev/lv_indev.c.o
+[198/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/bin_decoder/lv_bin_decoder.c.o
+[199/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/libjpeg_turbo/lv_libjpeg_turbo.c.o
+[200/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/lodepng/lv_lodepng.c.o
+[201/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/qrcode/qrcodegen.c.o
+[202/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/tjpgd/lv_tjpgd.c.o
+[203/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/tjpgd/tjpgd.c.o
+[204/599] Building C object CMakeFiles/lvgl.dir/workspace/src/lv_init.c.o
+[205/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_anim.c.o
+[206/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_anim_timeline.c.o
+[207/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_area.c.o
+[208/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_bidi.c.o
+[209/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_color.c.o
+[210/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_event.c.o
+[211/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_fs.c.o
+[212/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_ll.c.o
+[213/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_log.c.o
+[214/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_lru.c.o
+[215/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_math.c.o
+[216/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_palette.c.o
+[217/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_profiler_builtin.c.o
+[218/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_rb.c.o
+[219/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_style.c.o
+[220/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_style_gen.c.o
+[221/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_templ.c.o
+[222/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_text.c.o
+[223/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_text_ap.c.o
+[224/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_timer.c.o
+[225/599] Building C object CMakeFiles/lvgl.dir/workspace/src/misc/lv_utils.c.o
+[226/599] Building C object CMakeFiles/lvgl.dir/workspace/src/osal/lv_cmsis_rtos2.c.o
+[227/599] Building C object CMakeFiles/lvgl.dir/workspace/src/osal/lv_freertos.c.o
+[228/599] Building C object CMakeFiles/lvgl.dir/workspace/src/osal/lv_mqx.c.o
+[229/599] Building C object CMakeFiles/lvgl.dir/workspace/src/osal/lv_os.c.o
+[230/599] Building C object CMakeFiles/lvgl.dir/workspace/src/osal/lv_os_none.c.o
+[231/599] Building C object CMakeFiles/lvgl.dir/workspace/src/osal/lv_pthread.c.o
+[232/599] Building C object CMakeFiles/lvgl.dir/workspace/src/osal/lv_rtthread.c.o
+[233/599] Building C object CMakeFiles/lvgl.dir/workspace/src/osal/lv_windows.c.o
+[234/599] Building C object CMakeFiles/lvgl.dir/workspace/src/others/file_explorer/lv_file_explorer.c.o
+[235/599] Building C object CMakeFiles/lvgl.dir/workspace/src/others/fragment/lv_fragment.c.o
+[236/599] Building C object CMakeFiles/lvgl.dir/workspace/src/others/fragment/lv_fragment_manager.c.o
+[237/599] Building C object CMakeFiles/lvgl.dir/workspace/src/others/gridnav/lv_gridnav.c.o
+[238/599] Building C object CMakeFiles/lvgl.dir/workspace/src/others/ime/lv_ime_pinyin.c.o
+[239/599] Building C object CMakeFiles/lvgl.dir/workspace/src/others/imgfont/lv_imgfont.c.o
+[240/599] Building C object CMakeFiles/lvgl.dir/workspace/src/others/monkey/lv_monkey.c.o
+[241/599] Building C object CMakeFiles/lvgl.dir/workspace/src/others/observer/lv_observer.c.o
+[242/599] Building C object CMakeFiles/lvgl.dir/workspace/src/others/snapshot/lv_snapshot.c.o
+[243/599] Building C object CMakeFiles/lvgl.dir/workspace/src/others/sysmon/lv_sysmon.c.o
+[244/599] Building C object CMakeFiles/lvgl.dir/workspace/src/others/vg_lite_tvg/vg_lite_matrix.c.o
+[245/599] Building C object CMakeFiles/lvgl.dir/workspace/src/stdlib/builtin/lv_mem_core_builtin.c.o
+[246/599] Building C object CMakeFiles/lvgl.dir/workspace/src/stdlib/builtin/lv_sprintf_builtin.c.o
+[247/599] Building C object CMakeFiles/lvgl.dir/workspace/src/stdlib/builtin/lv_string_builtin.c.o
+[248/599] Building C object CMakeFiles/lvgl.dir/workspace/src/stdlib/builtin/lv_tlsf.c.o
+[249/599] Building C object CMakeFiles/lvgl.dir/workspace/src/stdlib/clib/lv_mem_core_clib.c.o
+[250/599] Building C object CMakeFiles/lvgl.dir/workspace/src/stdlib/clib/lv_sprintf_clib.c.o
+[251/599] Building C object CMakeFiles/lvgl.dir/workspace/src/stdlib/clib/lv_string_clib.c.o
+[252/599] Building C object CMakeFiles/lvgl.dir/workspace/src/stdlib/lv_mem.c.o
+[253/599] Building C object CMakeFiles/lvgl.dir/workspace/src/stdlib/micropython/lv_mem_core_micropython.c.o
+[254/599] Building C object CMakeFiles/lvgl.dir/workspace/src/stdlib/rtthread/lv_mem_core_rtthread.c.o
+[255/599] Building C object CMakeFiles/lvgl.dir/workspace/src/stdlib/rtthread/lv_sprintf_rtthread.c.o
+[256/599] Building C object CMakeFiles/lvgl.dir/workspace/src/stdlib/rtthread/lv_string_rtthread.c.o
+[257/599] Building C object CMakeFiles/lvgl.dir/workspace/src/themes/lv_theme.c.o
+[258/599] Building C object CMakeFiles/lvgl.dir/workspace/src/themes/simple/lv_theme_simple.c.o
+[259/599] Building C object CMakeFiles/lvgl.dir/workspace/src/tick/lv_tick.c.o
+[260/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/animimage/lv_animimage.c.o
+[261/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/bar/lv_bar.c.o
+[262/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/button/lv_button.c.o
+[263/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/calendar/lv_calendar.c.o
+[264/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/calendar/lv_calendar_chinese.c.o
+[265/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/calendar/lv_calendar_header_arrow.c.o
+[266/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/calendar/lv_calendar_header_dropdown.c.o
+[267/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/canvas/lv_canvas.c.o
+[268/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/checkbox/lv_checkbox.c.o
+[269/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/imagebutton/lv_imagebutton.c.o
+[270/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/keyboard/lv_keyboard.c.o
+[271/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/led/lv_led.c.o
+[272/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/line/lv_line.c.o
+[273/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/list/lv_list.c.o
+[274/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/lottie/lv_lottie.c.o
+[275/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/msgbox/lv_msgbox.c.o
+[276/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/objx_templ/lv_objx_templ.c.o
+[277/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/property/lv_image_properties.c.o
+[278/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/property/lv_obj_properties.c.o
+[279/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/property/lv_style_properties.c.o
+[280/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/spinbox/lv_spinbox.c.o
+[281/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/spinner/lv_spinner.c.o
+[282/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/switch/lv_switch.c.o
+[283/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/tileview/lv_tileview.c.o
+[284/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/win/lv_win.c.o
+[285/599] Building C object CMakeFiles/lvgl.dir/workspace/src/themes/default/lv_theme_default.c.o
+[286/599] Building C object CMakeFiles/lvgl.dir/workspace/src/themes/mono/lv_theme_mono.c.o
+[287/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/arc/lv_arc.c.o
+[288/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/buttonmatrix/lv_buttonmatrix.c.o
+[289/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/chart/lv_chart.c.o
+[290/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/dropdown/lv_dropdown.c.o
+[291/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/image/lv_image.c.o
+[292/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/label/lv_label.c.o
+[293/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/menu/lv_menu.c.o
+[294/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/roller/lv_roller.c.o
+[295/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/scale/lv_scale.c.o
+[296/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/slider/lv_slider.c.o
+[297/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/span/lv_span.c.o
+[298/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/table/lv_table.c.o
+[299/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/tabview/lv_tabview.c.o
+[300/599] Building C object CMakeFiles/lvgl.dir/workspace/src/widgets/textarea/lv_textarea.c.o
+[301/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgAccessor.cpp.o
+[302/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgAnimation.cpp.o
+[303/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgCanvas.cpp.o
+[304/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgCompressor.cpp.o
+[305/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgFill.cpp.o
+[306/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgGlCanvas.cpp.o
+[307/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgInitializer.cpp.o
+[308/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgLines.cpp.o
+[309/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgLoader.cpp.o
+[310/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgLottieAnimation.cpp.o
+[311/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgLottieExpressions.cpp.o
+[312/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgLottieInterpolator.cpp.o
+[313/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgMath.cpp.o
+[314/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgPicture.cpp.o
+[315/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgRawLoader.cpp.o
+[316/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgRender.cpp.o
+[317/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgSaver.cpp.o
+[318/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgScene.cpp.o
+[319/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgStr.cpp.o
+[320/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgSvgCssStyle.cpp.o
+[321/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgSvgPath.cpp.o
+[322/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgSvgUtil.cpp.o
+[323/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgSwCanvas.cpp.o
+[324/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgSwImage.cpp.o
+[325/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgSwMath.cpp.o
+[326/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgSwMemPool.cpp.o
+[327/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgTaskScheduler.cpp.o
+[328/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgWgCanvas.cpp.o
+[329/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgXmlParser.cpp.o
+[330/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/others/vg_lite_tvg/vg_lite_tvg.cpp.o
+[331/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/benchmark/assets/img_benchmark_cogwheel_alpha256.c.o
+[332/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/benchmark/assets/img_benchmark_cogwheel_argb.c.o
+[333/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/benchmark/assets/img_benchmark_cogwheel_indexed16.c.o
+[334/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/benchmark/assets/img_benchmark_cogwheel_rgb.c.o
+[335/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/benchmark/assets/lv_font_benchmark_montserrat_12_compr_az.c.c.o
+[336/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/benchmark/assets/lv_font_benchmark_montserrat_16_compr_az.c.c.o
+[337/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/benchmark/assets/lv_font_benchmark_montserrat_28_compr_az.c.c.o
+[338/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/benchmark/lv_demo_benchmark.c.o
+[339/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/flex_layout/lv_demo_flex_layout_ctrl_pad.c.o
+[340/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/flex_layout/lv_demo_flex_layout_flex_loader.c.o
+[341/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/flex_layout/lv_demo_flex_layout_main.c.o
+[342/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/flex_layout/lv_demo_flex_layout_view.c.o
+[343/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/flex_layout/lv_demo_flex_layout_view_child_node.c.o
+[344/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/flex_layout/lv_demo_flex_layout_view_ctrl_pad.c.o
+[345/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/keypad_encoder/lv_demo_keypad_encoder.c.o
+[346/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/lv_demos.c.o
+[347/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_1.c.o
+[348/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_10.c.o
+[349/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_11.c.o
+[350/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_12.c.o
+[351/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_13.c.o
+[352/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_14.c.o
+[353/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_15.c.o
+[354/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_16.c.o
+[355/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_17.c.o
+[356/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_18.c.o
+[357/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_19.c.o
+[358/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_2.c.o
+[359/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_22.c.o
+[360/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_25.c.o
+[361/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_3.c.o
+[362/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_4.c.o
+[363/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_5.c.o
+[364/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_7.c.o
+[365/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/emojis/img_emoji_artist_palette.c.o
+[366/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/emojis/img_emoji_books.c.o
+[367/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/emojis/img_emoji_camera_with_flash.c.o
+[368/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/emojis/img_emoji_cat_face.c.o
+[369/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/emojis/img_emoji_deciduous_tree.c.o
+[370/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/emojis/img_emoji_dog_face.c.o
+[371/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/emojis/img_emoji_earth_globe_europe_africa.c.o
+[372/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/emojis/img_emoji_flexed_biceps.c.o
+[373/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/tiny_ttf/lv_tiny_ttf.c.o
+[374/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgCapi.cpp.o
+[375/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgLottieLoader.cpp.o
+[376/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgLottieParserHandler.cpp.o
+[377/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgShape.cpp.o
+[378/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgSwFill.cpp.o
+[379/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgSwRle.cpp.o
+[380/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgSwShape.cpp.o
+[381/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgSwStroke.cpp.o
+[382/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgText.cpp.o
+[383/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_6.c.o
+[384/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_8.c.o
+[385/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/avatars/img_multilang_avatar_9.c.o
+[386/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/emojis/img_emoji_movie_camera.c.o
+[387/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/emojis/img_emoji_red_heart.c.o
+[388/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/emojis/img_emoji_rocket.c.o
+[389/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/emojis/img_emoji_soccer_ball.c.o
+[390/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/fonts/font_multilang_large.c.o
+[391/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/fonts/font_multilang_small.c.o
+[392/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/assets/img_multilang_like.c.o
+[393/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/multilang/lv_demo_multilang.c.o
+[394/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_btn_corner_large.c.o
+[395/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_btn_list_pause.c.o
+[396/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_btn_list_pause_large.c.o
+[397/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_btn_list_play.c.o
+[398/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_btn_list_play_large.c.o
+[399/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_btn_loop.c.o
+[400/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_btn_loop_large.c.o
+[401/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_btn_next.c.o
+[402/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_btn_next_large.c.o
+[403/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_btn_pause.c.o
+[404/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_btn_pause_large.c.o
+[405/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_btn_play.c.o
+[406/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_btn_play_large.c.o
+[407/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_btn_prev.c.o
+[408/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_btn_prev_large.c.o
+[409/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_btn_rnd.c.o
+[410/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_btn_rnd_large.c.o
+[411/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_corner_left.c.o
+[412/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_corner_left_large.c.o
+[413/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_corner_right.c.o
+[414/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_corner_right_large.c.o
+[415/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_cover_1.c.o
+[416/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_cover_1_large.c.o
+[417/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_cover_2.c.o
+[418/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_cover_2_large.c.o
+[419/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_cover_3.c.o
+[420/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_cover_3_large.c.o
+[421/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_icon_1.c.o
+[422/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_icon_1_large.c.o
+[423/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_icon_2.c.o
+[424/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_icon_2_large.c.o
+[425/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_icon_3.c.o
+[426/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_icon_3_large.c.o
+[427/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_icon_4.c.o
+[428/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_icon_4_large.c.o
+[429/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_list_border.c.o
+[430/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_list_border_large.c.o
+[431/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_logo.c.o
+[432/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_slider_knob.c.o
+[433/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_slider_knob_large.c.o
+[434/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_wave_bottom.c.o
+[435/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_wave_bottom_large.c.o
+[436/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_wave_top.c.o
+[437/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/assets/img_lv_demo_music_wave_top_large.c.o
+[438/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/lv_demo_music.c.o
+[439/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/lv_demo_music_list.c.o
+[440/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/music/lv_demo_music_main.c.o
+[441/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/render/assets/img_render_arc_bg.c.o
+[442/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/render/assets/img_render_lvgl_logo_argb8888.c.o
+[443/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/render/assets/img_render_lvgl_logo_l8.c.o
+[444/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/render/assets/img_render_lvgl_logo_rgb565.c.o
+[445/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/render/assets/img_render_lvgl_logo_rgb888.c.o
+[446/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/render/assets/img_render_lvgl_logo_xrgb8888.c.o
+[447/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/scroll/lv_demo_scroll.c.o
+[448/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/stress/lv_demo_stress.c.o
+[449/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/transform/assets/img_transform_avatar_15.c.o
+[450/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/transform/lv_demo_transform.c.o
+[451/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/vector_graphic/lv_demo_vector_graphic.c.o
+[452/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/widgets/assets/img_clothes.c.o
+[453/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/widgets/assets/img_demo_widgets_needle.c.o
+[454/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/widgets/assets/img_lvgl_logo.c.o
+[455/599] Building C object CMakeFiles/test_common.dir/src/lv_test_indev.c.o
+[456/599] Building C object CMakeFiles/test_common.dir/src/lv_test_init.c.o
+[457/599] Building C object CMakeFiles/test_common.dir/src/lv_test_helpers.c.o
+[458/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_img_cogwheel_i4.c.o
+[459/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_img_cogwheel_a8.c.o
+[460/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_font_1_bin.c.o
+[461/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_font_2_bin.c.o
+[462/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_font_3_bin.c.o
+[463/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_kern_one_otf.c.o
+[464/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/lodepng/lodepng.c.o
+[465/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgLottieModel.cpp.o
+[466/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgPaint.cpp.o
+[467/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgSvgSceneBuilder.cpp.o
+[468/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgSwRenderer.cpp.o
+[469/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/render/lv_demo_render.c.o
+[470/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/vector_graphic/assets/img_demo_vector_avatar.c.o
+[471/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/widgets/assets/img_demo_widgets_avatar.c.o
+[472/599] Building C object CMakeFiles/lvgl_demos.dir/workspace/demos/widgets/lv_demo_widgets.c.o
+[473/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_animimg001.c.o
+[474/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_animimg002.c.o
+[475/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_animimg003.c.o
+[476/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_img_cogwheel_rgb565.c.o
+[477/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_img_cogwheel_rgb565a8.c.o
+[478/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_img_cogwheel_xrgb8888.c.o
+[479/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_img_cogwheel_argb8888.c.o
+[480/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_font_1.c.o
+[481/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_font_2.c.o
+[482/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_font_3.c.o
+[483/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_font_montserrat_ascii_1bpp.c.o
+[484/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_font_montserrat_ascii_2bpp.c.o
+[485/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_font_montserrat_ascii_4bpp.c.o
+[486/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_font_montserrat_ascii_4bpp_compressed.c.o
+[487/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_img_caret_down.c.o
+[488/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_arc_bg.c.o
+[489/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_img_lvgl_logo_png.c.o
+[490/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_img_lvgl_logo_jpg.c.o
+[491/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_img_emoji_F617.c.o
+[492/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_ubuntu_font.c.o
+[493/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_imagebutton_left.c.o
+[494/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_imagebutton_mid.c.o
+[495/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_imagebutton_right.c.o
+[496/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_music_button_play.c.o
+[497/599] Building C object CMakeFiles/test_common.dir/src/test_assets/test_lottie_approve.c.o
+[498/599] Building C object CMakeFiles/test_common.dir/unity/unity_support.c.o
+[499/599] Building C object CMakeFiles/test_common.dir/unity/unity.c.o
+[500/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/LZ4/test_A1_LZ4_align1.c.o
+[501/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/LZ4/test_A2_LZ4_align1.c.o
+[502/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/LZ4/test_A4_LZ4_align1.c.o
+[503/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/LZ4/test_A8_LZ4_align1.c.o
+[504/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/LZ4/test_ARGB8888_LZ4_align1.c.o
+[505/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/LZ4/test_I1_LZ4_align1.c.o
+[506/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/LZ4/test_I2_LZ4_align1.c.o
+[507/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/LZ4/test_I4_LZ4_align1.c.o
+[508/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/LZ4/test_I8_LZ4_align1.c.o
+[509/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/LZ4/test_L8_LZ4_align1.c.o
+[510/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/LZ4/test_RGB565A8_LZ4_align1.c.o
+[511/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/LZ4/test_RGB565_LZ4_align1.c.o
+[512/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/LZ4/test_RGB888_LZ4_align1.c.o
+[513/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/LZ4/test_XRGB8888_LZ4_align1.c.o
+[514/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/RLE/test_A1_RLE_align1.c.o
+[515/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/RLE/test_A2_RLE_align1.c.o
+[516/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/RLE/test_A4_RLE_align1.c.o
+[517/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/RLE/test_A8_RLE_align1.c.o
+[518/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/RLE/test_ARGB8888_RLE_align1.c.o
+[519/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/RLE/test_I1_RLE_align1.c.o
+[520/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/RLE/test_I2_RLE_align1.c.o
+[521/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/RLE/test_I4_RLE_align1.c.o
+[522/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/RLE/test_I8_RLE_align1.c.o
+[523/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/RLE/test_L8_RLE_align1.c.o
+[524/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/RLE/test_RGB565A8_RLE_align1.c.o
+[525/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/RLE/test_RGB565_RLE_align1.c.o
+[526/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/RLE/test_RGB888_RLE_align1.c.o
+[527/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/RLE/test_XRGB8888_RLE_align1.c.o
+[528/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/UNCOMPRESSED/test_A1_NONE_align1.c.o
+[529/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/UNCOMPRESSED/test_A2_NONE_align1.c.o
+[530/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/UNCOMPRESSED/test_A4_NONE_align1.c.o
+[531/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/UNCOMPRESSED/test_A8_NONE_align1.c.o
+[532/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/UNCOMPRESSED/test_ARGB8888_NONE_align1.c.o
+[533/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/UNCOMPRESSED/test_I1_NONE_align1.c.o
+[534/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/UNCOMPRESSED/test_I2_NONE_align1.c.o
+[535/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/UNCOMPRESSED/test_I4_NONE_align1.c.o
+[536/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/UNCOMPRESSED/test_I8_NONE_align1.c.o
+[537/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/UNCOMPRESSED/test_L8_NONE_align1.c.o
+[538/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/UNCOMPRESSED/test_RGB565A8_NONE_align1.c.o
+[539/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/UNCOMPRESSED/test_RGB565_NONE_align1.c.o
+[540/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/UNCOMPRESSED/test_RGB888_NONE_align1.c.o
+[541/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align1/UNCOMPRESSED/test_XRGB8888_NONE_align1.c.o
+[542/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/LZ4/test_A1_LZ4_align64.c.o
+[543/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/LZ4/test_A2_LZ4_align64.c.o
+[544/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/LZ4/test_A4_LZ4_align64.c.o
+[545/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/LZ4/test_A8_LZ4_align64.c.o
+[546/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/LZ4/test_ARGB8888_LZ4_align64.c.o
+[547/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/LZ4/test_I1_LZ4_align64.c.o
+[548/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/LZ4/test_I2_LZ4_align64.c.o
+[549/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/LZ4/test_I4_LZ4_align64.c.o
+[550/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/LZ4/test_I8_LZ4_align64.c.o
+[551/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/LZ4/test_L8_LZ4_align64.c.o
+[552/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/LZ4/test_RGB565A8_LZ4_align64.c.o
+[553/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/LZ4/test_RGB565_LZ4_align64.c.o
+[554/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/LZ4/test_RGB888_LZ4_align64.c.o
+[555/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/LZ4/test_XRGB8888_LZ4_align64.c.o
+[556/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/RLE/test_A1_RLE_align64.c.o
+[557/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/RLE/test_A4_RLE_align64.c.o
+[558/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/RLE/test_A2_RLE_align64.c.o
+[559/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/RLE/test_A8_RLE_align64.c.o
+[560/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/RLE/test_ARGB8888_RLE_align64.c.o
+[561/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/RLE/test_I1_RLE_align64.c.o
+[562/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/RLE/test_I2_RLE_align64.c.o
+[563/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/RLE/test_I4_RLE_align64.c.o
+[564/599] Building C object CMakeFiles/test_libs.dir/src/test_libs/rnd_unicodes/rnd_unicodes/src/library.c.o
+[565/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/RLE/test_L8_RLE_align64.c.o
+[566/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/RLE/test_I8_RLE_align64.c.o
+[567/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/UNCOMPRESSED/test_A1_NONE_align64.c.o
+[568/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/RLE/test_RGB565A8_RLE_align64.c.o
+[569/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/RLE/test_RGB565_RLE_align64.c.o
+[570/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/RLE/test_RGB888_RLE_align64.c.o
+[571/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/RLE/test_XRGB8888_RLE_align64.c.o
+[572/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/UNCOMPRESSED/test_I1_NONE_align64.c.o
+[573/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/UNCOMPRESSED/test_A2_NONE_align64.c.o
+[574/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/UNCOMPRESSED/test_A8_NONE_align64.c.o
+[575/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/UNCOMPRESSED/test_A4_NONE_align64.c.o
+[576/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/UNCOMPRESSED/test_I2_NONE_align64.c.o
+[577/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/UNCOMPRESSED/test_I8_NONE_align64.c.o
+[578/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/UNCOMPRESSED/test_I4_NONE_align64.c.o
+[579/599] Building C object CMakeFiles/test_libs.dir/src/test_libs/rnd_unicodes/lv_rnd_unicodes.c.o
+[580/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/UNCOMPRESSED/test_RGB565_NONE_align64.c.o
+[581/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/UNCOMPRESSED/test_RGB888_NONE_align64.c.o
+[582/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/UNCOMPRESSED/test_XRGB8888_NONE_align64.c.o
+[583/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/UNCOMPRESSED/test_ARGB8888_NONE_align64.c.o
+[584/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgSwRaster.cpp.o
+[585/599] Linking C static library libtest_libs.a
+[586/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/UNCOMPRESSED/test_RGB565A8_NONE_align64.c.o
+[587/599] Building C object CMakeFiles/test_common.dir/test_images/stride_align64/UNCOMPRESSED/test_L8_NONE_align64.c.o
+[588/599] Linking C static library libtest_common.a
+[589/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgSvgLoader.cpp.o
+[590/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgLottieBuilder.cpp.o
+[591/599] Building CXX object CMakeFiles/lvgl_thorvg.dir/workspace/src/libs/thorvg/tvgLottieParser.cpp.o
+[592/599] Building C object CMakeFiles/lvgl.dir/workspace/src/libs/lz4/lz4.c.o
+[593/599] Linking C static library lib/liblvgl.a
+[594/599] Linking C static library lib/liblvgl_demos.a
+[595/599] Linking CXX static library lib/liblvgl_thorvg.a
+[596/599] Generating test_gif_imgdsc_header_Runner.c
+[597/599] Building C object CMakeFiles/test_gif_imgdsc_header.dir/src/test_cases/libs/test_gif_imgdsc_header.c.o
+[598/599] Building C object CMakeFiles/test_gif_imgdsc_header.dir/test_gif_imgdsc_header_Runner.c.o
+[599/599] Linking CXX executable test_gif_imgdsc_header
+Test project /workspace/tests/build_test_sysheap
+    Start 21: test_gif_imgdsc_header
+1/1 Test #21: test_gif_imgdsc_header ...........   Passed    0.05 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.05 sec
+>>>>> Start Test Output
+All tests passed - fix is present
+imgdsc is correctly typed as lv_image_dsc_t
+Header fields (magic, flags, stride, data_size) are properly initialized
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

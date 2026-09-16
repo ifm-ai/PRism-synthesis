@@ -1,0 +1,48 @@
+{
+  "build_backend": "buildah",
+  "base_image": "ruby:3.2",
+  "platform": "linux/amd64",
+  "build_context": "/artifacts/environment",
+  "dockerfile_path": "/artifacts/environment/Dockerfile.final",
+  "output_image_name": "activeadmin-env:final",
+  "build_steps": [
+    {
+      "step": 1,
+      "action": "pull_base_image",
+      "description": "Pull ruby:3.2 base image"
+    },
+    {
+      "step": 2,
+      "action": "install_system_packages",
+      "packages": ["git", "curl", "build-essential", "pkg-config", "libsqlite3-dev", "ruby-dev", "libyaml-dev", "zlib1g-dev"],
+      "description": "Install system dependencies via apt-get"
+    },
+    {
+      "step": 3,
+      "action": "copy_and_run_repo_setup",
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh",
+      "description": "Copy repo_setup.sh and execute to clone repository to /workspace"
+    },
+    {
+      "step": 4,
+      "action": "copy_and_run_setup_runtime",
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh",
+      "description": "Copy setup_runtime.sh and execute to install Ruby gems via bundler"
+    },
+    {
+      "step": 5,
+      "action": "set_workdir",
+      "path": "/workspace",
+      "description": "Set final working directory to /workspace"
+    }
+  ],
+  "export_artifacts": {
+    "oci_archive": "/artifacts/environment/openenv_validation_oci.tar"
+  },
+  "runtime_mounts": {
+    "description": "eval.sh is runtime-mounted by orchestrator, not baked into image"
+  },
+  "notes": "Image built from structured environment_request.json. repo_setup.sh materializes /workspace during build. setup_runtime.sh installs bundler dependencies. eval.sh and test.patch are runtime-mounted verifier assets, not baked into image."
+}

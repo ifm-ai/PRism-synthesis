@@ -1,0 +1,14 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "high_value_files": [
+    "recipes/cancerit-allelecount/meta.yaml",
+    "recipes/cancerit-allelecount/build.sh",
+    "config.yml",
+    "azure-pipeline.yml",
+    ".github/workflows/master.yml",
+    "scripts/check-for-additional-platforms.sh"
+  ],
+  "notes": "Repository exploration complete. The bioconda-recipes repository uses conda/mambaforge for package management. The cancerit-allelecount recipe fix adds linux-aarch64 platform support. The repository is fully compatible with Linux x86-64 container testing via bioconda-utils with Docker/mulled testing. No infrastructure limitations identified."
+}

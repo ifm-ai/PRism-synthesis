@@ -1,0 +1,9 @@
+{
+  "status": "validation_complete",
+  "blocks_outer_progress": false,
+  "build_backend": "buildah",
+  "buildable": false,
+  "failure_class": "tool_unavailable",
+  "route_to": null,
+  "notes": "Build validation completed. The container spec is valid but the build exceeded the 600s timeout limit. This is an infrastructure constraint (timeout), not a spec error. The outer build system should use an increased timeout for this image. No routing to fixing agents is required since the spec itself is correct."
+}

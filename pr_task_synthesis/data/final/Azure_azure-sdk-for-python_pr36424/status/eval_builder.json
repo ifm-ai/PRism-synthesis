@@ -1,0 +1,29 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "verification_command": "cd /workspace/sdk/ml/azure-ai-ml && pytest tests/finetuning_job/unittests/test_azure_openai_finetuning_job_schema.py::TestAzureOpenAIFineTuningJobSchema::test_azure_openai_finetuning_job_full tests/finetuning_job/unittests/test_custom_model_finetuning_job_schema.py::TestCustomModelFineTuningJobSchema::test_custom_model_finetuning_job_full -v",
+  "activation_source": "source /opt/benchmark/venv/bin/activate",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "test_patch_applied",
+  "copied_test_patch": true,
+  "supplemental_tests_created": false,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that finetuning job objects accept camelCase task arguments ('chatCompletion', 'textCompletion') and correctly convert them to snake_case for the REST model, verifying the fix changes casing_transform from camel_to_snake to snake_to_camel and uses SnakeCaseFineTuningTaskTypes constants.",
+  "fix_patch_grounding": "The fix.patch creates constants.py with SnakeCaseFineTuningTaskTypes (snake_case values), changes finetuning_vertical.py casing_transform from camel_to_snake to snake_to_camel, and adds FineTuningTaskTypes class with PascalCase values. This allows camelCase input like 'chatCompletion' to be transformed to 'chat_completion' for REST.",
+  "issue_context_used": "The issue.md specifies that finetuning job objects must accept task arguments in camelCase form (e.g., 'chatCompletion', 'textCompletion') which guided the selection of tests that use camelCase input strings.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": [
+    "pytest tests/finetuning_job/unittests/test_azure_openai_finetuning_job_schema.py::TestAzureOpenAIFineTuningJobSchema::test_azure_openai_finetuning_job_full",
+    "pytest tests/finetuning_job/unittests/test_custom_model_finetuning_job_schema.py::TestCustomModelFineTuningJobSchema::test_custom_model_finetuning_job_full"
+  ],
+  "required_verifier_files": [
+    "eval.sh",
+    "test.patch"
+  ],
+  "notes": "The eval.sh script applies test.patch to use camelCase task strings ('chatCompletion', 'textCompletion') in the test fixtures. These tests should FAIL on the buggy state (which uses camel_to_snake transform expecting snake_case input) and PASS on the fixed state (which uses snake_to_camel transform to accept camelCase input and convert to snake_case for REST). Environment variables AZURE_TEST_RUN_LIVE=true and AZURE_SKIP_LIVE_RECORDING=true are set to skip the test proxy."
+}

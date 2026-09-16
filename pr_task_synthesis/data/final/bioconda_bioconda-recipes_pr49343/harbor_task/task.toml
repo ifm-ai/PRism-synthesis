@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "bioconda_bioconda-recipes_pr49343"
+description = "OpenEnv: bioconda/bioconda-recipes PR #49343"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/bioconda/bioconda-recipes.git"
+git_pr_id = "49343"
+git_base_commit = "055428fa9a8ebc88fbf94f40a12309e935b8b7de"
+task_id = "bioconda_bioconda-recipes_pr49343"
+repo_full_name = "bioconda/bioconda-recipes"
+domain = "BIOINFORMATICS_COMP_BIO"
+primary_language = "Shell"
+runtime_family = "conda"
+complexity = "easy"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

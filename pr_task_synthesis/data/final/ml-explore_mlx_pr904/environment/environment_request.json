@@ -1,0 +1,60 @@
+{
+  "base_image_candidate": "python:3.11-slim",
+  "system_packages": [
+    "cmake",
+    "libblas-dev",
+    "liblapack-dev",
+    "liblapacke-dev",
+    "python3-venv",
+    "python3-dev",
+    "git",
+    "curl"
+  ],
+  "base_setup_commands": [
+    "apt-get update",
+    "apt-get install -y cmake libblas-dev liblapack-dev liblapacke-dev python3-venv python3-dev git curl"
+  ],
+  "setup_runtime_commands": [
+    "mkdir -p /root/.pip && cat > /root/.pip/pip.conf << 'EOF'\n[global]\nindex-url = http://mirror.proxy.hpc:8081/repository/pypi-proxy/simple/\ntrusted-host = mirror.proxy.hpc\ntimeout = 300\nEOF",
+    "python3 -m venv /opt/benchmark/mlx_env",
+    "source /opt/benchmark/mlx_env/bin/activate",
+    "pip install --upgrade pip setuptools wheel --timeout=300",
+    "pip install \"setuptools<82\" --timeout=300",
+    "pip install nanobind --timeout=300",
+    "pip install \"cmake>=3.24\" --timeout=300",
+    "pip install numpy torch --timeout=300",
+    "cd /workspace && CMAKE_ARGS=\"-DMLX_BUILD_METAL=OFF\" pip install --timeout=600 -e ."
+  ],
+  "activation_commands": [
+    "source /opt/benchmark/mlx_env/bin/activate",
+    "source /opt/benchmark/mlx_env/bin/mlx_activate.sh"
+  ],
+  "activation_command": "source /opt/benchmark/mlx_env/bin/activate && source /opt/benchmark/mlx_env/bin/mlx_activate.sh",
+  "activation_type": "venv",
+  "activation_validation_command": "bash -c 'source /opt/benchmark/mlx_env/bin/activate && source /opt/benchmark/mlx_env/bin/mlx_activate.sh && python -c \"import mlx.core as mx; print(mx.__version__)\"'",
+  "detected_test_command": "cd /workspace/python/tests && python -m unittest test_random",
+  "test_framework": "unittest",
+  "runtime_smoke_command": "python -c \"import mlx.core as mx; print(mx.random.normal(dtype=mx.float16))\"",
+  "runtime_profile": {
+    "ecosystem": "Python",
+    "package_manager": "pip",
+    "env": "/opt/benchmark/mlx_env",
+    "env_name": "mlx_env",
+    "prepare_commands": [
+      "python3 -m venv /opt/benchmark/mlx_env",
+      "pip install --upgrade pip setuptools wheel",
+      "pip install \"setuptools<82\"",
+      "pip install nanobind cmake numpy torch",
+      "cd /workspace && CMAKE_ARGS=\"-DMLX_BUILD_METAL=OFF\" pip install -e ."
+    ],
+    "activation_commands": [
+      "source /opt/benchmark/mlx_env/bin/activate",
+      "source /opt/benchmark/mlx_env/bin/mlx_activate.sh"
+    ],
+    "base_deps_installed": ["cmake", "libblas-dev", "liblapack-dev", "liblapacke-dev", "python3-dev", "python3-venv", "nanobind", "numpy", "torch"],
+    "test_only_install_strategy": "test dependencies (numpy, torch) installed at build time",
+    "cache_dirs": ["/opt/benchmark/mlx_env", "/root/.cache/pip"],
+    "notes": "MLX requires LD_LIBRARY_PATH to include /workspace/python/mlx/lib for the shared library. Build with MLX_BUILD_METAL=OFF for Linux compatibility. Uses internal PyPI proxy (mirror.proxy.hpc:8081) for network reliability. Pip timeout set to 600 seconds for MLX build (5-10 min C++ compilation), 300 seconds for other packages. setuptools<82 required for torch compatibility. The mlx_activate.sh script sets LD_LIBRARY_PATH automatically. Base image: python:3.11-slim recommended for nanobind/MLX compatibility."
+  },
+  "notes": "MLX is Apple's ML framework with C++ core and Python bindings. Linux builds require disabling Metal GPU support. The editable install creates a .pth file but the shared library (libmlx.so) requires explicit LD_LIBRARY_PATH configuration. Updated setup_runtime.sh to use internal PyPI proxy (PIP_INDEX_URL=http://mirror.proxy.hpc:8081/repository/pypi-proxy/simple/) with 600-second timeout for MLX build (5-10 min C++ compilation). Pip timeout configured via environment variable (PIP_DEFAULT_TIMEOUT=300) and pip.conf file. Fixed setup_runtime.sh to: 1) use 'set -o pipefail' for proper exit code propagation, 2) remove '| tail -20' masking, 3) add BUILD_EXIT_CODE error handling with build log capture. Changed base image from python:3.13-slim to python:3.11-slim for better nanobind/MLX compatibility. Test runner confirmed working with unittest (10 tests in test_random.py)."
+}

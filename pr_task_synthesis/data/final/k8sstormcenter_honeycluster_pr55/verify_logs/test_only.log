@@ -1,0 +1,83 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.0, pluggy-1.6.0
+rootdir: /tests/tests
+plugins: anyio-4.14.0
+collected 6 items
+
+../tests/tests/test_kubehound_stix_bundles.py FFFF..                     [100%]
+
+=================================== FAILURES ===================================
+_______________________ test_no_kubehound_attack_bundles _______________________
+
+data = [{'type': 'bundle', 'id': 'bundle--kubehound-attack-CE_NSENTER', 'name': 'CE_NSENTER', 'version': '1.0.0', ...}, {'typ..., {'type': 'bundle', 'id': 'bundle--kubehound-attack-CE_PRIV_MOUNT', 'name': 'CE_PRIV_MOUNT', 'version': '1.0.0', ...}]
+
+    def test_no_kubehound_attack_bundles(data):
+        """Test that there are NO bundles with 'bundle--kubehound-attack-' prefix (buggy state)."""
+        bundle_ids = get_bundle_ids(data)
+        attack_bundles = [bid for bid in bundle_ids if bid.startswith('bundle--kubehound-attack-')]
+    
+>       assert len(attack_bundles) == 0, \
+            f"Found {len(attack_bundles)} bundles with 'bundle--kubehound-attack-' prefix (buggy state): {attack_bundles}"
+E       AssertionError: Found 3 bundles with 'bundle--kubehound-attack-' prefix (buggy state): ['bundle--kubehound-attack-CE_NSENTER', 'bundle--kubehound-attack-CE_SYS_PTRACE', 'bundle--kubehound-attack-CE_PRIV_MOUNT']
+E       assert 3 == 0
+E        +  where 3 = len(['bundle--kubehound-attack-CE_NSENTER', 'bundle--kubehound-attack-CE_SYS_PTRACE', 'bundle--kubehound-attack-CE_PRIV_MOUNT'])
+
+/tests/tests/test_kubehound_stix_bundles.py:47: AssertionError
+______________________ test_has_kubehound_attempt_bundles ______________________
+
+data = [{'type': 'bundle', 'id': 'bundle--kubehound-attack-CE_NSENTER', 'name': 'CE_NSENTER', 'version': '1.0.0', ...}, {'typ..., {'type': 'bundle', 'id': 'bundle--kubehound-attack-CE_PRIV_MOUNT', 'name': 'CE_PRIV_MOUNT', 'version': '1.0.0', ...}]
+
+    def test_has_kubehound_attempt_bundles(data):
+        """Test that bundles use 'bundle--kubehound-attempt-' prefix (fixed state)."""
+        bundle_ids = get_bundle_ids(data)
+        attempt_bundles = [bid for bid in bundle_ids if bid.startswith('bundle--kubehound-attempt-')]
+    
+>       assert len(attempt_bundles) >= 3, \
+            f"Expected at least 3 bundles with 'bundle--kubehound-attempt-' prefix, found {len(attempt_bundles)}: {attempt_bundles}"
+E       AssertionError: Expected at least 3 bundles with 'bundle--kubehound-attempt-' prefix, found 0: []
+E       assert 0 >= 3
+E        +  where 0 = len([])
+
+/tests/tests/test_kubehound_stix_bundles.py:56: AssertionError
+__________________________ test_has_new_bundle_types ___________________________
+
+data = [{'type': 'bundle', 'id': 'bundle--kubehound-attack-CE_NSENTER', 'name': 'CE_NSENTER', 'version': '1.0.0', ...}, {'typ..., {'type': 'bundle', 'id': 'bundle--kubehound-attack-CE_PRIV_MOUNT', 'name': 'CE_PRIV_MOUNT', 'version': '1.0.0', ...}]
+
+    def test_has_new_bundle_types(data):
+        """Test that new bundle types CE_MODULE_LOAD, CE_NET_MITM, CE_VAR_LOG_SYMLINK are present."""
+        bundle_ids = get_bundle_ids(data)
+        bundle_names = get_bundle_names(data)
+    
+        required_bundles = ['CE_MODULE_LOAD', 'CE_NET_MITM', 'CE_VAR_LOG_SYMLINK']
+    
+        for required in required_bundles:
+            found = required in bundle_names or any(required in bid for bid in bundle_ids)
+>           assert found, \
+                f"Required bundle '{required}' not found. Bundle names: {bundle_names}, IDs: {bundle_ids}"
+E           AssertionError: Required bundle 'CE_MODULE_LOAD' not found. Bundle names: ['CE_NSENTER', 'CE_SYS_PTRACE', 'CE_PRIV_MOUNT'], IDs: ['bundle--kubehound-attack-CE_NSENTER', 'bundle--kubehound-attack-CE_SYS_PTRACE', 'bundle--kubehound-attack-CE_PRIV_MOUNT']
+E           assert False
+
+/tests/tests/test_kubehound_stix_bundles.py:69: AssertionError
+__________________________ test_bundle_count_minimum ___________________________
+
+data = [{'type': 'bundle', 'id': 'bundle--kubehound-attack-CE_NSENTER', 'name': 'CE_NSENTER', 'version': '1.0.0', ...}, {'typ..., {'type': 'bundle', 'id': 'bundle--kubehound-attack-CE_PRIV_MOUNT', 'name': 'CE_PRIV_MOUNT', 'version': '1.0.0', ...}]
+
+    def test_bundle_count_minimum(data):
+        """Test that there are at least 6 bundles (fixed state has 6, buggy has 3)."""
+        bundle_ids = get_bundle_ids(data)
+>       assert len(bundle_ids) >= 6, \
+            f"Expected at least 6 bundles, found {len(bundle_ids)}: {bundle_ids}"
+E       AssertionError: Expected at least 6 bundles, found 3: ['bundle--kubehound-attack-CE_NSENTER', 'bundle--kubehound-attack-CE_SYS_PTRACE', 'bundle--kubehound-attack-CE_PRIV_MOUNT']
+E       assert 3 >= 6
+E        +  where 3 = len(['bundle--kubehound-attack-CE_NSENTER', 'bundle--kubehound-attack-CE_SYS_PTRACE', 'bundle--kubehound-attack-CE_PRIV_MOUNT'])
+
+/tests/tests/test_kubehound_stix_bundles.py:76: AssertionError
+=========================== short test summary info ============================
+FAILED ../tests/tests/test_kubehound_stix_bundles.py::test_no_kubehound_attack_bundles
+FAILED ../tests/tests/test_kubehound_stix_bundles.py::test_has_kubehound_attempt_bundles
+FAILED ../tests/tests/test_kubehound_stix_bundles.py::test_has_new_bundle_types
+FAILED ../tests/tests/test_kubehound_stix_bundles.py::test_bundle_count_minimum
+========================= 4 failed, 2 passed in 0.02s ==========================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

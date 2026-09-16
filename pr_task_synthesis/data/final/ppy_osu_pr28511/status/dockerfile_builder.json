@@ -1,0 +1,18 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "base_image": "mcr.microsoft.com/dotnet/sdk:8.0",
+  "copied_artifacts": [
+    "setup_runtime.sh",
+    "repo_setup.sh"
+  ],
+  "uses_repo_setup_script": true,
+  "repo_materialization_mode": "git_clone_during_build",
+  "container_build_plan_written": true,
+  "build_backend_target": "buildah",
+  "buildability_assessment": "buildable",
+  "blocking_risks": [],
+  "warnings": [],
+  "recommended_fixes": [],
+  "notes": "Dockerfile.final reviewed and validated. Proper ordering: repo_setup.sh runs before setup_runtime.sh. System packages git, curl, wget, apt-transport-https installed via apt-get (correct for Ubuntu-based .NET SDK image). WORKDIR is /workspace. All COPY sources exist in build context. eval.sh and tests are NOT baked into the image - they are runtime-mounted verifier assets. Image is ready for Buildah validation and OCI export."
+}

@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "partial",
+  "oracle_outcome": "fail",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "High-value RL trajectory: solver correctly localized the problem and made meaningful edits to ivf_flat_index.py and ingestion.py. One oracle test passed (cosine_distance) and one failed (inner_product_distances). The session timed out before completing all required changes. The verifier is discriminating correctly and the instruction is clear. This is a good example of partial progress on a complex implementation task."
+}

@@ -1,0 +1,63 @@
+{
+  "base_image_candidate": "python:3.11-slim",
+  "system_packages": [
+    "cmake",
+    "build-essential",
+    "pkg-config",
+    "python3-venv",
+    "git",
+    "curl"
+  ],
+  "base_setup_commands": [
+    "apt-get update -qq",
+    "apt-get install -y -qq cmake build-essential pkg-config python3-venv git curl"
+  ],
+  "setup_runtime_commands": [
+    "python3 -m venv /opt/benchmark/gudhi_env",
+    "source /opt/benchmark/gudhi_env/bin/activate",
+    "pip install --upgrade pip --quiet",
+    "pip install --quiet numpy>=1.15.0 cython>=0.27 pybind11 setuptools>=24.2.0 wheel build",
+    "pip install --quiet tensorflow",
+    "pip install --quiet pytest scikit-learn"
+  ],
+  "activation_commands": [
+    "source /opt/benchmark/gudhi_env/bin/activate"
+  ],
+  "activation_command": "source /opt/benchmark/gudhi_env/bin/activate",
+  "activation_type": "venv",
+  "activation_validation_command": "bash -c 'source /opt/benchmark/gudhi_env/bin/activate && echo ACTIVATION_OK'",
+  "detected_test_command": "python -m pytest src/python/test/test_perslay.py -v && python -m pytest src/python/test/test_diff.py -v",
+  "runtime_smoke_command": "python -c 'import tensorflow as tf; import numpy; print(f\"TensorFlow {tf.__version__}, NumPy {numpy.__version__}\")'",
+  "runtime_profile": {
+    "ecosystem": "python",
+    "package_manager": "pip",
+    "env": "venv",
+    "env_name": "gudhi_env",
+    "prepare_commands": [
+      "python3 -m venv /opt/benchmark/gudhi_env",
+      "pip install --upgrade pip",
+      "pip install numpy cython pybind11 setuptools wheel build tensorflow pytest scikit-learn"
+    ],
+    "activation_commands": [
+      "source /opt/benchmark/gudhi_env/bin/activate"
+    ],
+    "base_deps_installed": [
+      "tensorflow",
+      "numpy",
+      "cython",
+      "pybind11",
+      "setuptools",
+      "wheel",
+      "build",
+      "pytest",
+      "scikit-learn"
+    ],
+    "test_only_install_strategy": "gudhi package must be built with CMake then installed via pip in the venv",
+    "cache_dirs": [
+      "/opt/benchmark/gudhi_env",
+      "/root/.cache/pip"
+    ],
+    "notes": "The gudhi package requires CMake build for C++ extensions before pip install. TensorFlow layers tests need the built gudhi package."
+  },
+  "notes": "Base image python:3.11-slim recommended. git and curl are included in system_packages. The gudhi project uses CMake for C++ core and setuptools/pip for Python packaging. TensorFlow layers are pure Python but require the gudhi package to be built first."
+}

@@ -1,0 +1,29 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "infrastructure_reason": null,
+  "verification_command": "go test -v -run TestGrpcCredentialsProvider_TokenType ./grpctransport/...",
+  "activation_source": "environment_request.json",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "hidden_test_file",
+  "copied_test_patch": false,
+  "supplemental_tests_created": true,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that empty token.Type defaults to 'Bearer' when constructing the authorization header in gRPC metadata, as implemented by the setAuthMetadata helper function.",
+  "fix_patch_grounding": "The fix.patch adds setAuthMetadata(token *auth.Token, m map[string]string) which checks if token.Type is empty and substitutes internal.TokenTypeBearer ('Bearer') before constructing the authorization header.",
+  "issue_context_used": "The issue.md describes that tokens with empty Type field should be interpreted as Bearer tokens when constructing gRPC request metadata.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": [
+    "go test -v -run TestGrpcCredentialsProvider_TokenType ./grpctransport/..."
+  ],
+  "required_verifier_files": [
+    "eval.sh",
+    "tests/hidden_token_type_test.go"
+  ],
+  "notes": "Hidden test file created at /artifacts/evaluation/tests/hidden_token_type_test.go. The eval.sh copies the auth module to a temp directory, adds the hidden test if TestGrpcCredentialsProvider_TokenType doesn't already exist, and runs the test. Test FAILS on buggy code (empty Type produces ' token') and PASSES on fixed code (empty Type defaults to 'Bearer token')."
+}

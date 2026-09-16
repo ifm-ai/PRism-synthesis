@@ -1,0 +1,48 @@
+diff --git a/spec/controllers/schools/usage_controller_spec.rb b/spec/controllers/schools/usage_controller_spec.rb
+new file mode 100644
+index 000000000..f766cd3d7
+--- /dev/null
++++ b/spec/controllers/schools/usage_controller_spec.rb
+@@ -0,0 +1,23 @@
++# frozen_string_literal: true
++
++require 'rails_helper'
++
++describe Schools::UsageController do
++  describe 'GET #show' do
++    let(:school) do
++      school = create(:school, :with_fuel_configuration)
++      create(:electricity_meter_with_validated_reading, reading_count: 10, school: school)
++      school
++    end
++
++    it 'responds successfully' do
++      get :show, params: { school_id: school.to_param, supply: 'electricity', period: 'daily' }
++      expect(response).to be_successful
++    end
++
++    it 'handles invalid parameters' do
++      get :show, params: { school_id: school.to_param, supply: 'something', period: 'daily' }
++      expect(response).to have_http_status(:redirect)
++    end
++  end
++end
+diff --git a/spec/factories/schools_factory.rb b/spec/factories/schools_factory.rb
+index 43255b257..b6cf1b8cb 100644
+--- a/spec/factories/schools_factory.rb
++++ b/spec/factories/schools_factory.rb
+@@ -53,5 +53,14 @@ FactoryBot.define do
+         create(:activity, school: school, activity_type: activity_type, happened_on: evaluator.activities_happened_on)
+       end
+     end
++
++    trait :with_fuel_configuration do
++      after(:create) do |school|
++        fuel_configuration = Schools::FuelConfiguration.new(
++          has_electricity: true, has_gas: true, has_storage_heaters: true, has_solar_pv: true
++        )
++        school.configuration.update!(fuel_configuration: fuel_configuration)
++      end
++    end
+   end
+ end

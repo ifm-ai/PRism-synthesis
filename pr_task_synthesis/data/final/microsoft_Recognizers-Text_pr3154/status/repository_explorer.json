@@ -1,0 +1,14 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "high_value_files": [
+    ".NET/Microsoft.Recognizers.Definitions.Common/Spanish/DateTimeDefinitions.cs",
+    ".NET/Microsoft.Recognizers.Definitions.Common/Spanish/NumbersWithUnitDefinitions.cs",
+    "Patterns/Spanish/Spanish-DateTime.yaml",
+    "Patterns/Spanish/Spanish-NumbersWithUnit.yaml",
+    "Specs/DateTime/Spanish/DatePeriodParser.json",
+    "Specs/NumberWithUnit/Spanish/AgeModel.json"
+  ],
+  "notes": "Repository explored successfully. This is a cross-platform text recognition library supporting .NET, Python, JavaScript, and Java. The fix addresses Spanish datetime and age recognition for accented/unaccented 'año' variants. All build systems are Linux-compatible. The .NET solution uses msbuild/dotnet CLI, Python uses pip, JavaScript uses npm/lerna, and Java uses Maven. Test specs are in JSON format under /workspace/Specs/."
+}

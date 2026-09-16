@@ -1,0 +1,216 @@
+>>>>> Start Test Output
+
+> playcanvas@1.71.0-dev test
+> mocha --recursive --require test/fixtures.mjs --require test/fixtures.mjs /tests/tests/test-shader-utils-duplicate-attrs.test.mjs /tests/tests/test-particle-shader-conditionals.test.mjs
+
+Server started at http://localhost:3000
+
+
+  ShaderUtils.collectAttributes - Duplicate Attribute Handling
+    duplicate attribute detection
+      ✔ should handle a single attribute correctly
+      ✔ should handle multiple unique attributes correctly
+      ✔ should handle duplicate attributes without adding them twice
+      ✔ should handle multiple duplicate occurrences of the same attribute
+      ✔ should handle duplicate custom attributes (non-semantic)
+      1) should not change mapping for duplicate custom attributes
+      ✔ should handle the particle shader duplicate attribute pattern
+
+  Particle Shader Conditional Sampler Uniforms
+    particle_cpu.js
+      2) should wrap internalTex0 in #ifdef PARTICLE_GPU
+      3) should wrap internalTex1 in #ifdef PARTICLE_GPU
+      4) should wrap internalTex2 in #ifdef PARTICLE_GPU
+      5) should not have unconditional internalTex0 declaration outside #ifdef block
+      6) should not have unconditional internalTex1 declaration outside #ifdef block
+      7) should not have unconditional internalTex2 declaration outside #ifdef block
+    particle_init.js
+      8) should wrap internalTex0 in #ifdef PARTICLE_GPU
+      9) should wrap internalTex1 in #ifdef PARTICLE_GPU
+      10) should wrap internalTex2 in #ifdef PARTICLE_GPU
+      11) should not have unconditional internalTex0 declaration outside #ifdef block
+      12) should not have unconditional internalTex1 declaration outside #ifdef block
+      13) should not have unconditional internalTex2 declaration outside #ifdef block
+
+
+  6 passing (9ms)
+  13 failing
+
+  1) ShaderUtils.collectAttributes - Duplicate Attribute Handling
+       duplicate attribute detection
+         should not change mapping for duplicate custom attributes:
+
+      AssertionError: expected 'ATTR1' to equal 'ATTR0'
+      + expected - actual
+
+      -ATTR1
+      +ATTR0
+      
+      at Context.<anonymous> (file:///tests/tests/test-shader-utils-duplicate-attrs.test.mjs:116:44)
+      at process.processImmediate (node:internal/timers:476:21)
+
+  2) Particle Shader Conditional Sampler Uniforms
+       particle_cpu.js
+         should wrap internalTex0 in #ifdef PARTICLE_GPU:
+
+      AssertionError: expected false to be true
+      + expected - actual
+
+      -false
+      +true
+      
+      at Context.<anonymous> (file:///tests/tests/test-particle-shader-conditionals.test.mjs:37:53)
+      at process.processImmediate (node:internal/timers:476:21)
+
+  3) Particle Shader Conditional Sampler Uniforms
+       particle_cpu.js
+         should wrap internalTex1 in #ifdef PARTICLE_GPU:
+
+      AssertionError: expected false to be true
+      + expected - actual
+
+      -false
+      +true
+      
+      at Context.<anonymous> (file:///tests/tests/test-particle-shader-conditionals.test.mjs:43:53)
+      at process.processImmediate (node:internal/timers:476:21)
+
+  4) Particle Shader Conditional Sampler Uniforms
+       particle_cpu.js
+         should wrap internalTex2 in #ifdef PARTICLE_GPU:
+
+      AssertionError: expected false to be true
+      + expected - actual
+
+      -false
+      +true
+      
+      at Context.<anonymous> (file:///tests/tests/test-particle-shader-conditionals.test.mjs:49:53)
+      at process.processImmediate (node:internal/timers:476:21)
+
+  5) Particle Shader Conditional Sampler Uniforms
+       particle_cpu.js
+         should not have unconditional internalTex0 declaration outside #ifdef block:
+
+      AssertionError: expected true to be false
+      + expected - actual
+
+      -true
+      +false
+      
+      at Context.<anonymous> (file:///tests/tests/test-particle-shader-conditionals.test.mjs:60:55)
+      at process.processImmediate (node:internal/timers:476:21)
+
+  6) Particle Shader Conditional Sampler Uniforms
+       particle_cpu.js
+         should not have unconditional internalTex1 declaration outside #ifdef block:
+
+      AssertionError: expected true to be false
+      + expected - actual
+
+      -true
+      +false
+      
+      at Context.<anonymous> (file:///tests/tests/test-particle-shader-conditionals.test.mjs:67:55)
+      at process.processImmediate (node:internal/timers:476:21)
+
+  7) Particle Shader Conditional Sampler Uniforms
+       particle_cpu.js
+         should not have unconditional internalTex2 declaration outside #ifdef block:
+
+      AssertionError: expected true to be false
+      + expected - actual
+
+      -true
+      +false
+      
+      at Context.<anonymous> (file:///tests/tests/test-particle-shader-conditionals.test.mjs:74:55)
+      at process.processImmediate (node:internal/timers:476:21)
+
+  8) Particle Shader Conditional Sampler Uniforms
+       particle_init.js
+         should wrap internalTex0 in #ifdef PARTICLE_GPU:
+
+      AssertionError: expected false to be true
+      + expected - actual
+
+      -false
+      +true
+      
+      at Context.<anonymous> (file:///tests/tests/test-particle-shader-conditionals.test.mjs:84:53)
+      at process.processImmediate (node:internal/timers:476:21)
+
+  9) Particle Shader Conditional Sampler Uniforms
+       particle_init.js
+         should wrap internalTex1 in #ifdef PARTICLE_GPU:
+
+      AssertionError: expected false to be true
+      + expected - actual
+
+      -false
+      +true
+      
+      at Context.<anonymous> (file:///tests/tests/test-particle-shader-conditionals.test.mjs:90:53)
+      at process.processImmediate (node:internal/timers:476:21)
+
+  10) Particle Shader Conditional Sampler Uniforms
+       particle_init.js
+         should wrap internalTex2 in #ifdef PARTICLE_GPU:
+
+      AssertionError: expected false to be true
+      + expected - actual
+
+      -false
+      +true
+      
+      at Context.<anonymous> (file:///tests/tests/test-particle-shader-conditionals.test.mjs:96:53)
+      at process.processImmediate (node:internal/timers:476:21)
+
+  11) Particle Shader Conditional Sampler Uniforms
+       particle_init.js
+         should not have unconditional internalTex0 declaration outside #ifdef block:
+
+      AssertionError: expected true to be false
+      + expected - actual
+
+      -true
+      +false
+      
+      at Context.<anonymous> (file:///tests/tests/test-particle-shader-conditionals.test.mjs:103:55)
+      at process.processImmediate (node:internal/timers:476:21)
+
+  12) Particle Shader Conditional Sampler Uniforms
+       particle_init.js
+         should not have unconditional internalTex1 declaration outside #ifdef block:
+
+      AssertionError: expected true to be false
+      + expected - actual
+
+      -true
+      +false
+      
+      at Context.<anonymous> (file:///tests/tests/test-particle-shader-conditionals.test.mjs:110:55)
+      at process.processImmediate (node:internal/timers:476:21)
+
+  13) Particle Shader Conditional Sampler Uniforms
+       particle_init.js
+         should not have unconditional internalTex2 declaration outside #ifdef block:
+
+      AssertionError: expected true to be false
+      + expected - actual
+
+      -true
+      +false
+      
+      at Context.<anonymous> (file:///tests/tests/test-particle-shader-conditionals.test.mjs:117:55)
+      at process.processImmediate (node:internal/timers:476:21)
+
+
+
+
+========================================
+TEST RESULT: FAILED
+One or more tests failed.
+========================================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=13

@@ -1,0 +1,17 @@
+>>>>> Start Test Output
+F
+======================================================================
+FAIL: test_normal (test_random.TestRandom.test_normal)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/python/tests/test_random.py", line 102, in test_normal
+    self.assertTrue(mx.all(a < mx.inf))
+AssertionError: array(False, dtype=bool) is not true
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1
+EXIT_CODE=1

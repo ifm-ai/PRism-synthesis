@@ -1,0 +1,47 @@
+{
+  "schema_version": "2.0",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "scores": {
+    "environment_readiness": 4,
+    "dependency_completeness": 4,
+    "verifier_integrity": 4,
+    "instruction_verifier_alignment": 4,
+    "trajectory_progress_value": 4
+  },
+  "struggle_patterns": [],
+  "phase_signals": {
+    "tests_executed": true,
+    "first_meaningful_edit_made": true,
+    "touched_relevant_files": true,
+    "solver_time_budget_exhausted": false,
+    "oracle_verifier_executed": true,
+    "oracle_verifier_passed": true
+  },
+  "signal_strength": {
+    "solver_signal": "strong",
+    "oracle_signal": "strong"
+  },
+  "verifier_diagnosis": {
+    "verifier_coverage_class": "behavioral",
+    "solver_approach_valid": true,
+    "repair_priority": "none"
+  },
+  "needs_verifier_change": false,
+  "needs_instruction_change": false,
+  "instruction_tuning_advice": {
+    "priority": "none",
+    "missing_spec_type": "none",
+    "tuning_context": "none",
+    "anti_contamination_constraints": []
+  },
+  "filter_label": "keep",
+  "summary": "The solver successfully implemented the singleprecision parameter on apply_transforms by correctly identifying the target file, understanding the --float flag mechanism, and making the appropriate edit. The oracle verifier executed and passed both tests (parameter existence and behavioral correctness), confirming the implementation matches the fix.patch requirements.",
+  "evidence": [
+    "Solver used grep to locate apply_transforms function in ants/registration/apply_transforms.py",
+    "Solver identified --float flag usage and understood its role in precision control",
+    "Solver made edit adding singleprecision=False parameter to function signature",
+    "Oracle verifier executed: 2 tests passed in 3.10s with exit code 0",
+    "eval_builder.json confirms verification_mode is behavioral, testing both parameter existence and correct behavior"
+  ]
+}

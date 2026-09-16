@@ -1,0 +1,20 @@
+{
+  "is_finish": true,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "failure_domain": "unknown",
+  "route_to": null,
+  "blocking_errors": [],
+  "warnings": [
+    "First build attempt failed due to transient network error (IncompleteRead) during pip download",
+    "Build succeeded on retry (attempt 2)"
+  ],
+  "next_actions": [
+    "OCI archive exported to /artifacts/environment/openenv_validation_oci.tar",
+    "Container image ready for use with tiledbsoma 1.0.0 installed"
+  ],
+  "notes": "Build succeeded after one retry. The first attempt failed with a transient network error (pip IncompleteRead) during package download. The retry policy was applied and the second attempt completed successfully. The CXXFLAGS=-Wno-error=dangling-reference fix in setup_runtime.sh worked correctly for g++ 13+ compatibility.",
+  "retry_attempted": true,
+  "retry_reason": "transient_network"
+}

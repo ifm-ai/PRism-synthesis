@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "debian:bookworm",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Python venv at /opt/benchmark/venv with Microsoft Recognizers Text libraries installed in editable mode, including recognizers-suite, recognizers-date-time, recognizers-number-with-unit, and all supporting packages. Resources generated from YAML pattern definitions.",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "25119 tests collected in 1.89s\npytest successfully discovered all test cases including test_runner_datetime.py, test_runner_number_with_unit.py, and test_runner_sequence.py tests",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "source /opt/benchmark/venv/bin/activate",
+  "notes": "Environment successfully created and verified. Python virtualenv created at /opt/benchmark/venv. All recognizers libraries installed in editable mode from /workspace/Python/libraries/. Test dependencies (pytest, pytest-cov) installed. Test runner reachability confirmed with 25119 tests collected. The environment is ready for running Python tests against the Spanish datetime and age recognition fix. MOUNT SUPPORT: The /tests/ directory is created in setup_runtime.sh with chmod 755 permissions to provide a proper mount point for the outer verifier's bind-mount of /artifacts/evaluation/ to /tests/. OUTER VERIFIER READINESS: The /artifacts/evaluation/eval.sh script contains correct test delimiters (>>>>> Start Test Output / >>>>> End Test Output) and OPENENV_EXIT_CODE emission. The eval.sh is designed to be mounted at /tests/eval.sh by the outer verifier. The activation command is embedded in eval.sh. The /artifacts/evaluation/tests/ directory contains the hidden test file test_spanish_datetime_age_fix.py. The /tests directory with proper permissions exists in the image to support the bind mount operation."
+}

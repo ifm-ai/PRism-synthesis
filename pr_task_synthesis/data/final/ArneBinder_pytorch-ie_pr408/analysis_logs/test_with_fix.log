@@ -1,0 +1,16 @@
+The "poetry.dev-dependencies" section is deprecated and will be removed in a future version. Use "poetry.group.dev.dependencies" instead.
+>>>>> Start Test Output
+The "poetry.dev-dependencies" section is deprecated and will be removed in a future version. Use "poetry.group.dev.dependencies" instead.
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.1, pluggy-1.6.0 -- /home/agent_sandbox/.cache/pypoetry/virtualenvs/pytorch-ie-xS3fZVNL-py3.11/bin/python
+cachedir: .pytest_cache
+rootdir: /artifacts/evaluation/tests
+collecting ... collected 1 item
+
+../artifacts/evaluation/tests/test_annotation_sort.py::test_annotation_sort PASSED [100%]
+
+============================== 1 passed in 2.84s ===============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0
+OPENENV_EXIT_CODE=0
+EXIT_CODE=0

@@ -1,0 +1,54 @@
+{
+  "schema_version": "2.0",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "scores": {
+    "environment_readiness": 5,
+    "dependency_completeness": 5,
+    "verifier_integrity": 5,
+    "instruction_verifier_alignment": 5,
+    "trajectory_progress_value": 5
+  },
+  "struggle_patterns": [
+    {
+      "pattern": "none",
+      "phase": "edit",
+      "evidence": "Solver successfully identified and fixed all 10 occurrences of dynamic=True across 4 TensorFlow layer files.",
+      "score_impacts": []
+    }
+  ],
+  "phase_signals": {
+    "tests_executed": true,
+    "first_meaningful_edit_made": true,
+    "touched_relevant_files": true,
+    "solver_time_budget_exhausted": false,
+    "oracle_verifier_executed": true,
+    "oracle_verifier_passed": true
+  },
+  "signal_strength": {
+    "solver_signal": "strong",
+    "oracle_signal": "strong"
+  },
+  "verifier_diagnosis": {
+    "verifier_coverage_class": "behavioral",
+    "solver_approach_valid": true,
+    "repair_priority": "none"
+  },
+  "needs_verifier_change": false,
+  "needs_instruction_change": false,
+  "instruction_tuning_advice": {
+    "priority": "none",
+    "missing_spec_type": "none",
+    "tuning_context": "The instruction clearly described the problem and required fix; solver correctly localized and addressed all affected files.",
+    "anti_contamination_constraints": []
+  },
+  "filter_label": "keep",
+  "summary": "The solver correctly identified all 10 occurrences of the deprecated dynamic=True argument across 4 TensorFlow layer files and removed them using targeted edits. The oracle verifier executed successfully with all 9 tests passing, confirming the behavioral fix. This is a clean pass with strong signals from both solver trajectory and oracle verification.",
+  "evidence": [
+    "Solver edited all 4 files touched by fix.patch: cubical_layer.py, lower_star_simplex_tree_layer.py, rips_layer.py, perslay.py",
+    "Solver removed dynamic=True from all 10 super().__init__() calls as confirmed by grep verification",
+    "Oracle verifier ran pytest with 9 tests, all passed (exit code 0)",
+    "Tests covered 7 layer classes in perslay.py which are pure Python and testable without C++ build",
+    "analysis_feedback.json confirms verifier_alignment.status=aligned with direct target overlap"
+  ]
+}

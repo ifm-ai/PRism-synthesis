@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "partial",
+  "oracle_outcome": "fail",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "Solver demonstrated valid problem-solving approach by exploring NuttX codebase structure, reading reference implementations from Nucleo-H743ZI, and creating board-level driver files. The 13 passing tests confirm solver touched relevant files and made behavioral changes. However, solver missed the core bug fix in arch/arm/src/stm32h7/stm32_adc.c (setbits initialization), did not create pysim_cm7/defconfig, and had incomplete qencoder implementation. This is a high-value RL training example showing partial progress on a complex embedded systems task."
+}

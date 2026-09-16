@@ -1,0 +1,44 @@
+{
+  "base_image": "mcr.microsoft.com/dotnet/sdk:8.0",
+  "base_image_candidate": "mcr.microsoft.com/dotnet/sdk:8.0",
+  "system_packages": [
+    "git",
+    "curl",
+    "wget",
+    "apt-transport-https"
+  ],
+  "base_setup_commands": [
+    "apt-get update -qq && apt-get install -y -qq git curl wget apt-transport-https",
+    "wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O /tmp/packages-microsoft-prod.deb",
+    "dpkg -i /tmp/packages-microsoft-prod.deb",
+    "rm /tmp/packages-microsoft-prod.deb",
+    "apt-get update -qq && apt-get install -y -qq dotnet-sdk-8.0"
+  ],
+  "setup_runtime_commands": [
+    "cd /workspace && dotnet restore --verbosity quiet"
+  ],
+  "activation_commands": [],
+  "activation_command": "",
+  "activation_type": "system",
+  "activation_validation_command": "dotnet --version",
+  "detected_test_command": "dotnet test --verbosity quiet",
+  "runtime_smoke_command": "dotnet build --verbosity quiet",
+  "runtime_profile": {
+    "ecosystem": "dotnet",
+    "package_manager": "nuget",
+    "env": {},
+    "env_name": null,
+    "prepare_commands": [
+      "dotnet restore"
+    ],
+    "activation_commands": [],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "dotnet restore is idempotent; tests run via dotnet test which auto-restores",
+    "cache_dirs": [
+      "/root/.nuget/packages"
+    ],
+    "notes": "Projects target .NET 6.0 (net6.0) and .NET Standard 2.0. .NET SDK 8.0 provides backward compatibility for building and testing these targets."
+  },
+  "working_directory": "/workspace",
+  "notes": "Base image mcr.microsoft.com/dotnet/sdk:8.0 already includes git and curl, so explicit installation of git and curl in setup_runtime_commands is not required. The .NET SDK 8.0 can build projects targeting .NET 6.0 and .NET Standard 2.0."
+}

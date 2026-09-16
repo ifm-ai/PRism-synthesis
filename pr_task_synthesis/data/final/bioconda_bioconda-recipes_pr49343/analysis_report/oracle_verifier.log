@@ -1,0 +1,80 @@
+WARNING: Skipping mount /etc/localtime [binds]: /etc/localtime doesn't exist in container
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.14.6, pytest-9.1.0, pluggy-1.6.0 -- /opt/conda/envs/bioconda/bin/python
+cachedir: .pytest_cache
+rootdir: /tests/tests
+plugins: anyio-4.13.0
+collecting ... collected 8 items
+
+../tests/tests/test_fix_verification.py::TestMetaYaml::test_additional_platforms_linux_aarch64 PASSED [ 12%]
+../tests/tests/test_fix_verification.py::TestMetaYaml::test_build_number_is_7 FAILED [ 25%]
+../tests/tests/test_fix_verification.py::TestMetaYaml::test_run_exports_present PASSED [ 37%]
+../tests/tests/test_fix_verification.py::TestMetaYaml::test_license_is_gpl3_only PASSED [ 50%]
+../tests/tests/test_fix_verification.py::TestMetaYaml::test_license_file_present PASSED [ 62%]
+../tests/tests/test_fix_verification.py::TestMetaYaml::test_license_family_present FAILED [ 75%]
+../tests/tests/test_fix_verification.py::TestBuildSh::test_set_xeu_not_set_eu FAILED [ 87%]
+../tests/tests/test_fix_verification.py::TestBuildSh::test_parallel_make_with_cpu_count PASSED [100%]
+
+=================================== FAILURES ===================================
+_____________________ TestMetaYaml.test_build_number_is_7 ______________________
+
+self = <test_fix_verification.TestMetaYaml object at 0x7fc4d8b2ed50>
+meta_content = '{% set version = "4.3.0" %}\n\npackage:\n  name: cancerit-allelecount\n  version: {{ version }}\n\nsource:\n  url: ht...ENCE\n  summary: Support code for NGS copy number algorithms\n\nextra:\n  additional-platforms:\n    - linux-aarch64\n'
+
+    def test_build_number_is_7(self, meta_content):
+        """Verify build number is 7 (fixed version)."""
+        # Look for build number in the build section
+        # The fix changes number from 6 to 7
+        pattern = r'build:\s*\n\s*number:\s*7'
+>       assert re.search(pattern, meta_content), \
+            "Expected build number 7, not found in meta.yaml"
+E       AssertionError: Expected build number 7, not found in meta.yaml
+E       assert None
+E        +  where None = <function search at 0x7fc4daa078a0>('build:\\s*\\n\\s*number:\\s*7', '{% set version = "4.3.0" %}\n\npackage:\n  name: cancerit-allelecount\n  version: {{ version }}\n\nsource:\n  url: https://github.com/cancerit/alleleCount/archive/v{{ version }}.tar.gz\n  sha256: 5363ae12c2385c962728336a4498b1a29c9eaa3d4a24492d0debf897771cfd3c\n\nbuild:\n  number: 6\n  skip: True # [osx]\n  run_exports:\n    - {{ pin_subpackage(\'cancerit-allelecount\', max_pin="x") }}\n\nrequirements:\n  build:\n    - make\n    - {{ compiler(\'c\') }}\n    - wget\n  host:\n    - htslib\n    - zlib\n    - bzip2\n    - xz\n  run:\n    - zlib\n    - htslib\n    - bzip2\n    - xz\n\ntest:\n  commands:\n    - \'alleleCounter -h\'\n\nabout:\n  home: https://github.com/cancerit/alleleCount\n  license: GPL-3.0-only\n  license_file: LICENCE\n  summary: Support code for NGS copy number algorithms\n\nextra:\n  additional-platforms:\n    - linux-aarch64\n')
+E        +    where <function search at 0x7fc4daa078a0> = re.search
+
+/tests/tests/test_fix_verification.py:56: AssertionError
+___________________ TestMetaYaml.test_license_family_present ___________________
+
+self = <test_fix_verification.TestMetaYaml object at 0x7fc4d8bfa8b0>
+meta_content = '{% set version = "4.3.0" %}\n\npackage:\n  name: cancerit-allelecount\n  version: {{ version }}\n\nsource:\n  url: ht...ENCE\n  summary: Support code for NGS copy number algorithms\n\nextra:\n  additional-platforms:\n    - linux-aarch64\n'
+
+    def test_license_family_present(self, meta_content):
+        """Verify license_family is specified."""
+>       assert 'license_family: GPL3' in meta_content, \
+            "Missing 'license_family: GPL3' in meta.yaml"
+E       AssertionError: Missing 'license_family: GPL3' in meta.yaml
+E       assert 'license_family: GPL3' in '{% set version = "4.3.0" %}\n\npackage:\n  name: cancerit-allelecount\n  version: {{ version }}\n\nsource:\n  url: https://github.com/cancerit/alleleCount/archive/v{{ version }}.tar.gz\n  sha256: 5363ae12c2385c962728336a4498b1a29c9eaa3d4a24492d0debf897771cfd3c\n\nbuild:\n  number: 6\n  skip: True # [osx]\n  run_exports:\n    - {{ pin_subpackage(\'cancerit-allelecount\', max_pin="x") }}\n\nrequirements:\n  build:\n    - make\n    - {{ compiler(\'c\') }}\n    - wget\n  host:\n    - htslib\n    - zlib\n    - bzip2\n    - xz\n  run:\n    - zlib\n    - htslib\n    - bzip2\n    - xz\n\ntest:\n  commands:\n    - \'alleleCounter -h\'\n\nabout:\n  home: https://github.com/cancerit/alleleCount\n  license: GPL-3.0-only\n  license_file: LICENCE\n  summary: Support code for NGS copy number algorithms\n\nextra:\n  additional-platforms:\n    - linux-aarch64\n'
+
+/tests/tests/test_fix_verification.py:88: AssertionError
+_____________________ TestBuildSh.test_set_xeu_not_set_eu ______________________
+
+self = <test_fix_verification.TestBuildSh object at 0x7fc4d8b2ead0>
+build_sh_content = '#!/bin/bash\nset -eu\nexport LIBRARY_PATH=${PREFIX}/lib\nexport INCPATH=${PREFIX}/include\n#wget --ca-certificate=$PR... Makefile\nmake -j ${CPU_COUNT} OPTINC="-I$PREFIX/include -L$PREFIX/lib"\nmkdir -p $PREFIX/bin\ncp bin/* $PREFIX/bin\n'
+
+    def test_set_xeu_not_set_eu(self, build_sh_content):
+        """Verify build.sh uses 'set -xeu' (with -x for debugging)."""
+        # The fix changes 'set -eu' to 'set -xeu'
+        lines = build_sh_content.split('\n')
+        set_line = None
+        for line in lines:
+            stripped = line.strip()
+            if stripped.startswith('set -'):
+                set_line = stripped
+                break
+    
+        assert set_line is not None, "Could not find 'set -' line in build.sh"
+>       assert 'xeu' in set_line or '-x' in set_line, \
+            f"Expected 'set -xeu' but found '{set_line}'. The fix adds -x for verbose debugging."
+E       AssertionError: Expected 'set -xeu' but found 'set -eu'. The fix adds -x for verbose debugging.
+E       assert ('xeu' in 'set -eu' or '-x' in 'set -eu')
+
+/tests/tests/test_fix_verification.py:112: AssertionError
+=========================== short test summary info ============================
+FAILED ../tests/tests/test_fix_verification.py::TestMetaYaml::test_build_number_is_7
+FAILED ../tests/tests/test_fix_verification.py::TestMetaYaml::test_license_family_present
+FAILED ../tests/tests/test_fix_verification.py::TestBuildSh::test_set_xeu_not_set_eu
+========================= 3 failed, 5 passed in 0.03s ==========================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

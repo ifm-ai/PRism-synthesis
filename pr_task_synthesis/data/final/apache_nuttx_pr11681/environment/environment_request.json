@@ -1,0 +1,70 @@
+{
+  "base_image_candidate": "ubuntu:22.04",
+  "system_packages": [
+    "build-essential",
+    "gcc",
+    "g++",
+    "make",
+    "cmake",
+    "bison",
+    "flex",
+    "gawk",
+    "gperf",
+    "libncurses5-dev",
+    "gcc-arm-none-eabi",
+    "git",
+    "curl",
+    "ninja-build"
+  ],
+  "base_setup_commands": [
+    "apt-get update -qq",
+    "DEBIAN_FRONTEND=noninteractive apt-get install -y -qq build-essential gcc g++ make cmake bison flex gawk gperf libncurses5-dev gcc-arm-none-eabi git curl ninja-build"
+  ],
+  "setup_runtime_commands": [
+    "git clone --depth 1 https://github.com/apache/nuttx-apps.git ${WORKSPACE}/apps || true",
+    "pip3 install --user -q kconfiglib || apt-get install -y -qq python3-kconfiglib || true",
+    "pip3 install --user -q pexpect==4.8.0 pytest==6.2.5 pytest-repeat==0.9.1 pytest-json==0.4.0 pytest-ordering==0.6 pyserial==3.5 || true",
+    "make distclean || true",
+    "./tools/configure.sh nucleo-h745zi:nsh_cm7"
+  ],
+  "activation_commands": [],
+  "activation_command": "",
+  "activation_type": "system",
+  "activation_validation_command": "test -f .config && echo 'NuttX configured'",
+  "detected_test_command": "cd tools/ci/testrun && pytest",
+  "runtime_smoke_command": "make --version && arm-none-eabi-gcc --version && python3 --version",
+  "runtime_profile": {
+    "ecosystem": "C/C++ embedded RTOS",
+    "package_manager": "manual",
+    "env": {},
+    "env_name": "system",
+    "prepare_commands": [
+      "git clone --depth 1 https://github.com/apache/nuttx-apps.git ${WORKSPACE}/apps || true",
+      "pip3 install --user -q kconfiglib || apt-get install -y -qq python3-kconfiglib || true",
+      "pip3 install --user -q pexpect==4.8.0 pytest==6.2.5 pytest-repeat==0.9.1 pytest-json==0.4.0 pytest-ordering==0.6 pyserial==3.5 || true",
+      "./tools/configure.sh nucleo-h745zi:nsh_cm7"
+    ],
+    "activation_commands": [],
+    "base_deps_installed": [
+      "build-essential",
+      "gcc-arm-none-eabi",
+      "cmake",
+      "bison",
+      "flex",
+      "gawk",
+      "gperf",
+      "libncurses5-dev",
+      "python3-kconfiglib",
+      "python3-pytest",
+      "python3-pexpect",
+      "python3-pyserial"
+    ],
+    "test_only_install_strategy": "pip3 install --user -r tools/ci/testrun/env/requirements.txt",
+    "cache_dirs": [
+      "/root/.cache/pip",
+      "${WORKSPACE}/apps"
+    ],
+    "notes": "NuttX uses a Make-based build system with Kconfig for configuration. The apps repository must be cloned separately. Python kconfiglib is used for Kconfig parsing as an alternative to C-based kconfig-frontends. The pysim_cm7 configuration (added by fix.patch) enables simulator-based testing without hardware."
+  },
+  "notes": "Apache NuttX is a POSIX-compliant RTOS for embedded systems. This environment supports building NuttX with the nucleo-h745zi board configuration. The base image is Ubuntu 22.04 matching the project's CI Dockerfile. System packages include ARM GCC toolchain for cross-compilation. Python packages (pytest, pexpect, pyserial) are installed using pip3 --user for Ubuntu 22.04 compatibility (pip 22.0.2 does not support --break-system-packages which was added in pip 23.0+ per PEP 668). The setup_runtime.sh script clones the nuttx-apps repository before configure.sh and configures NuttX with the nsh_cm7 configuration. The pysim_cm7 configuration is available only after applying fix.patch."
+}

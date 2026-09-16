@@ -1,0 +1,34 @@
+schema_version = "1.1"
+
+[task]
+name = "firezone_firezone_pr3434"
+description = "OpenEnv: firezone/firezone PR #3434"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/firezone/firezone.git"
+git_pr_id = "3434"
+git_base_commit = "2bad4c617f90acb19a82afbc71390573905d421d"
+task_id = "firezone_firezone_pr3434"
+repo_full_name = "firezone/firezone"
+domain = "DEVOPS_NETWORK_SERVICES"
+primary_language = "Elixir"
+complexity = "hard"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

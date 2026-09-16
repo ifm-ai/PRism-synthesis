@@ -1,0 +1,74 @@
+{
+  "pr_summary": "Add support for persisting and reloading models quantized in the Marlin format. The fix enables `AutoGPTQForCausalLM.from_quantized` with `use_marlin=True` to properly load Marlin-quantized models, cache converted weights, and save models with `is_marlin_format` flag. Key changes include: adding `is_marlin_format` field to `BaseQuantizeConfig`, creating new `marlin_utils.py` module with `prepare_model_for_marlin_load`, `_get_cached_marlin_save_name`, and `_validate_marlin_device_support` functions, moving `_validate_marlin_compatibility` to marlin_utils, and updating save_pretrained to write `model.safetensors` (not `autogptq_model.safetensors`) when in Marlin format.",
+  "runtime_family": "Python",
+  "package_manager": "pip",
+  "touched_files": [
+    "auto_gptq/modeling/_base.py",
+    "auto_gptq/modeling/_utils.py",
+    "auto_gptq/nn_modules/qlinear/qlinear_marlin.py",
+    "auto_gptq/utils/marlin_utils.py"
+  ],
+  "important_build_files": [
+    "setup.py"
+  ],
+  "important_test_files": [
+    "tests/test_q4.py",
+    "tests/test_serialization.py"
+  ],
+  "candidate_build_commands": [
+    "pip install -vvv -e .",
+    "TORCH_CUDA_ARCH_LIST=\"8.0 8.6+PTX\" COMPILE_MARLIN=1 DISABLE_QIGEN=1 pip install -vvv -e ."
+  ],
+  "candidate_test_commands": [
+    "python -m pytest tests/test_q4.py -v",
+    "python -m pytest tests/test_serialization.py -v",
+    "python -m unittest tests.test_q4.TestQ4Marlin"
+  ],
+  "candidate_smoke_commands": [
+    "python -c \"import auto_gptq; print(auto_gptq.__version__)\"",
+    "python -c \"from auto_gptq import AutoGPTQForCausalLM; print('Import successful')\"",
+    "python -c \"from auto_gptq.utils.marlin_utils import _get_cached_marlin_save_name; print('Marlin utils available')\""
+  ],
+  "candidate_activation_checks": [
+    "python -c \"import torch; print('CUDA available:', torch.cuda.is_available())\"",
+    "python -c \"import marlin_cuda; print('Marlin CUDA kernel available')\"",
+    "python -c \"from auto_gptq.utils.import_utils import MARLIN_AVAILABLE; print('MARLIN_AVAILABLE:', MARLIN_AVAILABLE)\""
+  ],
+  "environment_management": "Standard Python environment with pip. No conda/poetry/uv detected. Requires PyTorch with CUDA support for GPU acceleration.",
+  "special_system_dependencies": [
+    "CUDA toolkit (11.8 or 12.1)",
+    "NVIDIA GPU with compute capability >= 8.0 for Marlin kernel (Ampere GPUs)",
+    "C++ compiler (g++)",
+    "CUDA development headers"
+  ],
+  "high_value_files": [
+    "auto_gptq/modeling/_base.py",
+    "auto_gptq/utils/marlin_utils.py",
+    "auto_gptq/modeling/_utils.py",
+    "auto_gptq/nn_modules/qlinear/qlinear_marlin.py",
+    "auto_gptq/utils/import_utils.py",
+    "setup.py",
+    "tests/test_q4.py",
+    "tests/test_serialization.py"
+  ],
+  "patch_file_cues": [
+    "auto_gptq/modeling/_base.py - Main from_quantized logic, Marlin loading flow",
+    "auto_gptq/modeling/_utils.py - Removed convert_to_marlin function (moved to marlin_utils)",
+    "auto_gptq/nn_modules/qlinear/qlinear_marlin.py - Removed _validate_marlin_compatibility (moved to marlin_utils)",
+    "auto_gptq/utils/marlin_utils.py - NEW FILE with Marlin loading utilities"
+  ],
+  "test_file_cues": [
+    "tests/test_q4.py - TestQ4Marlin class tests Marlin kernel loading",
+    "tests/test_serialization.py - NEW FILE tests Marlin serialization and caching behavior"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "setup.py specifies platforms: ['windows', 'linux'] but Marlin kernel requires CUDA compute capability 8.0+ (Ampere GPUs)",
+    "CI workflow build_wheels_cuda.yml runs on ubuntu-20.04 and windows-latest",
+    "Code uses torch.cuda.get_device_capability() for Marlin validation - requires NVIDIA GPU",
+    "Marlin kernel is CUDA-only (not ROCm-compatible per README)",
+    "No macOS-specific code or Xcode project files found",
+    "Linux is the primary development and testing platform for CUDA-based ML workloads"
+  ],
+  "notes": "This is a Python quantization library for LLMs based on GPTQ algorithm. The fix adds Marlin format persistence support. Key requirements: PyTorch >= 1.13.0 with CUDA, transformers >= 4.31.0, accelerate >= 0.26.0. Marlin kernel specifically requires Ampere GPUs (compute capability 8.0 or 8.6). The test suite uses unittest framework with parameterized tests. Tests require CUDA GPU to run Marlin-related tests. The repository uses setup.py for package installation with optional CUDA extension building (BUILD_CUDA_EXT=1 by default)."
+}

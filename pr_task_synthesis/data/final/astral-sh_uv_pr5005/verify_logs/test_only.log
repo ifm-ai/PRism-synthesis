@@ -1,0 +1,928 @@
+>>>>> Start Test Output
+    Updating git repository `https://github.com/astral-sh/reqwest-middleware`
+    Updating crates.io index
+    Updating git repository `https://github.com/charliermarsh/rs-async-zip`
+    Updating git repository `https://github.com/astral-sh/pubgrub`
+ Downloading crates ...
+  Downloaded alloc-no-stdlib v2.0.4
+  Downloaded adler v1.0.2
+  Downloaded anstyle v1.0.7
+  Downloaded cfg_aliases v0.1.1
+  Downloaded async-channel v2.3.1
+  Downloaded anstream v0.6.14
+  Downloaded clap_lex v0.7.0
+  Downloaded cfg-if v1.0.0
+  Downloaded bytecheck_derive v0.6.12
+  Downloaded event-listener-strategy v0.5.2
+  Downloaded clap_complete_command v0.5.1
+  Downloaded alloc-stdlib v0.2.2
+  Downloaded dyn-clone v1.0.17
+  Downloaded bisection v0.1.0
+  Downloaded dirs-sys v0.4.1
+  Downloaded fnv v1.0.7
+  Downloaded ctrlc v3.4.4
+  Downloaded futures-task v0.3.30
+  Downloaded colorchoice v1.0.1
+  Downloaded futures-io v0.3.30
+  Downloaded form_urlencoded v1.2.1
+  Downloaded block-buffer v0.10.4
+  Downloaded anstyle-query v1.0.3
+  Downloaded serde_urlencoded v0.7.1
+  Downloaded equivalent v1.0.1
+  Downloaded futures-core v0.3.30
+  Downloaded async_http_range_reader v0.8.0
+  Downloaded strsim v0.11.1
+  Downloaded bytecheck v0.6.12
+  Downloaded funty v2.0.0
+  Downloaded supports-color v3.0.0
+  Downloaded urlencoding v2.1.3
+  Downloaded tracing-serde v0.1.3
+  Downloaded tinyvec_macros v0.1.1
+  Downloaded float-cmp v0.9.0
+  Downloaded futures-sink v0.3.30
+  Downloaded doc-comment v0.3.3
+  Downloaded fastrand v2.1.0
+  Downloaded difflib v0.4.0
+  Downloaded cpufeatures v0.2.12
+  Downloaded terminal_size v0.3.0
+  Downloaded tokio-macros v2.3.0
+  Downloaded supports-hyperlinks v3.0.0
+  Downloaded tap v1.0.1
+  Downloaded sync_wrapper v1.0.1
+  Downloaded backtrace-ext v0.2.1
+  Downloaded futures-macro v0.3.30
+  Downloaded dunce v1.0.4
+  Downloaded clap_complete_fig v4.5.0
+  Downloaded crypto-common v0.1.6
+  Downloaded termtree v0.4.1
+  Downloaded directories v5.0.1
+  Downloaded untrusted v0.9.0
+  Downloaded unscanny v0.1.0
+  Downloaded fs2 v0.4.3
+  Downloaded charset v0.1.3
+  Downloaded fixedbitset v0.4.2
+  Downloaded xattr v1.3.1
+  Downloaded thiserror-impl v1.0.61
+  Downloaded tower-service v0.3.2
+  Downloaded toml_datetime v0.6.6
+  Downloaded errno v0.3.9
+  Downloaded assert_cmd v2.0.14
+  Downloaded anstyle-parse v0.2.4
+  Downloaded digest v0.10.7
+  Downloaded data-encoding v2.6.0
+  Downloaded ahash v0.7.8
+  Downloaded rend v0.4.2
+  Downloaded smawk v0.3.2
+  Downloaded clap_derive v4.5.8
+  Downloaded generic-array v0.14.7
+  Downloaded globwalk v0.9.1
+  Downloaded wait-timeout v0.2.0
+  Downloaded filetime v0.2.23
+  Downloaded cmake v0.1.50
+  Downloaded utf8parse v0.2.1
+  Downloaded try-lock v0.2.5
+  Downloaded unicode-linebreak v0.1.5
+  Downloaded backoff v0.4.0
+  Downloaded clap_complete_nushell v0.1.11
+  Downloaded byteorder v1.5.0
+  Downloaded version_check v0.9.4
+  Downloaded cachedir v0.3.1
+  Downloaded tower-layer v0.3.2
+  Downloaded thread_local v1.1.8
+  Downloaded fs-err v2.11.0
+  Downloaded either v1.13.0
+  Downloaded supports-unicode v3.0.0
+  Downloaded crossbeam-deque v0.8.5
+  Downloaded autocfg v1.3.0
+  Downloaded assert_fs v1.1.1
+  Downloaded crc32fast v1.4.2
+  Downloaded async-trait v0.1.81
+  Downloaded want v0.3.1
+  Downloaded serde_spanned v0.6.6
+  Downloaded sha2 v0.10.8
+  Downloaded configparser v3.1.0
+  Downloaded concurrent-queue v2.5.0
+  Downloaded futures-channel v0.3.30
+  Downloaded utf8-width v0.1.7
+  Downloaded shell-escape v0.1.5
+  Downloaded serde_derive_internals v0.29.1
+  Downloaded futures-executor v0.3.30
+  Downloaded encoding_rs_io v0.1.7
+  Downloaded rustc-hash v2.0.0
+  Downloaded rustc-hash v1.1.0
+  Downloaded addr2line v0.22.0
+  Downloaded subtle v2.5.0
+  Downloaded slab v0.4.9
+  Downloaded simdutf8 v0.1.4
+  Downloaded heck v0.5.0
+  Downloaded anyhow v1.0.86
+  Downloaded cargo-util v0.2.12
+  Downloaded bzip2 v0.4.4
+  Downloaded thiserror v1.0.61
+  Downloaded tikv-jemallocator v0.5.4
+  Downloaded html-escape v0.2.13
+  Downloaded zeroize v1.8.1
+  Downloaded signal-hook-registry v1.4.2
+  Downloaded futures-lite v2.3.0
+  Downloaded dashmap v6.0.1
+  Downloaded crossbeam-utils v0.8.20
+  Downloaded clap_complete v4.5.2
+  Downloaded bitflags v2.5.0
+  Downloaded crossbeam-epoch v0.9.18
+  Downloaded zstd-safe v7.1.0
+  Downloaded zstd v0.13.1
+  Downloaded walkdir v2.5.0
+  Downloaded target-lexicon v0.12.14
+  Downloaded sys-info v0.9.1
+  Downloaded wyz v0.5.1
+  Downloaded csv-core v0.1.11
+  Downloaded rkyv_derive v0.7.44
+  Downloaded rustls-native-certs v0.7.0
+  Downloaded globset v0.4.14
+  Downloaded glob v0.3.1
+  Downloaded home v0.5.9
+  Downloaded which v6.0.1
+  Downloaded tracing-log v0.2.0
+  Downloaded console v0.15.8
+  Downloaded base64 v0.13.1
+  Downloaded event-listener v5.3.1
+  Downloaded futures v0.3.30
+  Downloaded clap v4.5.9
+  Downloaded sharded-slab v0.1.7
+  Downloaded derivative v2.2.0
+  Downloaded nu-ansi-term v0.50.0
+  Downloaded tokio-rustls v0.26.0
+  Downloaded uuid v1.8.0
+  Downloaded ryu v1.0.18
+  Downloaded bytes v1.6.0
+  Downloaded base64 v0.22.1
+  Downloaded spin v0.9.8
+  Downloaded unicode-ident v1.0.12
+  Downloaded hex v0.4.3
+  Downloaded cc v1.0.98
+  Downloaded getrandom v0.2.15
+  Downloaded indoc v2.0.5
+  Downloaded tracing-tree v0.3.1
+  Downloaded tl v0.7.8
+  Downloaded serde_derive v1.0.204
+  Downloaded smallvec v1.13.2
+  Downloaded flate2 v1.0.30
+  Downloaded backtrace v0.3.72
+  Downloaded tracing-attributes v0.1.27
+  Downloaded proc-macro2 v1.0.85
+  Downloaded typenum v1.17.0
+  Downloaded textwrap v0.16.1
+  Downloaded similar v2.5.0
+  Downloaded async-compression v0.4.11
+  Downloaded httparse v1.8.0
+  Downloaded unicode-bidi v0.3.15
+  Downloaded tokio-tar v0.3.1
+  Downloaded toml v0.8.14
+  Downloaded tempfile v3.10.1
+  Downloaded tracing-core v0.1.32
+  Downloaded tokio-stream v0.1.15
+  Downloaded retry-policies v0.4.0
+  Downloaded tinyvec v1.6.0
+  Downloaded socket2 v0.5.7
+  Downloaded tracing v0.1.40
+  Downloaded zip v0.6.6
+  Downloaded url v2.5.2
+  Downloaded serde v1.0.204
+  Downloaded seahash v4.1.0
+  Downloaded aho-corasick v1.1.3
+  Downloaded clap_builder v4.5.9
+  Downloaded toml_edit v0.22.14
+  Downloaded tokio-util v0.7.11
+  Downloaded brotli-decompressor v4.0.1
+  Downloaded tower v0.4.13
+  Downloaded hashbrown v0.12.3
+  Downloaded hyper v1.4.1
+  Downloaded chrono v0.4.38
+  Downloaded serde_json v1.0.120
+  Downloaded bitvec v1.0.1
+  Downloaded hashbrown v0.14.5
+  Downloaded futures-util v0.3.30
+  Downloaded winnow v0.6.11
+  Downloaded regex v1.10.5
+  Downloaded unicode-normalization v0.1.23
+  Downloaded tracing-subscriber v0.3.18
+  Downloaded bstr v1.9.1
+  Downloaded syn v2.0.69
+  Downloaded webpki-roots v0.26.1
+  Downloaded syn v1.0.109
+  Downloaded gimli v0.29.0
+  Downloaded rustls v0.23.10
+  Downloaded hyper-util v0.1.6
+  Downloaded radium v0.7.0
+  Downloaded quoted_printable v0.5.0
+  Downloaded itertools v0.12.1
+  Downloaded iana-time-zone v0.1.60
+  Downloaded hyper-rustls v0.27.2
+  Downloaded rmp v0.8.14
+  Downloaded quote v1.0.36
+  Downloaded bzip2-sys v0.1.11+1.0.8
+  Downloaded rkyv v0.7.44
+  Downloaded unicode-width v0.1.13
+  Downloaded csv v1.3.0
+  Downloaded zstd-sys v2.0.10+zstd.1.5.6
+  Downloaded log v0.4.21
+  Downloaded tokio v1.38.0
+  Downloaded tikv-jemalloc-sys v0.5.4+5.3.0-patched
+  Downloaded miniz_oxide v0.7.3
+  Downloaded itertools v0.13.0
+  Downloaded normalize-line-endings v0.3.0
+  Downloaded memchr v2.7.4
+  Downloaded pin-utils v0.1.0
+  Downloaded openssl-probe v0.1.5
+  Downloaded paste v1.0.15
+  Downloaded parking_lot_core v0.9.10
+  Downloaded nix v0.28.0
+  Downloaded priority-queue v2.0.3
+  Downloaded ptr_meta v0.1.4
+  Downloaded rust-netrc v0.1.1
+  Downloaded pin-project-lite v0.2.14
+  Downloaded rand_chacha v0.3.1
+  Downloaded regex-automata v0.1.10
+  Downloaded reflink-copy v0.1.19
+  Downloaded option-ext v0.2.0
+  Downloaded md-5 v0.10.6
+  Downloaded quinn-udp v0.5.2
+  Downloaded nanoid v0.4.0
+  Downloaded matchers v0.1.0
+  Downloaded owo-colors v4.0.0
+  Downloaded jobserver v0.1.31
+  Downloaded is_terminal_polyfill v1.70.0
+  Downloaded platform-info v2.0.3
+  Downloaded is_ci v1.2.0
+  Downloaded overload v0.1.1
+  Downloaded mailparse v0.15.0
+  Downloaded instant v0.1.13
+  Downloaded itoa v1.0.11
+  Downloaded lazy_static v1.4.0
+  Downloaded lock_api v0.4.12
+  Downloaded pkg-config v0.3.30
+  Downloaded same-file v1.0.6
+  Downloaded pin-project-internal v1.1.5
+  Downloaded rustc-demangle v0.1.24
+  Downloaded http-body v1.0.0
+  Downloaded path-absolutize v3.1.1
+  Downloaded http-body-util v0.1.2
+  Downloaded ipnet v2.9.0
+  Downloaded parking v2.2.0
+  Downloaded miette-derive v7.2.0
+  Downloaded rustls-pki-types v1.7.0
+  Downloaded http-content-range v0.1.2
+  Downloaded rayon-core v1.12.1
+  Downloaded indicatif v0.17.8
+  Downloaded insta v1.39.0
+  Downloaded mime v0.3.17
+  Downloaded regex-automata v0.4.6
+  Downloaded path-dedot v3.1.1
+  Downloaded number_prefix v0.4.0
+  Downloaded predicates-tree v1.0.9
+  Downloaded predicates-core v1.0.6
+  Downloaded rustls-pemfile v2.1.2
+  Downloaded rmp-serde v1.3.0
+  Downloaded once_cell v1.19.0
+  Downloaded ptr_meta_derive v0.1.4
+  Downloaded pathdiff v0.2.1
+  Downloaded predicates v3.1.0
+  Downloaded indexmap v2.2.6
+  Downloaded path-slash v0.2.1
+  Downloaded ppv-lite86 v0.2.17
+  Downloaded linked-hash-map v0.5.6
+  Downloaded rand_core v0.6.4
+  Downloaded ignore v0.4.22
+  Downloaded scopeguard v1.2.0
+  Downloaded percent-encoding v2.3.1
+  Downloaded num-traits v0.2.19
+  Downloaded http v1.1.0
+  Downloaded memmap2 v0.9.4
+  Downloaded schemars v0.8.21
+  Downloaded schemars_derive v0.8.21
+  Downloaded nu-ansi-term v0.46.0
+  Downloaded pin-project v1.1.5
+  Downloaded rand v0.8.5
+  Downloaded quinn v0.11.2
+  Downloaded reqwest v0.12.5
+  Downloaded quinn-proto v0.11.3
+  Downloaded rustls-webpki v0.102.4
+  Downloaded portable-atomic v1.6.0
+  Downloaded miette v7.2.0
+  Downloaded mio v0.8.11
+  Downloaded rayon v1.10.0
+  Downloaded brotli v6.0.0
+  Downloaded encoding_rs v0.8.34
+  Downloaded rustix v0.38.34
+  Downloaded idna v0.5.0
+  Downloaded regex-syntax v0.8.3
+  Downloaded regex-syntax v0.6.29
+  Downloaded object v0.35.0
+  Downloaded libc v0.2.155
+  Downloaded petgraph v0.6.5
+  Downloaded linux-raw-sys v0.4.14
+  Downloaded libz-ng-sys v1.1.15
+  Downloaded ring v0.17.8
+   Compiling proc-macro2 v1.0.85
+   Compiling unicode-ident v1.0.12
+   Compiling quote v1.0.36
+   Compiling syn v2.0.69
+   Compiling libc v0.2.155
+   Compiling once_cell v1.19.0
+   Compiling cfg-if v1.0.0
+   Compiling jobserver v0.1.31
+   Compiling cc v1.0.98
+   Compiling autocfg v1.3.0
+   Compiling memchr v2.7.4
+   Compiling pin-project-lite v0.2.14
+   Compiling serde v1.0.204
+   Compiling serde_derive v1.0.204
+   Compiling futures-core v0.3.30
+   Compiling bytes v1.6.0
+   Compiling getrandom v0.2.15
+   Compiling bitflags v2.5.0
+   Compiling socket2 v0.5.7
+   Compiling signal-hook-registry v1.4.2
+   Compiling mio v0.8.11
+   Compiling tokio-macros v2.3.0
+   Compiling tokio v1.38.0
+   Compiling rustix v0.38.34
+   Compiling linux-raw-sys v0.4.14
+   Compiling futures-io v0.3.30
+   Compiling itoa v1.0.11
+   Compiling futures-sink v0.3.30
+   Compiling version_check v0.9.4
+   Compiling crossbeam-utils v0.8.20
+   Compiling pkg-config v0.3.30
+   Compiling slab v0.4.9
+   Compiling tracing-core v0.1.32
+   Compiling futures-channel v0.3.30
+   Compiling aho-corasick v1.1.3
+   Compiling futures-macro v0.3.30
+   Compiling tinyvec_macros v0.1.1
+   Compiling pin-utils v0.1.0
+   Compiling ryu v1.0.18
+   Compiling log v0.4.21
+   Compiling futures-task v0.3.30
+   Compiling regex-syntax v0.8.3
+   Compiling regex-automata v0.4.6
+   Compiling futures-util v0.3.30
+   Compiling tinyvec v1.6.0
+   Compiling tracing-attributes v0.1.27
+   Compiling smallvec v1.13.2
+   Compiling adler v1.0.2
+   Compiling anstyle v1.0.7
+   Compiling thiserror v1.0.61
+   Compiling syn v1.0.109
+   Compiling percent-encoding v2.3.1
+   Compiling serde_json v1.0.120
+   Compiling form_urlencoded v1.2.1
+   Compiling miniz_oxide v0.7.3
+   Compiling tracing v0.1.40
+   Compiling unicode-normalization v0.1.23
+   Compiling zstd-sys v2.0.10+zstd.1.5.6
+   Compiling ring v0.17.8
+   Compiling cmake v0.1.50
+   Compiling thiserror-impl v1.0.61
+   Compiling unicode-bidi v0.3.15
+   Compiling rustls-pki-types v1.7.0
+   Compiling idna v0.5.0
+   Compiling libz-ng-sys v1.1.15
+   Compiling utf8parse v0.2.1
+   Compiling fnv v1.0.7
+   Compiling http v1.1.0
+   Compiling anstyle-parse v0.2.4
+   Compiling url v2.5.2
+   Compiling bzip2-sys v0.1.11+1.0.8
+   Compiling pin-project-internal v1.1.5
+   Compiling alloc-no-stdlib v2.0.4
+   Compiling untrusted v0.9.0
+   Compiling is_terminal_polyfill v1.70.0
+   Compiling colorchoice v1.0.1
+   Compiling anstyle-query v1.0.3
+   Compiling httparse v1.8.0
+   Compiling zstd-safe v7.1.0
+   Compiling spin v0.9.8
+   Compiling anstream v0.6.14
+   Compiling alloc-stdlib v0.2.2
+   Compiling pin-project v1.1.5
+   Compiling http-body v1.0.0
+   Compiling num-traits v0.2.19
+   Compiling crc32fast v1.4.2
+   Compiling typenum v1.17.0
+   Compiling rustls v0.23.10
+   Compiling hashbrown v0.14.5
+   Compiling fastrand v2.1.0
+   Compiling try-lock v0.2.5
+   Compiling want v0.3.1
+   Compiling flate2 v1.0.30
+   Compiling brotli-decompressor v4.0.1
+   Compiling rustls-webpki v0.102.4
+   Compiling generic-array v0.14.7
+   Compiling tokio-util v0.7.11
+   Compiling rand_core v0.6.4
+   Compiling base64 v0.22.1
+   Compiling tower-layer v0.3.2
+   Compiling tower-service v0.3.2
+   Compiling subtle v2.5.0
+   Compiling zeroize v1.8.1
+   Compiling ppv-lite86 v0.2.17
+   Compiling rand_chacha v0.3.1
+   Compiling tower v0.4.13
+   Compiling rustls-pemfile v2.1.2
+   Compiling hyper v1.4.1
+   Compiling brotli v6.0.0
+   Compiling bzip2 v0.4.4
+   Compiling zstd v0.13.1
+   Compiling ptr_meta_derive v0.1.4
+   Compiling crossbeam-epoch v0.9.18
+   Compiling ahash v0.7.8
+   Compiling openssl-probe v0.1.5
+   Compiling either v1.13.0
+   Compiling unicode-width v0.1.13
+   Compiling anyhow v1.0.86
+   Compiling bytecheck v0.6.12
+   Compiling rustls-native-certs v0.7.0
+   Compiling crossbeam-deque v0.8.5
+   Compiling ptr_meta v0.1.4
+   Compiling async-compression v0.4.11
+   Compiling hyper-util v0.1.6
+   Compiling tokio-rustls v0.26.0
+   Compiling rand v0.8.5
+   Compiling tempfile v3.10.1
+   Compiling bytecheck_derive v0.6.12
+   Compiling webpki-roots v0.26.1
+   Compiling regex v1.10.5
+   Compiling bstr v1.9.1
+   Compiling seahash v4.1.0
+   Compiling simdutf8 v0.1.4
+   Compiling rend v0.4.2
+   Compiling hyper-rustls v0.27.2
+   Compiling http-body-util v0.1.2
+   Compiling serde_urlencoded v0.7.1
+   Compiling lock_api v0.4.12
+   Compiling fs-err v2.11.0
+   Compiling encoding_rs v0.8.34
+   Compiling equivalent v1.0.1
+   Compiling sync_wrapper v1.0.1
+   Compiling ipnet v2.9.0
+   Compiling rustc-hash v2.0.0
+   Compiling rkyv v0.7.44
+   Compiling mime v0.3.17
+   Compiling parking_lot_core v0.9.10
+   Compiling same-file v1.0.6
+   Compiling walkdir v2.5.0
+   Compiling reqwest v0.12.5
+   Compiling indexmap v2.2.6
+   Compiling hashbrown v0.12.3
+   Compiling globset v0.4.14
+   Compiling block-buffer v0.10.4
+   Compiling crypto-common v0.1.6
+   Compiling rkyv_derive v0.7.44
+   Compiling async-trait v0.1.81
+   Compiling serde_derive_internals v0.29.1
+   Compiling schemars v0.8.21
+   Compiling owo-colors v4.0.0
+   Compiling scopeguard v1.2.0
+   Compiling schemars_derive v0.8.21
+   Compiling reqwest-middleware v0.3.2 (https://github.com/astral-sh/reqwest-middleware?rev=21ceec9a5fd2e8d6f71c3ea2999078fecbd13cbe#21ceec9a)
+   Compiling digest v0.10.7
+   Compiling ignore v0.4.22
+   Compiling instant v0.1.13
+   Compiling path-dedot v3.1.1
+   Compiling urlencoding v2.1.3
+   Compiling dyn-clone v1.0.17
+   Compiling path-absolutize v3.1.1
+   Compiling backoff v0.4.0
+   Compiling dashmap v6.0.1
+   Compiling uv-warnings v0.0.1 (/workspace/crates/uv-warnings)
+   Compiling encoding_rs_io v0.1.7
+   Compiling cachedir v0.3.1
+   Compiling terminal_size v0.3.0
+   Compiling filetime v0.2.23
+   Compiling fs2 v0.4.3
+   Compiling cpufeatures v0.2.12
+   Compiling dunce v1.0.4
+   Compiling hex v0.4.3
+   Compiling path-slash v0.2.1
+   Compiling unscanny v0.1.0
+   Compiling pep440_rs v0.6.0 (/workspace/crates/pep440-rs)
+   Compiling uv-fs v0.0.1 (/workspace/crates/uv-fs)
+   Compiling sha2 v0.10.8
+   Compiling uv-normalize v0.0.1 (/workspace/crates/uv-normalize)
+   Compiling serde_spanned v0.6.6
+   Compiling toml_datetime v0.6.6
+   Compiling shell-escape v0.1.5
+   Compiling base64 v0.13.1
+   Compiling iana-time-zone v0.1.60
+   Compiling clap_lex v0.7.0
+   Compiling heck v0.5.0
+   Compiling winnow v0.6.11
+   Compiling strsim v0.11.1
+   Compiling clap_builder v4.5.9
+   Compiling toml_edit v0.22.14
+   Compiling clap_derive v4.5.8
+   Compiling chrono v0.4.38
+   Compiling charset v0.1.3
+   Compiling cargo-util v0.2.12
+   Compiling cache-key v0.0.1 (/workspace/crates/cache-key)
+   Compiling derivative v2.2.0
+   Compiling quoted_printable v0.5.0
+   Compiling data-encoding v2.6.0
+   Compiling mailparse v0.15.0
+   Compiling pep508_rs v0.6.0 (/workspace/crates/pep508-rs)
+   Compiling uv-git v0.0.1 (/workspace/crates/uv-git)
+   Compiling clap v4.5.9
+   Compiling toml v0.8.14
+   Compiling itertools v0.13.0
+   Compiling futures-executor v0.3.30
+   Compiling futures v0.3.30
+   Compiling pypi-types v0.0.1 (/workspace/crates/pypi-types)
+   Compiling byteorder v1.5.0
+   Compiling parking v2.2.0
+   Compiling platform-tags v0.0.1 (/workspace/crates/platform-tags)
+   Compiling paste v1.0.15
+   Compiling option-ext v0.2.0
+   Compiling dirs-sys v0.4.1
+   Compiling distribution-filename v0.0.1 (/workspace/crates/distribution-filename)
+   Compiling tokio-stream v0.1.15
+   Compiling rmp v0.8.14
+   Compiling directories v5.0.1
+   Compiling futures-lite v2.3.0
+   Compiling zip v0.6.6
+   Compiling once-map v0.0.1 (/workspace/crates/once-map)
+   Compiling rust-netrc v0.1.1
+   Compiling csv-core v0.1.11
+   Compiling sys-info v0.9.1
+   Compiling rayon-core v1.12.1
+   Compiling csv v1.3.0
+   Compiling uv-auth v0.0.1 (/workspace/crates/uv-auth)
+   Compiling async_zip v0.0.17 (https://github.com/charliermarsh/rs-async-zip?rev=1dcb40cfe1bf5325a6fd4bfcf9894db40241f585#1dcb40cf)
+   Compiling rmp-serde v1.3.0
+   Compiling distribution-types v0.0.1 (/workspace/crates/distribution-types)
+   Compiling retry-policies v0.4.0
+   Compiling nanoid v0.4.0
+   Compiling itertools v0.12.1
+   Compiling reflink-copy v0.1.19
+   Compiling memmap2 v0.9.4
+   Compiling platform-info v2.0.3
+   Compiling utf8-width v0.1.7
+   Compiling pathdiff v0.2.1
+   Compiling configparser v3.1.0
+   Compiling bisection v0.1.0
+   Compiling http-content-range v0.1.2
+   Compiling async_http_range_reader v0.8.0
+   Compiling install-wheel-rs v0.0.1 (/workspace/crates/install-wheel-rs)
+   Compiling html-escape v0.2.13
+   Compiling uv-cache v0.0.1 (/workspace/crates/uv-cache)
+   Compiling reqwest-retry v0.7.0 (https://github.com/astral-sh/reqwest-middleware?rev=21ceec9a5fd2e8d6f71c3ea2999078fecbd13cbe#21ceec9a)
+   Compiling uv-configuration v0.0.1 (/workspace/crates/uv-configuration)
+   Compiling xattr v1.3.1
+   Compiling target-lexicon v0.12.14
+   Compiling uv-version v0.2.24 (/workspace/crates/uv-version)
+   Compiling tl v0.7.8
+   Compiling uv-client v0.0.1 (/workspace/crates/uv-client)
+   Compiling tokio-tar v0.3.1
+   Compiling rayon v1.10.0
+   Compiling md-5 v0.10.6
+   Compiling home v0.5.9
+   Compiling which v6.0.1
+   Compiling uv-extract v0.0.1 (/workspace/crates/uv-extract)
+   Compiling uv-state v0.0.1 (/workspace/crates/uv-state)
+   Compiling uv-python v0.0.1 (/workspace/crates/uv-python)
+   Compiling uv-types v0.0.1 (/workspace/crates/uv-types)
+   Compiling glob v0.3.1
+   Compiling uv-distribution v0.0.1 (/workspace/crates/uv-distribution)
+   Compiling lazy_static v1.4.0
+   Compiling unicode-linebreak v0.1.5
+   Compiling smawk v0.3.2
+   Compiling textwrap v0.16.1
+   Compiling priority-queue v2.0.3
+   Compiling concurrent-queue v2.5.0
+   Compiling fixedbitset v0.4.2
+   Compiling rustc-hash v1.1.0
+   Compiling pubgrub v0.2.1 (https://github.com/astral-sh/pubgrub?rev=b4435e2f3af10dab2336a0345b35dcd622699d06#b4435e2f)
+   Compiling petgraph v0.6.5
+   Compiling event-listener v5.3.1
+   Compiling requirements-txt v0.0.1 (/workspace/crates/requirements-txt)
+   Compiling cfg_aliases v0.1.1
+   Compiling nix v0.28.0
+   Compiling uv-resolver v0.0.1 (/workspace/crates/uv-resolver)
+   Compiling event-listener-strategy v0.5.2
+   Compiling clap_complete v4.5.2
+   Compiling backtrace v0.3.72
+   Compiling gimli v0.29.0
+   Compiling regex-syntax v0.6.29
+   Compiling regex-automata v0.1.10
+   Compiling addr2line v0.22.0
+   Compiling async-channel v2.3.1
+   Compiling console v0.15.8
+   Compiling uv-virtualenv v0.0.4 (/workspace/crates/uv-virtualenv)
+   Compiling object v0.35.0
+   Compiling tikv-jemalloc-sys v0.5.4+5.3.0-patched
+   Compiling overload v0.1.1
+   Compiling rustc-demangle v0.1.24
+   Compiling portable-atomic v1.6.0
+   Compiling nu-ansi-term v0.46.0
+   Compiling uv-cli v0.0.1 (/workspace/crates/uv-cli)
+   Compiling uv-installer v0.0.1 (/workspace/crates/uv-installer)
+   Compiling matchers v0.1.0
+   Compiling clap_complete_fig v4.5.0
+   Compiling clap_complete_nushell v0.1.11
+   Compiling sharded-slab v0.1.7
+   Compiling tracing-log v0.2.0
+   Compiling tracing-serde v0.1.3
+   Compiling thread_local v1.1.8
+   Compiling uv-macros v0.0.1 (/workspace/crates/uv-macros)
+   Compiling indoc v2.0.5
+   Compiling is_ci v1.2.0
+   Compiling supports-color v3.0.0
+   Compiling uv-build v0.0.1 (/workspace/crates/uv-build)
+   Compiling uv-settings v0.0.1 (/workspace/crates/uv-settings)
+   Compiling tracing-subscriber v0.3.18
+   Compiling clap_complete_command v0.5.1
+   Compiling ctrlc v3.4.4
+   Compiling backtrace-ext v0.2.1
+   Compiling miette-derive v7.2.0
+   Compiling doc-comment v0.3.3
+   Compiling number_prefix v0.4.0
+   Compiling supports-hyperlinks v3.0.0
+   Compiling nu-ansi-term v0.50.0
+   Compiling predicates-core v1.0.6
+   Compiling supports-unicode v3.0.0
+   Compiling miette v7.2.0
+   Compiling tracing-tree v0.3.1
+   Compiling indicatif v0.17.8
+   Compiling tikv-jemallocator v0.5.4
+   Compiling uv-requirements v0.1.0 (/workspace/crates/uv-requirements)
+   Compiling uv-dispatch v0.0.1 (/workspace/crates/uv-dispatch)
+   Compiling uv-tool v0.0.1 (/workspace/crates/uv-tool)
+   Compiling uv-scripts v0.0.1 (/workspace/crates/uv-scripts)
+   Compiling float-cmp v0.9.0
+   Compiling normalize-line-endings v0.3.0
+   Compiling termtree v0.4.1
+   Compiling difflib v0.4.0
+   Compiling predicates v3.1.0
+   Compiling predicates-tree v1.0.9
+   Compiling uv v0.2.24 (/workspace/crates/uv)
+   Compiling assert_cmd v2.0.14
+   Compiling globwalk v0.9.1
+   Compiling wait-timeout v0.2.0
+   Compiling similar v2.5.0
+   Compiling linked-hash-map v0.5.6
+   Compiling insta v1.39.0
+   Compiling assert_fs v1.1.1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 6m 33s
+     Running tests/help.rs (target/debug/deps/help-3218f163d8a1f673)
+
+running 12 tests
+test help ... FAILED
+test help_flag ... FAILED
+test help_flag_subcommand ... FAILED
+test help_flag_subsubcommand ... FAILED
+test help_short_flag ... FAILED
+test help_subcommand ... FAILED
+test help_subsubcommand ... FAILED
+test help_unknown_subcommand ... ok
+test help_unknown_subsubcommand ... ok
+test help_with_global_option ... FAILED
+test help_with_help ... ok
+test help_with_version ... ok
+
+failures:
+
+---- help stdout ----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Snapshot Summary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Snapshot: help
+Source: crates/uv/tests/help.rs:10
+────────────────────────────────────────────────────────────────────────────────
+Expression: snapshot
+────────────────────────────────────────────────────────────────────────────────
+-old snapshot
++new results
+────────────┬───────────────────────────────────────────────────────────────────
+   30    30 │           installed, managed, system, only-system]
+   31    31 │       --python-fetch <PYTHON_FETCH>
+   32    32 │           Whether to automatically download Python when required [possible values: automatic,
+   33    33 │           manual]
+   34       │-      --isolated
+   35       │-          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
+   36       │-          parent directories
+   37    34 │   -n, --no-cache
+   38    35 │           Avoid reading from or writing to the cache [env: UV_NO_CACHE=]
+   39    36 │       --cache-dir [CACHE_DIR]
+   40    37 │           Path to the cache directory [env: UV_CACHE_DIR=]
+────────────┴───────────────────────────────────────────────────────────────────
+To update snapshots run `cargo insta review`
+Stopped on the first failure. Run `cargo insta test` to run all snapshots.
+thread 'help' panicked at /root/.cargo/registry/src/index.crates.io-6f17d22bba15001f/insta-1.39.0/src/runtime.rs:562:9:
+snapshot assertion for 'help' failed in line 10
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- help_flag stdout ----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Snapshot Summary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Snapshot: help_flag
+Source: crates/uv/tests/help.rs:69
+────────────────────────────────────────────────────────────────────────────────
+Expression: snapshot
+────────────────────────────────────────────────────────────────────────────────
+-old snapshot
++new results
+────────────┬───────────────────────────────────────────────────────────────────
+   30    30 │           installed, managed, system, only-system]
+   31    31 │       --python-fetch <PYTHON_FETCH>
+   32    32 │           Whether to automatically download Python when required [possible values: automatic,
+   33    33 │           manual]
+   34       │-      --isolated
+   35       │-          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
+   36       │-          parent directories
+   37    34 │   -n, --no-cache
+   38    35 │           Avoid reading from or writing to the cache [env: UV_NO_CACHE=]
+   39    36 │       --cache-dir [CACHE_DIR]
+   40    37 │           Path to the cache directory [env: UV_CACHE_DIR=]
+────────────┴───────────────────────────────────────────────────────────────────
+To update snapshots run `cargo insta review`
+Stopped on the first failure. Run `cargo insta test` to run all snapshots.
+thread 'help_flag' panicked at /root/.cargo/registry/src/index.crates.io-6f17d22bba15001f/insta-1.39.0/src/runtime.rs:562:9:
+snapshot assertion for 'help_flag' failed in line 69
+
+---- help_flag_subcommand stdout ----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Snapshot Summary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Snapshot: help_flag_subcommand
+Source: crates/uv/tests/help.rs:415
+────────────────────────────────────────────────────────────────────────────────
+Expression: snapshot
+────────────────────────────────────────────────────────────────────────────────
+-old snapshot
++new results
+────────────┬───────────────────────────────────────────────────────────────────
+   29    29 │           installed, managed, system, only-system]
+   30    30 │       --python-fetch <PYTHON_FETCH>
+   31    31 │           Whether to automatically download Python when required [possible values: automatic,
+   32    32 │           manual]
+   33       │-      --isolated
+   34       │-          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
+   35       │-          parent directories
+   36    33 │   -n, --no-cache
+   37    34 │           Avoid reading from or writing to the cache [env: UV_NO_CACHE=]
+   38    35 │       --cache-dir [CACHE_DIR]
+   39    36 │           Path to the cache directory [env: UV_CACHE_DIR=]
+────────────┴───────────────────────────────────────────────────────────────────
+To update snapshots run `cargo insta review`
+Stopped on the first failure. Run `cargo insta test` to run all snapshots.
+thread 'help_flag_subcommand' panicked at /root/.cargo/registry/src/index.crates.io-6f17d22bba15001f/insta-1.39.0/src/runtime.rs:562:9:
+snapshot assertion for 'help_flag_subcommand' failed in line 415
+
+---- help_flag_subsubcommand stdout ----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Snapshot Summary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Snapshot: help_flag_subsubcommand
+Source: crates/uv/tests/help.rs:473
+────────────────────────────────────────────────────────────────────────────────
+Expression: snapshot
+────────────────────────────────────────────────────────────────────────────────
+-old snapshot
++new results
+────────────┬───────────────────────────────────────────────────────────────────
+   26    26 │           installed, managed, system, only-system]
+   27    27 │       --python-fetch <PYTHON_FETCH>
+   28    28 │           Whether to automatically download Python when required [possible values: automatic,
+   29    29 │           manual]
+   30       │-      --isolated
+   31       │-          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
+   32       │-          parent directories
+   33    30 │   -n, --no-cache
+   34    31 │           Avoid reading from or writing to the cache [env: UV_NO_CACHE=]
+   35    32 │       --cache-dir [CACHE_DIR]
+   36    33 │           Path to the cache directory [env: UV_CACHE_DIR=]
+────────────┴───────────────────────────────────────────────────────────────────
+To update snapshots run `cargo insta review`
+Stopped on the first failure. Run `cargo insta test` to run all snapshots.
+thread 'help_flag_subsubcommand' panicked at /root/.cargo/registry/src/index.crates.io-6f17d22bba15001f/insta-1.39.0/src/runtime.rs:562:9:
+snapshot assertion for 'help_flag_subsubcommand' failed in line 473
+
+---- help_short_flag stdout ----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Snapshot Summary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Snapshot: help_short_flag
+Source: crates/uv/tests/help.rs:127
+────────────────────────────────────────────────────────────────────────────────
+Expression: snapshot
+────────────────────────────────────────────────────────────────────────────────
+-old snapshot
++new results
+────────────┬───────────────────────────────────────────────────────────────────
+   30    30 │           installed, managed, system, only-system]
+   31    31 │       --python-fetch <PYTHON_FETCH>
+   32    32 │           Whether to automatically download Python when required [possible values: automatic,
+   33    33 │           manual]
+   34       │-      --isolated
+   35       │-          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
+   36       │-          parent directories
+   37    34 │   -n, --no-cache
+   38    35 │           Avoid reading from or writing to the cache [env: UV_NO_CACHE=]
+   39    36 │       --cache-dir [CACHE_DIR]
+   40    37 │           Path to the cache directory [env: UV_CACHE_DIR=]
+────────────┴───────────────────────────────────────────────────────────────────
+To update snapshots run `cargo insta review`
+Stopped on the first failure. Run `cargo insta test` to run all snapshots.
+thread 'help_short_flag' panicked at /root/.cargo/registry/src/index.crates.io-6f17d22bba15001f/insta-1.39.0/src/runtime.rs:562:9:
+snapshot assertion for 'help_short_flag' failed in line 127
+
+---- help_subcommand stdout ----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Snapshot Summary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Snapshot: help_subcommand
+Source: crates/uv/tests/help.rs:186
+────────────────────────────────────────────────────────────────────────────────
+Expression: snapshot
+────────────────────────────────────────────────────────────────────────────────
+-old snapshot
++new results
+────────────┬───────────────────────────────────────────────────────────────────
+   70    70 │           - automatic: Automatically fetch managed Python installations when needed
+   71    71 │           - manual:    Do not automatically fetch managed Python installations; require explicit
+   72    72 │             installation
+   73    73 │ 
+   74       │-      --isolated
+   75       │-          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
+   76       │-          parent directories
+   77       │-
+   78    74 │   -n, --no-cache
+   79    75 │           Avoid reading from or writing to the cache
+   80    76 │           
+   81    77 │           [env: UV_NO_CACHE=]
+────────────┴───────────────────────────────────────────────────────────────────
+To update snapshots run `cargo insta review`
+Stopped on the first failure. Run `cargo insta test` to run all snapshots.
+thread 'help_subcommand' panicked at /root/.cargo/registry/src/index.crates.io-6f17d22bba15001f/insta-1.39.0/src/runtime.rs:562:9:
+snapshot assertion for 'help_subcommand' failed in line 186
+
+---- help_subsubcommand stdout ----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Snapshot Summary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Snapshot: help_subsubcommand
+Source: crates/uv/tests/help.rs:300
+────────────────────────────────────────────────────────────────────────────────
+Expression: snapshot
+────────────────────────────────────────────────────────────────────────────────
+-old snapshot
++new results
+────────────┬───────────────────────────────────────────────────────────────────
+   73    73 │           - automatic: Automatically fetch managed Python installations when needed
+   74    74 │           - manual:    Do not automatically fetch managed Python installations; require explicit
+   75    75 │             installation
+   76    76 │ 
+   77       │-      --isolated
+   78       │-          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
+   79       │-          parent directories
+   80       │-
+   81    77 │   -n, --no-cache
+   82    78 │           Avoid reading from or writing to the cache
+   83    79 │           
+   84    80 │           [env: UV_NO_CACHE=]
+────────────┴───────────────────────────────────────────────────────────────────
+To update snapshots run `cargo insta review`
+Stopped on the first failure. Run `cargo insta test` to run all snapshots.
+thread 'help_subsubcommand' panicked at /root/.cargo/registry/src/index.crates.io-6f17d22bba15001f/insta-1.39.0/src/runtime.rs:562:9:
+snapshot assertion for 'help_subsubcommand' failed in line 300
+
+---- help_with_global_option stdout ----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ Snapshot Summary ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Snapshot: help_with_global_option
+Source: crates/uv/tests/help.rs:581
+────────────────────────────────────────────────────────────────────────────────
+Expression: snapshot
+────────────────────────────────────────────────────────────────────────────────
+-old snapshot
++new results
+────────────┬───────────────────────────────────────────────────────────────────
+   30    30 │           installed, managed, system, only-system]
+   31    31 │       --python-fetch <PYTHON_FETCH>
+   32    32 │           Whether to automatically download Python when required [possible values: automatic,
+   33    33 │           manual]
+   34       │-      --isolated
+   35       │-          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any
+   36       │-          parent directories
+   37    34 │   -n, --no-cache
+   38    35 │           Avoid reading from or writing to the cache [env: UV_NO_CACHE=]
+   39    36 │       --cache-dir [CACHE_DIR]
+   40    37 │           Path to the cache directory [env: UV_CACHE_DIR=]
+────────────┴───────────────────────────────────────────────────────────────────
+To update snapshots run `cargo insta review`
+Stopped on the first failure. Run `cargo insta test` to run all snapshots.
+thread 'help_with_global_option' panicked at /root/.cargo/registry/src/index.crates.io-6f17d22bba15001f/insta-1.39.0/src/runtime.rs:562:9:
+snapshot assertion for 'help_with_global_option' failed in line 581
+
+
+failures:
+    help
+    help_flag
+    help_flag_subcommand
+    help_flag_subsubcommand
+    help_short_flag
+    help_subcommand
+    help_subsubcommand
+    help_with_global_option
+
+test result: FAILED. 4 passed; 8 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.77s
+
+error: test failed, to rerun pass `-p uv --test help`
+>>>>> End Test Output
+OPENENV_EXIT_CODE=101

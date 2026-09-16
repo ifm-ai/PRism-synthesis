@@ -1,0 +1,67 @@
+{
+  "base_image": "golang:1.21",
+  "build_context_files": [
+    "repo_setup.sh",
+    "setup_runtime.sh"
+  ],
+  "system_packages": [
+    "git",
+    "curl",
+    "ca-certificates"
+  ],
+  "build_steps": [
+    {
+      "step": 1,
+      "type": "base_image",
+      "instruction": "FROM golang:1.21"
+    },
+    {
+      "step": 2,
+      "type": "system_packages",
+      "instruction": "apt-get update && apt-get install -y git curl ca-certificates"
+    },
+    {
+      "step": 3,
+      "type": "copy_script",
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh",
+      "execute": true
+    },
+    {
+      "step": 4,
+      "type": "copy_script",
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh",
+      "execute": true
+    },
+    {
+      "step": 5,
+      "type": "workdir",
+      "instruction": "WORKDIR /workspace"
+    }
+  ],
+  "environment_variables": {
+    "PATH": "/usr/local/go/bin:$PATH",
+    "GOPATH": "/root/go",
+    "GOBIN": "/root/go/bin"
+  },
+  "runtime_profile": {
+    "ecosystem": "Go",
+    "package_manager": "go modules",
+    "activation_type": "go"
+  },
+  "repo_materialization": {
+    "mode": "repo_setup_script",
+    "script_path": "/opt/benchmark/repo_setup.sh",
+    "target_directory": "/workspace"
+  },
+  "excluded_from_image": [
+    "/artifacts/evaluation/eval.sh",
+    "/artifacts/evaluation/test.patch",
+    "/artifacts/evaluation/tests/"
+  ],
+  "build_backend": "buildah",
+  "export_format": "oci",
+  "export_target": "/artifacts/environment/openenv_validation_oci.tar",
+  "notes": "Dockerfile compiled from structured environment artifacts. eval.sh is runtime-mounted, not baked into image."
+}

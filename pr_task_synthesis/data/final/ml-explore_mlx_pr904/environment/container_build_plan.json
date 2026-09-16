@@ -1,0 +1,69 @@
+{
+  "build_strategy": "single_stage",
+  "base_image": "python:3.11-slim",
+  "build_context_files": [
+    "repo_setup.sh",
+    "setup_runtime.sh",
+    "eval.sh",
+    "test.patch"
+  ],
+  "build_phases": [
+    {
+      "phase": "base_setup",
+      "description": "Install system dependencies via apt-get",
+      "commands": [
+        "apt-get update && apt-get install -y --no-install-recommends cmake libblas-dev liblapack-dev liblapacke-dev git curl python3.11-venv python3.11-dev",
+        "rm -rf /var/lib/apt/lists/*"
+      ]
+    },
+    {
+      "phase": "script_copy",
+      "description": "Copy build-context scripts to /opt/benchmark/",
+      "operations": [
+        "COPY repo_setup.sh /opt/benchmark/repo_setup.sh",
+        "COPY setup_runtime.sh /opt/benchmark/setup_runtime.sh",
+        "COPY eval.sh /opt/benchmark/eval.sh",
+        "COPY test.patch /opt/benchmark/test.patch"
+      ]
+    },
+    {
+      "phase": "repo_materialization",
+      "description": "Run repo_setup.sh to clone and checkout MLX repository",
+      "commands": [
+        "/opt/benchmark/repo_setup.sh"
+      ],
+      "result": "/workspace contains MLX source at commit a5681ebc5227477dd3aeb9579adc0a1288136e6c"
+    },
+    {
+      "phase": "runtime_creation",
+      "description": "Run setup_runtime.sh to create Python venv and build MLX",
+      "commands": [
+        "/opt/benchmark/setup_runtime.sh"
+      ],
+      "result": "/opt/benchmark/mlx_env venv with MLX editable install (MLX_BUILD_METAL=OFF)"
+    },
+    {
+      "phase": "finalization",
+      "description": "Set WORKDIR and prepare for eval.sh execution",
+      "operations": [
+        "WORKDIR /workspace"
+      ]
+    }
+  ],
+  "runtime_environment": {
+    "venv_path": "/opt/benchmark/mlx_env",
+    "activation": "source /opt/benchmark/mlx_env/bin/activate && export LD_LIBRARY_PATH=\"/workspace/python/mlx/lib:$LD_LIBRARY_PATH\"",
+    "test_dependencies": ["numpy", "torch"],
+    "build_flags": {
+      "MLX_BUILD_METAL": "OFF"
+    }
+  },
+  "eval_assets": {
+    "eval_sh_path": "/opt/benchmark/eval.sh",
+    "test_patch_path": "/opt/benchmark/test.patch",
+    "test_command": "cd /workspace/python/tests && python -m unittest test_random.TestRandom.test_normal"
+  },
+  "build_backend": "buildah",
+  "export_artifact": "/artifacts/environment/openenv_validation_oci.tar",
+  "notes": "Single-stage build for MLX library. repo_setup.sh runs before setup_runtime.sh to ensure /workspace exists before building. eval.sh and test.patch are copied as runtime-mounted verifier assets."
+}

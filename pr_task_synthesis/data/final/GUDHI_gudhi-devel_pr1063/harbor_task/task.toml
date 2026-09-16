@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "GUDHI_gudhi-devel_pr1063"
+description = "OpenEnv: GUDHI/gudhi-devel PR #1063"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/GUDHI/gudhi-devel.git"
+git_pr_id = "1063"
+git_base_commit = "d78e583293d809b54a6152bf42a551773ef78ca6"
+task_id = "GUDHI_gudhi-devel_pr1063"
+repo_full_name = "GUDHI/gudhi-devel"
+domain = "ML_DEEP_LEARNING"
+primary_language = "C"
+runtime_family = "Python"
+complexity = "medium"
+star_category = "stars_101_500"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

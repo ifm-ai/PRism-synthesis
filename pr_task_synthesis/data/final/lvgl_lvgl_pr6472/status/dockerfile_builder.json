@@ -1,0 +1,33 @@
+{
+  "status": "repaired",
+  "blocks_outer_progress": false,
+  "base_image": "debian:bookworm",
+  "copied_artifacts": [
+    {
+      "source": "/artifacts/environment/setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh"
+    },
+    {
+      "source": "/artifacts/environment/repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh"
+    }
+  ],
+  "uses_repo_setup_script": true,
+  "repo_materialization_mode": "git-partial-clone",
+  "container_build_plan_written": true,
+  "build_backend_target": "buildah",
+  "buildability_assessment": {
+    "assessment": "buildable",
+    "dockerfile_syntax": "valid",
+    "base_image_available": true,
+    "copy_sources_exist": true,
+    "package_manager_compatible": true,
+    "script_paths_consistent": true,
+    "workspace_contract_valid": true,
+    "verifier_separation_valid": true
+  },
+  "blocking_risks": [],
+  "warnings": [],
+  "recommended_fixes": [],
+  "notes": "Dockerfile.final passed buildability review. Proper ordering: repo_setup.sh runs before setup_runtime.sh. The image uses debian:bookworm with system-level toolchain installation. No virtual environment needed. The workspace is materialized via git partial clone during build. eval.sh and tests/ are runtime-mounted verifier assets, not baked into the image."
+}

@@ -1,0 +1,48 @@
+{
+  "base_image_candidate": "node:18-bookworm",
+  "system_packages": [
+    "git",
+    "curl",
+    "xvfb",
+    "chromium",
+    "npm"
+  ],
+  "base_setup_commands": [
+    "apt-get update",
+    "apt-get install -y git curl xvfb npm chromium"
+  ],
+  "setup_runtime_commands": [
+    "export CHROME_BIN=/usr/bin/chromium",
+    "cd /workspace",
+    "npm clean-install --progress=false --no-fund"
+  ],
+  "activation_commands": [
+    "export CHROME_BIN=/usr/bin/chromium"
+  ],
+  "activation_command": "export CHROME_BIN=/usr/bin/chromium",
+  "activation_validation_command": "bash -c 'export CHROME_BIN=/usr/bin/chromium && echo ACTIVATION_OK'",
+  "detected_test_command": "npm test",
+  "runtime_smoke_command": "npm run build -- target:esm",
+  "runtime_profile": {
+    "ecosystem": "nodejs",
+    "package_manager": "npm",
+    "env": {
+      "CHROME_BIN": "/usr/bin/chromium"
+    },
+    "env_name": null,
+    "prepare_commands": [
+      "npm clean-install --progress=false --no-fund"
+    ],
+    "activation_commands": [
+      "export CHROME_BIN=/usr/bin/chromium"
+    ],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "npm clean-install --progress=false --no-fund",
+    "cache_dirs": [
+      "/workspace/node_modules",
+      "/root/.npm"
+    ],
+    "notes": "Node.js 18.x environment with npm package manager. Chrome browser required for Karma-based browser tests. xvfb required for headless Chrome execution in CI."
+  },
+  "notes": "PlayCanvas WebGL game engine. Base image node:18-bookworm provides Node.js 18.x as per CI configuration. git, curl, npm, xvfb are installed via apt. Chrome and xvfb are required for karma browser tests. The project uses ESM modules (type: module in package.json). Test commands: 'npm test' for Node/Mocha tests, 'xvfb-run --auto-servernum npm run test:karma' for browser tests."
+}

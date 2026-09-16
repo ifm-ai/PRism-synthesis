@@ -1,0 +1,14 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "official_verifier": {
+    "execution_mode": "real_execution",
+    "test_only_exit_code": 1,
+    "test_with_fix_exit_code": 0
+  },
+  "non_discriminating": false,
+  "test_only_log": "/artifacts/analysis_logs/test_only.log",
+  "test_with_fix_log": "/artifacts/analysis_logs/test_with_fix.log",
+  "notes": "Source inspection test correctly discriminates buggy vs fixed code. Test reads ImageSaver.kt and verifies DATE_MODIFIED uses epochSecond instead of toEpochMilli(). testOnly (buggy workspace) exits 1, testWithFix (fixed workspace) exits 0."
+}

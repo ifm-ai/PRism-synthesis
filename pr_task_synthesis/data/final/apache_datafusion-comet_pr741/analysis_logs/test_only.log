@@ -1,0 +1,25 @@
+>>>>> Start Test Output
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.22s
+     Running tests/decimal_promotion_check.rs (target/debug/deps/decimal_promotion_check-77222a8a988fff37)
+
+running 1 test
+test test_low_precision_decimal_addition_no_unnecessary_decimal256_promotion ... FAILED
+
+failures:
+
+---- test_low_precision_decimal_addition_no_unnecessary_decimal256_promotion stdout ----
+thread 'test_low_precision_decimal_addition_no_unnecessary_decimal256_promotion' panicked at core/tests/decimal_promotion_check.rs:167:5:
+assertion `left == right` failed: BUG DETECTED: Low-precision Decimal128(10,2) + Decimal128(10,2) created 2 unnecessary Decimal256 cast(s). Boundary value 10 is less than DECIMAL128_MAX_PRECISION (38), so the optimization should keep operations in Decimal128 without promotion to Decimal256. This indicates the buggy code path that always promotes to Decimal256.
+  left: 2
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    test_low_precision_decimal_addition_no_unnecessary_decimal256_promotion
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+error: test failed, to rerun pass `-p datafusion-comet --test decimal_promotion_check`
+>>>>> End Test Output
+OPENENV_EXIT_CODE=101

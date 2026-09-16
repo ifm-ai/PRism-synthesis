@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "fail",
+  "oracle_outcome": "fail",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "Solver correctly localized the problem and edited all relevant files (EditorTimestampParser.cs, Editor.cs, TimeInfoContainer.cs, OsuGame.cs, MessageFormatter.cs) but implementation had edge case bugs causing 5 of 13 behavioral tests to fail. The verifier is aligned and behavioral - testing the exact functionality described in the issue. This is a valid RL training example showing a solver that understood the task but made implementation errors in edge case handling."
+}

@@ -1,0 +1,17 @@
+{
+  "is_finish": true,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "failure_domain": "unknown",
+  "route_to": null,
+  "blocking_errors": [],
+  "warnings": [
+    "NuGet restore failed during build due to network unavailability - tests will need network access at runtime"
+  ],
+  "next_actions": [
+    "OCI archive exported successfully",
+    "Image ready for runtime validation with verifier assets mounted"
+  ],
+  "notes": "Build completed successfully. All 9 steps executed: base image pulled, system packages installed, scripts copied and made executable, repo_setup.sh cloned the osu repository, setup_runtime.sh verified .NET SDK was present. NuGet pre-restore failed due to network but the script handled this gracefully. OCI archive created at /artifacts/environment/openenv_validation_oci.tar."
+}

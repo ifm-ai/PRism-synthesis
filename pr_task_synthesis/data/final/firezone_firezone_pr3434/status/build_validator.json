@@ -1,0 +1,9 @@
+{
+  "status": "success",
+  "blocks_outer_progress": false,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "route_to": null,
+  "notes": "Build validation completed successfully. The container image includes build-essential which provides the cc linker required for Rust compilation. OCI archive exported."
+}

@@ -1,0 +1,70 @@
+{
+  "base_image": "python:3.11-slim",
+  "build_context": {
+    "dockerfile_path": "/artifacts/environment/Dockerfile.final",
+    "context_files": [
+      "/artifacts/environment/repo_setup.sh",
+      "/artifacts/environment/setup_runtime.sh"
+    ],
+    "context_root": "/artifacts/environment"
+  },
+  "build_stages": [
+    {
+      "stage": "base",
+      "action": "FROM python:3.11-slim",
+      "purpose": "Clean Python 3.11 base image"
+    },
+    {
+      "stage": "system_packages",
+      "action": "apt-get install",
+      "packages": [
+        "git",
+        "curl",
+        "python3-venv",
+        "python3-dev",
+        "libgdal-dev",
+        "gdal-bin",
+        "libnetcdf-dev",
+        "libhdf5-dev",
+        "libproj-dev",
+        "libgeos-dev",
+        "build-essential",
+        "pkg-config"
+      ],
+      "purpose": "Install system-level dependencies for GDAL, netcdf, hdf5, proj, geos"
+    },
+    {
+      "stage": "env_setup",
+      "action": "mkdir /opt/benchmark",
+      "purpose": "Create benchmark directory structure"
+    },
+    {
+      "stage": "copy_scripts",
+      "action": "COPY repo_setup.sh setup_runtime.sh to /opt/benchmark/",
+      "purpose": "Copy build-context scripts into image"
+    },
+    {
+      "stage": "repo_materialization",
+      "action": "RUN /opt/benchmark/repo_setup.sh",
+      "purpose": "Clone RavenPy repository to /workspace at specific commit"
+    },
+    {
+      "stage": "runtime_creation",
+      "action": "RUN /opt/benchmark/setup_runtime.sh",
+      "purpose": "Create Python venv and install RavenPy with dependencies"
+    }
+  ],
+  "runtime_assets": {
+    "venv_path": "/opt/benchmark/venv",
+    "activation_command": "source /opt/benchmark/venv/bin/activate",
+    "workspace_path": "/workspace",
+    "verifier_mounts": [
+      "/artifacts/evaluation/eval.sh",
+      "/artifacts/evaluation/test.patch"
+    ]
+  },
+  "build_backend": "buildah",
+  "target_oci_archive": "/artifacts/environment/openenv_validation_oci.tar",
+  "final_workdir": "/workspace",
+  "notes": "eval.sh and test.patch are runtime-mounted verifier assets, not baked into the image"
+}

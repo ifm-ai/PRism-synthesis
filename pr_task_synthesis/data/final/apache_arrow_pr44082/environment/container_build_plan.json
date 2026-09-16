@@ -1,0 +1,87 @@
+{
+  "build_backend": "buildah",
+  "base_image": "ubuntu:22.04",
+  "build_stages": [
+    {
+      "name": "base_setup",
+      "description": "Install system packages and create benchmark directory",
+      "commands": [
+        "apt-get update",
+        "apt-get install -y git curl build-essential pkg-config ca-certificates",
+        "rm -rf /var/lib/apt/lists/*",
+        "mkdir -p /opt/benchmark"
+      ]
+    },
+    {
+      "name": "script_injection",
+      "description": "Copy setup scripts from build context into image",
+      "commands": [
+        "COPY setup_runtime.sh /opt/benchmark/setup_runtime.sh",
+        "COPY repo_setup.sh /opt/benchmark/repo_setup.sh",
+        "chmod +x /opt/benchmark/setup_runtime.sh /opt/benchmark/repo_setup.sh"
+      ]
+    },
+    {
+      "name": "repo_materialization",
+      "description": "Execute repo_setup.sh to clone and configure Apache Arrow repository",
+      "commands": [
+        "/opt/benchmark/repo_setup.sh"
+      ],
+      "result": "Apache Arrow repository at /workspace from commit 9986b7b10618e0da2d8533e7e440c70f3fec7337"
+    },
+    {
+      "name": "runtime_setup",
+      "description": "Execute setup_runtime.sh to create conda environment with C++ dependencies",
+      "commands": [
+        "/opt/benchmark/setup_runtime.sh"
+      ],
+      "result": "Conda environment 'arrow-cpp' with cmake, ninja, benchmark, boost-cpp, gtest, and other C++ dependencies"
+    },
+    {
+      "name": "finalization",
+      "description": "Set working directory and default command",
+      "commands": [
+        "WORKDIR /workspace",
+        "CMD bash -c 'source /opt/conda/etc/profile.d/conda.sh && conda activate arrow-cpp && exec bash'"
+      ]
+    }
+  ],
+  "expected_artifacts": {
+    "image": "arrow-cpp-parquet-benchmark:latest",
+    "workspace": "/workspace (Apache Arrow repository)",
+    "conda_env": "/opt/conda/envs/arrow-cpp",
+    "setup_scripts": [
+      "/opt/benchmark/setup_runtime.sh",
+      "/opt/benchmark/repo_setup.sh"
+    ]
+  },
+  "runtime_mounts": {
+    "description": "Verifier assets mounted at runtime, not baked into image",
+    "assets": [
+      "/artifacts/evaluation/eval.sh",
+      "/artifacts/evaluation/test.patch",
+      "/artifacts/evaluation/tests/"
+    ]
+  },
+  "key_tools_installed": [
+    "git",
+    "curl",
+    "cmake>=3.16",
+    "ninja",
+    "google-benchmark>=1.6.0",
+    "boost-cpp>=1.68.0",
+    "gtest>=1.10.0",
+    "gflags",
+    "glog",
+    "snappy",
+    "lz4-c",
+    "zlib",
+    "brotli",
+    "thrift-cpp>=0.11.0",
+    "rapidjson",
+    "re2",
+    "zstd"
+  ],
+  "activation_command": "source /opt/conda/etc/profile.d/conda.sh && conda activate arrow-cpp",
+  "notes": "Image is ready for RL agent to apply patches and run Parquet benchmarks. Verifier assets (eval.sh, test.patch, tests/) are runtime-mounted, not baked into the image."
+}

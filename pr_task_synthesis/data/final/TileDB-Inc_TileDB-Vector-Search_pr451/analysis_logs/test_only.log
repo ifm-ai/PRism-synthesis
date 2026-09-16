@@ -1,0 +1,33 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-7.4.4, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /workspace/apis/python
+plugins: nbmake-1.5.5, zarr-3.1.5, xdist-3.8.0
+collecting ... collected 14 items / 9 deselected / 5 selected
+
+test/test_distance_metrics.py::test_ivf_flat_ingestion_cosine FAILED
+
+=================================== FAILURES ===================================
+________________________ test_ivf_flat_ingestion_cosine ________________________
+test/test_distance_metrics.py:57: in test_ivf_flat_ingestion_cosine
+    index = ingest(
+/opt/benchmark/venv/lib/python3.11/site-packages/tiledb/vector_search/ingestion.py:2901: in ingest
+    create_arrays(
+/opt/benchmark/venv/lib/python3.11/site-packages/tiledb/vector_search/ingestion.py:733: in create_arrays
+    ivf_flat_index.create(
+/opt/benchmark/venv/lib/python3.11/site-packages/tiledb/vector_search/ivf_flat_index.py:524: in create
+    raise ValueError(
+E   ValueError: Distance metric DistanceMetric.COSINE is not supported in IVF_FLAT
+=============================== warnings summary ===============================
+../../../opt/benchmark/venv/lib/python3.11/site-packages/tiledb/vector_search/ivf_pq_index.py:180
+  /opt/benchmark/venv/lib/python3.11/site-packages/tiledb/vector_search/ivf_pq_index.py:180: SyntaxWarning: "is not" with a literal. Did you mean "!="?
+    n_list=partitions if (partitions is not None and partitions is not -1) else 0,
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED test/test_distance_metrics.py::test_ivf_flat_ingestion_cosine - ValueE...
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+================== 1 failed, 9 deselected, 1 warning in 4.47s ==================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

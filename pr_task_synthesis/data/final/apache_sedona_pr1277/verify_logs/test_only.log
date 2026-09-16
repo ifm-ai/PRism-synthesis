@@ -1,0 +1,89 @@
+Looking in indexes: http://mirror.proxy.hpc:8081/repository/pypi-proxy/simple/
+Collecting pyspark
+  Downloading pyspark-4.1.2.tar.gz (455.4 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 455.4/455.4 MB 175.5 MB/s  0:00:01
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Collecting py4j<0.10.9.10,>=0.10.9.7 (from pyspark)
+  Downloading py4j-0.10.9.9-py2.py3-none-any.whl (203 kB)
+Building wheels for collected packages: pyspark
+  Building wheel for pyspark (pyproject.toml): started
+  Building wheel for pyspark (pyproject.toml): finished with status 'done'
+  Created wheel for pyspark: filename=pyspark-4.1.2-py2.py3-none-any.whl size=456079515 sha256=1e86686569739e60d931f5762bc2c730fc3dedbf4431b841e3e71be72fcc4e65
+  Stored in directory: /root/.cache/pip/wheels/e5/f2/55/c9abc382eb90dd1b5b2abbb7e3dbbcc6af520508ee7d342150
+Successfully built pyspark
+Installing collected packages: py4j, pyspark
+
+Successfully installed py4j-0.10.9.9 pyspark-4.1.2
+Looking in indexes: http://mirror.proxy.hpc:8081/repository/pypi-proxy/simple/
+Obtaining file:///workspace/python
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: apache-sedona
+  Building editable for apache-sedona (pyproject.toml): started
+  Building editable for apache-sedona (pyproject.toml): finished with status 'done'
+  Created wheel for apache-sedona: filename=apache_sedona-1.5.1-0.editable-cp311-cp311-linux_x86_64.whl size=3478 sha256=81a09f7404390302fe589fdba8faaaf445ce5d47dd0d50451e8c8131ef4dfdcb
+  Stored in directory: /tmp/pip-ephem-wheel-cache-gzy0d8nh/wheels/3d/23/b0/6aa2e6700286497d1d65222efb6505e8b4d33282d4b2346fd0
+Successfully built apache-sedona
+Installing collected packages: apache-sedona
+  Attempting uninstall: apache-sedona
+    Found existing installation: apache-sedona 1.5.1
+    Uninstalling apache-sedona-1.5.1:
+      Successfully uninstalled apache-sedona-1.5.1
+Successfully installed apache-sedona-1.5.1
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.0, pluggy-1.6.0 -- /workspace/python/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /tests/tests
+collecting ... collected 3 items
+
+../tests/tests/test_st_s2_to_geom_quick.py::test_st_s2_to_geom_import FAILED [ 33%]
+../tests/tests/test_st_s2_to_geom_quick.py::test_st_s2_to_geom_in_exports FAILED [ 66%]
+../tests/tests/test_st_s2_to_geom_quick.py::test_st_s2_to_geom_signature FAILED [100%]
+
+=================================== FAILURES ===================================
+__________________________ test_st_s2_to_geom_import ___________________________
+
+    def test_st_s2_to_geom_import():
+        """Test that ST_S2ToGeom can be imported from sedona.sql.st_functions."""
+>       from sedona.sql.st_functions import ST_S2ToGeom
+E       ImportError: cannot import name 'ST_S2ToGeom' from 'sedona.sql.st_functions' (/workspace/python/sedona/sql/st_functions.py)
+
+/tests/tests/test_st_s2_to_geom_quick.py:29: ImportError
+________________________ test_st_s2_to_geom_in_exports _________________________
+
+    def test_st_s2_to_geom_in_exports():
+        """Test that ST_S2ToGeom is in the module's __all__ exports."""
+        from sedona.sql import st_functions
+>       assert "ST_S2ToGeom" in st_functions.__all__, "ST_S2ToGeom should be in __all__"
+E       AssertionError: ST_S2ToGeom should be in __all__
+E       assert 'ST_S2ToGeom' in ['GeometryType', 'ST_3DDistance', 'ST_AddPoint', 'ST_Area', 'ST_AreaSpheroid', 'ST_AsBinary', ...]
+E        +  where ['GeometryType', 'ST_3DDistance', 'ST_AddPoint', 'ST_Area', 'ST_AreaSpheroid', 'ST_AsBinary', ...] = <module 'sedona.sql.st_functions' from '/workspace/python/sedona/sql/st_functions.py'>.__all__
+
+/tests/tests/test_st_s2_to_geom_quick.py:37: AssertionError
+_________________________ test_st_s2_to_geom_signature _________________________
+
+    def test_st_s2_to_geom_signature():
+        """Test that ST_S2ToGeom has the expected function signature."""
+>       from sedona.sql.st_functions import ST_S2ToGeom
+E       ImportError: cannot import name 'ST_S2ToGeom' from 'sedona.sql.st_functions' (/workspace/python/sedona/sql/st_functions.py)
+
+/tests/tests/test_st_s2_to_geom_quick.py:42: ImportError
+=========================== short test summary info ============================
+FAILED ../tests/tests/test_st_s2_to_geom_quick.py::test_st_s2_to_geom_import
+FAILED ../tests/tests/test_st_s2_to_geom_quick.py::test_st_s2_to_geom_in_exports
+FAILED ../tests/tests/test_st_s2_to_geom_quick.py::test_st_s2_to_geom_signature
+============================== 3 failed in 0.52s ===============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

@@ -1,0 +1,85 @@
+{
+  "base_image_candidate": "debian:bookworm",
+  "system_packages": [
+    "git",
+    "curl",
+    "wget",
+    "ca-certificates",
+    "gnupg",
+    "xmlstarlet",
+    "maven"
+  ],
+  "base_setup_commands": [
+    "apt-get update",
+    "apt-get install -y git curl wget ca-certificates gnupg xmlstarlet maven"
+  ],
+  "setup_runtime_commands": [
+    "mkdir -p /root/.m2",
+    "cat > /root/.m2/settings.xml << 'SETTINGS_EOF'\n<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<settings xmlns=\"http://maven.apache.org/SETTINGS/1.2.0\"\n          xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n          xsi:schemaLocation=\"http://maven.apache.org/SETTINGS/1.2.0 https://maven.apache.org/xsd/settings-1.2.0.xsd\">\n  <mirrors>\n    <mirror>\n      <id>mirror</id>\n      <mirrorOf>external:*</mirrorOf>\n      <url>http://mirror.proxy.hpc:8081/repository/maven-public/</url>\n      <blocked>false</blocked>\n    </mirror>\n  </mirrors>\n  <profiles>\n    <profile>\n      <id>mirror</id>\n      <repositories>\n        <repository>\n          <id>central</id>\n          <url>http://mirror.proxy.hpc:8081/repository/maven-public/</url>\n          <releases><enabled>true</enabled><updatePolicy>daily</updatePolicy></releases>\n          <snapshots><enabled>true</enabled><updatePolicy>always</updatePolicy></snapshots>\n        </repository>\n        <repository>\n          <id>central-fallback</id>\n          <url>https://repo.maven.apache.org/maven2/</url>\n          <releases><enabled>true</enabled><updatePolicy>daily</updatePolicy></releases>\n          <snapshots><enabled>false</enabled></snapshots>\n        </repository>\n      </repositories>\n      <pluginRepositories>\n        <pluginRepository>\n          <id>central</id>\n          <url>http://mirror.proxy.hpc:8081/repository/maven-public/</url>\n          <releases><enabled>true</enabled><updatePolicy>daily</updatePolicy></releases>\n          <snapshots><enabled>true</enabled><updatePolicy>always</updatePolicy></snapshots>\n        </pluginRepository>\n        <pluginRepository>\n          <id>central-fallback</id>\n          <url>https://repo.maven.apache.org/maven2/</url>\n          <releases><enabled>true</enabled><updatePolicy>daily</updatePolicy></releases>\n          <snapshots><enabled>false</enabled></snapshots>\n        </pluginRepository>\n      </pluginRepositories>\n    </profile>\n  </profiles>\n  <activeProfiles>\n    <activeProfile>mirror</activeProfile>\n  </activeProfiles>\n  <servers>\n    <server>\n      <id>mirror</id>\n      <configuration>\n        <httpConfiguration>\n          <connectionTimeout>30000</connectionTimeout>\n          <requestTimeout>60000</requestTimeout>\n          <socketTimeout>30000</socketTimeout>\n        </httpConfiguration>\n      </configuration>\n    </server>\n  </servers>\n</settings>\nSETTINGS_EOF",
+    "curl --retry 3 --retry-delay 10 --retry-max-time 60 --http1.1 -L https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u412-b08/OpenJDK8U-jdk_x64_linux_hotspot_8u412b08.tar.gz -o /tmp/temurin8.tar.gz",
+    "tar -xzf /tmp/temurin8.tar.gz -C /opt/java",
+    "rm /tmp/temurin8.tar.gz",
+    "export JAVA_HOME=/opt/java/jdk8u412-b08",
+    "export PATH=$JAVA_HOME/bin:$PATH",
+    "export MAVEN_HOME=/usr/share/maven",
+    "export PATH=$MAVEN_HOME/bin:$PATH",
+    "cd /workspace",
+    "for i in 1 2 3; do if mvn -B install -DskipTests -U -Dmaven.wagon.http.retryHandler.count=3 -Dmaven.wagon.http.retryHandler.delay_secs=10; then break; else if [ $i -eq 3 ]; then exit 1; fi; sleep 10; fi; done",
+    "for i in 1 2 3; do if mvn -pl flink-cdc-runtime -am -B dependency:go-offline -U -Dmaven.wagon.http.retryHandler.count=3 -Dmaven.wagon.http.retryHandler.delay_secs=10; then break; else if [ $i -eq 3 ]; then exit 1; fi; sleep 10; fi; done",
+    "mvn -pl flink-cdc-runtime -B dependency:resolve -DincludeScope=test -U -Dmaven.wagon.http.retryHandler.count=3 -Dmaven.wagon.http.retryHandler.delay_secs=10",
+    "mvn -pl flink-cdc-runtime -B test-compile -U -q || true"
+  ],
+  "activation_commands": [
+    "export JAVA_HOME=/opt/java/jdk8u412-b08",
+    "export PATH=$JAVA_HOME/bin:$PATH",
+    "export MAVEN_HOME=/usr/share/maven",
+    "export PATH=$MAVEN_HOME/bin:$PATH"
+  ],
+  "activation_command": "export JAVA_HOME=/opt/java/jdk8u412-b08 && export PATH=$JAVA_HOME/bin:$PATH && export MAVEN_HOME=/usr/share/maven && export PATH=$MAVEN_HOME/bin:$PATH",
+  "activation_type": "java",
+  "activation_validation_command": "java -version && mvn --version",
+  "detected_test_command": "mvn -pl flink-cdc-runtime -B test -Dtest=PostTransformOperatorTest#testDataChangeEventTransformWithDuplicateColumns",
+  "runtime_smoke_command": "mvn -pl flink-cdc-runtime -B compile -q",
+  "runtime_profile": {
+    "ecosystem": "java",
+    "package_manager": "maven",
+    "env": {
+      "JAVA_HOME": "/opt/java/jdk8u412-b08",
+      "MAVEN_HOME": "/usr/share/maven",
+      "PATH": "/opt/java/jdk8u412-b08/bin:/usr/share/maven/bin:$PATH"
+    },
+    "env_name": "jdk8-maven3.8",
+    "prepare_commands": [
+      "mkdir -p /opt/java",
+      "curl --retry 3 --retry-delay 10 --retry-max-time 60 --http1.1 -L https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u412-b08/OpenJDK8U-jdk_x64_linux_hotspot_8u412b08.tar.gz -o /tmp/temurin8.tar.gz",
+      "tar -xzf /tmp/temurin8.tar.gz -C /opt/java",
+      "rm /tmp/temurin8.tar.gz"
+    ],
+    "activation_commands": [
+      "export JAVA_HOME=/opt/java/jdk8u412-b08",
+      "export PATH=$JAVA_HOME/bin:$PATH",
+      "export MAVEN_HOME=/usr/share/maven",
+      "export PATH=$MAVEN_HOME/bin:$PATH"
+    ],
+    "base_deps_installed": true,
+    "dependencies_precached": true,
+    "test_only_install_strategy": "maven-test-compile",
+    "cache_dirs": [
+      "/root/.m2/repository",
+      "/opt/java/jdk8u412-b08"
+    ],
+    "prepare_commands": [
+      "mkdir -p /opt/java",
+      "curl --retry 3 --retry-delay 10 --retry-max-time 60 --http1.1 -L https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u412-b08/OpenJDK8U-jdk_x64_linux_hotspot_8u412b08.tar.gz -o /tmp/temurin8.tar.gz",
+      "tar -xzf /tmp/temurin8.tar.gz -C /opt/java",
+      "rm /tmp/temurin8.tar.gz",
+      "cd /workspace",
+      "for i in 1 2 3; do if mvn -B install -DskipTests -U -Dmaven.wagon.http.retryHandler.count=3 -Dmaven.wagon.http.retryHandler.delay_secs=10; then break; else if [ $i -eq 3 ]; then exit 1; fi; sleep 10; fi; done",
+      "for i in 1 2 3; do if mvn -pl flink-cdc-runtime -am -B dependency:go-offline -U -Dmaven.wagon.http.retryHandler.count=3 -Dmaven.wagon.http.retryHandler.delay_secs=10; then break; else if [ $i -eq 3 ]; then exit 1; fi; sleep 10; fi; done",
+      "mvn -pl flink-cdc-runtime -B dependency:resolve -DincludeScope=test -U -Dmaven.wagon.http.retryHandler.count=3 -Dmaven.wagon.http.retryHandler.delay_secs=10",
+      "mvn -pl flink-cdc-runtime -B test-compile -U -q || true"
+    ],
+    "notes": "Java 8 (Temurin JDK 8u412) and Maven 3.8.7 installed. Project uses Maven multi-module structure. Test target is flink-cdc-runtime module. Maven dependencies are pre-cached during image construction with retry logic: (1) 'mvn install -DskipTests -U' builds all modules and installs inter-module SNAPSHOT artifacts to local repo (retries 3x), (2) 'mvn dependency:go-offline' downloads external JARs and POMs while network is available (retries 3x). This ensures inter-module SNAPSHOT dependencies (e.g., flink-cdc-common:3.2-SNAPSHOT) are available before caching external deps. Maven is configured to use Mirror proxy at http://mirror.proxy.hpc:8081/repository/maven-public/ with fallback to Maven Central (mirrorOf=external:* allows fallback). HTTP timeouts configured: connection=30s, request=60s, socket=30s."
+  },
+  "notes": "Apache Flink CDC project requires Java 8 (JDK 1.8) and Maven 3.x. The fix is in the flink-cdc-runtime module. Git and curl are included in baseline system packages. The test to run is PostTransformOperatorTest#testDataChangeEventTransformWithDuplicateColumns. Maven dependencies are pre-cached during Docker image construction when network is available; tests run offline using cached /root/.m2/repository. Maven is configured to use Mirror proxy at http://mirror.proxy.hpc:8081/repository/maven-public/ with fallback to Maven Central (mirrorOf=external:*). Retry logic added for network resilience: mvn commands retry up to 3 times with 10s delay, wagon retry handler configured with count=3 and delay_secs=10. HTTP timeouts configured for slow connections."
+}

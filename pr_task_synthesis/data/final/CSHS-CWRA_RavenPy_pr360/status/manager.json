@@ -1,0 +1,20 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_full_outer_turn": false,
+  "blocks_reason": null,
+  "repair_cycles_attempted": 0,
+  "workers_used": [
+    "openenv-repository-explorer",
+    "openenv-environment-builder",
+    "openenv-eval-builder",
+    "openenv-test-analyst",
+    "openenv-dockerfile-builder",
+    "openenv-build-validator"
+  ],
+  "iterations": 1,
+  "verifier_asset_mode": "testOnly",
+  "build_backend": "buildah",
+  "container_build_status": "success",
+  "notes": "SWE Builder synthesis workflow completed successfully. All artifacts generated: exploration_report.json, environment_request.json, setup_runtime.sh, repo_setup.sh, eval.sh, test.patch, Dockerfile.final, container_build_plan.json, openenv_validation_oci.tar. Test analyst verified: testOnly fails (exit code 1) on buggy workspace, testWithFix passes (exit code 0) on fixed workspace. No hacking detected. Buildah validation succeeded with OCI archive exported."
+}

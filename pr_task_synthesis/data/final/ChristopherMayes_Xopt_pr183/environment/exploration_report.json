@@ -1,0 +1,67 @@
+{
+  "pr_summary": "Fix CNSGAGenerator to maintain population_size invariant when handling DataFrames with duplicate/non-unique indices. The fix changes pop_from_data() to use positional index (i) instead of label-based index (ix[i]), and cnsga_select() to use .iloc[] instead of .loc[] to avoid selecting multiple rows for duplicate index labels.",
+  "runtime_family": "Python",
+  "package_manager": "conda/pip",
+  "touched_files": [
+    "xopt/generators/ga/cnsga.py"
+  ],
+  "important_build_files": [
+    "setup.py",
+    "requirements.txt",
+    "environment.yml",
+    "test-requirements.txt",
+    "docs-requirements.txt"
+  ],
+  "important_test_files": [
+    "tests/generators/ga/test_cnsga.py",
+    "tests/test_xopt.py",
+    "tests/test_generator.py",
+    "scripts/run_tests.py"
+  ],
+  "candidate_build_commands": [
+    "pip install --no-dependencies -e .",
+    "conda env create -f environment.yml && conda activate xopt-dev && pip install --no-dependencies -e ."
+  ],
+  "candidate_test_commands": [
+    "python scripts/run_tests.py",
+    "pytest tests/generators/ga/test_cnsga.py -v",
+    "pytest tests/ -v"
+  ],
+  "candidate_smoke_commands": [
+    "python -c \"import xopt; print(xopt.__version__)\"",
+    "python -c \"from xopt.generators.ga.cnsga import CNSGAGenerator; print('CNSGAGenerator imported successfully')\""
+  ],
+  "candidate_activation_checks": [
+    "conda activate xopt-dev",
+    "python -c \"import torch; import botorch; import deap\""
+  ],
+  "environment_management": "conda (mambaforge) with pip for package installation",
+  "special_system_dependencies": [
+    "mpi4py (for MPI parallel execution)",
+    "mambaforge/conda for environment management"
+  ],
+  "high_value_files": [
+    "xopt/generators/ga/cnsga.py",
+    "environment.yml",
+    "tests/generators/ga/test_cnsga.py",
+    ".github/workflows/ci.yml"
+  ],
+  "patch_file_cues": [
+    "xopt/generators/ga/cnsga.py - lines 292-319: changes to pop_from_data() and cnsga_select() functions",
+    "Fix involves changing from label-based indexing (.loc) to positional indexing (.iloc)",
+    "Fix removes dependency on dataframe index labels to handle duplicate indices"
+  ],
+  "test_file_cues": [
+    "tests/generators/ga/test_cnsga.py - new test test_cnsga_baddf() added",
+    "Test verifies population_size remains constant after operations with duplicate-index DataFrames",
+    "Test includes 100 iterations of generate/evaluate cycles and duplicate index DataFrame additions"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    ".github/workflows/ci.yml runs on ubuntu-latest",
+    "No Windows or macOS specific code or dependencies detected",
+    "Project uses standard Python/conda stack which is cross-platform",
+    "MPI support via mpi4py works on Linux"
+  ],
+  "notes": "This is a Python optimization library (Xopt) that uses conda/mamba for environment management. The fix addresses a pandas indexing bug where duplicate DataFrame indices could cause incorrect row selection. The CI workflow uses mambaforge and runs on ubuntu-latest. The test patch adds test_cnsga_baddf() which tests the fix by creating DataFrames with duplicate indices and verifying population_size invariance."
+}

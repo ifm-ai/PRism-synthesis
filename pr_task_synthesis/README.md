@@ -133,19 +133,52 @@ every check is mechanical and its output is fed back as text:
   trajectory judge, instruction tuner.
 - `prompts/skills/*/SKILL.md`: three skills — dockerfile buildability review, container build
   validation, and the trajectory rubric.
-- `sandbox.def`: the Apptainer image — opencode, buildah, and Apptainer itself, because the
-  agent builds container images from inside a container.
-- `data/input.jsonl`: five real tasks (issue, repository, base commit, fix patch).
-- `data/final.jsonl`: one real successful run — the environment, the verified `eval.sh` and the
-  Harbor bundle it produced, after four turns.
+- `Dockerfile`: the sandbox image — opencode, buildah, and Apptainer itself, because the agent
+  builds container images from inside a container. This is the image the pipeline was actually
+  run with, not a reconstruction of it.
+- `install_opencode.sh`: installs opencode from the binaries the Dockerfile pre-downloads,
+  picking the right build for the architecture and libc.
+- `data/input.jsonl`: fifty real tasks — the `task_input.json` of each run, plus the `license` of
+  the repository it came from.
+- `data/final/<task_id>/`: what each run produced — the `artifacts/` tree, directory per task:
+  `environment/` (the synthesized `Dockerfile.final`, `setup_runtime.sh`, build plan and
+  exploration report), `evaluation/` (the verified `eval.sh` and its tests), `harbor_task/` (the
+  exported bundle), `verify_logs/`, `analysis_report/` (the solver trajectory and
+  the judge's verdict), `status/` (each sub-agent's record) and `stats_timing.json`.
 
 Most of what decides the output is in `prompts/`, not in the Python.
 
+### About the examples
+
+Fifty successful runs over fifty distinct repositories, spread across seventeen languages — C,
+Python, Go, Shell, C#, Rust, Java, Ruby, Scala, JavaScript, Kotlin, C++, Elixir, TypeScript, R and
+PHP — because the environment builder has to cope with whatever the PR is written in. Every one
+reached `outcome: success`, meaning its `eval.sh` failed before the fix and passed after it; most
+got there in one or two turns. Repositories are MIT or Apache-2.0 only.
+
 ## Running it
 
-```bash
-apptainer build --fakeroot sandbox.sif sandbox.def
+Build the image, then convert it for Apptainer:
 
+```bash
+docker build -t swe-env-builder .
+apptainer build sandbox.sif docker-daemon://swe-env-builder:latest
+```
+
+`docker-daemon://` reads straight out of the local Docker daemon, so nothing has to be pushed
+anywhere. Alternatives, if that doesn't suit:
+
+- **From a registry** — push the image, then
+  `apptainer build sandbox.sif docker://<registry>/swe-env-builder:latest`. Also what you want
+  when several machines share one build.
+- **Skip the .sif** — pass `--image docker://<registry>/swe-env-builder:latest` directly;
+  Apptainer converts on first use and caches the result.
+- **No Docker at all** — `apptainer build sandbox.sif docker-archive://image.tar` builds from a
+  `docker save` tarball, for when only one machine has a daemon.
+
+Then:
+
+```bash
 export MODEL_BASE_URL=http://<vllm-host>:8000/v1
 export MODEL=Qwen/Qwen3.5-397B-A17B-FP8
 export MODEL_API_KEY=...            # whatever your endpoint expects; EMPTY for a bare vLLM

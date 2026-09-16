@@ -1,0 +1,43 @@
+The "poetry.dev-dependencies" section is deprecated and will be removed in a future version. Use "poetry.group.dev.dependencies" instead.
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+safety 2.3.5 requires packaging<22.0,>=21.0, but you have packaging 26.2 which is incompatible.
+>>>>> Start Test Output
+The "poetry.dev-dependencies" section is deprecated and will be removed in a future version. Use "poetry.group.dev.dependencies" instead.
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-7.4.2, pluggy-1.3.0 -- /root/.cache/pypoetry/virtualenvs/pytorch-ie-xS3fZVNL-py3.11/bin/python
+cachedir: .pytest_cache
+rootdir: /tests/tests
+plugins: typeguard-4.1.3, xdoctest-1.1.1
+collecting ... collected 1 item
+
+../tests/tests/test_annotation_sort.py::test_annotation_sort PASSED      [100%]
+
+=============================== warnings summary ===============================
+../root/.cache/pypoetry/virtualenvs/pytorch-ie-xS3fZVNL-py3.11/lib/python3.11/site-packages/lightning_utilities/core/imports.py:13
+  /root/.cache/pypoetry/virtualenvs/pytorch-ie-xS3fZVNL-py3.11/lib/python3.11/site-packages/lightning_utilities/core/imports.py:13: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+    import pkg_resources
+
+../root/.cache/pypoetry/virtualenvs/pytorch-ie-xS3fZVNL-py3.11/lib/python3.11/site-packages/pkg_resources/__init__.py:2871
+  /root/.cache/pypoetry/virtualenvs/pytorch-ie-xS3fZVNL-py3.11/lib/python3.11/site-packages/pkg_resources/__init__.py:2871: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('sphinxcontrib')`.
+  Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages
+    declare_namespace(pkg)
+
+../root/.cache/pypoetry/virtualenvs/pytorch-ie-xS3fZVNL-py3.11/lib/python3.11/site-packages/lightning_fabric/__init__.py:36
+  /root/.cache/pypoetry/virtualenvs/pytorch-ie-xS3fZVNL-py3.11/lib/python3.11/site-packages/lightning_fabric/__init__.py:36: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('lightning_fabric')`.
+  Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages
+    __import__("pkg_resources").declare_namespace(__name__)
+
+../root/.cache/pypoetry/virtualenvs/pytorch-ie-xS3fZVNL-py3.11/lib/python3.11/site-packages/torchmetrics/utilities/imports.py:24
+../root/.cache/pypoetry/virtualenvs/pytorch-ie-xS3fZVNL-py3.11/lib/python3.11/site-packages/torchmetrics/utilities/imports.py:24
+  /root/.cache/pypoetry/virtualenvs/pytorch-ie-xS3fZVNL-py3.11/lib/python3.11/site-packages/torchmetrics/utilities/imports.py:24: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
+    _PYTHON_LOWER_3_8 = LooseVersion(_PYTHON_VERSION) < LooseVersion("3.8")
+
+../root/.cache/pypoetry/virtualenvs/pytorch-ie-xS3fZVNL-py3.11/lib/python3.11/site-packages/pytorch_lightning/__init__.py:36
+  /root/.cache/pypoetry/virtualenvs/pytorch-ie-xS3fZVNL-py3.11/lib/python3.11/site-packages/pytorch_lightning/__init__.py:36: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('pytorch_lightning')`.
+  Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages
+    __import__("pkg_resources").declare_namespace(__name__)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 1 passed, 6 warnings in 5.17s =========================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

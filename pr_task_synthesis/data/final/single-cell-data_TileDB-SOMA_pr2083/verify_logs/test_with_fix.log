@@ -1,0 +1,34 @@
+patching file apis/python/tests/test_basic_anndata_io.py
+Reversed (or previously applied) patch detected!  Skipping patch.
+2 out of 2 hunks ignored -- saving rejects to file apis/python/tests/test_basic_anndata_io.py.rej
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /workspace/apis/python
+configfile: pyproject.toml
+plugins: zarr-3.1.5, typeguard-2.13.3
+collecting ... collected 1 item
+
+tests/test_basic_anndata_io.py::test_null_obs PASSED                     [100%]
+
+=============================== warnings summary ===============================
+src/tiledbsoma/_general_utilities.py:13
+  /workspace/apis/python/src/tiledbsoma/_general_utilities.py:13: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+    from pkg_resources import DistributionNotFound, get_distribution
+
+../../../opt/benchmark/venv/lib/python3.11/site-packages/typeguard/__init__.py:1016
+  /opt/benchmark/venv/lib/python3.11/site-packages/typeguard/__init__.py:1016: UserWarning: no type annotations present -- not typechecking typing._overload_dummy
+    warn('no type annotations present -- not typechecking {}'.format(function_name(func)))
+
+tests/test_basic_anndata_io.py::test_null_obs
+  <frozen abc>:119: FutureWarning: SparseDataset is deprecated and will be removed in late 2024. It has been replaced by the public classes CSRDataset and CSCDataset.
+  
+  For instance checks, use `isinstance(X, (anndata.experimental.CSRDataset, anndata.experimental.CSCDataset))` instead.
+  
+  For creation, use `anndata.experimental.sparse_dataset(X)` instead.
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 1 passed, 3 warnings in 5.29s =========================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

@@ -1,0 +1,94 @@
+patching file apis/python/tests/test_basic_anndata_io.py
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-9.1.1, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /workspace/apis/python
+configfile: pyproject.toml
+plugins: zarr-3.1.5, typeguard-2.13.3
+collecting ... collected 1 item
+
+tests/test_basic_anndata_io.py::test_null_obs FAILED                     [100%]
+
+=================================== FAILURES ===================================
+________________________________ test_null_obs _________________________________
+
+adata = AnnData object with n_obs × n_vars = 80 × 20
+    obs: 'orig.ident', 'nCount_RNA', 'nFeature_RNA', 'RNA_snn_res.0.8', '...ce.standardized', 'vst.variable'
+    uns: 'neighbors'
+    obsm: 'X_pca', 'X_tsne'
+    varm: 'PCs'
+    obsp: 'distances'
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_null_obs0')
+
+    def test_null_obs(adata, tmp_path: Path):
+        output_path = tmp_path.as_uri()
+        seed = 42
+        #   Create column of all null values
+        adata.obs["empty_categorical_all"] = pd.Categorical(
+            [np.NaN] * adata.n_obs, dtype=pd.CategoricalDtype(categories=[], ordered=False)
+        )
+        adata.obs["empty_extension_all"] = pd.Series(
+            [np.nan] * adata.n_obs, dtype=pd.Int64Dtype()
+        )
+        #   Create column of partially-null values
+        rng = np.random.RandomState(seed)
+    
+        adata.obs["empty_categorical_partial"] = rng.choice(
+            (np.NaN, 1.0), adata.n_obs, True
+        )
+        adata.obs["empty_extension_partial"] = pd.Series(
+            [1] * adata.n_obs + [np.nan], dtype=pd.Int64Dtype()
+        )
+    
+        original = adata.copy()
+>       uri = tiledbsoma.io.from_anndata(
+            output_path, adata, "RNA", ingest_mode="write", X_kind=tiledbsoma.SparseNDArray
+        )
+
+tests/test_basic_anndata_io.py:742: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/benchmark/venv/lib/python3.11/site-packages/typeguard/__init__.py:1033: in wrapper
+    retval = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+src/tiledbsoma/io/ingest.py:472: in from_anndata
+    with _write_dataframe(
+/opt/benchmark/venv/lib/python3.11/site-packages/typeguard/__init__.py:1033: in wrapper
+    retval = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+src/tiledbsoma/io/ingest.py:1233: in _write_dataframe
+    return _write_dataframe_impl(
+/opt/benchmark/venv/lib/python3.11/site-packages/typeguard/__init__.py:1033: in wrapper
+    retval = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+src/tiledbsoma/io/ingest.py:1257: in _write_dataframe_impl
+    arrow_table = df_to_arrow(df)
+                  ^^^^^^^^^^^^^^^
+src/tiledbsoma/_arrow_types.py:211: in df_to_arrow
+    df[k] = pa.nulls(df.shape[0], pa.infer_type(df[k]))
+                                  ^^^^^^^^^^^^^^^^^^^^
+pyarrow/array.pxi:596: in pyarrow.lib.infer_type
+    ???
+pyarrow/error.pxi:155: in pyarrow.lib.pyarrow_internal_check_status
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   ???
+E   pyarrow.lib.ArrowInvalid: Could not convert <NA> with type NAType: did not recognize Python value type when inferring an Arrow data type
+
+pyarrow/error.pxi:92: ArrowInvalid
+=============================== warnings summary ===============================
+src/tiledbsoma/_general_utilities.py:13
+  /workspace/apis/python/src/tiledbsoma/_general_utilities.py:13: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+    from pkg_resources import DistributionNotFound, get_distribution
+
+../../../opt/benchmark/venv/lib/python3.11/site-packages/typeguard/__init__.py:1016
+  /opt/benchmark/venv/lib/python3.11/site-packages/typeguard/__init__.py:1016: UserWarning: no type annotations present -- not typechecking typing._overload_dummy
+    warn('no type annotations present -- not typechecking {}'.format(function_name(func)))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_basic_anndata_io.py::test_null_obs - pyarrow.lib.ArrowInval...
+======================== 1 failed, 2 warnings in 0.81s =========================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

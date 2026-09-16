@@ -1,0 +1,13 @@
+diff --git a/src/PhpSpreadsheet/Style/Conditional.php b/src/PhpSpreadsheet/Style/Conditional.php
+index c62e2f27..01a4d8a9 100644
+--- a/src/PhpSpreadsheet/Style/Conditional.php
++++ b/src/PhpSpreadsheet/Style/Conditional.php
+@@ -84,7 +84,7 @@ class Conditional implements IComparable
+     /**
+      * Text.
+      */
+-    private string $text;
++    private string $text = '';
+ 
+     /**
+      * Stop on this condition, if it matches.

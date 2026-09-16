@@ -1,0 +1,15 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "high_value_files": [
+    "sdk/ml/azure-ai-ml/azure/ai/ml/_schema/_finetuning/finetuning_vertical.py",
+    "sdk/ml/azure-ai-ml/azure/ai/ml/_schema/_finetuning/constants.py",
+    "sdk/ml/azure-ai-ml/azure/ai/ml/constants/_job/finetuning.py",
+    "sdk/ml/azure-ai-ml/azure/ai/ml/entities/_job/finetuning/finetuning_vertical.py",
+    "sdk/ml/azure-ai-ml/azure/ai/ml/entities/_job/finetuning/azure_openai_finetuning_job.py",
+    "sdk/ml/azure-ai-ml/azure/ai/ml/entities/_job/finetuning/custom_model_finetuning_job.py",
+    "sdk/ml/azure-ai-ml/azure/ai/ml/_utils/utils.py"
+  ],
+  "notes": "Repository exploration completed successfully. The Azure SDK for Python azure-ai-ml package is a Python project using pip for dependency management. The finetuning module is located at sdk/ml/azure-ai-ml. The fix involves adding a constants file for snake_case task types and modifying the casing transformation logic in the schema. The platform is Linux-compatible with no Windows or macOS exclusivity."
+}

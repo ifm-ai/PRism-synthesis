@@ -1,0 +1,12 @@
+{
+  "status": "success",
+  "blocks_outer_progress": false,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "route_to": null,
+  "notes": "Buildah build of Dockerfile.final completed successfully. OCI archive created at /artifacts/environment/openenv_validation_oci.tar (1.37 GB). The container spec is buildable and ready for use.",
+  "buildah_build_exit_code": 0,
+  "oci_archive_created": true,
+  "build_success": true
+}

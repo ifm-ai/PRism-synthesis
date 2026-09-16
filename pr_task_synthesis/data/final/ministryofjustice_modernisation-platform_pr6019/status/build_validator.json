@@ -1,0 +1,9 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "route_to": null,
+  "notes": "Build validation completed successfully. Image built and exported as OCI archive. Previous conftest version incompatibility resolved by pinning to v0.48.0."
+}

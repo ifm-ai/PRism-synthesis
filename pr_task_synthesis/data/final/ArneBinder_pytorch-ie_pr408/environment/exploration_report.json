@@ -1,0 +1,61 @@
+{
+  "pr_summary": "Implement ordering for the core Annotation class by adding comparison_fields_and_values property and __lt__ method. This enables Python's built-in sorted() to work with collections of annotations. The ordering considers only dataclass fields with compare=True, ignores _targets, and raises ValueError if compared annotations have different comparable field names.",
+  "runtime_family": "python",
+  "package_manager": "poetry",
+  "touched_files": [
+    "src/pytorch_ie/core/document.py"
+  ],
+  "important_build_files": [
+    "pyproject.toml",
+    "poetry.lock",
+    "noxfile.py"
+  ],
+  "important_test_files": [
+    "tests/core/test_document.py"
+  ],
+  "candidate_build_commands": [
+    "poetry install --with dev",
+    "poetry build"
+  ],
+  "candidate_test_commands": [
+    "poetry run nox -s tests_not_slow",
+    "poetry run pytest tests/core/test_document.py",
+    "poetry run pytest tests/core/test_document.py::test_annotation_sort"
+  ],
+  "candidate_smoke_commands": [
+    "python -c \"from pytorch_ie.core import Annotation; print('OK')\"",
+    "poetry run python -c \"import pytorch_ie; print(pytorch_ie.__version__)\""
+  ],
+  "candidate_activation_checks": [
+    "poetry env info",
+    "which python",
+    "python --version"
+  ],
+  "environment_management": "poetry",
+  "special_system_dependencies": [
+    "Python 3.9+",
+    "poetry",
+    "nox",
+    "nox-poetry"
+  ],
+  "high_value_files": [
+    "src/pytorch_ie/core/document.py",
+    "tests/core/test_document.py",
+    "pyproject.toml",
+    "noxfile.py",
+    "README.md"
+  ],
+  "patch_file_cues": [
+    "src/pytorch_ie/core/document.py - Annotation class modification adding comparison_fields_and_values property and __lt__ method"
+  ],
+  "test_file_cues": [
+    "tests/core/test_document.py - test_annotation_sort function testing sorting of annotations with simple and nested fields"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    ".github/workflows/tests.yml - CI runs on ubuntu-latest",
+    "pyproject.toml - Pure Python project with no platform-specific dependencies",
+    "No Windows-only or macOS-only markers in project configuration"
+  ],
+  "notes": "This is a pure Python project using Poetry for dependency management. The fix adds comparison functionality to the Annotation base class in the document module. Tests use pytest via nox. The project is fully cross-platform and runs on Linux CI (ubuntu-latest). Python 3.9+ is required. Key dependencies include torch, pytorch-lightning, transformers. The test patch adds test_annotation_sort which verifies that annotations can be sorted lexicographically by their comparison fields."
+}

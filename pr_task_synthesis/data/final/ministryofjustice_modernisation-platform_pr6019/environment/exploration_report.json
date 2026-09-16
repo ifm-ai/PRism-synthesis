@@ -1,0 +1,83 @@
+{
+  "pr_summary": "Update IAM policy for member infrastructure access to fix VPC-related permissions. Remove overly broad 'cognito:*' wildcard, consolidate individual EC2 describe actions under 'ec2:Describe*', replace specific VPC modification actions with 'ec2:ModifyVpc*' wildcard, and add new permissions for route tables, network ACLs, and flow logs required for data-platform-compute VPCs.",
+  "runtime_family": "terraform",
+  "package_manager": "terraform",
+  "touched_files": [
+    "terraform/environments/bootstrap/member-bootstrap/iam.tf"
+  ],
+  "important_build_files": [
+    "terraform/environments/bootstrap/member-bootstrap/iam.tf",
+    "terraform/environments/bootstrap/member-bootstrap/providers.tf",
+    "terraform/environments/bootstrap/member-bootstrap/versions.tf",
+    "terraform/modules/",
+    ".github/workflows/terraform-static-analysis.yml",
+    ".github/workflows/terraform-github.yml"
+  ],
+  "important_test_files": [
+    "terraform/environments/core-network-services/test/go_test.go",
+    "terraform/environments/core-shared-services/test/go_test.go",
+    "terraform/environments/core-logging/test/go_test.go",
+    "terraform/environments/core-security/test/go_test.go",
+    "scripts/tests/validate/run-opa-tests.sh"
+  ],
+  "candidate_build_commands": [
+    "terraform init",
+    "terraform plan",
+    "terraform apply"
+  ],
+  "candidate_test_commands": [
+    "cd terraform/environments/core-network-services/test && go test -v",
+    "cd terraform/environments/core-shared-services/test && go test -v",
+    "cd terraform/environments/core-logging/test && go test -v",
+    "cd terraform/environments/core-security/test && go test -v",
+    "./scripts/tests/validate/run-opa-tests.sh"
+  ],
+  "candidate_smoke_commands": [
+    "terraform validate",
+    "tflint",
+    "checkov -d .",
+    "conftest test"
+  ],
+  "candidate_activation_checks": [
+    "terraform --version",
+    "go version",
+    "which conftest"
+  ],
+  "environment_management": "terraform with go modules for tests",
+  "special_system_dependencies": [
+    "terraform",
+    "go (1.15+)",
+    "conftest (for OPA testing)",
+    "jq (for JSON processing in scripts)",
+    "docker (for documentation preview)"
+  ],
+  "high_value_files": [
+    "terraform/environments/bootstrap/member-bootstrap/iam.tf",
+    "terraform/environments/bootstrap/member-bootstrap/providers.tf",
+    "terraform/environments/core-network-services/test/go.mod",
+    ".github/workflows/terraform-static-analysis.yml",
+    "CONTRIBUTING.md",
+    "architecture-decision-record/0007-use-terratest-opa-and-go-for-testing.md"
+  ],
+  "patch_file_cues": [
+    "iam.tf - IAM policy document modifications",
+    "cognito:* - removed overly broad Cognito permission",
+    "ec2:ModifyVpc* - wildcard for VPC modification operations",
+    "ec2:AssociateRouteTable, ec2:CreateRouteTable, ec2:DeleteRouteTable - new route table permissions",
+    "ec2:*NetworkAcl* - network ACL permissions",
+    "ec2:*FlowLogs - VPC flow logs permissions"
+  ],
+  "test_file_cues": [
+    "Terratest-based Go tests in terraform/environments/*/test/",
+    "OPA/conftest tests in scripts/tests/validate/run-opa-tests.sh",
+    "Tests validate terraform plans and outputs"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "All GitHub Actions workflows use 'runs-on: ubuntu-latest'",
+    "No Windows-specific or macOS-specific dependencies detected",
+    "Terraform is cross-platform and runs on Linux",
+    "Go tests are cross-platform"
+  ],
+  "notes": "This is a Ministry of Justice Modernisation Platform repository containing Terraform infrastructure as code. The fix modifies IAM policy permissions for member accounts, specifically for VPC-related operations. Tests use Terratest (Go library) for Terraform testing and OPA/conftest for policy validation. The project is fully Linux-compatible and uses ubuntu-latest runners in CI/CD."
+}

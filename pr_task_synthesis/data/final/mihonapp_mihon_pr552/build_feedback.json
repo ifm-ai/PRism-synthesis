@@ -1,0 +1,20 @@
+{
+  "is_finish": true,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "failure_domain": null,
+  "route_to": null,
+  "blocking_errors": [],
+  "warnings": [
+    "First build attempt failed with transient network error (SSL read EOF) during Android SDK download",
+    "Second build attempt succeeded after retry",
+    "NDK download completed but is optional for unit tests"
+  ],
+  "next_actions": [
+    "OCI archive successfully exported to /artifacts/environment/openenv_validation_oci.tar",
+    "Container is ready for verifier runtime execution",
+    "Run source inspection test for DATE_MODIFIED fix verification"
+  ],
+  "notes": "Build succeeded on retry (attempt 2). The initial failure was a transient network error during Android SDK component download (curl SSL read error). The retry policy was correctly applied. All required components installed: JDK 17, Android SDK 34, Build Tools 29.0.3, NDK 26.1.10909125, Gradle 8.6. The container image is based on ubuntu:22.04 and includes the Mihon repository at commit ebee2751109daf7be86d93736806374d6255be7c."
+}

@@ -1,0 +1,82 @@
+{
+  "build_plan": {
+    "base_image": "ubuntu:22.04",
+    "platform": "linux/amd64",
+    "build_context": "/artifacts/environment",
+    "dockerfile": "Dockerfile.final"
+  },
+  "system_packages": [
+    "git",
+    "curl",
+    "jq",
+    "unzip",
+    "wget",
+    "ca-certificates"
+  ],
+  "runtime_tools": {
+    "go": {
+      "version": "1.23.2",
+      "goroot": "/usr/local/go",
+      "gopath": "/home/agent_sandbox/go"
+    },
+    "terraform": {
+      "version": "1.6.6",
+      "install_method": "download from releases.hashicorp.com"
+    },
+    "conftest": {
+      "install_method": "go install github.com/open-policy-agent/conftest@latest"
+    }
+  },
+  "environment_variables": {
+    "DEBIAN_FRONTEND": "noninteractive",
+    "GOROOT": "/usr/local/go",
+    "GOPATH": "/home/agent_sandbox/go",
+    "GOPROXY": "http://mirror.proxy.hpc:8081/repository/go-proxy/,direct"
+  },
+  "build_scripts": {
+    "repo_setup": {
+      "source": "/artifacts/environment/repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh",
+      "purpose": "Materialize repository at /workspace via git partial clone"
+    },
+    "setup_runtime": {
+      "source": "/artifacts/environment/setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh",
+      "purpose": "Install Go, conftest, Terraform, and setup Go modules for test directories"
+    }
+  },
+  "build_steps": [
+    "FROM ubuntu:22.04",
+    "Set environment variables (DEBIAN_FRONTEND, GOROOT, GOPATH, PATH, GOPROXY)",
+    "Install system packages (git, curl, jq, unzip, wget, ca-certificates)",
+    "Create /workspace directory",
+    "Create /opt/benchmark directory",
+    "COPY repo_setup.sh to /opt/benchmark/repo_setup.sh",
+    "COPY setup_runtime.sh to /opt/benchmark/setup_runtime.sh",
+    "RUN /opt/benchmark/repo_setup.sh (materialize repo)",
+    "RUN /opt/benchmark/setup_runtime.sh (install runtime deps)",
+    "Set WORKDIR /workspace"
+  ],
+  "repo_materialization": {
+    "method": "git partial clone with blob:none filter",
+    "source_repo": "https://github.com/ministryofjustice/modernisation-platform.git",
+    "commit": "f37922ba1126cddb8d1ee0ae44776422d08c3a1a",
+    "target_directory": "/workspace"
+  },
+  "test_framework": {
+    "primary": "Terratest (Go)",
+    "policy_validation": "OPA/conftest",
+    "test_directories": [
+      "terraform/environments/core-network-services/test",
+      "terraform/environments/core-shared-services/test",
+      "terraform/environments/core-logging/test",
+      "terraform/environments/core-security/test"
+    ]
+  },
+  "excluded_from_image": [
+    "/artifacts/evaluation/eval.sh",
+    "/artifacts/evaluation/test.patch",
+    "/artifacts/evaluation/tests/"
+  ],
+  "notes": "eval.sh and test artifacts are runtime-mounted verifier assets, not baked into the image"
+}

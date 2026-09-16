@@ -1,0 +1,70 @@
+{
+  "base_image": "rust:1.79-slim-bookworm",
+  "build_steps": [
+    {
+      "step": 1,
+      "type": "apt_install",
+      "description": "Install system packages",
+      "packages": ["git", "curl", "protobuf-compiler", "pkg-config", "libssl-dev"]
+    },
+    {
+      "step": 2,
+      "type": "directory_creation",
+      "description": "Create benchmark scripts directory",
+      "path": "/opt/benchmark"
+    },
+    {
+      "step": 3,
+      "type": "copy",
+      "description": "Copy setup_runtime.sh to image",
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh"
+    },
+    {
+      "step": 4,
+      "type": "copy",
+      "description": "Copy repo_setup.sh to image",
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh"
+    },
+    {
+      "step": 5,
+      "type": "chmod",
+      "description": "Make scripts executable",
+      "paths": ["/opt/benchmark/setup_runtime.sh", "/opt/benchmark/repo_setup.sh"]
+    },
+    {
+      "step": 6,
+      "type": "run",
+      "description": "Materialize /workspace from git repository",
+      "command": "/opt/benchmark/repo_setup.sh"
+    },
+    {
+      "step": 7,
+      "type": "run",
+      "description": "Set up Rust toolchain and pre-fetch dependencies",
+      "command": "/opt/benchmark/setup_runtime.sh"
+    }
+  ],
+  "copy_operations": [
+    {
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh",
+      "from_context": true
+    },
+    {
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh",
+      "from_context": true
+    }
+  ],
+  "workdir": "/workspace",
+  "entrypoint": null,
+  "cmd": ["/bin/bash"],
+  "runtime_mounts": {
+    "eval_script": "/artifacts/evaluation/eval.sh",
+    "test_patch": "/artifacts/evaluation/test.patch",
+    "tests_directory": "/artifacts/evaluation/tests/"
+  },
+  "notes": "eval.sh and tests are runtime-mounted verifier assets, not baked into the image. The image is built with Buildah and used with Apptainer at runtime."
+}

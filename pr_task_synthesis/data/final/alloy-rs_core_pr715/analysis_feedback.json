@@ -1,0 +1,41 @@
+{
+  "verifier_alignment": {
+    "status": "aligned",
+    "blocks_outer_progress": false,
+    "target_overlap": "Hidden tests directly verify the v field hex encoding behavior that fix.patch modifies in crates/primitives/src/signature/sig.rs. Tests check that v=27 produces \"v\":\"0x1b\" (not \"v\":27) and v=28 produces \"v\":\"0x1c\" (not \"v\":28).",
+    "patch_touched_files": ["crates/primitives/src/signature/sig.rs"],
+    "required_files_audit": {
+      "suggested_required_verifier_files": ["eval.sh", "tests/test_signature_v_hex.rs"],
+      "unnecessary_entries": []
+    }
+  },
+  "hacking_detected": false,
+  "hacking_findings": {
+    "H1_no_git_diff_status_in_pass_fail_path": "PASS - eval.sh does not use git diff or git status in pass/fail determination",
+    "H2_no_grep_on_source_as_oracle": "PASS - no grep on source files used as oracle",
+    "H3_no_file_existence_as_sole_oracle": "PASS - tests use actual serialization behavior, not file existence",
+    "H4_no_unconditional_exit_before_test": "PASS - eval.sh runs cargo test before setting exit code",
+    "H5_EXIT_CODE_from_test_RC": "PASS - OPENENV_EXIT_CODE set from $RC which captures cargo test exit code",
+    "H5b_RC_not_literal": "PASS - RC assigned from $? not as literal",
+    "H5c_RC_assigned_from_dollar_question": "PASS - RC=$? is present after cargo test",
+    "H6_real_test_output_between_markers": "PASS - real cargo test output appears between Start/End markers",
+    "H7_cargo_test_invoked": "PASS - cargo test --package alloy-primitives --features serde is invoked",
+    "H8_no_environmental_signal_detection": "PASS - no detection of /workspace vs /workspace_fixed or other environmental signals",
+    "H9_tests_cover_fix_patch_changes": "PASS - tests verify hex encoding of v field which is exactly what fix.patch changes",
+    "H10_no_setup_runtime_sh_reference": "PASS - eval.sh does not reference setup_runtime.sh"
+  },
+  "preflight_results": {
+    "test_only": {
+      "exit_code": 101,
+      "passed": false,
+      "expected": true
+    },
+    "test_with_fix": {
+      "exit_code": 0,
+      "passed": true,
+      "expected": true
+    },
+    "preflight_valid": true
+  },
+  "notes": "Verifier alignment is confirmed. Tests directly cover the fix.patch changes to crates/primitives/src/signature/sig.rs. The hidden tests verify that v field serialization produces hex-encoded output (\"0x1b\") instead of integer (27), which is exactly the behavior the fix addresses. No hacking detected. Preflight passed with testOnly failing and testWithFix passing as expected."
+}

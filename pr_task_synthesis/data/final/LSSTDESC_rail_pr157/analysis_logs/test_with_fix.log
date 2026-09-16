@@ -1,0 +1,21 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.1, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /tmp
+plugins: cov-7.1.0
+collecting ... collected 9 items
+
+../tmp/test_import_path_fix_fixed.py::TestYAMLConfigurations::test_pipe_example_yml PASSED [ 11%]
+../tmp/test_import_path_fix_fixed.py::TestYAMLConfigurations::test_goldenspike_yml PASSED [ 22%]
+../tmp/test_import_path_fix_fixed.py::TestNotebookImports::test_build_save_load_pipeline_notebook PASSED [ 33%]
+../tmp/test_import_path_fix_fixed.py::TestNotebookImports::test_degradation_demo_notebook PASSED [ 44%]
+../tmp/test_import_path_fix_fixed.py::TestNotebookImports::test_photometric_realization_demo_notebook PASSED [ 55%]
+../tmp/test_import_path_fix_fixed.py::TestNotebookImports::test_posterior_demo_notebook PASSED [ 66%]
+../tmp/test_import_path_fix_fixed.py::TestNotebookImports::test_goldenspike_notebook PASSED [ 77%]
+../tmp/test_import_path_fix_fixed.py::TestIntegration::test_yaml_load_and_parse PASSED [ 88%]
+../tmp/test_import_path_fix_fixed.py::TestIntegration::test_no_old_import_paths_in_examples PASSED [100%]
+
+============================== 9 passed in 0.03s ===============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

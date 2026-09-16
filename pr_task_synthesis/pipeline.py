@@ -60,7 +60,7 @@ def load_tasks(path: str, limit: int = 0):
                 "fix_patch": record.get("fix_patch"),
                 "test_patch": record.get("test_patch"),
                 "primary_language": record.get("primary_language"),
-                "repo_description": record.get("description"),
+                "repo_description": record.get("repo_description"),
                 "issue": record.get("issue"),
                 "domain": record.get("domain"),
                 "star_category": record.get("star_category"),

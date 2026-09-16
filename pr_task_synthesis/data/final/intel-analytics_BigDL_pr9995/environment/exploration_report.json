@@ -1,0 +1,61 @@
+{
+  "pr_summary": "Fix for BigDLLM initialization where optimize_model and use_cache flags were being incorrectly retrieved from kwargs instead of from bigdl_llm_kwargs, causing these settings to be lost during model initialization.",
+  "runtime_family": "Python",
+  "package_manager": "pip",
+  "touched_files": [
+    "python/llm/dev/benchmark/harness/bigdl_llm.py"
+  ],
+  "important_build_files": [
+    "python/llm/setup.py",
+    "pyproject.toml"
+  ],
+  "important_test_files": [
+    "python/llm/test/inference/test_optimize_model.py",
+    "python/llm/test/inference/test_optimize.py",
+    "python/llm/test/inference/test_transformers_api.py"
+  ],
+  "candidate_build_commands": [
+    "cd /workspace/python/llm && python setup.py clean --all bdist_wheel",
+    "pip install -e /workspace/python/llm"
+  ],
+  "candidate_test_commands": [
+    "cd /workspace/python/llm && pytest test/inference/test_optimize_model.py",
+    "cd /workspace/python/llm && python -m pytest test/inference/ -v"
+  ],
+  "candidate_smoke_commands": [
+    "python -c \"from bigdl.llm.transformers import AutoModelForCausalLM; print('import successful')\"",
+    "python -c \"import bigdl.llm; print(bigdl.llm.__version__)\""
+  ],
+  "candidate_activation_checks": [
+    "python -c \"import bigdl.llm\"",
+    "python -c \"from bigdl.llm.transformers import AutoModelForCausalLM\""
+  ],
+  "environment_management": "pip",
+  "special_system_dependencies": [
+    "intel-openmp (for x86_64/AMD64)",
+    "Optional: intel_extension_for_pytorch for GPU (XPU) support"
+  ],
+  "high_value_files": [
+    "python/llm/dev/benchmark/harness/bigdl_llm.py",
+    "python/llm/dev/benchmark/harness/run_llb.py",
+    "python/llm/dev/benchmark/harness/README.md",
+    "python/llm/setup.py",
+    "python/llm/README.md"
+  ],
+  "patch_file_cues": [
+    "bigdl_llm.py: Lines 49-50 changed from kwargs.get() to self.bigdl_llm_kwargs.get() for use_cache and optimize_model flags"
+  ],
+  "test_file_cues": [
+    "test_optimize_model.py: Tests optimize_model parameter with various models (Llama, Bloom, ChatGLM2, Replit Code)",
+    "test_optimize.py: Tests optimize_model API with low_bit quantization",
+    "test_optimize_mistral.py: Tests optimize_model with Mistral model"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "setup.py explicitly handles Linux platform with linux_binarys list and platform detection",
+    "CI workflows (PR_validation.yml) run on Linux runners",
+    "README.md shows Linux installation commands",
+    "No Windows-only or macOS-only API usage in the touched file bigdl_llm.py"
+  ],
+  "notes": "The repository is a Python-based BigDL-LLM project for running LLMs on Intel XPU. The fix is in the benchmark harness module (bigdl_llm.py) which wraps lm_eval's AutoCausalLM. The bug causes use_cache and optimize_model flags to be lost because they were being retrieved from kwargs (which had already been popped) instead of from bigdl_llm_kwargs. Tests use pytest framework and require model paths set via environment variables. Python 3.9 is the tested version. No conda/poetry/uv detected - pure pip-based installation."
+}

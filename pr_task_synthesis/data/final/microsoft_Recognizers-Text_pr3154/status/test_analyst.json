@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "official_verifier": {
+    "execution_mode": "real_execution",
+    "test_only_exit_code": 1,
+    "test_with_fix_exit_code": 0
+  },
+  "non_discriminating": false,
+  "notes": "Local preflight verification completed successfully. testOnly (buggy workspace) returned exit code 1 with 5 failed tests on unaccented 'anos' forms. testWithFix (fixed workspace) returned exit code 0 with all 11 tests passing. The verifier properly discriminates between buggy and fixed states. No hacking detected - eval.sh uses real test runner (pytest), captures exit code correctly via RC=$?, and tests cover the code paths modified by fix.patch (Spanish datetime/age recognition patterns for unaccented forms)."
+}

@@ -1,0 +1,64 @@
+{
+  "base_image_candidate": "rust:slim",
+  "system_packages": [
+    "git",
+    "curl",
+    "ca-certificates",
+    "build-essential",
+    "protobuf-compiler",
+    "libprotobuf-dev",
+    "libtss2-dev",
+    "libssl-dev",
+    "pkg-config",
+    "cmake",
+    "clang",
+    "llvm"
+  ],
+  "base_setup_commands": [
+    "export DEBIAN_FRONTEND=noninteractive",
+    "apt-get update -qq",
+    "apt-get install -y -qq protobuf-compiler libprotobuf-dev libtss2-dev libssl-dev pkg-config git curl ca-certificates build-essential cmake clang llvm"
+  ],
+  "setup_runtime_commands": [
+    "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --profile minimal",
+    "export RUSTUP_HOME=/root/.rustup",
+    "export CARGO_HOME=/root/.cargo",
+    "export PATH=$CARGO_HOME/bin:$PATH",
+    "cd /workspace && cargo fetch -p verifier --features se-verifier || true",
+    "cargo fetch || true"
+  ],
+  "activation_commands": [
+    "source /root/.cargo/env"
+  ],
+  "activation_command": "source /root/.cargo/env",
+  "activation_type": "cargo",
+  "activation_validation_command": "bash -c 'source /root/.cargo/env && cargo --version'",
+  "detected_test_command": "cargo test -p verifier --features se-verifier",
+  "runtime_smoke_command": "cargo check -p verifier --features se-verifier",
+  "runtime_profile": {
+    "ecosystem": "rust",
+    "package_manager": "cargo",
+    "env": {
+      "RUSTUP_HOME": "/root/.rustup",
+      "CARGO_HOME": "/root/.cargo",
+      "PATH": "/root/.cargo/bin:$PATH"
+    },
+    "env_name": "stable",
+    "prepare_commands": [
+      "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --profile minimal",
+      "source /root/.cargo/env"
+    ],
+    "activation_commands": [
+      "source /root/.cargo/env"
+    ],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "cargo uses Cargo.lock for deterministic builds; no additional test-only deps needed",
+    "cache_dirs": [
+      "/root/.cargo",
+      "/root/.rustup",
+      "/workspace/target"
+    ],
+    "notes": "Rust toolchain installed via rustup with stable channel. System dependencies include protobuf-compiler, libprotobuf-dev, libtss2-dev, libssl-dev for se-verifier feature. Git and curl included in baseline packages."
+  },
+  "notes": "Base image: rust:slim provides Rust toolchain but we install via rustup for flexibility. System packages include git and curl (baseline) plus protobuf-compiler, libprotobuf-dev, libtss2-dev, libssl-dev, pkg-config for building verifier with se-verifier feature. The se-verifier feature requires OpenSSL for certificate handling. The environment supports building and testing the IBM SE verifier on x86_64 (development) though target deployment is s390x."
+}

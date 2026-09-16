@@ -1,0 +1,54 @@
+{
+  "base_image": "debian:bookworm",
+  "build_context_files": [
+    "setup_runtime.sh",
+    "repo_setup.sh"
+  ],
+  "system_packages": [
+    "git",
+    "curl",
+    "make",
+    "golang-go"
+  ],
+  "build_steps": [
+    {
+      "type": "base_image",
+      "instruction": "FROM debian:bookworm"
+    },
+    {
+      "type": "system_packages",
+      "instruction": "RUN apt-get update -qq && apt-get install -y -qq git curl make golang-go"
+    },
+    {
+      "type": "copy_scripts",
+      "sources": ["setup_runtime.sh", "repo_setup.sh"],
+      "destination": "/opt/benchmark/"
+    },
+    {
+      "type": "repo_materialization",
+      "instruction": "RUN /opt/benchmark/repo_setup.sh",
+      "purpose": "Clone and set up the legitify repository in /workspace"
+    },
+    {
+      "type": "runtime_setup",
+      "instruction": "RUN /opt/benchmark/setup_runtime.sh",
+      "purpose": "Install Go tools, OPA, Regal, and download dependencies"
+    },
+    {
+      "type": "workdir",
+      "instruction": "WORKDIR /workspace"
+    }
+  ],
+  "runtime_mounts": [
+    "/opt/benchmark/eval.sh",
+    "/opt/benchmark/test.patch"
+  ],
+  "environment_variables": {
+    "GOPATH": "/root/go",
+    "PATH": "/usr/local/go/bin:${GOPATH}/bin:${PATH}"
+  },
+  "repo_materialization_mode": "repo_setup_script",
+  "build_backend": "buildah",
+  "output_format": "oci",
+  "notes": "eval.sh and test.patch are runtime-mounted verifier assets, not baked into the image"
+}

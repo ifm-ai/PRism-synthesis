@@ -1,0 +1,59 @@
+{
+  "build_context_files": [
+    "/artifacts/environment/setup_runtime.sh",
+    "/artifacts/environment/repo_setup.sh"
+  ],
+  "base_image": "mcr.microsoft.com/dotnet/sdk:8.0",
+  "build_steps": [
+    {
+      "step": 1,
+      "description": "Start from .NET SDK 8.0 base image",
+      "command": "FROM mcr.microsoft.com/dotnet/sdk:8.0"
+    },
+    {
+      "step": 2,
+      "description": "Install system packages and ensure .NET SDK 8.0 is available",
+      "command": "RUN apt-get update && apt-get install -y wget apt-transport-https && install Microsoft repo && apt-get install -y dotnet-sdk-8.0"
+    },
+    {
+      "step": 3,
+      "description": "Set .NET telemetry opt-out environment variable",
+      "command": "ENV DOTNET_CLI_TELEMETRY_OPTOUT=1"
+    },
+    {
+      "step": 4,
+      "description": "Create benchmark directory and copy setup scripts",
+      "command": "RUN mkdir -p /opt/benchmark && COPY setup_runtime.sh repo_setup.sh /opt/benchmark/"
+    },
+    {
+      "step": 5,
+      "description": "Execute repo_setup.sh to materialize /workspace from git repository",
+      "command": "RUN /opt/benchmark/repo_setup.sh"
+    },
+    {
+      "step": 6,
+      "description": "Execute setup_runtime.sh to restore NuGet packages",
+      "command": "RUN /opt/benchmark/setup_runtime.sh"
+    },
+    {
+      "step": 7,
+      "description": "Set working directory to /workspace",
+      "command": "WORKDIR /workspace"
+    }
+  ],
+  "runtime_mounts": {
+    "eval_sh": {
+      "source": "/artifacts/evaluation/eval.sh",
+      "target": "/opt/benchmark/eval.sh",
+      "note": "Verifier asset mounted at runtime, not baked into image"
+    },
+    "test_assets": {
+      "source": "/artifacts/evaluation/tests/",
+      "target": "/opt/benchmark/tests/",
+      "note": "Test assets mounted at runtime"
+    }
+  },
+  "repo_materialization_mode": "git_clone_via_repo_setup_sh",
+  "ecosystem": "dotnet",
+  "package_manager": "nuget"
+}

@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_full_outer_turn": false,
+  "blocks_reason": null,
+  "repair_cycles_attempted": 0,
+  "workers_used": [
+    "openenv-dockerfile-builder",
+    "openenv-build-validator"
+  ],
+  "iterations": 1,
+  "verifier_asset_mode": "hidden_tests",
+  "build_backend": "buildah",
+  "container_build_status": "success",
+  "notes": "Remediation turn completed successfully. Fixed Dockerfile violations by removing forbidden COPY instructions for eval.sh and tests/ directory. The Dockerfile.final now only copies repo_setup.sh and setup_runtime.sh to /opt/benchmark/. Buildah validation passed and OCI archive re-exported. Per contract, eval.sh and hidden tests are runtime-mounted, not baked into the image."
+}

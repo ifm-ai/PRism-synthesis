@@ -1,0 +1,63 @@
+{
+  "base_image_candidate": "python:3.11-slim",
+  "system_packages": [
+    "git",
+    "curl",
+    "python3.11-venv"
+  ],
+  "base_setup_commands": [
+    "apt-get update -qq && apt-get install -y -qq git curl python3.11-venv"
+  ],
+  "setup_runtime_commands": [
+    "python3 -m venv /opt/benchmark/venv",
+    "source /opt/benchmark/venv/bin/activate",
+    "pip install --upgrade pip 'setuptools<60' wheel",
+    "pip install pytest pytest-cov pytest-mock pytest-timeout pytest-xdist pytest-asyncio",
+    "pip install -e /workspace/tools/azure-devtools",
+    "pip install -e /workspace/tools/azure-sdk-tools",
+    "cd /workspace/sdk/ml/azure-ai-ml && pip install . --no-build-isolation",
+    "pip install 'marshmallow<3.20' 'marshmallow-jsonschema==0.10.0'",
+    "pip install pyyaml python-dotenv mock"
+  ],
+  "activation_commands": [
+    "source /opt/benchmark/venv/bin/activate"
+  ],
+  "activation_command": "source /opt/benchmark/venv/bin/activate",
+  "activation_type": "venv",
+  "activation_validation_command": "bash -c 'source /opt/benchmark/venv/bin/activate && echo ACTIVATION_OK'",
+  "detected_test_command": "cd /workspace/sdk/ml/azure-ai-ml && pytest tests/finetuning_job/unittests/ -v",
+  "runtime_smoke_command": "python -c \"from azure.ai.ml.entities._job.finetuning import AzureOpenAIFineTuningJob, CustomModelFineTuningJob; print('Import successful')\"",
+  "runtime_profile": {
+    "ecosystem": "Python",
+    "package_manager": "pip",
+    "env": "/opt/benchmark/venv",
+    "env_name": "benchmark",
+    "prepare_commands": [
+      "python3 -m venv /opt/benchmark/venv",
+      "pip install --upgrade pip 'setuptools<60' wheel"
+    ],
+    "activation_commands": [
+      "source /opt/benchmark/venv/bin/activate"
+    ],
+    "base_deps_installed": [
+      "pytest",
+      "pytest-cov",
+      "pytest-mock",
+      "pytest-timeout",
+      "pytest-xdist",
+      "pytest-asyncio",
+      "azure-devtools",
+      "azure-sdk-tools",
+      "azure-ai-ml",
+      "marshmallow<3.20",
+      "marshmallow-jsonschema==0.10.0"
+    ],
+    "test_only_install_strategy": "The test dependencies are installed in the base environment. No additional test-only installation is needed.",
+    "cache_dirs": [
+      "/opt/benchmark/venv",
+      "/root/.cache/pip"
+    ],
+    "notes": "The environment uses a Python 3.11 virtual environment at /opt/benchmark/venv. The azure-ai-ml package is installed from local source. Marshmallow version is pinned to <3.20 for compatibility with the project schema definitions."
+  },
+  "notes": "Environment configured for Azure SDK for Python finetuning module tests. The project uses pip as the package manager with a virtual environment. Key dependencies include azure-ai-ml (installed from local source), azure-devtools, and azure-sdk-tools for test utilities. Marshmallow is pinned to <3.20 to maintain compatibility with the project's schema definitions. The test runner (pytest) is verified to be reachable and can discover tests in tests/finetuning_job/unittests/."
+}

@@ -1,0 +1,75 @@
+{
+  "base_image": "ubuntu:22.04",
+  "build_context_files": [
+    "repo_setup.sh",
+    "setup_runtime.sh"
+  ],
+  "system_packages": [
+    "build-essential",
+    "gcc",
+    "g++",
+    "make",
+    "cmake",
+    "bison",
+    "flex",
+    "gawk",
+    "gperf",
+    "libncurses5-dev",
+    "gcc-arm-none-eabi",
+    "git",
+    "curl",
+    "ninja-build"
+  ],
+  "build_steps": [
+    {
+      "step": 1,
+      "description": "Install system packages",
+      "command": "apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq build-essential gcc g++ make cmake bison flex gawk gperf libncurses5-dev gcc-arm-none-eabi git curl ninja-build && apt-get clean && rm -rf /var/lib/apt/lists/*"
+    },
+    {
+      "step": 2,
+      "description": "Create benchmark directory",
+      "command": "mkdir -p /opt/benchmark"
+    },
+    {
+      "step": 3,
+      "description": "Copy and execute repo_setup.sh to materialize /workspace",
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh",
+      "command": "/opt/benchmark/repo_setup.sh"
+    },
+    {
+      "step": 4,
+      "description": "Copy and execute setup_runtime.sh for runtime environment",
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh",
+      "command": "/opt/benchmark/setup_runtime.sh"
+    },
+    {
+      "step": 5,
+      "description": "Set working directory",
+      "command": "WORKDIR /workspace"
+    }
+  ],
+  "runtime_mounts": {
+    "description": "Verifier assets mounted at runtime, not baked into image",
+    "assets": [
+      {
+        "source": "/artifacts/evaluation/eval.sh",
+        "target": "/opt/benchmark/evaluation/eval.sh",
+        "purpose": "Test verifier script"
+      },
+      {
+        "source": "/artifacts/evaluation/tests/",
+        "target": "/opt/benchmark/evaluation/tests/",
+        "purpose": "Hidden test files"
+      }
+    ]
+  },
+  "workdir": "/workspace",
+  "environment": {
+    "WORKSPACE": "/workspace",
+    "DEBIAN_FRONTEND": "noninteractive"
+  },
+  "notes": "This container image contains the NuttX RTOS source code and build environment. The eval.sh verifier and tests are runtime-mounted, not baked into the image. The repo_setup.sh script clones the NuttX repository at a specific commit. The setup_runtime.sh script configures the build environment with nuttx-apps and Python dependencies."
+}

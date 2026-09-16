@@ -1,0 +1,98 @@
+{
+  "base_image": "node:20-bookworm",
+  "build_context_files": [
+    "repo_setup.sh",
+    "setup_runtime.sh"
+  ],
+  "build_steps": [
+    {
+      "step": 1,
+      "instruction": "FROM node:20-bookworm",
+      "description": "Use Node.js 20.x on Debian Bookworm as base image"
+    },
+    {
+      "step": 2,
+      "instruction": "ENV DEBIAN_FRONTEND=noninteractive",
+      "description": "Prevent interactive prompts during apt-get operations"
+    },
+    {
+      "step": 3,
+      "instruction": "RUN apt-get update && apt-get install -y ...",
+      "description": "Install system packages for native module compilation and headless browser testing"
+    },
+    {
+      "step": 4,
+      "instruction": "RUN mkdir -p /opt/benchmark",
+      "description": "Create benchmark directory for build scripts"
+    },
+    {
+      "step": 5,
+      "instruction": "COPY repo_setup.sh /opt/benchmark/repo_setup.sh",
+      "description": "Copy repository setup script from build context"
+    },
+    {
+      "step": 6,
+      "instruction": "RUN /opt/benchmark/repo_setup.sh",
+      "description": "Execute repo_setup.sh to clone Babylon.js repository at specific commit and prepare /workspace"
+    },
+    {
+      "step": 7,
+      "instruction": "COPY setup_runtime.sh /opt/benchmark/setup_runtime.sh",
+      "description": "Copy runtime setup script from build context"
+    },
+    {
+      "step": 8,
+      "instruction": "RUN /opt/benchmark/setup_runtime.sh",
+      "description": "Execute setup_runtime.sh to install Node.js 20.18.0, npm dependencies, and ts-patch"
+    },
+    {
+      "step": 9,
+      "instruction": "WORKDIR /workspace",
+      "description": "Set working directory to /workspace for test execution"
+    }
+  ],
+  "final_workdir": "/workspace",
+  "verifier_assets": {
+    "note": "Verifier assets are NOT baked into the image - they are runtime-mounted",
+    "runtime_mount_path": "/opt/benchmark/",
+    "assets": [
+      {
+        "file": "eval.sh",
+        "purpose": "Test runner script that executes Jest tests"
+      },
+      {
+        "file": "tests/jest.config.external.js",
+        "purpose": "External Jest configuration for running tests"
+      },
+      {
+        "file": "tests/wgsl-shader-fixes.test.ts",
+        "purpose": "Hidden test file for WGSL shader fixes verification"
+      }
+    ]
+  },
+  "system_packages": [
+    "build-essential",
+    "ca-certificates",
+    "curl",
+    "git",
+    "libcairo2-dev",
+    "libjpeg-dev",
+    "libpango1.0-dev",
+    "libgif-dev",
+    "openssl",
+    "pkg-config",
+    "wget",
+    "xvfb"
+  ],
+  "runtime_version": {
+    "node": "20.18.0",
+    "npm": "bundled with Node.js"
+  },
+  "repo_materialization": {
+    "method": "git shallow clone with partial fetch",
+    "repository": "https://github.com/BabylonJS/Babylon.js.git",
+    "commit": "715c6964f32d53e4e285fe37f645766c8ba30807",
+    "target_directory": "/workspace"
+  },
+  "build_backend_target": "Buildah"
+}

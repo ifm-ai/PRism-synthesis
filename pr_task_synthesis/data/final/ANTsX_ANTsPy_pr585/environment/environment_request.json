@@ -1,0 +1,57 @@
+{
+  "base_image_candidate": "python:3.11-slim-bookworm",
+  "system_packages": [
+    "cmake",
+    "libblas-dev",
+    "liblapack-dev",
+    "gfortran",
+    "libpng-dev",
+    "python3-dev",
+    "git",
+    "curl",
+    "python3-pip",
+    "python3.11-venv"
+  ],
+  "base_setup_commands": [
+    "apt-get update -qq",
+    "apt-get install -y -qq cmake libblas-dev liblapack-dev gfortran libpng-dev python3-dev git curl python3-pip python3.11-venv"
+  ],
+  "setup_runtime_commands": [
+    "python3 -m venv /opt/benchmark/venv",
+    "source /opt/benchmark/venv/bin/activate",
+    "pip install --upgrade pip setuptools wheel",
+    "pip install numpy pandas scipy scikit-image scikit-learn statsmodels matplotlib pyyaml webcolors Pillow nibabel",
+    "pip install pytest",
+    "pip install antspyx"
+  ],
+  "activation_commands": [
+    "source /opt/benchmark/venv/bin/activate"
+  ],
+  "activation_command": "source /opt/benchmark/venv/bin/activate",
+  "activation_type": "venv",
+  "activation_validation_command": "bash -c 'source /opt/benchmark/venv/bin/activate && python -c \"import ants; print(ants.__version__)\"'",
+  "detected_test_command": "python -m pytest tests/ -v",
+  "runtime_smoke_command": "python -c \"import ants; print('ANTsPy version:', ants.__version__)\"",
+  "runtime_profile": {
+    "ecosystem": "python",
+    "package_manager": "pip",
+    "env": "/opt/benchmark/venv",
+    "env_name": "benchmark",
+    "prepare_commands": [
+      "python3 -m venv /opt/benchmark/venv",
+      "pip install --upgrade pip setuptools wheel",
+      "pip install numpy pandas scipy scikit-image scikit-learn statsmodels matplotlib pyyaml webcolors Pillow nibabel antspyx pytest"
+    ],
+    "activation_commands": [
+      "source /opt/benchmark/venv/bin/activate"
+    ],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "use_preinstalled_venv",
+    "cache_dirs": [
+      "/opt/benchmark/venv",
+      "/root/.cache/pip"
+    ],
+    "notes": "Pre-built antspyx wheel installed from PyPI to avoid complex C++ build. Tests should be run with the venv activated and from a directory other than /workspace to avoid local source shadowing the installed package."
+  },
+  "notes": "ANTsPy requires ITK and ANTs C++ libraries. Using pre-built antspyx wheel from PyPI (version 0.6.3) to avoid complex compilation during benchmark setup. Git and curl are explicitly included in system packages. The local /workspace source directory shadows the installed ants module, so tests should run with PYTHONPATH adjusted or from outside /workspace."
+}

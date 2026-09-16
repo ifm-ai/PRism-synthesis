@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "High-quality trajectory: solver correctly localized the problem, applied the correct fix pattern, and verified it thoroughly. Both solver tests and oracle verifier passed. The solver's approach was valid and the fix matches the expected patch."
+}

@@ -1,0 +1,14 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "high_value_files": [
+    "Cargo.toml",
+    "rust-toolchain.toml",
+    "CONTRIBUTING.md",
+    "crates/uv-cli/src/lib.rs",
+    "crates/uv/tests/help.rs",
+    ".github/workflows/ci.yml"
+  ],
+  "notes": "Repository is a cross-platform Rust project (uv - Python package installer). The fix.patch modifies crates/uv-cli/src/lib.rs to make the --isolated flag visible in help output. The test.patch updates snapshot tests in crates/uv/tests/help.rs. Platform is Linux-compatible; no Windows-only or macOS-only restrictions detected."
+}

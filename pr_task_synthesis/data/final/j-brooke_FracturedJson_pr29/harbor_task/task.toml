@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "j-brooke_FracturedJson_pr29"
+description = "OpenEnv: j-brooke/FracturedJson PR #29"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/j-brooke/FracturedJson.git"
+git_pr_id = "29"
+git_base_commit = "6f5f9fee985b4398e46ec506a40f2545e799ff62"
+task_id = "j-brooke_FracturedJson_pr29"
+repo_full_name = "j-brooke/FracturedJson"
+domain = "TEXT_REGEX_EDITING"
+primary_language = "C#"
+runtime_family = "dotnet"
+complexity = "hard"
+star_category = "stars_6_50"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

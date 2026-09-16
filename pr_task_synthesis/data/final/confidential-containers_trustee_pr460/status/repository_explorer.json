@@ -1,0 +1,18 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "build_system": "cargo",
+  "test_framework": "rstest",
+  "primary_language": "rust",
+  "repo_url": "https://github.com/confidential-containers/trustee",
+  "base_commit": "79722e7525dfd2fe7700d29d8bcdddb9437cfa70",
+  "high_value_files": [
+    "deps/verifier/src/se/ibmse.rs",
+    "deps/verifier/src/se/mod.rs",
+    "deps/verifier/src/se/README.md",
+    "deps/verifier/Cargo.toml",
+    "kbs/config/kubernetes/overlays/s390x/patch.yaml"
+  ],
+  "notes": "Repository exploration complete. The fix targets IBM SE verifier certificate verification behavior. Platform is Linux-compatible (cross-platform Rust project). No blocking issues for environment synthesis."
+}

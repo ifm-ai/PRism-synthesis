@@ -1,0 +1,99 @@
+{
+  "base_image": "debian:bookworm-slim",
+  "platform": "linux/amd64",
+  "runtime": {
+    "ecosystem": "go",
+    "version": "1.22.0",
+    "installation_source": "https://dl.google.com/go/go1.22.0.linux-amd64.tar.gz"
+  },
+  "system_packages": [
+    "git",
+    "curl",
+    "build-essential",
+    "pkg-config",
+    "ca-certificates"
+  ],
+  "environment_variables": {
+    "PATH": "/usr/local/go/bin:/root/go/bin:$PATH",
+    "GOPATH": "/root/go",
+    "GOROOT": "/usr/local/go",
+    "GOOS": "linux",
+    "GOARCH": "amd64",
+    "DEBIAN_FRONTEND": "noninteractive"
+  },
+  "build_context_scripts": [
+    {
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh",
+      "executed_during_build": true
+    },
+    {
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh",
+      "executed_during_build": true
+    }
+  ],
+  "build_steps": [
+    {
+      "step": 1,
+      "action": "base_image",
+      "description": "Start from debian:bookworm-slim"
+    },
+    {
+      "step": 2,
+      "action": "system_packages",
+      "description": "Install git, curl, build-essential, pkg-config, ca-certificates"
+    },
+    {
+      "step": 3,
+      "action": "go_installation",
+      "description": "Install Go 1.22.0 from official tarball"
+    },
+    {
+      "step": 4,
+      "action": "copy_scripts",
+      "description": "Copy setup_runtime.sh and repo_setup.sh to /opt/benchmark/"
+    },
+    {
+      "step": 5,
+      "action": "repo_materialization",
+      "description": "Execute repo_setup.sh to clone cilium/cilium to /workspace"
+    },
+    {
+      "step": 6,
+      "action": "runtime_setup",
+      "description": "Execute setup_runtime.sh to install Go module dependencies"
+    }
+  ],
+  "workdir": "/workspace",
+  "repo_materialization": {
+    "method": "git_partial_clone",
+    "repository": "https://github.com/cilium/cilium.git",
+    "commit": "7e9de944a06eca20a88abd8d072d751dd3b56447",
+    "script": "/opt/benchmark/repo_setup.sh"
+  },
+  "excluded_from_image": [
+    "/artifacts/evaluation/eval.sh",
+    "/artifacts/evaluation/tests/",
+    "/artifacts/evaluation/test.patch"
+  ],
+  "runtime_mounts_required": [
+    {
+      "source": "/artifacts/evaluation/eval.sh",
+      "purpose": "Verifier script (runtime-mounted, not baked)"
+    },
+    {
+      "source": "/artifacts/evaluation/tests/",
+      "purpose": "Hidden test files (runtime-mounted, not baked)"
+    }
+  ],
+  "fix_location": {
+    "file": "pkg/clustermesh/common/remote_cluster.go",
+    "line": 270,
+    "description": "Channel buffer fix to prevent deadlock"
+  },
+  "test_command": "go test -v -timeout 60s -run \"TestChannelBufferFixAtLine270|TestGetClusterConfigNoDeadlock\" ./pkg/clustermesh/common/",
+  "build_backend": "buildah",
+  "export_format": "oci",
+  "export_path": "/artifacts/environment/openenv_validation_oci.tar"
+}

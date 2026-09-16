@@ -1,0 +1,18 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.10.20, pytest-7.4.3, pluggy-1.6.0 -- /workspace/python/.venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /tests/tests
+plugins: asyncio-0.23.2, anyio-4.14.0
+asyncio: mode=strict
+collecting ... collected 5 items
+
+../../tests/tests/test_logprobs_attribute_safety.py::TestLogprobsAttributeSafety::test_get_metadata_with_logprobs_present PASSED [ 20%]
+../../tests/tests/test_logprobs_attribute_safety.py::TestLogprobsAttributeSafety::test_get_metadata_without_logprobs_attribute PASSED [ 40%]
+../../tests/tests/test_logprobs_attribute_safety.py::TestLogprobsAttributeSafety::test_get_metadata_with_logprobs_none PASSED [ 60%]
+../../tests/tests/test_logprobs_attribute_safety.py::TestLogprobsAttributeSafety::test_get_metadata_chunk_choice_with_logprobs PASSED [ 80%]
+../../tests/tests/test_logprobs_attribute_safety.py::TestLogprobsAttributeSafety::test_get_metadata_chunk_choice_without_logprobs PASSED [100%]
+
+============================== 5 passed in 0.67s ===============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

@@ -1,0 +1,31 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "infrastructure_reason": null,
+  "verification_command": "go test -tags containerd -v ./comp/core/workloadmeta/collectors/internal/containerd/... -run \"TestKnownImagesGetPreferredNameExists|TestKnownImagesAddReferenceConsolidation|TestKnownImagesDeleteReference|TestIsAnImageID|TestIsARepoDigest|TestImageMetadataConsolidationLogic|TestNameUpdateWhenMoreReadable|TestKnownImagesReferenceReplacement|TestGetPreferredNameWithRepoDigestPriority\"",
+  "activation_source": "export PATH=/usr/local/go/bin:$PATH && export GOPATH=/root/go",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "hidden_tests",
+  "copied_test_patch": false,
+  "supplemental_tests_created": true,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests the image metadata consolidation behavior introduced in fix.patch: mergedImages map consolidates references by entity ID, getPreferredName method selects user-friendly names (repo digest > repo tag > image ID), reference tracking correctly categorizes repo tags vs repo digests, and name update logic only updates when the new name is more readable (doesn't contain raw sha256).",
+  "fix_patch_grounding": "The tests verify the getPreferredName method and knownImages data structure changes from fix.patch that consolidate multiple containerd image references into a single metadata event per unique image entity ID, preventing duplicate events.",
+  "issue_context_used": "The issue describes consolidating containerd image references to avoid duplicate metadata events and selecting user-friendly names, which directly informed the test design for getPreferredName priority and reference consolidation.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": [
+    "go test -tags containerd -v ./comp/core/workloadmeta/collectors/internal/containerd/... -run TestKnownImagesGetPreferredNameExists",
+    "go test -tags containerd -v ./comp/core/workloadmeta/collectors/internal/containerd/... -run TestKnownImagesAddReferenceConsolidation",
+    "go test -tags containerd -v ./comp/core/workloadmeta/collectors/internal/containerd/... -run TestGetPreferredNameWithRepoDigestPriority"
+  ],
+  "required_verifier_files": [
+    "eval.sh",
+    "tests/containerd_image_consolidation_test.go"
+  ],
+  "notes": "Hidden tests verify the fix by testing the getPreferredName method and knownImages data structure that were introduced/modified in fix.patch. Tests fail to compile on the buggy version because getPreferredName doesn't exist, and pass on the fixed version. The tests cover: (1) getPreferredName existence and basic functionality, (2) reference consolidation in knownImages, (3) reference deletion, (4) helper functions isAnImageID and isARepoDigest, (5) metadata consolidation logic, (6) name update when more readable logic, (7) reference replacement, and (8) repo digest priority in getPreferredName."
+}

@@ -1,0 +1,16 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.1, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /artifacts/evaluation/tests
+plugins: anyio-4.14.0
+collecting ... collected 7 items
+
+../artifacts/evaluation/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_optimize_model_false_is_retained PASSED [ 14%]
+../artifacts/evaluation/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_use_cache_false_is_retained PASSED [ 28%]
+../artifacts/evaluation/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_both_flags_false_are_retained PASSED [ 42%]
+../artifacts/evaluation/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_default_values_when_not_provided PASSED [ 57%]
+../artifacts/evaluation/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_RuntimeBehavior::test_mixed_flag_values PASSED [ 71%]
+../artifacts/evaluation/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_BehavioralSimulation::test_fixed_pattern_retains_flags PASSED [ 85%]
+../artifacts/evaluation/tests/test_bigdl_llm_kwargs.py::TestBigDLLM_BehavioralSimulation::test_buggy_pattern_loses_flags PASSED [100%]
+
+============================== 7 passed in 0.01s ===============================

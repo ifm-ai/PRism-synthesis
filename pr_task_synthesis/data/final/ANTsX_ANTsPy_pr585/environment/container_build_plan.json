@@ -1,0 +1,99 @@
+{
+  "build_plan_version": "1.0",
+  "project": "ANTsPy",
+  "description": "Docker container build plan for ANTsPy benchmark environment with pre-built antspyx wheel",
+  "base_image": "python:3.11-slim-bookworm",
+  "build_steps": [
+    {
+      "step": 1,
+      "instruction": "FROM",
+      "description": "Use Python 3.11 slim bookworm as base image",
+      "layer_size_estimate_mb": 120
+    },
+    {
+      "step": 2,
+      "instruction": "ENV",
+      "description": "Set environment variables for non-interactive installation",
+      "layer_size_estimate_mb": 0
+    },
+    {
+      "step": 3,
+      "instruction": "RUN apt-get install",
+      "description": "Install system dependencies: cmake, libblas-dev, liblapack-dev, gfortran, libpng-dev, python3-dev, git, curl, python3-pip, python3.11-venv",
+      "layer_size_estimate_mb": 350
+    },
+    {
+      "step": 4,
+      "instruction": "RUN mkdir",
+      "description": "Create directories for benchmark artifacts",
+      "layer_size_estimate_mb": 0
+    },
+    {
+      "step": 5,
+      "instruction": "COPY",
+      "description": "Copy setup_runtime.sh and repo_setup.sh to /opt/benchmark/",
+      "layer_size_estimate_mb": 1
+    },
+    {
+      "step": 6,
+      "instruction": "RUN repo_setup.sh",
+      "description": "Materialize /workspace by cloning ANTsPy repository at specified commit",
+      "layer_size_estimate_mb": 150
+    },
+    {
+      "step": 7,
+      "instruction": "RUN setup_runtime.sh",
+      "description": "Create Python venv and install antspyx with dependencies",
+      "layer_size_estimate_mb": 800
+    },
+    {
+      "step": 8,
+      "instruction": "WORKDIR",
+      "description": "Set working directory to /workspace",
+      "layer_size_estimate_mb": 0
+    }
+  ],
+  "expected_total_size_mb": 1421,
+  "key_layers": [
+    "Base Python 3.11 image (~120MB)",
+    "System dependencies (~350MB)",
+    "ANTsPy repository checkout (~150MB)",
+    "Python venv with antspyx and scientific packages (~800MB)"
+  ],
+  "copied_artifacts": [
+    {
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh",
+      "purpose": "Runtime setup script for Python environment"
+    },
+    {
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh",
+      "purpose": "Repository materialization script"
+    }
+  ],
+  "excluded_artifacts": [
+    {
+      "path": "/artifacts/evaluation/eval.sh",
+      "reason": "Runtime-mounted verifier asset, not baked into image"
+    },
+    {
+      "path": "/artifacts/evaluation/test.patch",
+      "reason": "Runtime-mounted verifier asset, not baked into image"
+    },
+    {
+      "path": "/artifacts/evaluation/tests/",
+      "reason": "Runtime-mounted verifier asset, not baked into image"
+    }
+  ],
+  "runtime_configuration": {
+    "working_directory": "/workspace",
+    "virtual_environment": "/opt/benchmark/venv",
+    "activation_command": "source /opt/benchmark/venv/bin/activate",
+    "python_version": "3.11",
+    "antspyx_version": "0.6.3"
+  },
+  "build_backend": "buildah",
+  "validation_target": "OCI archive export",
+  "apptainer_usage": "runtime-only after image build"
+}

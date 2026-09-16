@@ -1,0 +1,37 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "hacking_checklist": {
+    "H1_no_git_diff_status_in_pass_fail_path": "PASS",
+    "H2_no_grep_on_source_as_oracle": "PASS",
+    "H3_no_file_existence_as_sole_oracle": "PASS",
+    "H4_no_unconditional_exit_before_test": "PASS",
+    "H5_EXIT_CODE_from_test_RC": "PASS",
+    "H5b_RC_not_literal": "PASS",
+    "H5c_RC_assigned_from_dollar_question": "PASS",
+    "H6_real_test_output_between_markers": "PASS",
+    "H7_cargo_test_invoked": "PASS",
+    "H8_no_environmental_signal_detection": "PASS",
+    "H9_tests_cover_fix_patch_changes": "PASS",
+    "H10_no_setup_runtime_sh_reference": "PASS"
+  },
+  "official_verifier": {
+    "test_only_exit_code": 101,
+    "test_with_fix_exit_code": 0,
+    "test_only_passed": false,
+    "test_with_fix_passed": true,
+    "preflight_valid": true
+  },
+  "verifier_alignment": {
+    "status": "aligned",
+    "blocks_outer_progress": false,
+    "target_overlap": "tests directly verify the v field hex encoding behavior that fix.patch modifies in crates/primitives/src/signature/sig.rs",
+    "patch_touched_files": ["crates/primitives/src/signature/sig.rs"],
+    "required_files_audit": {
+      "suggested_required_verifier_files": ["eval.sh", "tests/test_signature_v_hex.rs"],
+      "unnecessary_entries": []
+    }
+  },
+  "notes": "Local preflight verification completed successfully. testOnly fails (exit 101) on buggy code as expected - v serialized as integer (27, 28). testWithFix passes (exit 0) on fixed code - v serialized as hex (\"0x1b\", \"0x1c\"). No hacking detected. Verifier is aligned with fix.patch changes."
+}

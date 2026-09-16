@@ -1,0 +1,62 @@
+{
+  "base_image": "python:3.11-slim",
+  "system_packages": [
+    "cmake",
+    "libssl-dev",
+    "pkg-config",
+    "python3.11-venv",
+    "patch",
+    "python3-dev",
+    "git",
+    "curl"
+  ],
+  "build_steps": [
+    {
+      "step": 1,
+      "description": "Install system packages required for building native extensions",
+      "command": "apt-get update -qq && apt-get install -y -qq cmake libssl-dev pkg-config python3.11-venv patch python3-dev git curl"
+    },
+    {
+      "step": 2,
+      "description": "Create /opt/benchmark directory for benchmark artifacts",
+      "command": "mkdir -p /opt/benchmark && chmod 755 /opt/benchmark"
+    },
+    {
+      "step": 3,
+      "description": "Copy setup_runtime.sh and repo_setup.sh from build context",
+      "command": "COPY setup_runtime.sh /opt/benchmark/setup_runtime.sh && COPY repo_setup.sh /opt/benchmark/repo_setup.sh"
+    },
+    {
+      "step": 4,
+      "description": "Run repo_setup.sh to materialize /workspace from git repository",
+      "command": "/opt/benchmark/repo_setup.sh"
+    },
+    {
+      "step": 5,
+      "description": "Run setup_runtime.sh to create Python venv and install dependencies",
+      "command": "/opt/benchmark/setup_runtime.sh"
+    },
+    {
+      "step": 6,
+      "description": "Set WORKDIR to /workspace",
+      "command": "WORKDIR /workspace"
+    }
+  ],
+  "final_workdir": "/workspace",
+  "copied_artifacts": [
+    {
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh"
+    },
+    {
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh"
+    }
+  ],
+  "runtime_setup": {
+    "venv_path": "/opt/benchmark/venv",
+    "activation_command": "source /opt/benchmark/venv/bin/activate",
+    "test_command": "python -m pytest tests/test_basic_anndata_io.py::test_null_obs -v"
+  },
+  "notes": "Dockerfile.final is the single authoritative packaging spec. The image installs system packages, materializes /workspace via repo_setup.sh, and sets up Python venv via setup_runtime.sh. Verifier assets (eval.sh, test.patch) are runtime-mounted at /opt/benchmark/, not baked into the image. The RL agent runs: cd /workspace && source /opt/benchmark/venv/bin/activate && /opt/benchmark/eval.sh"
+}

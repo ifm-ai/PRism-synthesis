@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "intel-analytics_BigDL_pr9995"
+description = "OpenEnv: intel-analytics/BigDL PR #9995"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/intel-analytics/BigDL.git"
+git_pr_id = "9995"
+git_base_commit = "00c57c8bd8f6b9bb191c5a3400d4521659ca14e4"
+task_id = "intel-analytics_BigDL_pr9995"
+repo_full_name = "intel-analytics/BigDL"
+domain = "ML_DEEP_LEARNING"
+primary_language = "Scala"
+runtime_family = "Python"
+complexity = "easy"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

@@ -1,0 +1,55 @@
+{
+  "base_image_candidate": "python:3.11-slim-bookworm",
+  "system_packages": [
+    "git",
+    "curl",
+    "python3.11-venv",
+    "python3-pip"
+  ],
+  "base_setup_commands": [
+    "apt-get update",
+    "apt-get install -y git curl python3.11-venv python3-pip"
+  ],
+  "setup_runtime_commands": [
+    "python3 -m venv /opt/benchmark/venv",
+    "source /opt/benchmark/venv/bin/activate",
+    "pip install --upgrade pip --retries 5 --timeout 60",
+    "pip install requests --retries 5 --timeout 60",
+    "pip install torch --index-url https://download.pytorch.org/whl/cpu --retries 10 --timeout 120",
+    "pip install py-cpuinfo protobuf numpy --retries 5 --timeout 60",
+    "pip install transformers==4.31.0 sentencepiece tokenizers==0.13.3 accelerate==0.21.0 --retries 5 --timeout 60",
+    "pip install tabulate lm_eval --retries 5 --timeout 60",
+    "echo '/workspace/python/llm/src' > /opt/benchmark/venv/lib/python3.11/site-packages/bigdl-llm.pth",
+    "pip install pytest --retries 5 --timeout 60"
+  ],
+  "activation_commands": [
+    "source /opt/benchmark/venv/bin/activate"
+  ],
+  "activation_command": "source /opt/benchmark/venv/bin/activate",
+  "activation_type": "venv",
+  "activation_validation_command": "bash -c 'source /opt/benchmark/venv/bin/activate && echo ACTIVATION_OK'",
+  "detected_test_command": "cd /workspace/python/llm && python -m pytest test/inference/test_optimize_model.py -v",
+  "runtime_smoke_command": "python -c \"import sys; sys.path.insert(0, '/workspace/python/llm/src'); import bigdl.llm; print('BigDL-LLM import successful')\"",
+  "runtime_profile": {
+    "ecosystem": "python",
+    "package_manager": "pip",
+    "env": "venv",
+    "env_name": "benchmark",
+    "env_path": "/opt/benchmark/venv",
+    "prepare_commands": [
+      "pip install torch --index-url https://download.pytorch.org/whl/cpu",
+      "pip install transformers==4.31.0 sentencepiece tokenizers==0.13.3 accelerate==0.21.0 lm_eval pytest"
+    ],
+    "activation_commands": [
+      "source /opt/benchmark/venv/bin/activate"
+    ],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "No additional test-only dependencies needed; pytest is installed in base environment",
+    "cache_dirs": [
+      "/root/.cache/pip",
+      "/root/.cache/huggingface"
+    ],
+    "notes": "CPU-only torch variant used to reduce download size from >2.5GB to ~200MB. This is essential for network-constrained environments with 500-900 kB/s bandwidth. BigDL-LLM package accessible via .pth file. Native binary dependencies not included due to network restrictions, but Python modules are importable for testing the kwargs handling logic fix."
+  },
+  "notes": "NETWORK-OPTIMIZED BUILD: Git and curl provided by base python:3.11-slim-bookworm image. STRATEGY: CPU-only torch from https://download.pytorch.org/whl/cpu reduces download from >2.5GB CUDA variant to ~200MB - critical for 500-900 kB/s bandwidth. The test (test_optimize_model.py) tests that optimize_model and use_cache flags are correctly retrieved from bigdl_llm_kwargs - this kwargs handling logic can be verified without requiring actual GPU inference. BigDL-LLM package installed via .pth file since native binaries require sourceforge downloads."
+}

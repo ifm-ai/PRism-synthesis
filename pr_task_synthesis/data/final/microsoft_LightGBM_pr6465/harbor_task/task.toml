@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "microsoft_LightGBM_pr6465"
+description = "OpenEnv: microsoft/LightGBM PR #6465"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/microsoft/LightGBM.git"
+git_pr_id = "6465"
+git_base_commit = "4b5d549d0d2c61c99059ee4df86308a3619908dc"
+task_id = "microsoft_LightGBM_pr6465"
+repo_full_name = "microsoft/LightGBM"
+domain = "DEVOPS_NETWORK_SERVICES"
+primary_language = "C++"
+runtime_family = "python"
+complexity = "hard"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

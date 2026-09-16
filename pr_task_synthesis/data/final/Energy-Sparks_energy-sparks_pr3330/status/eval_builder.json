@@ -1,0 +1,28 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "verification_command": "bundle exec rspec spec/controllers/schools/usage_controller_spec.rb",
+  "activation_source": "export BUNDLE_PATH=/opt/benchmark/vendor/bundle && export BUNDLE_APP_CONFIG=/opt/benchmark/.bundle && export PATH=$PATH:/opt/benchmark/vendor/bundle/ruby/3.1.0/bin",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "test.patch",
+  "copied_test_patch": true,
+  "supplemental_tests_created": false,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that the Schools::UsageController#show action validates supply and period parameters, returning success for valid values (electricity/daily) and redirect for invalid values.",
+  "fix_patch_grounding": "The fix.patch shows validate_supply and validate_period methods that return nil for invalid values instead of raising exceptions, and the controller checks for nil before proceeding.",
+  "issue_context_used": "The issue.md describes the need for robust validation of supply and period parameters to prevent security warnings and runtime errors.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": [
+    "bundle exec rspec spec/controllers/schools/usage_controller_spec.rb"
+  ],
+  "required_verifier_files": [
+    "eval.sh",
+    "test.patch"
+  ],
+  "notes": "Eval script uses test.patch to inject the test file and factory trait. The test verifies both valid parameter handling (returns success) and invalid parameter handling (returns redirect instead of raising exception)."
+}

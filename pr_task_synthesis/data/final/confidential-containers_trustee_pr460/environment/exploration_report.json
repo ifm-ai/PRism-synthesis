@@ -1,0 +1,68 @@
+{
+  "pr_summary": "Implement runtime-configurable certificate verification skipping for IBM Secure Execution verifier via SE_SKIP_CERTS_VERIFICATION environment variable. The fix removes the debug-only restriction, allowing the environment variable to work in both debug and release builds.",
+  "runtime_family": "rust",
+  "package_manager": "cargo",
+  "touched_files": [
+    "deps/verifier/src/se/ibmse.rs"
+  ],
+  "important_build_files": [
+    "Cargo.toml",
+    "Cargo.lock",
+    "deps/verifier/Cargo.toml",
+    "kbs/Cargo.toml",
+    "kbs/Makefile"
+  ],
+  "important_test_files": [
+    "deps/verifier/src/snp/mod.rs",
+    "kbs/test/"
+  ],
+  "candidate_build_commands": [
+    "cargo build -p verifier --features se-verifier",
+    "cargo build -p kbs --no-default-features --features coco-as-builtin,openssl,resource,opa",
+    "make -C kbs"
+  ],
+  "candidate_test_commands": [
+    "cargo test -p verifier --features se-verifier",
+    "cargo test -p kbs -p kbs-client",
+    "make -C kbs check"
+  ],
+  "candidate_smoke_commands": [
+    "cargo check -p verifier --features se-verifier",
+    "cargo check -p kbs"
+  ],
+  "candidate_activation_checks": [
+    "rustc --version",
+    "cargo --version",
+    "which cargo"
+  ],
+  "environment_management": "cargo (Rust package manager)",
+  "special_system_dependencies": [
+    "protobuf-compiler",
+    "libprotobuf-dev",
+    "libtss2-dev",
+    "openssl development libraries",
+    "s390x architecture for IBM SE testing"
+  ],
+  "high_value_files": [
+    "deps/verifier/src/se/ibmse.rs",
+    "deps/verifier/src/se/mod.rs",
+    "deps/verifier/src/se/README.md",
+    "deps/verifier/Cargo.toml",
+    "kbs/config/kubernetes/overlays/s390x/patch.yaml"
+  ],
+  "patch_file_cues": [
+    "deps/verifier/src/se/ibmse.rs - removes #[cfg(debug_assertions)] conditional, makes SE_SKIP_CERTS_VERIFICATION work in release builds"
+  ],
+  "test_file_cues": [
+    "deps/verifier/src/snp/mod.rs - example of TEE verifier tests with rstest",
+    "kbs/test/ - KBS integration tests"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "CI workflows use ubuntu-22.04",
+    "Docker-based deployment",
+    "Cross-platform Rust/Cargo build system",
+    "IBM SE verifier targets s390x Linux architecture but code compiles on x86_64"
+  ],
+  "notes": "The repository is the confidential-containers/trustee project at commit 79722e7. The fix modifies the IBM SE verifier to allow runtime certificate verification skipping via SE_SKIP_CERTS_VERIFICATION environment variable in both debug and release builds. The previous implementation only allowed this in debug builds via #[cfg(debug_assertions)]. The project uses Rust with Cargo as the build system. Tests use rstest framework. The IBM SE verifier is specifically for s390x (IBM Z) architecture but the code can be compiled on x86_64 for development. No test.patch is provided, so hidden tests will need to be synthesized. Key environment variables: SE_SKIP_CERTS_VERIFICATION, SE_CERTIFICATES_ROOT, SE_CERTIFICATE_REVOCATION_LISTS_ROOT, SE_HOST_KEY_DOCUMENTS_ROOT, SE_IMAGE_HEADER_FILE, SE_MEASUREMENT_ENCR_KEY_PRIVATE, SE_MEASUREMENT_ENCR_KEY_PUBLIC."
+}

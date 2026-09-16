@@ -1,0 +1,67 @@
+{
+  "base_image_candidate": "ruby:3.1-bookworm",
+  "system_packages": [
+    "git",
+    "curl",
+    "postgresql-client",
+    "libpq-dev",
+    "nodejs",
+    "npm",
+    "build-essential",
+    "libssl-dev",
+    "zlib1g-dev",
+    "libreadline-dev",
+    "libsqlite3-dev",
+    "libxml2-dev",
+    "libxslt1-dev",
+    "ruby-dev"
+  ],
+  "base_setup_commands": [
+    "apt-get update -qq && apt-get install -y -qq git curl postgresql-client libpq-dev nodejs npm build-essential libssl-dev zlib1g-dev libreadline-dev libsqlite3-dev libxml2-dev libxslt1-dev ruby-dev"
+  ],
+  "setup_runtime_commands": [
+    "mkdir -p /opt/benchmark/vendor/bundle /opt/benchmark/.bundle",
+    "bundle config set path /opt/benchmark/vendor/bundle",
+    "bundle config set with 'development test'",
+    "cd /workspace && if ! grep -q \"^gem 'prime'\" Gemfile; then echo \"gem 'prime'\" >> Gemfile; fi",
+    "bundle install --jobs=4 --retry=3"
+  ],
+  "activation_commands": [
+    "export BUNDLE_PATH=/opt/benchmark/vendor/bundle",
+    "export BUNDLE_APP_CONFIG=/opt/benchmark/.bundle",
+    "export PATH=$PATH:/opt/benchmark/vendor/bundle/ruby/3.1.0/bin"
+  ],
+  "activation_command": "export BUNDLE_PATH=/opt/benchmark/vendor/bundle && export BUNDLE_APP_CONFIG=/opt/benchmark/.bundle && export PATH=$PATH:/opt/benchmark/vendor/bundle/ruby/3.1.0/bin",
+  "activation_type": "system",
+  "activation_validation_command": "bundle check || bundle install",
+  "detected_test_command": "bundle exec rspec spec/controllers/schools/usage_controller_spec.rb",
+  "runtime_smoke_command": "bundle check && ruby -v && bundle exec rails runner 'puts Rails.version'",
+  "runtime_profile": {
+    "ecosystem": "ruby",
+    "package_manager": "bundler",
+    "env": {
+      "BUNDLE_PATH": "/opt/benchmark/vendor/bundle",
+      "BUNDLE_APP_CONFIG": "/opt/benchmark/.bundle",
+      "RUBY_VERSION": "3.1"
+    },
+    "env_name": "system",
+    "prepare_commands": [
+      "bundle config set path /opt/benchmark/vendor/bundle",
+      "bundle config set with 'development test'",
+      "bundle install --jobs=4 --retry=3"
+    ],
+    "activation_commands": [
+      "export BUNDLE_PATH=/opt/benchmark/vendor/bundle",
+      "export BUNDLE_APP_CONFIG=/opt/benchmark/.bundle",
+      "export PATH=$PATH:/opt/benchmark/vendor/bundle/ruby/3.1.0/bin"
+    ],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "bundle install --without development",
+    "cache_dirs": [
+      "/opt/benchmark/vendor/bundle",
+      "/opt/benchmark/.bundle"
+    ],
+    "notes": "Ruby 3.1 with bundler for dependency management. Node.js 14+ available via system package. PostgreSQL client libraries installed for database connectivity. Bundler (2.3.7) is pre-installed in ruby:3.1-bookworm base image. The prime gem is explicitly added to the Gemfile during setup_runtime.sh to satisfy the distribution gem requirement (statsample dependency) for Ruby 3.x, as prime was extracted from the standard library in Ruby 3.1 and must be declared as an explicit dependency."
+  },
+  "notes": "Ruby on Rails 6.1 application using bundler for Ruby dependencies and yarn for JavaScript. PostgreSQL 10+ required for database. Test framework is RSpec with FactoryBot. The environment uses system-level Ruby 3.1 with bundler installing to /opt/benchmark/vendor/bundle. Git dependencies (energy-sparks_analytics, statsample, roo) require network access during bundle install. Bundler (2.3.7) is pre-installed in ruby:3.1-bookworm base image. The prime gem is explicitly added to the Gemfile during setup_runtime.sh (if not already present) to satisfy the distribution gem requirement (statsample dependency) for Ruby 3.x, as prime was extracted from the standard library in Ruby 3.1 and must be declared as an explicit dependency."
+}

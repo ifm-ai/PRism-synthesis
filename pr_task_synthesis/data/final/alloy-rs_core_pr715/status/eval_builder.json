@@ -1,0 +1,29 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "infrastructure_reason": null,
+  "verification_command": "cargo test --package alloy-primitives --features serde -- test_v --nocapture",
+  "activation_source": "export RUSTUP_HOME=/root/.rustup && export CARGO_HOME=/root/.cargo && source /root/.cargo/env",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "hidden_integration_tests",
+  "copied_test_patch": false,
+  "supplemental_tests_created": true,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that the v component in Ethereum signature JSON is hex-encoded (e.g., \"0x1b\") rather than a plain integer (e.g., 27), verifying both serialization and roundtrip deserialization for NonEip155 signatures.",
+  "fix_patch_grounding": "The fix wraps v values in crate::U64::from() for NonEip155 serialization (line 421) and tuple serialization (line 432), and changes deserialization to use crate::U64 instead of u64 (line 560), ensuring hex encoding in JSON output.",
+  "issue_context_used": "The issue describes that v was emitted as plain integer (27) instead of hex (\"0x1b\"), breaking compatibility with tools expecting quantity format; the verifier tests this exact behavior.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": [
+    "cargo test --package alloy-primitives --features serde -- test_v --nocapture"
+  ],
+  "required_verifier_files": [
+    "eval.sh",
+    "tests/test_signature_v_hex.rs"
+  ],
+  "notes": "Hidden integration tests created under /artifacts/evaluation/tests/. The eval.sh script copies tests to the crate's tests/ directory at runtime (required for Rust integration tests) and runs cargo test with the serde feature. Tests verify hex encoding of v field in NonEip155 signatures (v=27 -> \"0x1b\", v=28 -> \"0x1c\") and JSON roundtrip preservation."
+}

@@ -1,0 +1,64 @@
+{
+  "base_image_candidate": "golang:1.21",
+  "system_packages": [
+    "git",
+    "curl",
+    "cmake",
+    "g++",
+    "python3",
+    "python3-dev",
+    "libseccomp-dev",
+    "python3.11-venv"
+  ],
+  "base_setup_commands": [
+    "apt-get update -qq",
+    "apt-get install -y -qq git curl cmake g++ python3 python3-dev libseccomp-dev python3.11-venv",
+    "curl -fsSL https://dl.google.com/go/go1.21.7.linux-amd64.tar.gz -o /tmp/go1.21.7.linux-amd64.tar.gz",
+    "tar -C /usr/local -xzf /tmp/go1.21.7.linux-amd64.tar.gz",
+    "rm -f /tmp/go1.21.7.linux-amd64.tar.gz"
+  ],
+  "setup_runtime_commands": [
+    "export PATH=/usr/local/go/bin:$PATH",
+    "export GOPATH=/root/go",
+    "python3 -m venv /opt/benchmark/venv",
+    "source /opt/benchmark/venv/bin/activate && pip install --upgrade pip && pip install invoke",
+    "cd /workspace && go mod download"
+  ],
+  "activation_commands": [
+    "export PATH=/usr/local/go/bin:$PATH",
+    "export GOPATH=/root/go"
+  ],
+  "activation_command": "export PATH=/usr/local/go/bin:$PATH && export GOPATH=/root/go",
+  "activation_type": "go",
+  "activation_validation_command": "bash -c 'export PATH=/usr/local/go/bin:$PATH && export GOPATH=/root/go && go version && echo ACTIVATION_OK'",
+  "detected_test_command": "go test -tags containerd ./comp/core/workloadmeta/collectors/internal/containerd/...",
+  "runtime_smoke_command": "go build -tags containerd ./comp/core/workloadmeta/collectors/internal/containerd/...",
+  "runtime_profile": {
+    "ecosystem": "Go",
+    "package_manager": "go modules",
+    "env": {
+      "PATH": "/usr/local/go/bin:$PATH",
+      "GOPATH": "/root/go",
+      "GOROOT": "/usr/local/go"
+    },
+    "env_name": "go-1.21.7",
+    "prepare_commands": [
+      "curl -fsSL https://dl.google.com/go/go1.21.7.linux-amd64.tar.gz -o /tmp/go1.21.7.linux-amd64.tar.gz",
+      "tar -C /usr/local -xzf /tmp/go1.21.7.linux-amd64.tar.gz",
+      "python3 -m venv /opt/benchmark/venv",
+      "source /opt/benchmark/venv/bin/activate && pip install invoke"
+    ],
+    "activation_commands": [
+      "export PATH=/usr/local/go/bin:$PATH",
+      "export GOPATH=/root/go"
+    ],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "go mod download in /workspace",
+    "cache_dirs": [
+      "/root/go/pkg/mod",
+      "/opt/benchmark/venv"
+    ],
+    "notes": "Go 1.21.7 installed from Google CDN. Python venv created at /opt/benchmark/venv with invoke. Project uses go modules."
+  },
+  "notes": "Base image should be golang:1.21 or equivalent. Git and curl included in system_packages. Go 1.21.7 installed from https://dl.google.com/go/go1.21.7.linux-amd64.tar.gz. Tests require -tags containerd build tag. The datadog-agent project uses invoke (Python-based) for build orchestration."
+}

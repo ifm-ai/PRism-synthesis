@@ -1,0 +1,21 @@
+{
+  "is_finish": true,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "failure_domain": "unknown",
+  "route_to": null,
+  "blocking_errors": [],
+  "warnings": [
+    "Android SDK sdkmanager had network issues fetching package manifests (Failed to download any source lists, IO exception while downloading manifest)",
+    "sdkmanager failed to find package 'platform-tools' after 3 retries",
+    "Gradle wrapper had connection timeout when downloading gradle-8.7-bin.zip during verification step",
+    "Gradle dependency resolution also timed out when downloading from services.gradle.org"
+  ],
+  "next_actions": [
+    "Container image built successfully and exported to OCI archive",
+    "Runtime network access may be needed for sdkmanager and Gradle wrapper to function properly",
+    "Consider pre-caching Android SDK packages and Gradle distributions if network access is constrained in runtime environment"
+  ],
+  "notes": "Build completed successfully. The image contains JDK 17 (Temurin), Gradle 8.7, and Android SDK command-line tools. Network-dependent operations (sdkmanager package installation, Gradle wrapper downloads) experienced timeouts but did not block the build. The container is ready for use but may need network access for full Android SDK component installation and Gradle operations at runtime."
+}

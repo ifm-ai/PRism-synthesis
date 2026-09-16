@@ -1,0 +1,15 @@
+{
+  "status": "success",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": "CI workflows (ci-pytest.yml) run on ubuntu-20.04. Shell scripts (configure_ITK.sh, configure_ANTsPy.sh) are bash scripts for Linux/Unix. The touched file (ants/registration/apply_transforms.py) is pure Python, cross-platform. No Windows-only or macOS-only restrictions for the fix/test path.",
+  "high_value_files": [
+    "ants/registration/apply_transforms.py",
+    "tests/test_registation.py",
+    "tests/test_core_ants_transform.py",
+    "setup.py",
+    "scripts/configure_ITK.sh",
+    "scripts/configure_ANTsPy.sh"
+  ],
+  "notes": "ANTsPy is a Python wrapper around C++ ANTs medical image processing library. The fix adds a singleprecision parameter to apply_transforms() function. The repository is cross-platform but CI primarily targets Linux. The test path is runnable in a Linux x86-64 container."
+}

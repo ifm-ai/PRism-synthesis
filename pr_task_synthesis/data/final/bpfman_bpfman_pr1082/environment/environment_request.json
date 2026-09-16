@@ -1,0 +1,62 @@
+{
+  "base_image_candidate": "rust:1-slim",
+  "system_packages": [
+    "git",
+    "curl",
+    "clang",
+    "llvm",
+    "libbpf-dev",
+    "libelf-dev",
+    "protobuf-compiler",
+    "cmake",
+    "libssl-dev",
+    "gcc-multilib",
+    "pkg-config"
+  ],
+  "base_setup_commands": [
+    "apt-get update",
+    "apt-get install -y git curl clang llvm libbpf-dev libelf-dev protobuf-compiler cmake libssl-dev gcc-multilib pkg-config",
+    "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --profile minimal",
+    "source $HOME/.cargo/env && rustup toolchain install nightly --profile minimal",
+    "source $HOME/.cargo/env && rustup component add rust-src --toolchain nightly"
+  ],
+  "setup_runtime_commands": [
+    "source $HOME/.cargo/env",
+    "cd /workspace && cargo fetch --verbose",
+    "cd /workspace && cargo xtask build-ebpf --libbpf-dir ./libbpf",
+    "cd /workspace && cargo build --verbose -p bpfman-api -p bpfman",
+    "cd /workspace && cargo build --bin bpfman-rpc -p bpfman-api",
+    "cd /workspace && cargo build --bin bpfman -p bpfman"
+  ],
+  "activation_commands": [
+    "source $HOME/.cargo/env"
+  ],
+  "activation_command": "source $HOME/.cargo/env",
+  "activation_type": "cargo",
+  "activation_validation_command": "source $HOME/.cargo/env && cargo --version && rustc --version",
+  "detected_test_command": "cargo test -p bpfman -p bpfman-api",
+  "runtime_smoke_command": "cargo build -p bpfman-api --bin bpfman-rpc",
+  "runtime_profile": {
+    "ecosystem": "Rust",
+    "package_manager": "cargo",
+    "env": "cargo",
+    "env_name": "stable-x86_64-unknown-linux-gnu",
+    "prepare_commands": [
+      "source $HOME/.cargo/env",
+      "cargo fetch",
+      "cargo build -p bpfman-api -p bpfman"
+    ],
+    "activation_commands": [
+      "source $HOME/.cargo/env"
+    ],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "cargo test --no-run",
+    "cache_dirs": [
+      "$HOME/.cargo/registry",
+      "$HOME/.cargo/git",
+      "/workspace/target"
+    ],
+    "notes": "Project requires both stable and nightly Rust toolchains. eBPF programs require libbpf, clang, and llvm. Socket directories /run/bpfman-sock and /run/bpfman/csi must be created at runtime by the RPC binary."
+  },
+  "notes": "bpfman is a Linux-only eBPF program manager requiring systemd for journal logging. The fix involves socket directory creation (/run/bpfman-sock, /run/bpfman/csi) and logging initialization in RPC and CLI binaries. Git and curl are included in system packages. The project uses cargo workspace with xtask for custom build tasks."
+}

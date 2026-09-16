@@ -1,0 +1,11 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "route_to": null,
+  "buildah_exit_code": 0,
+  "oci_archive_created": true,
+  "notes": "Build completed successfully. OCI archive exported to /artifacts/environment/openenv_validation_oci.tar"
+}

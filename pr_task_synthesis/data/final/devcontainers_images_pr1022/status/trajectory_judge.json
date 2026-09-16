@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "Clean successful trajectory: solver correctly localized the problem, made correct edits to Dockerfile and test.sh matching fix.patch, and oracle verifier passed all 4 tests. No struggle patterns detected; all scores remain at baseline 4."
+}

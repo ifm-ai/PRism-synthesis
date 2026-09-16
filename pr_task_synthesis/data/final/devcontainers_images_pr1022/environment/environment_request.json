@@ -1,0 +1,77 @@
+{
+  "base_image_candidate": "continuumio/anaconda3:latest",
+  "system_packages": [
+    "git",
+    "curl",
+    "bzip2",
+    "ca-certificates",
+    "libglib2.0-0",
+    "libsm6",
+    "libxcomposite1",
+    "libxcursor1",
+    "libxdamage1",
+    "libxext6",
+    "libxfixes3",
+    "libxi6",
+    "libxinerama1",
+    "libxrandr2",
+    "libxrender1",
+    "mercurial",
+    "openssh-client",
+    "procps",
+    "subversion",
+    "wget"
+  ],
+  "base_setup_commands": [
+    "apt-get update && apt-get install -y git curl bzip2 ca-certificates libglib2.0-0 libsm6 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxinerama1 libxrandr2 libxrender1 mercurial openssh-client procps subversion wget",
+    "curl -fsSL -o /tmp/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh",
+    "bash /tmp/miniconda.sh -b -p /opt/conda",
+    "rm -f /tmp/miniconda.sh",
+    "/opt/conda/bin/conda init bash"
+  ],
+  "setup_runtime_commands": [
+    "source /opt/conda/etc/profile.d/conda.sh",
+    "conda create -n benchmark -y python=3.11",
+    "conda activate benchmark",
+    "pip install --upgrade pip",
+      "pip install 'Pillow==10.2.0'",
+    "pip install pytest",
+    "conda clean -afy"
+  ],
+  "activation_commands": [
+    "source /opt/conda/etc/profile.d/conda.sh && conda activate benchmark"
+  ],
+  "activation_command": "source /opt/conda/etc/profile.d/conda.sh && conda activate benchmark",
+  "activation_type": "conda",
+  "activation_validation_command": "source /opt/conda/etc/profile.d/conda.sh && conda activate benchmark && python -c 'from PIL import Image; print(Image.__version__)'",
+  "detected_test_command": "python -m pytest",
+  "runtime_smoke_command": "python -c 'from PIL import Image; print(f\"Pillow {Image.__version__}\")'",
+  "runtime_profile": {
+    "ecosystem": "Python/Anaconda",
+    "package_manager": "conda",
+    "env": "benchmark",
+    "env_name": "benchmark",
+    "prepare_commands": [
+      "source /opt/conda/etc/profile.d/conda.sh",
+      "conda create -n benchmark -y python=3.11",
+      "pip install --upgrade pip",
+    "pip install 'Pillow==10.2.0'",
+      "pip install pytest"
+    ],
+    "activation_commands": [
+      "source /opt/conda/etc/profile.d/conda.sh && conda activate benchmark"
+    ],
+    "base_deps_installed": [
+      "python=3.11",
+      "Pillow==10.2.0",
+      "pytest"
+    ],
+    "test_only_install_strategy": "pip install pytest in activated conda environment",
+    "cache_dirs": [
+      "/opt/conda/pkgs",
+      "/root/.cache/pip"
+    ],
+    "notes": "Conda environment 'benchmark' created with Python 3.11 and Pillow 10.2.0 (buggy version). git and curl already available in base system."
+  },
+  "notes": "Base image candidate is continuumio/anaconda3:latest (Debian Bullseye). git and curl are already available in the host system at /usr/bin/git and /usr/bin/curl. The environment uses conda as the primary package manager with pip for specific Python packages like Pillow 10.2.0 (buggy version). The fix addresses security vulnerability GHSA-44wm-f244-xhp3 by updating Pillow from 10.2.0 to 10.3.0."
+}

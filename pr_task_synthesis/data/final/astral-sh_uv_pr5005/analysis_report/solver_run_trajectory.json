@@ -1,0 +1,1530 @@
+Exporting session: ses_11ac73b8effehzK9zcbjby1ewO
+{
+  "info": {
+    "id": "ses_11ac73b8effehzK9zcbjby1ewO",
+    "slug": "quick-wizard",
+    "projectID": "23c6cd774b466924d02de23add7101bcaa7b7c3e",
+    "directory": "/workspace",
+    "title": "Fix --isolated flag visibility in help text",
+    "version": "1.4.6",
+    "summary": {
+      "additions": 1,
+      "deletions": 1,
+      "files": 1
+    },
+    "permission": [
+      {
+        "permission": "question",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_enter",
+        "pattern": "*",
+        "action": "deny"
+      },
+      {
+        "permission": "plan_exit",
+        "pattern": "*",
+        "action": "deny"
+      }
+    ],
+    "time": {
+      "created": 1781962163313,
+      "updated": 1781963012020
+    }
+  },
+  "messages": [
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1781962163340
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "vllm",
+          "modelID": "Qwen/Qwen3.5-397B-A17B-FP8"
+        },
+        "summary": {
+          "diffs": [
+            {
+              "file": "crates/uv-cli/src/lib.rs",
+              "patch": "Index: crates/uv-cli/src/lib.rs\n===================================================================\n--- crates/uv-cli/src/lib.rs\t\n+++ crates/uv-cli/src/lib.rs\t\n@@ -1,2621 +1,2621 @@\n use std::ffi::OsString;\n use std::ops::Deref;\n use std::path::PathBuf;\n use std::str::FromStr;\n \n use anyhow::{anyhow, Result};\n use clap::{Args, Parser, Subcommand};\n \n use distribution_types::{FlatIndexLocation, IndexUrl};\n use pep508_rs::Requirement;\n use pypi_types::VerbatimParsedUrl;\n use uv_cache::CacheArgs;\n use uv_configuration::{\n     ConfigSettingEntry, IndexStrategy, KeyringProviderType, PackageNameSpecifier, TargetTriple,\n };\n use uv_normalize::{ExtraName, PackageName};\n use uv_python::{PythonFetch, PythonPreference, PythonVersion};\n use uv_resolver::{AnnotationStyle, ExcludeNewer, PreReleaseMode, ResolutionMode};\n \n pub mod compat;\n pub mod options;\n pub mod version;\n \n #[derive(Debug, Clone, Copy, clap::ValueEnum)]\n pub enum VersionFormat {\n     /// Display the version as plain text.\n     Text,\n     /// Display the version as JSON.\n     Json,\n }\n \n #[derive(Debug, Default, Clone, clap::ValueEnum)]\n pub enum ListFormat {\n     /// Display the list of packages in a human-readable table.\n     #[default]\n     Columns,\n     /// Display the list of packages in a `pip freeze`-like format, with one package per line\n     /// alongside its version.\n     Freeze,\n     /// Display the list of packages in a machine-readable JSON format.\n     Json,\n }\n \n fn extra_name_with_clap_error(arg: &str) -> Result<ExtraName> {\n     ExtraName::from_str(arg).map_err(|_err| {\n         anyhow!(\n             \"Extra names must start and end with a letter or digit and may only \\\n             contain -, _, ., and alphanumeric characters\"\n         )\n     })\n }\n \n #[derive(Parser)]\n #[command(name = \"uv\", author, version = uv_version::version(), long_version = crate::version::version())]\n #[command(about = \"An extremely fast Python package manager.\")]\n #[command(propagate_version = true)]\n #[command(\n     after_help = \"Use `uv help` for more details.\",\n     after_long_help = \"\",\n     disable_help_flag = true,\n     disable_help_subcommand = true\n )]\n #[allow(clippy::struct_excessive_bools)]\n pub struct Cli {\n     #[command(subcommand)]\n     pub command: Box<Commands>,\n \n     #[command(flatten)]\n     pub global_args: Box<GlobalArgs>,\n \n     #[command(flatten)]\n     pub cache_args: Box<CacheArgs>,\n \n     /// The path to a `uv.toml` file to use for configuration.\n     #[arg(global = true, long, env = \"UV_CONFIG_FILE\")]\n     pub config_file: Option<PathBuf>,\n \n     /// Print help.\n     #[arg(global = true, short, long, action = clap::ArgAction::HelpShort)]\n     help: Option<bool>,\n }\n \n #[derive(Parser, Debug, Clone)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct GlobalArgs {\n     /// Do not print any output.\n     #[arg(global = true, long, short, conflicts_with = \"verbose\")]\n     pub quiet: bool,\n \n     /// Use verbose output.\n     ///\n     /// You can configure fine-grained logging using the `RUST_LOG` environment variable.\n     /// (<https://docs.rs/tracing-subscriber/latest/tracing_subscriber/filter/struct.EnvFilter.html#directives>)\n     #[arg(global = true, action = clap::ArgAction::Count, long, short, conflicts_with = \"quiet\")]\n     pub verbose: u8,\n \n     /// Disable colors; provided for compatibility with `pip`.\n     #[arg(global = true, long, hide = true, conflicts_with = \"color\")]\n     pub no_color: bool,\n \n     /// Control colors in output.\n     #[arg(\n         global = true,\n         long,\n         value_enum,\n         default_value = \"auto\",\n         conflicts_with = \"no_color\",\n         value_name = \"COLOR_CHOICE\"\n     )]\n     pub color: ColorChoice,\n \n     /// Whether to load TLS certificates from the platform's native certificate store.\n     ///\n     /// By default, `uv` loads certificates from the bundled `webpki-roots` crate. The\n     /// `webpki-roots` are a reliable set of trust roots from Mozilla, and including them in `uv`\n     /// improves portability and performance (especially on macOS).\n     ///\n     /// However, in some cases, you may want to use the platform's native certificate store,\n     /// especially if you're relying on a corporate trust root (e.g., for a mandatory proxy) that's\n     /// included in your system's certificate store.\n     #[arg(global = true, long, env = \"UV_NATIVE_TLS\", value_parser = clap::builder::BoolishValueParser::new(), overrides_with(\"no_native_tls\"))]\n     pub native_tls: bool,\n \n     #[arg(global = true, long, overrides_with(\"native_tls\"), hide = true)]\n     pub no_native_tls: bool,\n \n     /// Disable network access, relying only on locally cached data and locally available files.\n     #[arg(global = true, long, overrides_with(\"no_offline\"))]\n     pub offline: bool,\n \n     #[arg(global = true, long, overrides_with(\"offline\"), hide = true)]\n     pub no_offline: bool,\n \n     /// Whether to prefer using Python from uv or on the system.\n     #[arg(global = true, long)]\n     pub python_preference: Option<PythonPreference>,\n \n     /// Whether to automatically download Python when required.\n     #[arg(global = true, long)]\n     pub python_fetch: Option<PythonFetch>,\n \n     /// Whether to enable experimental, preview features.\n     #[arg(global = true, long, hide = true, env = \"UV_PREVIEW\", value_parser = clap::builder::BoolishValueParser::new(), overrides_with(\"no_preview\"))]\n     pub preview: bool,\n \n     #[arg(global = true, long, overrides_with(\"preview\"), hide = true)]\n     pub no_preview: bool,\n \n     /// Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any\n     /// parent directories.\n-    #[arg(global = true, long, hide = true)]\n+    #[arg(global = true, long)]\n     pub isolated: bool,\n \n     /// Show the resolved settings for the current command.\n     #[arg(global = true, long, hide = true)]\n     pub show_settings: bool,\n }\n \n #[derive(Debug, Copy, Clone, clap::ValueEnum)]\n pub enum ColorChoice {\n     /// Enables colored output only when the output is going to a terminal or TTY with support.\n     Auto,\n \n     /// Enables colored output regardless of the detected environment.\n     Always,\n \n     /// Disables colored output.\n     Never,\n }\n \n impl From<ColorChoice> for anstream::ColorChoice {\n     fn from(value: ColorChoice) -> Self {\n         match value {\n             ColorChoice::Auto => Self::Auto,\n             ColorChoice::Always => Self::Always,\n             ColorChoice::Never => Self::Never,\n         }\n     }\n }\n \n #[derive(Subcommand)]\n #[allow(clippy::large_enum_variant)]\n pub enum Commands {\n     /// Resolve and install Python packages.\n     #[command(\n         after_help = \"Use `uv help pip`` for more details.\",\n         after_long_help = \"\"\n     )]\n     Pip(PipNamespace),\n     /// Run and manage executable Python packages.\n     #[command(\n         after_help = \"Use `uv help tool` for more details.\",\n         after_long_help = \"\"\n     )]\n     Tool(ToolNamespace),\n     /// Manage Python installations.\n     #[command(\n         after_help = \"Use `uv help python` for more details.\",\n         after_long_help = \"\"\n     )]\n     Python(PythonNamespace),\n     /// Manage Python projects.\n     #[command(flatten)]\n     Project(Box<ProjectCommand>),\n     /// Create a virtual environment.\n     #[command(\n         alias = \"virtualenv\",\n         alias = \"v\",\n         after_help = \"Use `uv help venv` for more details.\",\n         after_long_help = \"\"\n     )]\n     Venv(VenvArgs),\n     /// Manage the cache.\n     #[command(\n         after_help = \"Use `uv help cache` for more details.\",\n         after_long_help = \"\"\n     )]\n     Cache(CacheNamespace),\n     /// Manage the `uv` executable.\n     #[command(name = \"self\")]\n     #[cfg(feature = \"self-update\")]\n     Self_(SelfNamespace),\n     /// Clear the cache, removing all entries or those linked to specific packages.\n     #[command(hide = true)]\n     Clean(CleanArgs),\n     /// Display uv's version\n     Version {\n         #[arg(long, value_enum, default_value = \"text\")]\n         output_format: VersionFormat,\n     },\n     /// Generate shell completion\n     #[command(alias = \"--generate-shell-completion\", hide = true)]\n     GenerateShellCompletion { shell: clap_complete_command::Shell },\n     /// Display documentation for a command.\n     #[command(help_template = \"\\\n {about-with-newline}\n {usage-heading} {usage}\n \")]\n     Help(HelpArgs),\n }\n \n #[derive(Args, Debug)]\n pub struct HelpArgs {\n     pub command: Option<Vec<String>>,\n }\n \n #[derive(Args)]\n #[cfg(feature = \"self-update\")]\n pub struct SelfNamespace {\n     #[command(subcommand)]\n     pub command: SelfCommand,\n }\n \n #[derive(Subcommand)]\n #[cfg(feature = \"self-update\")]\n pub enum SelfCommand {\n     /// Update `uv` to the latest version.\n     Update,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct CacheNamespace {\n     #[command(subcommand)]\n     pub command: CacheCommand,\n }\n \n #[derive(Subcommand)]\n pub enum CacheCommand {\n     /// Clear the cache, removing all entries or those linked to specific packages.\n     Clean(CleanArgs),\n     /// Prune all unreachable objects from the cache.\n     Prune,\n     /// Show the cache directory.\n     Dir,\n }\n \n #[derive(Args, Debug)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct CleanArgs {\n     /// The packages to remove from the cache.\n     pub package: Vec<PackageName>,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct PipNamespace {\n     #[command(subcommand)]\n     pub command: PipCommand,\n }\n \n #[derive(Subcommand)]\n pub enum PipCommand {\n     /// Compile a `requirements.in` file to a `requirements.txt` file.\n     #[command(\n         after_help = \"Use `uv help pip compile` for more details.\",\n         after_long_help = \"\"\n     )]\n     Compile(PipCompileArgs),\n     /// Sync an environment with a `requirements.txt` file.\n     #[command(\n         after_help = \"Use `uv help pip sync` for more details.\",\n         after_long_help = \"\"\n     )]\n     Sync(Box<PipSyncArgs>),\n     /// Install packages into an environment.\n     #[command(\n         after_help = \"Use `uv help pip install` for more details.\",\n         after_long_help = \"\"\n     )]\n     Install(PipInstallArgs),\n     /// Uninstall packages from an environment.\n     #[command(\n         after_help = \"Use `uv help pip uninstall` for more details.\",\n         after_long_help = \"\"\n     )]\n     Uninstall(PipUninstallArgs),\n     /// List, in requirements format, packages installed in an environment.\n     #[command(\n         after_help = \"Use `uv help pip freeze` for more details.\",\n         after_long_help = \"\"\n     )]\n     Freeze(PipFreezeArgs),\n     /// List, in tabular format, packages installed in an environment.\n     #[command(\n         after_help = \"Use `uv help pip list` for more details.\",\n         after_long_help = \"\"\n     )]\n     List(PipListArgs),\n     /// Show information about one or more installed packages.\n     #[command(\n         after_help = \"Use `uv help pip show` for more details.\",\n         after_long_help = \"\"\n     )]\n     Show(PipShowArgs),\n     /// Display the dependency tree for an environment.\n     #[command(\n         after_help = \"Use `uv help pip tree` for more details.\",\n         after_long_help = \"\"\n     )]\n     Tree(PipTreeArgs),\n     /// Verify installed packages have compatible dependencies.\n     #[command(\n         after_help = \"Use `uv help pip check` for more details.\",\n         after_long_help = \"\"\n     )]\n     Check(PipCheckArgs),\n }\n \n #[derive(Subcommand)]\n pub enum ProjectCommand {\n     /// Run a command in the project environment.\n     #[clap(hide = true)]\n     #[command(\n         after_help = \"Use `uv help run` for more details.\",\n         after_long_help = \"\"\n     )]\n     Run(RunArgs),\n     /// Sync the project's dependencies with the environment.\n     #[clap(hide = true)]\n     #[command(\n         after_help = \"Use `uv help sync` for more details.\",\n         after_long_help = \"\"\n     )]\n     Sync(SyncArgs),\n     /// Resolve the project requirements into a lockfile.\n     #[clap(hide = true)]\n     #[command(\n         after_help = \"Use `uv help lock` for more details.\",\n         after_long_help = \"\"\n     )]\n     Lock(LockArgs),\n     /// Add one or more packages to the project requirements.\n     #[clap(hide = true)]\n     #[command(\n         after_help = \"Use `uv help add` for more details.\",\n         after_long_help = \"\"\n     )]\n     Add(AddArgs),\n     /// Remove one or more packages from the project requirements.\n     #[clap(hide = true)]\n     #[command(\n         after_help = \"Use `uv help remove` for more details.\",\n         after_long_help = \"\"\n     )]\n     Remove(RemoveArgs),\n     /// Display the dependency tree for the project.\n     #[clap(hide = true)]\n     Tree(TreeArgs),\n }\n \n /// A re-implementation of `Option`, used to avoid Clap's automatic `Option` flattening in\n /// [`parse_index_url`].\n #[derive(Debug, Clone)]\n pub enum Maybe<T> {\n     Some(T),\n     None,\n }\n \n impl<T> Maybe<T> {\n     pub fn into_option(self) -> Option<T> {\n         match self {\n             Maybe::Some(value) => Some(value),\n             Maybe::None => None,\n         }\n     }\n }\n \n /// Parse a string into an [`IndexUrl`], mapping the empty string to `None`.\n fn parse_index_url(input: &str) -> Result<Maybe<IndexUrl>, String> {\n     if input.is_empty() {\n         Ok(Maybe::None)\n     } else {\n         match IndexUrl::from_str(input) {\n             Ok(url) => Ok(Maybe::Some(url)),\n             Err(err) => Err(err.to_string()),\n         }\n     }\n }\n \n /// Parse a string into a [`PathBuf`]. The string can represent a file, either as a path or a\n /// `file://` URL.\n fn parse_file_path(input: &str) -> Result<PathBuf, String> {\n     if input.starts_with(\"file://\") {\n         let url = match url::Url::from_str(input) {\n             Ok(url) => url,\n             Err(err) => return Err(err.to_string()),\n         };\n         url.to_file_path()\n             .map_err(|()| \"invalid file URL\".to_string())\n     } else {\n         match PathBuf::from_str(input) {\n             Ok(path) => Ok(path),\n             Err(err) => Err(err.to_string()),\n         }\n     }\n }\n \n /// Parse a string into a [`PathBuf`], mapping the empty string to `None`.\n fn parse_maybe_file_path(input: &str) -> Result<Maybe<PathBuf>, String> {\n     if input.is_empty() {\n         Ok(Maybe::None)\n     } else {\n         parse_file_path(input).map(Maybe::Some)\n     }\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct PipCompileArgs {\n     /// Include all packages listed in the given `requirements.in` files.\n     ///\n     /// If a `pyproject.toml`, `setup.py`, or `setup.cfg` file is provided, `uv` will\n     /// extract the requirements for the relevant project.\n     ///\n     /// If `-` is provided, then requirements will be read from stdin.\n     #[arg(required(true), value_parser = parse_file_path)]\n     pub src_file: Vec<PathBuf>,\n \n     /// Constrain versions using the given requirements files.\n     ///\n     /// Constraints files are `requirements.txt`-like files that only control the _version_ of a\n     /// requirement that's installed. However, including a package in a constraints file will _not_\n     /// trigger the installation of that package.\n     ///\n     /// This is equivalent to pip's `--constraint` option.\n     #[arg(long, short, env = \"UV_CONSTRAINT\", value_delimiter = ' ', value_parser = parse_maybe_file_path)]\n     pub constraint: Vec<Maybe<PathBuf>>,\n \n     /// Override versions using the given requirements files.\n     ///\n     /// Overrides files are `requirements.txt`-like files that force a specific version of a\n     /// requirement to be installed, regardless of the requirements declared by any constituent\n     /// package, and regardless of whether this would be considered an invalid resolution.\n     ///\n     /// While constraints are _additive_, in that they're combined with the requirements of the\n     /// constituent packages, overrides are _absolute_, in that they completely replace the\n     /// requirements of the constituent packages.\n     #[arg(long, env = \"UV_OVERRIDE\", value_delimiter = ' ', value_parser = parse_maybe_file_path)]\n     pub r#override: Vec<Maybe<PathBuf>>,\n \n     /// Include optional dependencies from the extra group name; may be provided more than once.\n     /// Only applies to `pyproject.toml`, `setup.py`, and `setup.cfg` sources.\n     #[arg(long, conflicts_with = \"all_extras\", value_parser = extra_name_with_clap_error)]\n     pub extra: Option<Vec<ExtraName>>,\n \n     /// Include all optional dependencies.\n     /// Only applies to `pyproject.toml`, `setup.py`, and `setup.cfg` sources.\n     #[arg(long, conflicts_with = \"extra\")]\n     pub all_extras: bool,\n \n     #[arg(long, overrides_with(\"all_extras\"), hide = true)]\n     pub no_all_extras: bool,\n \n     #[command(flatten)]\n     pub resolver: ResolverArgs,\n \n     #[command(flatten)]\n     pub refresh: RefreshArgs,\n \n     /// Ignore package dependencies, instead only add those packages explicitly listed\n     /// on the command line to the resulting the requirements file.\n     #[arg(long)]\n     pub no_deps: bool,\n \n     #[arg(long, overrides_with(\"no_deps\"), hide = true)]\n     pub deps: bool,\n \n     /// Write the compiled requirements to the given `requirements.txt` file.\n     #[arg(long, short)]\n     pub output_file: Option<PathBuf>,\n \n     /// Include extras in the output file.\n     ///\n     /// By default, `uv` strips extras, as any packages pulled in by the extras are already included\n     /// as dependencies in the output file directly. Further, output files generated with\n     /// `--no-strip-extras` cannot be used as constraints files in `install` and `sync` invocations.\n     #[arg(long, overrides_with(\"strip_extras\"))]\n     pub no_strip_extras: bool,\n \n     #[arg(long, overrides_with(\"no_strip_extras\"), hide = true)]\n     pub strip_extras: bool,\n \n     /// Include environment markers in the output file.\n     ///\n     /// By default, `uv` strips environment markers, as the resolution generated by `compile` is\n     /// only guaranteed to be correct for the target environment.\n     #[arg(long, overrides_with(\"strip_markers\"))]\n     pub no_strip_markers: bool,\n \n     #[arg(long, overrides_with(\"no_strip_markers\"), hide = true)]\n     pub strip_markers: bool,\n \n     /// Exclude comment annotations indicating the source of each package.\n     #[arg(long, overrides_with(\"annotate\"))]\n     pub no_annotate: bool,\n \n     #[arg(long, overrides_with(\"no_annotate\"), hide = true)]\n     pub annotate: bool,\n \n     /// Exclude the comment header at the top of the generated output file.\n     #[arg(long, overrides_with(\"header\"))]\n     pub no_header: bool,\n \n     #[arg(long, overrides_with(\"no_header\"), hide = true)]\n     pub header: bool,\n \n     /// Choose the style of the annotation comments, which indicate the source of each package.\n     ///\n     /// Defaults to `split`.\n     #[arg(long, value_enum)]\n     pub annotation_style: Option<AnnotationStyle>,\n \n     /// Change header comment to reflect custom command wrapping `uv pip compile`.\n     #[arg(long, env = \"UV_CUSTOM_COMPILE_COMMAND\")]\n     pub custom_compile_command: Option<String>,\n \n     /// The Python interpreter against which to compile the requirements.\n     ///\n     /// By default, `uv` uses the virtual environment in the current working directory or any parent\n     /// directory, falling back to searching for a Python executable in `PATH`. The `--python`\n     /// option allows you to specify a different interpreter.\n     ///\n     /// Supported formats:\n     /// - `3.10` looks for an installed Python 3.10 using `py --list-paths` on Windows, or\n     ///   `python3.10` on Linux and macOS.\n     /// - `python3.10` or `python.exe` looks for a binary with the given name in `PATH`.\n     /// - `/home/ferris/.local/bin/python3.10` uses the exact Python at the given path.\n     #[arg(long, verbatim_doc_comment)]\n     pub python: Option<String>,\n \n     /// Install packages into the system Python.\n     ///\n     /// By default, `uv` uses the virtual environment in the current working directory or any parent\n     /// directory, falling back to searching for a Python executable in `PATH`. The `--system`\n     /// option instructs `uv` to avoid using a virtual environment Python and restrict its search to\n     /// the system path.\n     #[arg(\n         long,\n         env = \"UV_SYSTEM_PYTHON\",\n         value_parser = clap::builder::BoolishValueParser::new(),\n         overrides_with(\"no_system\")\n     )]\n     pub system: bool,\n \n     #[arg(long, overrides_with(\"system\"), hide = true)]\n     pub no_system: bool,\n \n     /// Include distribution hashes in the output file.\n     #[arg(long, overrides_with(\"no_generate_hashes\"))]\n     pub generate_hashes: bool,\n \n     #[arg(long, overrides_with(\"generate_hashes\"), hide = true)]\n     pub no_generate_hashes: bool,\n \n     /// Use legacy `setuptools` behavior when building source distributions without a\n     /// `pyproject.toml`.\n     #[arg(long, overrides_with(\"no_legacy_setup_py\"))]\n     pub legacy_setup_py: bool,\n \n     #[arg(long, overrides_with(\"legacy_setup_py\"), hide = true)]\n     pub no_legacy_setup_py: bool,\n \n     /// Disable isolation when building source distributions.\n     ///\n     /// Assumes that build dependencies specified by PEP 518 are already installed.\n     #[arg(\n         long,\n         env = \"UV_NO_BUILD_ISOLATION\",\n         value_parser = clap::builder::BoolishValueParser::new(),\n         overrides_with(\"build_isolation\")\n     )]\n     pub no_build_isolation: bool,\n \n     #[arg(long, overrides_with(\"no_build_isolation\"), hide = true)]\n     pub build_isolation: bool,\n \n     /// Don't build source distributions.\n     ///\n     /// When enabled, resolving will not run arbitrary code. The cached wheels of already-built\n     /// source distributions will be reused, but operations that require building distributions will\n     /// exit with an error.\n     ///\n     /// Alias for `--only-binary :all:`.\n     #[arg(\n         long,\n         conflicts_with = \"no_binary\",\n         conflicts_with = \"only_binary\",\n         overrides_with(\"build\")\n     )]\n     pub no_build: bool,\n \n     #[arg(\n         long,\n         conflicts_with = \"no_binary\",\n         conflicts_with = \"only_binary\",\n         overrides_with(\"no_build\"),\n         hide = true\n     )]\n     pub build: bool,\n \n     /// Don't install pre-built wheels.\n     ///\n     /// The given packages will be installed from a source distribution. The resolver\n     /// will still use pre-built wheels for metadata.\n     ///\n     /// Multiple packages may be provided. Disable binaries for all packages with `:all:`.\n     /// Clear previously specified packages with `:none:`.\n     #[arg(long, conflicts_with = \"no_build\")]\n     pub no_binary: Option<Vec<PackageNameSpecifier>>,\n \n     /// Only use pre-built wheels; don't build source distributions.\n     ///\n     /// When enabled, resolving will not run code from the given packages. The cached wheels of already-built\n     /// source distributions will be reused, but operations that require building distributions will\n     /// exit with an error.\n     ///\n     /// Multiple packages may be provided. Disable binaries for all packages with `:all:`.\n     /// Clear previously specified packages with `:none:`.\n     #[arg(long, conflicts_with = \"no_build\")]\n     pub only_binary: Option<Vec<PackageNameSpecifier>>,\n \n     /// The minimum Python version that should be supported by the compiled requirements (e.g.,\n     /// `3.7` or `3.7.9`).\n     ///\n     /// If a patch version is omitted, the minimum patch version is assumed. For example, `3.7` is\n     /// mapped to `3.7.0`.\n     #[arg(long, short)]\n     pub python_version: Option<PythonVersion>,\n \n     /// The platform for which requirements should be resolved.\n     ///\n     /// Represented as a \"target triple\", a string that describes the target platform in terms of\n     /// its CPU, vendor, and operating system name, like `x86_64-unknown-linux-gnu` or\n     /// `aaarch64-apple-darwin`.\n     #[arg(long)]\n     pub python_platform: Option<TargetTriple>,\n \n     /// Perform a universal resolution, attempting to generate a single `requirements.txt` output\n     /// file that is compatible with all operating systems, architectures, and Python\n     /// implementations.\n     ///\n     /// In universal mode, the current Python version (or user-provided `--python-version`) will be\n     /// treated as a lower bound. For example, `--universal --python-version 3.7` would produce a\n     /// universal resolution for Python 3.7 and later.\n     #[arg(\n         long,\n         overrides_with(\"no_universal\"),\n         conflicts_with(\"python_platform\")\n     )]\n     pub universal: bool,\n \n     #[arg(long, overrides_with(\"universal\"), hide = true)]\n     pub no_universal: bool,\n \n     /// Specify a package to omit from the output resolution. Its dependencies will still be\n     /// included in the resolution. Equivalent to pip-compile's `--unsafe-package` option.\n     #[arg(long, alias = \"unsafe-package\")]\n     pub no_emit_package: Option<Vec<PackageName>>,\n \n     /// Include `--index-url` and `--extra-index-url` entries in the generated output file.\n     #[arg(long, overrides_with(\"no_emit_index_url\"))]\n     pub emit_index_url: bool,\n \n     #[arg(long, overrides_with(\"emit_index_url\"), hide = true)]\n     pub no_emit_index_url: bool,\n \n     /// Include `--find-links` entries in the generated output file.\n     #[arg(long, overrides_with(\"no_emit_find_links\"))]\n     pub emit_find_links: bool,\n \n     #[arg(long, overrides_with(\"emit_find_links\"), hide = true)]\n     pub no_emit_find_links: bool,\n \n     /// Include `--no-binary` and `--only-binary` entries in the generated output file.\n     #[arg(long, overrides_with(\"no_emit_build_options\"))]\n     pub emit_build_options: bool,\n \n     #[arg(long, overrides_with(\"emit_build_options\"), hide = true)]\n     pub no_emit_build_options: bool,\n \n     /// Whether to emit a marker string indicating when it is known that the\n     /// resulting set of pinned dependencies is valid.\n     ///\n     /// The pinned dependencies may be valid even when the marker expression is\n     /// false, but when the expression is true, the requirements are known to\n     /// be correct.\n     #[arg(long, overrides_with(\"no_emit_marker_expression\"), hide = true)]\n     pub emit_marker_expression: bool,\n \n     #[arg(long, overrides_with(\"emit_marker_expression\"), hide = true)]\n     pub no_emit_marker_expression: bool,\n \n     /// Include comment annotations indicating the index used to resolve each package (e.g.,\n     /// `# from https://pypi.org/simple`).\n     #[arg(long, overrides_with(\"no_emit_index_annotation\"))]\n     pub emit_index_annotation: bool,\n \n     #[arg(long, overrides_with(\"emit_index_annotation\"), hide = true)]\n     pub no_emit_index_annotation: bool,\n \n     #[command(flatten)]\n     pub compat_args: compat::PipCompileCompatArgs,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct PipSyncArgs {\n     /// Include all packages listed in the given `requirements.txt` files.\n     ///\n     /// If a `pyproject.toml`, `setup.py`, or `setup.cfg` file is provided, `uv` will\n     /// extract the requirements for the relevant project.\n     ///\n     /// If `-` is provided, then requirements will be read from stdin.\n     #[arg(required(true), value_parser = parse_file_path)]\n     pub src_file: Vec<PathBuf>,\n \n     /// Constrain versions using the given requirements files.\n     ///\n     /// Constraints files are `requirements.txt`-like files that only control the _version_ of a\n     /// requirement that's installed. However, including a package in a constraints file will _not_\n     /// trigger the installation of that package.\n     ///\n     /// This is equivalent to pip's `--constraint` option.\n     #[arg(long, short, env = \"UV_CONSTRAINT\", value_delimiter = ' ', value_parser = parse_maybe_file_path)]\n     pub constraint: Vec<Maybe<PathBuf>>,\n \n     #[command(flatten)]\n     pub installer: InstallerArgs,\n \n     #[command(flatten)]\n     pub refresh: RefreshArgs,\n \n     /// Require a matching hash for each requirement.\n     ///\n     /// Hash-checking mode is all or nothing. If enabled, _all_ requirements must be provided\n     /// with a corresponding hash or set of hashes. Additionally, if enabled, _all_ requirements\n     /// must either be pinned to exact versions (e.g., `==1.0.0`), or be specified via direct URL.\n     ///\n     /// Hash-checking mode introduces a number of additional constraints:\n     /// - Git dependencies are not supported.\n     /// - Editable installs are not supported.\n     /// - Local dependencies are not supported, unless they point to a specific wheel (`.whl`) or\n     ///   source archive (`.zip`, `.tar.gz`), as opposed to a directory.\n     #[arg(long,         env = \"UV_REQUIRE_HASHES\",\n     value_parser = clap::builder::BoolishValueParser::new(), overrides_with(\"no_require_hashes\"))]\n     pub require_hashes: bool,\n \n     #[arg(long, overrides_with(\"require_hashes\"), hide = true)]\n     pub no_require_hashes: bool,\n \n     /// The Python interpreter into which packages should be installed.\n     ///\n     /// By default, `uv` installs into the virtual environment in the current working directory or\n     /// any parent directory. The `--python` option allows you to specify a different interpreter,\n     /// which is intended for use in continuous integration (CI) environments or other automated\n     /// workflows.\n     ///\n     /// Supported formats:\n     /// - `3.10` looks for an installed Python 3.10 using `py --list-paths` on Windows, or\n     ///   `python3.10` on Linux and macOS.\n     /// - `python3.10` or `python.exe` looks for a binary with the given name in `PATH`.\n     /// - `/home/ferris/.local/bin/python3.10` uses the exact Python at the given path.\n     #[arg(long, short, env = \"UV_PYTHON\", verbatim_doc_comment)]\n     pub python: Option<String>,\n \n     /// Install packages into the system Python.\n     ///\n     /// By default, `uv` installs into the virtual environment in the current working directory or\n     /// any parent directory. The `--system` option instructs `uv` to instead use the first Python\n     /// found in the system `PATH`.\n     ///\n     /// WARNING: `--system` is intended for use in continuous integration (CI) environments and\n     /// should be used with caution, as it can modify the system Python installation.\n     #[arg(\n         long,\n         env = \"UV_SYSTEM_PYTHON\",\n         value_parser = clap::builder::BoolishValueParser::new(),\n         overrides_with(\"no_system\")\n     )]\n     pub system: bool,\n \n     #[arg(long, overrides_with(\"system\"), hide = true)]\n     pub no_system: bool,\n \n     /// Allow `uv` to modify an `EXTERNALLY-MANAGED` Python installation.\n     ///\n     /// WARNING: `--break-system-packages` is intended for use in continuous integration (CI)\n     /// environments, when installing into Python installations that are managed by an external\n     /// package manager, like `apt`. It should be used with caution, as such Python installations\n     /// explicitly recommend against modifications by other package managers (like `uv` or `pip`).\n     #[arg(\n         long,\n         env = \"UV_BREAK_SYSTEM_PACKAGES\",\n         value_parser = clap::builder::BoolishValueParser::new(),\n         overrides_with(\"no_break_system_packages\")\n     )]\n     pub break_system_packages: bool,\n \n     #[arg(long, overrides_with(\"break_system_packages\"))]\n     pub no_break_system_packages: bool,\n \n     /// Install packages into the specified directory, rather than into the virtual environment\n     /// or system Python interpreter. The packages will be installed at the top-level of the\n     /// directory\n     #[arg(long, conflicts_with = \"prefix\")]\n     pub target: Option<PathBuf>,\n \n     /// Install packages into `lib`, `bin`, and other top-level folders under the specified\n     /// directory, as if a virtual environment were created at the specified location.\n     ///\n     /// In general, prefer the use of `--python` to install into an alternate environment, as\n     /// scripts and other artifacts installed via `--prefix` will reference the installing\n     /// interpreter, rather than any interpreter added to the `--prefix` directory, rendering them\n     /// non-portable.\n     #[arg(long, conflicts_with = \"target\")]\n     pub prefix: Option<PathBuf>,\n \n     /// Use legacy `setuptools` behavior when building source distributions without a\n     /// `pyproject.toml`.\n     #[arg(long, overrides_with(\"no_legacy_setup_py\"))]\n     pub legacy_setup_py: bool,\n \n     #[arg(long, overrides_with(\"legacy_setup_py\"), hide = true)]\n     pub no_legacy_setup_py: bool,\n \n     /// Disable isolation when building source distributions.\n     ///\n     /// Assumes that build dependencies specified by PEP 518 are already installed.\n     #[arg(\n         long,\n         env = \"UV_NO_BUILD_ISOLATION\",\n         value_parser = clap::builder::BoolishValueParser::new(),\n         overrides_with(\"build_isolation\")\n     )]\n     pub no_build_isolation: bool,\n \n     #[arg(long, overrides_with(\"no_build_isolation\"), hide = true)]\n     pub build_isolation: bool,\n \n     /// Don't build source distributions.\n     ///\n     /// When enabled, resolving will not run arbitrary code. The cached wheels of already-built\n     /// source distributions will be reused, but operations that require building distributions will\n     /// exit with an error.\n     ///\n     /// Alias for `--only-binary :all:`.\n     #[arg(\n         long,\n         conflicts_with = \"no_binary\",\n         conflicts_with = \"only_binary\",\n         overrides_with(\"build\")\n     )]\n     pub no_build: bool,\n \n     #[arg(\n         long,\n         conflicts_with = \"no_binary\",\n         conflicts_with = \"only_binary\",\n         overrides_with(\"no_build\"),\n         hide = true\n     )]\n     pub build: bool,\n \n     /// Don't install pre-built wheels.\n     ///\n     /// The given packages will be installed from a source distribution. The resolver\n     /// will still use pre-built wheels for metadata.\n     ///\n     /// Multiple packages may be provided. Disable binaries for all packages with `:all:`.\n     /// Clear previously specified packages with `:none:`.\n     #[arg(long, conflicts_with = \"no_build\")]\n     pub no_binary: Option<Vec<PackageNameSpecifier>>,\n \n     /// Only use pre-built wheels; don't build source distributions.\n     ///\n     /// When enabled, resolving will not run code from the given packages. The cached wheels of already-built\n     /// source distributions will be reused, but operations that require building distributions will\n     /// exit with an error.\n     ///\n     /// Multiple packages may be provided. Disable binaries for all packages with `:all:`.\n     /// Clear previously specified packages with `:none:`.\n     #[arg(long, conflicts_with = \"no_build\")]\n     pub only_binary: Option<Vec<PackageNameSpecifier>>,\n \n     /// Allow sync of empty requirements, which will clear the environment of all packages.\n     #[arg(long, overrides_with(\"no_allow_empty_requirements\"))]\n     pub allow_empty_requirements: bool,\n \n     #[arg(long, overrides_with(\"allow_empty_requirements\"))]\n     pub no_allow_empty_requirements: bool,\n \n     /// The minimum Python version that should be supported by the requirements (e.g.,\n     /// `3.7` or `3.7.9`).\n     ///\n     /// If a patch version is omitted, the minimum patch version is assumed. For example, `3.7` is\n     /// mapped to `3.7.0`.\n     #[arg(long)]\n     pub python_version: Option<PythonVersion>,\n \n     /// The platform for which requirements should be installed.\n     ///\n     /// Represented as a \"target triple\", a string that describes the target platform in terms of\n     /// its CPU, vendor, and operating system name, like `x86_64-unknown-linux-gnu` or\n     /// `aaarch64-apple-darwin`.\n     ///\n     /// WARNING: When specified, uv will select wheels that are compatible with the _target_\n     /// platform; as a result, the installed distributions may not be compatible with the _current_\n     /// platform. Conversely, any distributions that are built from source may be incompatible with\n     /// the _target_ platform, as they will be built for the _current_ platform. The\n     /// `--python-platform` option is intended for advanced use cases.\n     #[arg(long)]\n     pub python_platform: Option<TargetTriple>,\n \n     /// Validate the virtual environment after completing the installation, to detect packages with\n     /// missing dependencies or other issues.\n     #[arg(long, overrides_with(\"no_strict\"))]\n     pub strict: bool,\n \n     #[arg(long, overrides_with(\"strict\"), hide = true)]\n     pub no_strict: bool,\n \n     /// Perform a dry run, i.e., don't actually install anything but resolve the dependencies and\n     /// print the resulting plan.\n     #[arg(long)]\n     pub dry_run: bool,\n \n     #[command(flatten)]\n     pub compat_args: compat::PipSyncCompatArgs,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n #[command(group = clap::ArgGroup::new(\"sources\").required(true).multiple(true))]\n pub struct PipInstallArgs {\n     /// Install all listed packages.\n     #[arg(group = \"sources\")]\n     pub package: Vec<String>,\n \n     /// Install all packages listed in the given `requirements.txt` files.\n     ///\n     /// If a `pyproject.toml`, `setup.py`, or `setup.cfg` file is provided, `uv` will\n     /// extract the requirements for the relevant project.\n     ///\n     /// If `-` is provided, then requirements will be read from stdin.\n     #[arg(long, short, group = \"sources\", value_parser = parse_file_path)]\n     pub requirement: Vec<PathBuf>,\n \n     /// Install the editable package based on the provided local file path.\n     #[arg(long, short, group = \"sources\")]\n     pub editable: Vec<String>,\n \n     /// Constrain versions using the given requirements files.\n     ///\n     /// Constraints files are `requirements.txt`-like files that only control the _version_ of a\n     /// requirement that's installed. However, including a package in a constraints file will _not_\n     /// trigger the installation of that package.\n     ///\n     /// This is equivalent to pip's `--constraint` option.\n     #[arg(long, short, env = \"UV_CONSTRAINT\", value_delimiter = ' ', value_parser = parse_maybe_file_path)]\n     pub constraint: Vec<Maybe<PathBuf>>,\n \n     /// Override versions using the given requirements files.\n     ///\n     /// Overrides files are `requirements.txt`-like files that force a specific version of a\n     /// requirement to be installed, regardless of the requirements declared by any constituent\n     /// package, and regardless of whether this would be considered an invalid resolution.\n     ///\n     /// While constraints are _additive_, in that they're combined with the requirements of the\n     /// constituent packages, overrides are _absolute_, in that they completely replace the\n     /// requirements of the constituent packages.\n     #[arg(long, env = \"UV_OVERRIDE\", value_delimiter = ' ', value_parser = parse_maybe_file_path)]\n     pub r#override: Vec<Maybe<PathBuf>>,\n \n     /// Include optional dependencies from the extra group name; may be provided more than once.\n     /// Only applies to `pyproject.toml`, `setup.py`, and `setup.cfg` sources.\n     #[arg(long, conflicts_with = \"all_extras\", value_parser = extra_name_with_clap_error)]\n     pub extra: Option<Vec<ExtraName>>,\n \n     /// Include all optional dependencies.\n     /// Only applies to `pyproject.toml`, `setup.py`, and `setup.cfg` sources.\n     #[arg(long, conflicts_with = \"extra\", overrides_with = \"no_all_extras\")]\n     pub all_extras: bool,\n \n     #[arg(long, overrides_with(\"all_extras\"), hide = true)]\n     pub no_all_extras: bool,\n \n     #[command(flatten)]\n     pub installer: ResolverInstallerArgs,\n \n     #[command(flatten)]\n     pub refresh: RefreshArgs,\n \n     /// Ignore package dependencies, instead only installing those packages explicitly listed\n     /// on the command line or in the requirements files.\n     #[arg(long, overrides_with(\"deps\"))]\n     pub no_deps: bool,\n \n     #[arg(long, overrides_with(\"no_deps\"), hide = true)]\n     pub deps: bool,\n \n     /// Require a matching hash for each requirement.\n     ///\n     /// Hash-checking mode is all or nothing. If enabled, _all_ requirements must be provided\n     /// with a corresponding hash or set of hashes. Additionally, if enabled, _all_ requirements\n     /// must either be pinned to exact versions (e.g., `==1.0.0`), or be specified via direct URL.\n     ///\n     /// Hash-checking mode introduces a number of additional constraints:\n     /// - Git dependencies are not supported.\n     /// - Editable installs are not supported.\n     /// - Local dependencies are not supported, unless they point to a specific wheel (`.whl`) or\n     ///   source archive (`.zip`, `.tar.gz`), as opposed to a directory.\n     #[arg(\n         long,\n         env = \"UV_REQUIRE_HASHES\",\n         value_parser = clap::builder::BoolishValueParser::new(),\n         overrides_with(\"no_require_hashes\"),\n     )]\n     pub require_hashes: bool,\n \n     #[arg(long, overrides_with(\"require_hashes\"), hide = true)]\n     pub no_require_hashes: bool,\n \n     /// The Python interpreter into which packages should be installed.\n     ///\n     /// By default, `uv` installs into the virtual environment in the current working directory or\n     /// any parent directory. The `--python` option allows you to specify a different interpreter,\n     /// which is intended for use in continuous integration (CI) environments or other automated\n     /// workflows.\n     ///\n     /// Supported formats:\n     /// - `3.10` looks for an installed Python 3.10 using `py --list-paths` on Windows, or\n     ///   `python3.10` on Linux and macOS.\n     /// - `python3.10` or `python.exe` looks for a binary with the given name in `PATH`.\n     /// - `/home/ferris/.local/bin/python3.10` uses the exact Python at the given path.\n     #[arg(long, short, env = \"UV_PYTHON\", verbatim_doc_comment)]\n     pub python: Option<String>,\n \n     /// Install packages into the system Python.\n     ///\n     /// By default, `uv` installs into the virtual environment in the current working directory or\n     /// any parent directory. The `--system` option instructs `uv` to instead use the first Python\n     /// found in the system `PATH`.\n     ///\n     /// WARNING: `--system` is intended for use in continuous integration (CI) environments and\n     /// should be used with caution, as it can modify the system Python installation.\n     #[arg(\n         long,\n         env = \"UV_SYSTEM_PYTHON\",\n         value_parser = clap::builder::BoolishValueParser::new(),\n         overrides_with(\"no_system\")\n     )]\n     pub system: bool,\n \n     #[arg(long, overrides_with(\"system\"), hide = true)]\n     pub no_system: bool,\n \n     /// Allow `uv` to modify an `EXTERNALLY-MANAGED` Python installation.\n     ///\n     /// WARNING: `--break-system-packages` is intended for use in continuous integration (CI)\n     /// environments, when installing into Python installations that are managed by an external\n     /// package manager, like `apt`. It should be used with caution, as such Python installations\n     /// explicitly recommend against modifications by other package managers (like `uv` or `pip`).\n     #[arg(\n         long,\n         env = \"UV_BREAK_SYSTEM_PACKAGES\",\n         value_parser = clap::builder::BoolishValueParser::new(),\n         overrides_with(\"no_break_system_packages\")\n     )]\n     pub break_system_packages: bool,\n \n     #[arg(long, overrides_with(\"break_system_packages\"))]\n     pub no_break_system_packages: bool,\n \n     /// Install packages into the specified directory, rather than into the virtual environment\n     /// or system Python interpreter. The packages will be installed at the top-level of the\n     /// directory\n     #[arg(long, conflicts_with = \"prefix\")]\n     pub target: Option<PathBuf>,\n \n     /// Install packages into `lib`, `bin`, and other top-level folders under the specified\n     /// directory, as if a virtual environment were created at the specified location.\n     ///\n     /// In general, prefer the use of `--python` to install into an alternate environment, as\n     /// scripts and other artifacts installed via `--prefix` will reference the installing\n     /// interpreter, rather than any interpreter added to the `--prefix` directory, rendering them\n     /// non-portable.\n     #[arg(long, conflicts_with = \"target\")]\n     pub prefix: Option<PathBuf>,\n \n     /// Use legacy `setuptools` behavior when building source distributions without a\n     /// `pyproject.toml`.\n     #[arg(long, overrides_with(\"no_legacy_setup_py\"))]\n     pub legacy_setup_py: bool,\n \n     #[arg(long, overrides_with(\"legacy_setup_py\"), hide = true)]\n     pub no_legacy_setup_py: bool,\n \n     /// Disable isolation when building source distributions.\n     ///\n     /// Assumes that build dependencies specified by PEP 518 are already installed.\n     #[arg(\n         long,\n         env = \"UV_NO_BUILD_ISOLATION\",\n         value_parser = clap::builder::BoolishValueParser::new(),\n         overrides_with(\"build_isolation\")\n     )]\n     pub no_build_isolation: bool,\n \n     #[arg(long, overrides_with(\"no_build_isolation\"), hide = true)]\n     pub build_isolation: bool,\n \n     /// Don't build source distributions.\n     ///\n     /// When enabled, resolving will not run arbitrary code. The cached wheels of already-built\n     /// source distributions will be reused, but operations that require building distributions will\n     /// exit with an error.\n     ///\n     /// Alias for `--only-binary :all:`.\n     #[arg(\n         long,\n         conflicts_with = \"no_binary\",\n         conflicts_with = \"only_binary\",\n         overrides_with(\"build\")\n     )]\n     pub no_build: bool,\n \n     #[arg(\n         long,\n         conflicts_with = \"no_binary\",\n         conflicts_with = \"only_binary\",\n         overrides_with(\"no_build\"),\n         hide = true\n     )]\n     pub build: bool,\n \n     /// Don't install pre-built wheels.\n     ///\n     /// The given packages will be installed from a source distribution. The resolver\n     /// will still use pre-built wheels for metadata.\n     ///\n     /// Multiple packages may be provided. Disable binaries for all packages with `:all:`.\n     /// Clear previously specified packages with `:none:`.\n     #[arg(long, conflicts_with = \"no_build\")]\n     pub no_binary: Option<Vec<PackageNameSpecifier>>,\n \n     /// Only use pre-built wheels; don't build source distributions.\n     ///\n     /// When enabled, resolving will not run code from the given packages. The cached wheels of already-built\n     /// source distributions will be reused, but operations that require building distributions will\n     /// exit with an error.\n     ///\n     /// Multiple packages may be provided. Disable binaries for all packages with `:all:`.\n     /// Clear previously specified packages with `:none:`.\n     #[arg(long, conflicts_with = \"no_build\")]\n     pub only_binary: Option<Vec<PackageNameSpecifier>>,\n \n     /// The minimum Python version that should be supported by the requirements (e.g.,\n     /// `3.7` or `3.7.9`).\n     ///\n     /// If a patch version is omitted, the minimum patch version is assumed. For example, `3.7` is\n     /// mapped to `3.7.0`.\n     #[arg(long)]\n     pub python_version: Option<PythonVersion>,\n \n     /// The platform for which requirements should be installed.\n     ///\n     /// Represented as a \"target triple\", a string that describes the target platform in terms of\n     /// its CPU, vendor, and operating system name, like `x86_64-unknown-linux-gnu` or\n     /// `aaarch64-apple-darwin`.\n     ///\n     /// WARNING: When specified, uv will select wheels that are compatible with the _target_\n     /// platform; as a result, the installed distributions may not be compatible with the _current_\n     /// platform. Conversely, any distributions that are built from source may be incompatible with\n     /// the _target_ platform, as they will be built for the _current_ platform. The\n     /// `--python-platform` option is intended for advanced use cases.\n     #[arg(long)]\n     pub python_platform: Option<TargetTriple>,\n \n     /// Validate the virtual environment after completing the installation, to detect packages with\n     /// missing dependencies or other issues.\n     #[arg(long, overrides_with(\"no_strict\"))]\n     pub strict: bool,\n \n     #[arg(long, overrides_with(\"strict\"), hide = true)]\n     pub no_strict: bool,\n \n     /// Perform a dry run, i.e., don't actually install anything but resolve the dependencies and\n     /// print the resulting plan.\n     #[arg(long)]\n     pub dry_run: bool,\n \n     #[command(flatten)]\n     pub compat_args: compat::PipInstallCompatArgs,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n #[command(group = clap::ArgGroup::new(\"sources\").required(true).multiple(true))]\n pub struct PipUninstallArgs {\n     /// Uninstall all listed packages.\n     #[arg(group = \"sources\")]\n     pub package: Vec<String>,\n \n     /// Uninstall all packages listed in the given requirements files.\n     #[arg(long, short, group = \"sources\", value_parser = parse_file_path)]\n     pub requirement: Vec<PathBuf>,\n \n     /// The Python interpreter from which packages should be uninstalled.\n     ///\n     /// By default, `uv` uninstalls from the virtual environment in the current working directory or\n     /// any parent directory. The `--python` option allows you to specify a different interpreter,\n     /// which is intended for use in continuous integration (CI) environments or other automated\n     /// workflows.\n     ///\n     /// Supported formats:\n     /// - `3.10` looks for an installed Python 3.10 using `py --list-paths` on Windows, or\n     ///   `python3.10` on Linux and macOS.\n     /// - `python3.10` or `python.exe` looks for a binary with the given name in `PATH`.\n     /// - `/home/ferris/.local/bin/python3.10` uses the exact Python at the given path.\n     #[arg(long, short, env = \"UV_PYTHON\", verbatim_doc_comment)]\n     pub python: Option<String>,\n \n     /// Attempt to use `keyring` for authentication for remote requirements files.\n     ///\n     /// At present, only `--keyring-provider subprocess` is supported, which configures `uv` to\n     /// use the `keyring` CLI to handle authentication.\n     ///\n     /// Defaults to `disabled`.\n     #[arg(long, value_enum, env = \"UV_KEYRING_PROVIDER\")]\n     pub keyring_provider: Option<KeyringProviderType>,\n \n     /// Use the system Python to uninstall packages.\n     ///\n     /// By default, `uv` uninstalls from the virtual environment in the current working directory or\n     /// any parent directory. The `--system` option instructs `uv` to instead use the first Python\n     /// found in the system `PATH`.\n     ///\n     /// WARNING: `--system` is intended for use in continuous integration (CI) environments and\n     /// should be used with caution, as it can modify the system Python installation.\n     #[arg(\n         long,\n         env = \"UV_SYSTEM_PYTHON\",\n         value_parser = clap::builder::BoolishValueParser::new(),\n         overrides_with(\"no_system\")\n     )]\n     pub system: bool,\n \n     #[arg(long, overrides_with(\"system\"), hide = true)]\n     pub no_system: bool,\n \n     /// Allow `uv` to modify an `EXTERNALLY-MANAGED` Python installation.\n     ///\n     /// WARNING: `--break-system-packages` is intended for use in continuous integration (CI)\n     /// environments, when installing into Python installations that are managed by an external\n     /// package manager, like `apt`. It should be used with caution, as such Python installations\n     /// explicitly recommend against modifications by other package managers (like `uv` or `pip`).\n     #[arg(\n         long,\n         env = \"UV_BREAK_SYSTEM_PACKAGES\",\n         value_parser = clap::builder::BoolishValueParser::new(),\n         overrides_with(\"no_break_system_packages\")\n     )]\n     pub break_system_packages: bool,\n \n     #[arg(long, overrides_with(\"break_system_packages\"))]\n     pub no_break_system_packages: bool,\n \n     /// Uninstall packages from the specified `--target` directory.\n     #[arg(long, conflicts_with = \"prefix\")]\n     pub target: Option<PathBuf>,\n \n     /// Uninstall packages from the specified `--prefix` directory.\n     #[arg(long, conflicts_with = \"target\")]\n     pub prefix: Option<PathBuf>,\n \n     #[command(flatten)]\n     pub compat_args: compat::PipGlobalCompatArgs,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct PipFreezeArgs {\n     /// Exclude any editable packages from output.\n     #[arg(long)]\n     pub exclude_editable: bool,\n \n     /// Validate the virtual environment, to detect packages with missing dependencies or other\n     /// issues.\n     #[arg(long, overrides_with(\"no_strict\"))]\n     pub strict: bool,\n \n     #[arg(long, overrides_with(\"strict\"), hide = true)]\n     pub no_strict: bool,\n \n     /// The Python interpreter for which packages should be listed.\n     ///\n     /// By default, `uv` lists packages in the currently activated virtual environment, or a virtual\n     /// environment (`.venv`) located in the current working directory or any parent directory,\n     /// falling back to the system Python if no virtual environment is found.\n     ///\n     /// Supported formats:\n     /// - `3.10` looks for an installed Python 3.10 using `py --list-paths` on Windows, or\n     ///   `python3.10` on Linux and macOS.\n     /// - `python3.10` or `python.exe` looks for a binary with the given name in `PATH`.\n     /// - `/home/ferris/.local/bin/python3.10` uses the exact Python at the given path.\n     #[arg(long, short, env = \"UV_PYTHON\", verbatim_doc_comment)]\n     pub python: Option<String>,\n \n     /// List packages for the system Python.\n     ///\n     /// By default, `uv` lists packages in the currently activated virtual environment, or a virtual\n     /// environment (`.venv`) located in the current working directory or any parent directory,\n     /// falling back to the system Python if no virtual environment is found. The `--system` option\n     /// instructs `uv` to use the first Python found in the system `PATH`.\n     ///\n     /// WARNING: `--system` is intended for use in continuous integration (CI) environments and\n     /// should be used with caution.\n     #[arg(\n         long,\n         env = \"UV_SYSTEM_PYTHON\",\n         value_parser = clap::builder::BoolishValueParser::new(),\n         overrides_with(\"no_system\")\n     )]\n     pub system: bool,\n \n     #[arg(long, overrides_with(\"system\"), hide = true)]\n     pub no_system: bool,\n \n     #[command(flatten)]\n     pub compat_args: compat::PipGlobalCompatArgs,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct PipListArgs {\n     /// Only include editable projects.\n     #[arg(short, long)]\n     pub editable: bool,\n \n     /// Exclude any editable packages from output.\n     #[arg(long)]\n     pub exclude_editable: bool,\n \n     /// Exclude the specified package(s) from the output.\n     #[arg(long)]\n     pub r#exclude: Vec<PackageName>,\n \n     /// Select the output format between: `columns` (default), `freeze`, or `json`.\n     #[arg(long, value_enum, default_value_t = ListFormat::default())]\n     pub format: ListFormat,\n \n     /// Validate the virtual environment, to detect packages with missing dependencies or other\n     /// issues.\n     #[arg(long, overrides_with(\"no_strict\"))]\n     pub strict: bool,\n \n     #[arg(long, overrides_with(\"strict\"), hide = true)]\n     pub no_strict: bool,\n \n     /// The Python interpreter for which packages should be listed.\n     ///\n     /// By default, `uv` lists packages in the currently activated virtual environment, or a virtual\n     /// environment (`.venv`) located in the current working directory or any parent directory,\n     /// falling back to the system Python if no virtual environment is found.\n     ///\n     /// Supported formats:\n     /// - `3.10` looks for an installed Python 3.10 using `py --list-paths` on Windows, or\n     ///   `python3.10` on Linux and macOS.\n     /// - `python3.10` or `python.exe` looks for a binary with the given name in `PATH`.\n     /// - `/home/ferris/.local/bin/python3.10` uses the exact Python at the given path.\n     #[arg(long, short, env = \"UV_PYTHON\", verbatim_doc_comment)]\n     pub python: Option<String>,\n \n     /// List packages for the system Python.\n     ///\n     /// By default, `uv` lists packages in the currently activated virtual environment, or a virtual\n     /// environment (`.venv`) located in the current working directory or any parent directory,\n     /// falling back to the system Python if no virtual environment is found. The `--system` option\n     /// instructs `uv` to use the first Python found in the system `PATH`.\n     ///\n     /// WARNING: `--system` is intended for use in continuous integration (CI) environments and\n     /// should be used with caution.\n     #[arg(\n         long,\n         env = \"UV_SYSTEM_PYTHON\",\n         value_parser = clap::builder::BoolishValueParser::new(),\n         overrides_with(\"no_system\")\n     )]\n     pub system: bool,\n \n     #[arg(long, overrides_with(\"system\"), hide = true)]\n     pub no_system: bool,\n \n     #[command(flatten)]\n     pub compat_args: compat::PipListCompatArgs,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct PipCheckArgs {\n     /// The Python interpreter for which packages should be listed.\n     ///\n     /// By default, `uv` lists packages in the currently activated virtual environment, or a virtual\n     /// environment (`.venv`) located in the current working directory or any parent directory,\n     /// falling back to the system Python if no virtual environment is found.\n     ///\n     /// Supported formats:\n     /// - `3.10` looks for an installed Python 3.10 using `py --list-paths` on Windows, or\n     ///   `python3.10` on Linux and macOS.\n     /// - `python3.10` or `python.exe` looks for a binary with the given name in `PATH`.\n     /// - `/home/ferris/.local/bin/python3.10` uses the exact Python at the given path.\n     #[arg(long, short, env = \"UV_PYTHON\", verbatim_doc_comment)]\n     pub python: Option<String>,\n \n     /// List packages for the system Python.\n     ///\n     /// By default, `uv` lists packages in the currently activated virtual environment, or a virtual\n     /// environment (`.venv`) located in the current working directory or any parent directory,\n     /// falling back to the system Python if no virtual environment is found. The `--system` option\n     /// instructs `uv` to use the first Python found in the system `PATH`.\n     ///\n     /// WARNING: `--system` is intended for use in continuous integration (CI) environments and\n     /// should be used with caution.\n     #[arg(\n         long,\n         env = \"UV_SYSTEM_PYTHON\",\n         value_parser = clap::builder::BoolishValueParser::new(),\n         overrides_with(\"no_system\")\n     )]\n     pub system: bool,\n \n     #[arg(long, overrides_with(\"system\"), hide = true)]\n     pub no_system: bool,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct PipShowArgs {\n     /// The package(s) to display.\n     pub package: Vec<PackageName>,\n \n     /// Validate the virtual environment, to detect packages with missing dependencies or other\n     /// issues.\n     #[arg(long, overrides_with(\"no_strict\"))]\n     pub strict: bool,\n \n     #[arg(long, overrides_with(\"strict\"), hide = true)]\n     pub no_strict: bool,\n \n     /// The Python interpreter for which packages should be listed.\n     ///\n     /// By default, `uv` lists packages in the currently activated virtual environment, or a virtual\n     /// environment (`.venv`) located in the current working directory or any parent directory,\n     /// falling back to the system Python if no virtual environment is found.\n     ///\n     /// Supported formats:\n     /// - `3.10` looks for an installed Python 3.10 using `py --list-paths` on Windows, or\n     ///   `python3.10` on Linux and macOS.\n     /// - `python3.10` or `python.exe` looks for a binary with the given name in `PATH`.\n     /// - `/home/ferris/.local/bin/python3.10` uses the exact Python at the given path.\n     #[arg(long, short, env = \"UV_PYTHON\", verbatim_doc_comment)]\n     pub python: Option<String>,\n \n     /// List packages for the system Python.\n     ///\n     /// By default, `uv` lists packages in the currently activated virtual environment, or a virtual\n     /// environment (`.venv`) located in the current working directory or any parent directory,\n     /// falling back to the system Python if no virtual environment is found. The `--system` option\n     /// instructs `uv` to use the first Python found in the system `PATH`.\n     ///\n     /// WARNING: `--system` is intended for use in continuous integration (CI) environments and\n     /// should be used with caution.\n     #[arg(\n         long,\n         env = \"UV_SYSTEM_PYTHON\",\n         value_parser = clap::builder::BoolishValueParser::new(),\n         overrides_with(\"no_system\")\n     )]\n     pub system: bool,\n \n     #[arg(long, overrides_with(\"system\"), hide = true)]\n     pub no_system: bool,\n \n     #[command(flatten)]\n     pub compat_args: compat::PipGlobalCompatArgs,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct PipTreeArgs {\n     #[command(flatten)]\n     pub tree: DisplayTreeArgs,\n \n     /// Validate the virtual environment, to detect packages with missing dependencies or other\n     /// issues.\n     #[arg(long, overrides_with(\"no_strict\"))]\n     pub strict: bool,\n \n     #[arg(long, overrides_with(\"strict\"), hide = true)]\n     pub no_strict: bool,\n \n     /// The Python interpreter for which packages should be listed.\n     ///\n     /// By default, `uv` lists packages in the currently activated virtual environment, or a virtual\n     /// environment (`.venv`) located in the current working directory or any parent directory,\n     /// falling back to the system Python if no virtual environment is found.\n     ///\n     /// Supported formats:\n     /// - `3.10` looks for an installed Python 3.10 using `py --list-paths` on Windows, or\n     ///   `python3.10` on Linux and macOS.\n     /// - `python3.10` or `python.exe` looks for a binary with the given name in `PATH`.\n     /// - `/home/ferris/.local/bin/python3.10` uses the exact Python at the given path.\n     #[arg(long, short, env = \"UV_PYTHON\", verbatim_doc_comment)]\n     pub python: Option<String>,\n \n     /// List packages for the system Python.\n     ///\n     /// By default, `uv` lists packages in the currently activated virtual environment, or a virtual\n     /// environment (`.venv`) located in the current working directory or any parent directory,\n     /// falling back to the system Python if no virtual environment is found. The `--system` option\n     /// instructs `uv` to use the first Python found in the system `PATH`.\n     ///\n     /// WARNING: `--system` is intended for use in continuous integration (CI) environments and\n     /// should be used with caution.\n     #[arg(\n         long,\n         env = \"UV_SYSTEM_PYTHON\",\n         value_parser = clap::builder::BoolishValueParser::new(),\n         overrides_with(\"no_system\")\n     )]\n     pub system: bool,\n \n     #[arg(long, overrides_with(\"system\"))]\n     pub no_system: bool,\n \n     #[command(flatten)]\n     pub compat_args: compat::PipGlobalCompatArgs,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct VenvArgs {\n     /// The Python interpreter to use for the virtual environment.\n     ///\n     /// Supported formats:\n     /// - `3.10` looks for an installed Python 3.10 using `py --list-paths` on Windows, or\n     ///   `python3.10` on Linux and macOS.\n     /// - `python3.10` or `python.exe` looks for a binary with the given name in `PATH`.\n     /// - `/home/ferris/.local/bin/python3.10` uses the exact Python at the given path.\n     ///\n     /// Note that this is different from `--python-version` in `pip compile`, which takes `3.10` or `3.10.13` and\n     /// doesn't look for a Python interpreter on disk.\n     #[arg(long, short, env = \"UV_PYTHON\", verbatim_doc_comment)]\n     pub python: Option<String>,\n \n     /// Use the system Python to uninstall packages.\n     ///\n     /// By default, `uv` uninstalls from the virtual environment in the current working directory or\n     /// any parent directory. The `--system` option instructs `uv` to use the first Python found in\n     /// the system `PATH`.\n     ///\n     /// WARNING: `--system` is intended for use in continuous integration (CI) environments and\n     /// should be used with caution, as it can modify the system Python installation.\n     #[arg(\n         long,\n         env = \"UV_SYSTEM_PYTHON\",\n         value_parser = clap::builder::BoolishValueParser::new(),\n         overrides_with(\"no_system\")\n     )]\n     pub system: bool,\n \n     #[arg(long, overrides_with(\"system\"), hide = true)]\n     pub no_system: bool,\n \n     /// Install seed packages (one or more of: `pip`, `setuptools`, and `wheel`) into the virtual environment.\n     ///\n     /// Note `setuptools` and `wheel` are not included in Python 3.12+ environments.\n     #[arg(long)]\n     pub seed: bool,\n \n     /// Preserve any existing files or directories at the target path.\n     ///\n     /// By default, `uv venv` will remove an existing virtual environment at the given path, and\n     /// exit with an error if the path is non-empty but _not_ a virtual environment. The\n     /// `--allow-existing` option will instead write to the given path, regardless of its contents,\n     /// and without clearing it beforehand.\n     ///\n     /// WARNING: This option can lead to unexpected behavior if the existing virtual environment\n     /// and the newly-created virtual environment are linked to different Python interpreters.\n     #[clap(long)]\n     pub allow_existing: bool,\n \n     /// The path to the virtual environment to create.\n     #[arg(default_value = \".venv\")]\n     pub name: PathBuf,\n \n     /// Provide an alternative prompt prefix for the virtual environment.\n     ///\n     /// The default behavior depends on whether the virtual environment path is provided:\n     /// - If provided (`uv venv project`), the prompt is set to the virtual environment's directory name.\n     /// - If not provided (`uv venv`), the prompt is set to the current directory's name.\n     ///\n     /// Possible values:\n     /// - `.`: Use the current directory name.\n     /// - Any string: Use the given string.\n     #[arg(long, verbatim_doc_comment)]\n     pub prompt: Option<String>,\n \n     /// Give the virtual environment access to the system site packages directory.\n     ///\n     /// Unlike `pip`, when a virtual environment is created with `--system-site-packages`, `uv` will\n     /// _not_ take system site packages into account when running commands like `uv pip list` or\n     /// `uv pip install`. The `--system-site-packages` flag will provide the virtual environment\n     /// with access to the system site packages directory at runtime, but it will not affect the\n     /// behavior of `uv` commands.\n     #[arg(long)]\n     pub system_site_packages: bool,\n \n     #[command(flatten)]\n     pub index_args: IndexArgs,\n \n     /// The strategy to use when resolving against multiple index URLs.\n     ///\n     /// By default, `uv` will stop at the first index on which a given package is available, and\n     /// limit resolutions to those present on that first index (`first-match`). This prevents\n     /// \"dependency confusion\" attacks, whereby an attack can upload a malicious package under the\n     /// same name to a secondary.\n     #[arg(long, value_enum, env = \"UV_INDEX_STRATEGY\")]\n     pub index_strategy: Option<IndexStrategy>,\n \n     /// Attempt to use `keyring` for authentication for index URLs.\n     ///\n     /// At present, only `--keyring-provider subprocess` is supported, which configures `uv` to\n     /// use the `keyring` CLI to handle authentication.\n     ///\n     /// Defaults to `disabled`.\n     #[arg(long, value_enum, env = \"UV_KEYRING_PROVIDER\")]\n     pub keyring_provider: Option<KeyringProviderType>,\n \n     /// Limit candidate packages to those that were uploaded prior to the given date.\n     ///\n     /// Accepts both RFC 3339 timestamps (e.g., `2006-12-02T02:07:43Z`) and UTC dates in the same\n     /// format (e.g., `2006-12-02`).\n     #[arg(long, env = \"UV_EXCLUDE_NEWER\")]\n     pub exclude_newer: Option<ExcludeNewer>,\n \n     /// The method to use when installing packages from the global cache.\n     ///\n     /// This option is only used for installing seed packages.\n     ///\n     /// Defaults to `clone` (also known as Copy-on-Write) on macOS, and `hardlink` on Linux and\n     /// Windows.\n     #[arg(long, value_enum, env = \"UV_LINK_MODE\")]\n     pub link_mode: Option<install_wheel_rs::linker::LinkMode>,\n \n     #[command(flatten)]\n     pub compat_args: compat::VenvCompatArgs,\n }\n \n #[derive(Parser, Debug, Clone)]\n pub enum ExternalCommand {\n     #[command(external_subcommand)]\n     Cmd(Vec<OsString>),\n }\n \n impl Deref for ExternalCommand {\n     type Target = Vec<OsString>;\n \n     fn deref(&self) -> &Self::Target {\n         match self {\n             Self::Cmd(cmd) => cmd,\n         }\n     }\n }\n \n impl ExternalCommand {\n     pub fn split(&self) -> (Option<&OsString>, &[OsString]) {\n         match self.as_slice() {\n             [] => (None, &[]),\n             [cmd, args @ ..] => (Some(cmd), args),\n         }\n     }\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct RunArgs {\n     /// Include optional dependencies from the extra group name; may be provided more than once.\n     /// Only applies to `pyproject.toml`, `setup.py`, and `setup.cfg` sources.\n     #[arg(long, conflicts_with = \"all_extras\", value_parser = extra_name_with_clap_error)]\n     pub extra: Option<Vec<ExtraName>>,\n \n     /// Include all optional dependencies.\n     /// Only applies to `pyproject.toml`, `setup.py`, and `setup.cfg` sources.\n     #[arg(long, conflicts_with = \"extra\")]\n     pub all_extras: bool,\n \n     #[arg(long, overrides_with(\"all_extras\"), hide = true)]\n     pub no_all_extras: bool,\n \n     /// Include development dependencies.\n     #[arg(long, overrides_with(\"no_dev\"), hide = true)]\n     pub dev: bool,\n \n     /// Omit development dependencies.\n     #[arg(long, overrides_with(\"dev\"))]\n     pub no_dev: bool,\n \n     /// The command to run.\n     #[command(subcommand)]\n     pub command: ExternalCommand,\n \n     /// Run with the given packages installed.\n     #[arg(long)]\n     pub with: Vec<String>,\n \n     #[command(flatten)]\n     pub installer: ResolverInstallerArgs,\n \n     #[command(flatten)]\n     pub build: BuildArgs,\n \n     #[command(flatten)]\n     pub refresh: RefreshArgs,\n \n     /// Run the command in a specific package in the workspace.\n     #[arg(long, conflicts_with = \"isolated\")]\n     pub package: Option<PackageName>,\n \n     /// The Python interpreter to use to build the run environment.\n     ///\n     /// By default, `uv` uses the virtual environment in the current working directory or any parent\n     /// directory, falling back to searching for a Python executable in `PATH`. The `--python`\n     /// option allows you to specify a different interpreter.\n     ///\n     /// Supported formats:\n     /// - `3.10` looks for an installed Python 3.10 using `py --list-paths` on Windows, or\n     ///   `python3.10` on Linux and macOS.\n     /// - `python3.10` or `python.exe` looks for a binary with the given name in `PATH`.\n     /// - `/home/ferris/.local/bin/python3.10` uses the exact Python at the given path.\n     #[arg(long, short, env = \"UV_PYTHON\", verbatim_doc_comment)]\n     pub python: Option<String>,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct SyncArgs {\n     /// Assert that the `uv.lock` will remain unchanged.\n     #[arg(long, conflicts_with = \"frozen\")]\n     pub locked: bool,\n \n     /// Install without updating the `uv.lock` file.\n     #[arg(long, conflicts_with = \"locked\")]\n     pub frozen: bool,\n \n     /// Include optional dependencies from the extra group name; may be provided more than once.\n     /// Only applies to `pyproject.toml`, `setup.py`, and `setup.cfg` sources.\n     #[arg(long, conflicts_with = \"all_extras\", value_parser = extra_name_with_clap_error)]\n     pub extra: Option<Vec<ExtraName>>,\n \n     /// Include all optional dependencies.\n     /// Only applies to `pyproject.toml`, `setup.py`, and `setup.cfg` sources.\n     #[arg(long, conflicts_with = \"extra\")]\n     pub all_extras: bool,\n \n     #[arg(long, overrides_with(\"all_extras\"), hide = true)]\n     pub no_all_extras: bool,\n \n     /// Include development dependencies.\n     #[arg(long, overrides_with(\"no_dev\"), hide = true)]\n     pub dev: bool,\n \n     /// Omit development dependencies.\n     #[arg(long, overrides_with(\"dev\"))]\n     pub no_dev: bool,\n \n     /// Does not clean the environment.\n     /// Without this flag any extraneous installations will be removed.\n     #[arg(long)]\n     pub no_clean: bool,\n \n     #[command(flatten)]\n     pub installer: ResolverInstallerArgs,\n \n     #[command(flatten)]\n     pub build: BuildArgs,\n \n     #[command(flatten)]\n     pub refresh: RefreshArgs,\n \n     /// The Python interpreter to use to build the run environment.\n     ///\n     /// By default, `uv` uses the virtual environment in the current working directory or any parent\n     /// directory, falling back to searching for a Python executable in `PATH`. The `--python`\n     /// option allows you to specify a different interpreter.\n     ///\n     /// Supported formats:\n     /// - `3.10` looks for an installed Python 3.10 using `py --list-paths` on Windows, or\n     ///   `python3.10` on Linux and macOS.\n     /// - `python3.10` or `python.exe` looks for a binary with the given name in `PATH`.\n     /// - `/home/ferris/.local/bin/python3.10` uses the exact Python at the given path.\n     #[arg(long, short, env = \"UV_PYTHON\", verbatim_doc_comment)]\n     pub python: Option<String>,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct LockArgs {\n     #[command(flatten)]\n     pub resolver: ResolverArgs,\n \n     #[command(flatten)]\n     pub build: BuildArgs,\n \n     #[command(flatten)]\n     pub refresh: RefreshArgs,\n \n     /// The Python interpreter to use to build the run environment.\n     ///\n     /// By default, `uv` uses the virtual environment in the current working directory or any parent\n     /// directory, falling back to searching for a Python executable in `PATH`. The `--python`\n     /// option allows you to specify a different interpreter.\n     ///\n     /// Supported formats:\n     /// - `3.10` looks for an installed Python 3.10 using `py --list-paths` on Windows, or\n     ///   `python3.10` on Linux and macOS.\n     /// - `python3.10` or `python.exe` looks for a binary with the given name in `PATH`.\n     /// - `/home/ferris/.local/bin/python3.10` uses the exact Python at the given path.\n     #[arg(long, short, env = \"UV_PYTHON\", verbatim_doc_comment)]\n     pub python: Option<String>,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct AddArgs {\n     /// The packages to add, as PEP 508 requirements (e.g., `flask==2.2.3`).\n     #[arg(required = true)]\n     pub requirements: Vec<String>,\n \n     /// Add the requirements as development dependencies.\n     #[arg(long, conflicts_with(\"optional\"))]\n     pub dev: bool,\n \n     /// Add the requirements to the specified optional dependency group.\n     #[arg(long, conflicts_with(\"dev\"))]\n     pub optional: Option<ExtraName>,\n \n     /// Add the requirements as editables.\n     #[arg(long, default_missing_value = \"true\", num_args(0..=1))]\n     pub editable: Option<bool>,\n \n     /// Add source requirements to the `project.dependencies` section of the `pyproject.toml`.\n     ///\n     /// Without this flag uv will try to use `tool.uv.sources` for any sources.\n     #[arg(long)]\n     pub raw_sources: bool,\n \n     /// Specific commit to use when adding from Git.\n     #[arg(long)]\n     pub rev: Option<String>,\n \n     /// Tag to use when adding from git.\n     #[arg(long)]\n     pub tag: Option<String>,\n \n     /// Branch to use when adding from git.\n     #[arg(long)]\n     pub branch: Option<String>,\n \n     /// Extras to activate for the dependency; may be provided more than once.\n     #[arg(long)]\n     pub extra: Option<Vec<ExtraName>>,\n \n     #[command(flatten)]\n     pub installer: ResolverInstallerArgs,\n \n     #[command(flatten)]\n     pub build: BuildArgs,\n \n     #[command(flatten)]\n     pub refresh: RefreshArgs,\n \n     /// Add the dependency to a specific package in the workspace.\n     #[arg(long, conflicts_with = \"isolated\")]\n     pub package: Option<PackageName>,\n \n     /// The Python interpreter into which packages should be installed.\n     ///\n     /// By default, `uv` installs into the virtual environment in the current working directory or\n     /// any parent directory. The `--python` option allows you to specify a different interpreter,\n     /// which is intended for use in continuous integration (CI) environments or other automated\n     /// workflows.\n     ///\n     /// Supported formats:\n     /// - `3.10` looks for an installed Python 3.10 using `py --list-paths` on Windows, or\n     ///   `python3.10` on Linux and macOS.\n     /// - `python3.10` or `python.exe` looks for a binary with the given name in `PATH`.\n     /// - `/home/ferris/.local/bin/python3.10` uses the exact Python at the given path.\n     #[arg(long, short, env = \"UV_PYTHON\", verbatim_doc_comment)]\n     pub python: Option<String>,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct RemoveArgs {\n     /// The names of the packages to remove (e.g., `flask`).\n     #[arg(required = true)]\n     pub requirements: Vec<PackageName>,\n \n     /// Remove the requirements from development dependencies.\n     #[arg(long, conflicts_with(\"optional\"))]\n     pub dev: bool,\n \n     /// Remove the requirements from the specified optional dependency group.\n     #[arg(long, conflicts_with(\"dev\"))]\n     pub optional: Option<ExtraName>,\n \n     #[command(flatten)]\n     pub installer: ResolverInstallerArgs,\n \n     #[command(flatten)]\n     pub build: BuildArgs,\n \n     #[command(flatten)]\n     pub refresh: RefreshArgs,\n \n     /// Remove the dependency from a specific package in the workspace.\n     #[arg(long, conflicts_with = \"isolated\")]\n     pub package: Option<PackageName>,\n \n     /// The Python interpreter into which packages should be installed.\n     ///\n     /// By default, `uv` installs into the virtual environment in the current working directory or\n     /// any parent directory. The `--python` option allows you to specify a different interpreter,\n     /// which is intended for use in continuous integration (CI) environments or other automated\n     /// workflows.\n     ///\n     /// Supported formats:\n     /// - `3.10` looks for an installed Python 3.10 using `py --list-paths` on Windows, or\n     ///   `python3.10` on Linux and macOS.\n     /// - `python3.10` or `python.exe` looks for a binary with the given name in `PATH`.\n     /// - `/home/ferris/.local/bin/python3.10` uses the exact Python at the given path.\n     #[arg(long, short, env = \"UV_PYTHON\", verbatim_doc_comment)]\n     pub python: Option<String>,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct TreeArgs {\n     #[command(flatten)]\n     pub tree: DisplayTreeArgs,\n \n     #[command(flatten)]\n     pub build: BuildArgs,\n \n     #[command(flatten)]\n     pub resolver: ResolverArgs,\n \n     /// The Python interpreter for which packages should be listed.\n     ///\n     /// By default, `uv` installs into the virtual environment in the current working directory or\n     /// any parent directory. The `--python` option allows you to specify a different interpreter,\n     /// which is intended for use in continuous integration (CI) environments or other automated\n     /// workflows.\n     ///\n     /// Supported formats:\n     /// - `3.10` looks for an installed Python 3.10 using `py --list-paths` on Windows, or\n     ///   `python3.10` on Linux and macOS.\n     /// - `python3.10` or `python.exe` looks for a binary with the given name in `PATH`.\n     /// - `/home/ferris/.local/bin/python3.10` uses the exact Python at the given path.\n     #[arg(long, short, env = \"UV_PYTHON\", verbatim_doc_comment)]\n     pub python: Option<String>,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct ToolNamespace {\n     #[command(subcommand)]\n     pub command: ToolCommand,\n }\n \n #[derive(Subcommand)]\n pub enum ToolCommand {\n     /// Run a tool.\n     Run(ToolRunArgs),\n     /// Hidden alias for `uv tool run` for invocation from the `uvx` command\n     #[command(\n         hide = true,\n         override_usage = \"uvx [OPTIONS] <COMMAND>\",\n         about = \"Run a tool.\"\n     )]\n     Uvx(ToolRunArgs),\n     /// Install a tool.\n     Install(ToolInstallArgs),\n     /// List installed tools.\n     List(ToolListArgs),\n     /// Uninstall a tool.\n     Uninstall(ToolUninstallArgs),\n     /// Show the tools directory.\n     Dir,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct ToolRunArgs {\n     /// The command to run.\n     ///\n     /// By default, the package to install is assumed to match the command name.\n     ///\n     /// The name of the command can include an exact version in the format `<package>@<version>`.\n     ///\n     /// If more complex version specification is desired or if the command is provided by a different\n     /// package, use `--from`.\n     #[command(subcommand)]\n     pub command: ExternalCommand,\n \n     /// Use the given package to provide the command.\n     ///\n     /// By default, the package name is assumed to match the command name.\n     #[arg(long)]\n     pub from: Option<String>,\n \n     /// Include the following extra requirements.\n     #[arg(long)]\n     pub with: Vec<String>,\n \n     #[command(flatten)]\n     pub installer: ResolverInstallerArgs,\n \n     #[command(flatten)]\n     pub build: BuildArgs,\n \n     #[command(flatten)]\n     pub refresh: RefreshArgs,\n \n     /// The Python interpreter to use to build the run environment.\n     ///\n     /// By default, `uv` uses the virtual environment in the current working directory or any parent\n     /// directory, falling back to searching for a Python executable in `PATH`. The `--python`\n     /// option allows you to specify a different interpreter.\n     ///\n     /// Supported formats:\n     /// - `3.10` looks for an installed Python 3.10 using `py --list-paths` on Windows, or\n     ///   `python3.10` on Linux and macOS.\n     /// - `python3.10` or `python.exe` looks for a binary with the given name in `PATH`.\n     /// - `/home/ferris/.local/bin/python3.10` uses the exact Python at the given path.\n     #[arg(long, short, env = \"UV_PYTHON\", verbatim_doc_comment)]\n     pub python: Option<String>,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct ToolInstallArgs {\n     /// The package to install commands from.\n     pub package: String,\n \n     /// The package to install commands from.\n     ///\n     /// This option is provided for parity with `uv tool run`, but is redundant with `package`.\n     #[arg(long, hide = true)]\n     pub from: Option<String>,\n \n     /// Include the following extra requirements.\n     #[arg(long)]\n     pub with: Vec<String>,\n \n     #[command(flatten)]\n     pub installer: ResolverInstallerArgs,\n \n     #[command(flatten)]\n     pub build: BuildArgs,\n \n     #[command(flatten)]\n     pub refresh: RefreshArgs,\n \n     /// Force installation of the tool.\n     ///\n     /// Will replace any existing entry points with the same name in the executable directory.\n     #[arg(long)]\n     pub force: bool,\n \n     /// The Python interpreter to use to build the tool environment.\n     ///\n     /// By default, uv will search for a Python executable in the `PATH`. uv ignores virtual\n     /// environments while looking for interpreter for tools. The `--python` option allows\n     /// you to specify a different interpreter.\n     ///\n     /// Supported formats:\n     /// - `3.10` looks for an installed Python 3.10 using `py --list-paths` on Windows, or\n     ///   `python3.10` on Linux and macOS.\n     /// - `python3.10` or `python.exe` looks for a binary with the given name in `PATH`.\n     /// - `/home/ferris/.local/bin/python3.10` uses the exact Python at the given path.\n     #[arg(long, short, env = \"UV_PYTHON\", verbatim_doc_comment)]\n     pub python: Option<String>,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct ToolListArgs;\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct ToolUninstallArgs {\n     /// The name of the tool to uninstall.\n     #[arg(required = true)]\n     pub name: Option<PackageName>,\n \n     /// Uninstall all tools.\n     #[arg(long, conflicts_with(\"name\"))]\n     pub all: bool,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct PythonNamespace {\n     #[command(subcommand)]\n     pub command: PythonCommand,\n }\n \n #[derive(Subcommand)]\n pub enum PythonCommand {\n     /// List the available Python installations.\n     List(PythonListArgs),\n \n     /// Download and install Python versions.\n     Install(PythonInstallArgs),\n \n     /// Search for a Python installation.\n     Find(PythonFindArgs),\n \n     /// Pin to a specific Python version.\n     Pin(PythonPinArgs),\n \n     /// Show the uv Python installation directory.\n     Dir,\n \n     /// Uninstall Python versions.\n     Uninstall(PythonUninstallArgs),\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct PythonListArgs {\n     /// List all Python versions, including outdated patch versions.\n     #[arg(long)]\n     pub all_versions: bool,\n \n     /// List Python installations for all platforms.\n     #[arg(long)]\n     pub all_platforms: bool,\n \n     /// Only show installed Python versions, exclude available downloads.\n     #[arg(long)]\n     pub only_installed: bool,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct PythonInstallArgs {\n     /// The Python version(s) to install.\n     ///\n     /// If not provided, the requested Python version(s) will be read from the `.python-versions`\n     /// or `.python-version` files. If neither file is present, uv will check if it has\n     /// installed any Python versions. If not, it will install the latest stable version of Python.\n     pub targets: Vec<String>,\n \n     /// Reinstall the requested Python version, if it's already installed.\n     #[arg(long, short, alias = \"force\")]\n     pub reinstall: bool,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct PythonUninstallArgs {\n     /// The Python version(s) to uninstall.\n     #[arg(required = true)]\n     pub targets: Vec<String>,\n \n     /// Uninstall all managed Python versions.\n     #[arg(long, conflicts_with(\"targets\"))]\n     pub all: bool,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct PythonFindArgs {\n     /// The Python request.\n     pub request: Option<String>,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct PythonPinArgs {\n     /// The Python version.\n     pub request: Option<String>,\n \n     /// Write the resolved Python interpreter path instead of the request.\n     ///\n     /// Ensures that the exact same interpreter is used.\n     #[arg(long, overrides_with(\"resolved\"))]\n     pub resolved: bool,\n \n     #[arg(long, overrides_with(\"no_resolved\"), hide = true)]\n     pub no_resolved: bool,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct IndexArgs {\n     /// The URL of the Python package index (by default: <https://pypi.org/simple>).\n     ///\n     /// Accepts either a repository compliant with PEP 503 (the simple repository API), or a local\n     /// directory laid out in the same format.\n     ///\n     /// The index given by this flag is given lower priority than all other\n     /// indexes specified via the `--extra-index-url` flag.\n     #[arg(long, short, env = \"UV_INDEX_URL\", value_parser = parse_index_url)]\n     pub index_url: Option<Maybe<IndexUrl>>,\n \n     /// Extra URLs of package indexes to use, in addition to `--index-url`.\n     ///\n     /// Accepts either a repository compliant with PEP 503 (the simple repository API), or a local\n     /// directory laid out in the same format.\n     ///\n     /// All indexes given via this flag take priority over the index\n     /// in `--index-url` (which defaults to PyPI). And when multiple\n     /// `--extra-index-url` flags are given, earlier values take priority.\n     #[arg(long, env = \"UV_EXTRA_INDEX_URL\", value_delimiter = ' ', value_parser = parse_index_url)]\n     pub extra_index_url: Option<Vec<Maybe<IndexUrl>>>,\n \n     /// Locations to search for candidate distributions, beyond those found in the indexes.\n     ///\n     /// If a path, the target must be a directory that contains package as wheel files (`.whl`) or\n     /// source distributions (`.tar.gz` or `.zip`) at the top level.\n     ///\n     /// If a URL, the page must contain a flat list of links to package files.\n     #[arg(long, short)]\n     pub find_links: Option<Vec<FlatIndexLocation>>,\n \n     /// Ignore the registry index (e.g., PyPI), instead relying on direct URL dependencies and those\n     /// discovered via `--find-links`.\n     #[arg(long)]\n     pub no_index: bool,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct RefreshArgs {\n     /// Refresh all cached data.\n     #[arg(long, conflicts_with(\"offline\"), overrides_with(\"no_refresh\"))]\n     pub refresh: bool,\n \n     #[arg(\n         long,\n         conflicts_with(\"offline\"),\n         overrides_with(\"refresh\"),\n         hide = true\n     )]\n     pub no_refresh: bool,\n \n     /// Refresh cached data for a specific package.\n     #[arg(long)]\n     pub refresh_package: Vec<PackageName>,\n }\n \n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct BuildArgs {\n     /// Don't build source distributions.\n     ///\n     /// When enabled, resolving will not run arbitrary code. The cached wheels of already-built\n     /// source distributions will be reused, but operations that require building distributions will\n     /// exit with an error.\n     #[arg(long, overrides_with(\"build\"))]\n     pub no_build: bool,\n \n     #[arg(long, overrides_with(\"no_build\"), hide = true)]\n     pub build: bool,\n \n     /// Don't build source distributions for a specific package.\n     #[arg(long)]\n     pub no_build_package: Vec<PackageName>,\n \n     /// Don't install pre-built wheels.\n     ///\n     /// The given packages will be installed from a source distribution. The resolver\n     /// will still use pre-built wheels for metadata.\n     #[arg(long, overrides_with(\"binary\"))]\n     pub no_binary: bool,\n \n     #[arg(long, overrides_with(\"no_binary\"), hide = true)]\n     pub binary: bool,\n \n     /// Don't install pre-built wheels for a specific package.\n     #[arg(long)]\n     pub no_binary_package: Vec<PackageName>,\n }\n \n /// Arguments that are used by commands that need to install (but not resolve) packages.\n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct InstallerArgs {\n     #[command(flatten)]\n     pub index_args: IndexArgs,\n \n     /// Reinstall all packages, regardless of whether they're already installed.\n     #[arg(long, alias = \"force-reinstall\", overrides_with(\"no_reinstall\"))]\n     pub reinstall: bool,\n \n     #[arg(long, overrides_with(\"reinstall\"), hide = true)]\n     pub no_reinstall: bool,\n \n     /// Reinstall a specific package, regardless of whether it's already installed.\n     #[arg(long)]\n     pub reinstall_package: Vec<PackageName>,\n \n     /// The strategy to use when resolving against multiple index URLs.\n     ///\n     /// By default, `uv` will stop at the first index on which a given package is available, and\n     /// limit resolutions to those present on that first index (`first-match`). This prevents\n     /// \"dependency confusion\" attacks, whereby an attack can upload a malicious package under the\n     /// same name to a secondary.\n     #[arg(long, value_enum, env = \"UV_INDEX_STRATEGY\")]\n     pub index_strategy: Option<IndexStrategy>,\n \n     /// Attempt to use `keyring` for authentication for index URLs.\n     ///\n     /// At present, only `--keyring-provider subprocess` is supported, which configures `uv` to\n     /// use the `keyring` CLI to handle authentication.\n     ///\n     /// Defaults to `disabled`.\n     #[arg(long, value_enum, env = \"UV_KEYRING_PROVIDER\")]\n     pub keyring_provider: Option<KeyringProviderType>,\n \n     /// Settings to pass to the PEP 517 build backend, specified as `KEY=VALUE` pairs.\n     #[arg(long, short = 'C', alias = \"config-settings\")]\n     pub config_setting: Option<Vec<ConfigSettingEntry>>,\n \n     /// Limit candidate packages to those that were uploaded prior to the given date.\n     ///\n     /// Accepts both RFC 3339 timestamps (e.g., `2006-12-02T02:07:43Z`) and UTC dates in the same\n     /// format (e.g., `2006-12-02`).\n     #[arg(long, env = \"UV_EXCLUDE_NEWER\")]\n     pub exclude_newer: Option<ExcludeNewer>,\n \n     /// The method to use when installing packages from the global cache.\n     ///\n     /// Defaults to `clone` (also known as Copy-on-Write) on macOS, and `hardlink` on Linux and\n     /// Windows.\n     #[arg(long, value_enum, env = \"UV_LINK_MODE\")]\n     pub link_mode: Option<install_wheel_rs::linker::LinkMode>,\n \n     /// Compile Python files to bytecode.\n     ///\n     /// By default, does not compile Python (`.py`) files to bytecode (`__pycache__/*.pyc`), instead\n     /// Python lazily does the compilation the first time a module is imported. In cases where the\n     /// first start time matters, such as CLI applications and docker containers, this option can\n     /// trade longer install time for faster startup.\n     ///\n     /// The compile option will process the entire site-packages directory for consistency and\n     /// (like pip) ignore all errors.\n     #[arg(long, alias = \"compile\", overrides_with(\"no_compile_bytecode\"))]\n     pub compile_bytecode: bool,\n \n     #[arg(\n         long,\n         alias = \"no-compile\",\n         overrides_with(\"compile_bytecode\"),\n         hide = true\n     )]\n     pub no_compile_bytecode: bool,\n }\n \n /// Arguments that are used by commands that need to resolve (but not install) packages.\n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct ResolverArgs {\n     #[command(flatten)]\n     pub index_args: IndexArgs,\n \n     /// Allow package upgrades, ignoring pinned versions in any existing output file.\n     #[arg(long, short = 'U', overrides_with(\"no_upgrade\"))]\n     pub upgrade: bool,\n \n     #[arg(long, overrides_with(\"upgrade\"), hide = true)]\n     pub no_upgrade: bool,\n \n     /// Allow upgrades for a specific package, ignoring pinned versions in any existing output\n     /// file.\n     #[arg(long, short = 'P')]\n     pub upgrade_package: Vec<Requirement<VerbatimParsedUrl>>,\n \n     /// The strategy to use when resolving against multiple index URLs.\n     ///\n     /// By default, `uv` will stop at the first index on which a given package is available, and\n     /// limit resolutions to those present on that first index (`first-match`). This prevents\n     /// \"dependency confusion\" attacks, whereby an attack can upload a malicious package under the\n     /// same name to a secondary.\n     #[arg(long, value_enum, env = \"UV_INDEX_STRATEGY\")]\n     pub index_strategy: Option<IndexStrategy>,\n \n     /// Attempt to use `keyring` for authentication for index URLs.\n     ///\n     /// At present, only `--keyring-provider subprocess` is supported, which configures `uv` to\n     /// use the `keyring` CLI to handle authentication.\n     ///\n     /// Defaults to `disabled`.\n     #[arg(long, value_enum, env = \"UV_KEYRING_PROVIDER\")]\n     pub keyring_provider: Option<KeyringProviderType>,\n \n     /// The strategy to use when selecting between the different compatible versions for a given\n     /// package requirement.\n     ///\n     /// By default, `uv` will use the latest compatible version of each package (`highest`).\n     #[arg(long, value_enum, env = \"UV_RESOLUTION\")]\n     pub resolution: Option<ResolutionMode>,\n \n     /// The strategy to use when considering pre-release versions.\n     ///\n     /// By default, `uv` will accept pre-releases for packages that _only_ publish pre-releases,\n     /// along with first-party requirements that contain an explicit pre-release marker in the\n     /// declared specifiers (`if-necessary-or-explicit`).\n     #[arg(long, value_enum, env = \"UV_PRERELEASE\")]\n     pub prerelease: Option<PreReleaseMode>,\n \n     #[arg(long, hide = true)]\n     pub pre: bool,\n \n     /// Settings to pass to the PEP 517 build backend, specified as `KEY=VALUE` pairs.\n     #[arg(long, short = 'C', alias = \"config-settings\")]\n     pub config_setting: Option<Vec<ConfigSettingEntry>>,\n \n     /// Limit candidate packages to those that were uploaded prior to the given date.\n     ///\n     /// Accepts both RFC 3339 timestamps (e.g., `2006-12-02T02:07:43Z`) and UTC dates in the same\n     /// format (e.g., `2006-12-02`).\n     #[arg(long, env = \"UV_EXCLUDE_NEWER\")]\n     pub exclude_newer: Option<ExcludeNewer>,\n \n     /// The method to use when installing packages from the global cache.\n     ///\n     /// This option is only used when building source distributions.\n     ///\n     /// Defaults to `clone` (also known as Copy-on-Write) on macOS, and `hardlink` on Linux and\n     /// Windows.\n     #[arg(long, value_enum, env = \"UV_LINK_MODE\")]\n     pub link_mode: Option<install_wheel_rs::linker::LinkMode>,\n }\n \n /// Arguments that are used by commands that need to resolve and install packages.\n #[derive(Args)]\n #[allow(clippy::struct_excessive_bools)]\n pub struct ResolverInstallerArgs {\n     #[command(flatten)]\n     pub index_args: IndexArgs,\n \n     /// Allow package upgrades, ignoring pinned versions in any existing output file.\n     #[arg(long, short = 'U', overrides_with(\"no_upgrade\"))]\n     pub upgrade: bool,\n \n     #[arg(long, overrides_with(\"upgrade\"), hide = true)]\n     pub no_upgrade: bool,\n \n     /// Allow upgrades for a specific package, ignoring pinned versions in any existing output\n     /// file.\n     #[arg(long, short = 'P')]\n     pub upgrade_package: Vec<Requirement<VerbatimParsedUrl>>,\n \n     /// Reinstall all packages, regardless of whether they're already installed.\n     #[arg(long, alias = \"force-reinstall\", overrides_with(\"no_reinstall\"))]\n     pub reinstall: bool,\n \n     #[arg(long, overrides_with(\"reinstall\"), hide = true)]\n     pub no_reinstall: bool,\n \n     /// Reinstall a specific package, regardless of whether it's already installed.\n     #[arg(long)]\n     pub reinstall_package: Vec<PackageName>,\n \n     /// The strategy to use when resolving against multiple index URLs.\n     ///\n     /// By default, `uv` will stop at the first index on which a given package is available, and\n     /// limit resolutions to those present on that first index (`first-match`). This prevents\n     /// \"dependency confusion\" attacks, whereby an attack can upload a malicious package under the\n     /// same name to a secondary.\n     #[arg(long, value_enum, env = \"UV_INDEX_STRATEGY\")]\n     pub index_strategy: Option<IndexStrategy>,\n \n     /// Attempt to use `keyring` for authentication for index URLs.\n     ///\n     /// At present, only `--keyring-provider subprocess` is supported, which configures `uv` to\n     /// use the `keyring` CLI to handle authentication.\n     ///\n     /// Defaults to `disabled`.\n     #[arg(long, value_enum, env = \"UV_KEYRING_PROVIDER\")]\n     pub keyring_provider: Option<KeyringProviderType>,\n \n     /// The strategy to use when selecting between the different compatible versions for a given\n     /// package requirement.\n     ///\n     /// By default, `uv` will use the latest compatible version of each package (`highest`).\n     #[arg(long, value_enum, env = \"UV_RESOLUTION\")]\n     pub resolution: Option<ResolutionMode>,\n \n     /// The strategy to use when considering pre-release versions.\n     ///\n     /// By default, `uv` will accept pre-releases for packages that _only_ publish pre-releases,\n     /// along with first-party requirements that contain an explicit pre-release marker in the\n     /// declared specifiers (`if-necessary-or-explicit`).\n     #[arg(long, value_enum, env = \"UV_PRERELEASE\")]\n     pub prerelease: Option<PreReleaseMode>,\n \n     #[arg(long, hide = true)]\n     pub pre: bool,\n \n     /// Settings to pass to the PEP 517 build backend, specified as `KEY=VALUE` pairs.\n     #[arg(long, short = 'C', alias = \"config-settings\")]\n     pub config_setting: Option<Vec<ConfigSettingEntry>>,\n \n     /// Limit candidate packages to those that were uploaded prior to the given date.\n     ///\n     /// Accepts both RFC 3339 timestamps (e.g., `2006-12-02T02:07:43Z`) and UTC dates in the same\n     /// format (e.g., `2006-12-02`).\n     #[arg(long, env = \"UV_EXCLUDE_NEWER\")]\n     pub exclude_newer: Option<ExcludeNewer>,\n \n     /// The method to use when installing packages from the global cache.\n     ///\n     /// Defaults to `clone` (also known as Copy-on-Write) on macOS, and `hardlink` on Linux and\n     /// Windows.\n     #[arg(long, value_enum, env = \"UV_LINK_MODE\")]\n     pub link_mode: Option<install_wheel_rs::linker::LinkMode>,\n \n     /// Compile Python files to bytecode.\n     ///\n     /// By default, does not compile Python (`.py`) files to bytecode (`__pycache__/*.pyc`), instead\n     /// Python lazily does the compilation the first time a module is imported. In cases where the\n     /// first start time matters, such as CLI applications and docker containers, this option can\n     /// trade longer install time for faster startup.\n     ///\n     /// The compile option will process the entire site-packages directory for consistency and\n     /// (like pip) ignore all errors.\n     #[arg(long, alias = \"compile\", overrides_with(\"no_compile_bytecode\"))]\n     pub compile_bytecode: bool,\n \n     #[arg(\n         long,\n         alias = \"no-compile\",\n         overrides_with(\"compile_bytecode\"),\n         hide = true\n     )]\n     pub no_compile_bytecode: bool,\n }\n \n #[derive(Args)]\n pub struct DisplayTreeArgs {\n     /// Maximum display depth of the dependency tree\n     #[arg(long, short, default_value_t = 255)]\n     pub depth: u8,\n \n     /// Prune the given package from the display of the dependency tree.\n     #[arg(long)]\n     pub prune: Vec<PackageName>,\n \n     /// Display only the specified packages.\n     #[arg(long)]\n     pub package: Vec<PackageName>,\n \n     /// Do not de-duplicate repeated dependencies.\n     /// Usually, when a package has already displayed its dependencies,\n     /// further occurrences will not re-display its dependencies,\n     /// and will include a (*) to indicate it has already been shown.\n     /// This flag will cause those duplicates to be repeated.\n     #[arg(long)]\n     pub no_dedupe: bool,\n \n     /// Show the reverse dependencies for the given package. This flag will invert the tree and display the packages that depend on the given package.\n     #[arg(long, alias = \"reverse\")]\n     pub invert: bool,\n }\n",
+              "additions": 1,
+              "deletions": 1,
+              "status": "modified"
+            }
+          ]
+        },
+        "id": "msg_ee538c48c001EEsMWlUFM7GvVz",
+        "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "\"The command‑line tool currently hides the global flag `--isolated` from its generated help text, making it impossible for users to discover its existence or purpose. The required behavior is that every help display – whether invoked as `uv --help`, `uv help`, or any subcommand’s help (e.g., `uv pip --help`, `uv tool --help`) – must list the flag under the global options section. The output must contain the flag name exactly as `--isolated` on its own line, followed by the description line exactly as `Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any parent directories`. The flag should appear in the same formatting as other global options, preserving indentation and line breaks. The command must still exit with status code 0 when displaying help. All snapshots that compare the full help text should now include these two new lines in every relevant help output.\"\n",
+          "id": "prt_ee538c48d001OFVlBOmAuL8CjI",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee538c48c001EEsMWlUFM7GvVz"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ee538c48c001EEsMWlUFM7GvVz",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 10651,
+          "input": 10465,
+          "output": 186,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1781962163528,
+          "completed": 1781962171321
+        },
+        "finish": "tool-calls",
+        "id": "msg_ee538c548001UY2vsULu4hL34e",
+        "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO"
+      },
+      "parts": [
+        {
+          "snapshot": "b8e23458c2607dd8ec3931380c9224b6ea9a386d",
+          "type": "step-start",
+          "id": "prt_ee538de2c0019U31XMMzetYql4",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee538c548001UY2vsULu4hL34e"
+        },
+        {
+          "type": "reasoning",
+          "text": "The user is asking me to fix a CLI tool's help text to make the `--isolated` flag visible in all help outputs. Let me first understand the codebase structure and find where the help text is generated.\n\nLet me start by exploring the workspace to understand the project structure.\n",
+          "time": {
+            "start": 1781962169901,
+            "end": 1781962169919
+          },
+          "id": "prt_ee538de2d001tLLOQtO0DytG8Y",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee538c548001UY2vsULu4hL34e"
+        },
+        {
+          "type": "text",
+          "text": "\n\n",
+          "time": {
+            "start": 1781962169921,
+            "end": 1781962169940
+          },
+          "id": "prt_ee538de40002Mi30hAa8pspY2A",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee538c548001UY2vsULu4hL34e"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_547e2ab967794cb68a9b97ab",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "ls -la /workspace",
+              "description": "List workspace contents"
+            },
+            "output": "total 464\ndrwxrwxrwx 11 root root   4096 Jun 20 13:09 .\ndrwxr-xr-x 22 root root   4096 Jun 20 13:29 ..\ndrwxr-xr-x  2 root root   4096 Jun 20 13:09 .cargo\ndrwxr-xr-x  2 root root   4096 Jun 20 13:09 .config\n-rw-r--r--  1 root root    355 Jun 20 13:09 .editorconfig\ndrwxr-xr-x  8 root root   4096 Jun 20 13:29 .git\n-rw-r--r--  1 root root     76 Jun 20 13:09 .gitattributes\ndrwxr-xr-x  3 root root   4096 Jun 20 13:09 .github\n-rw-r--r--  1 root root    479 Jun 20 13:09 .gitignore\n-rw-r--r--  1 root root    797 Jun 20 13:09 .pre-commit-config.yaml\n-rw-r--r--  1 root root     43 Jun 20 13:09 .python-versions\n-rw-r--r--  1 root root   4818 Jun 20 13:09 BENCHMARKS.md\n-rw-r--r--  1 root root  85329 Jun 20 13:09 CHANGELOG.md\n-rw-r--r--  1 root root   5016 Jun 20 13:09 CONTRIBUTING.md\n-rw-r--r--  1 root root 134577 Jun 20 13:09 Cargo.lock\n-rw-r--r--  1 root root   9669 Jun 20 13:09 Cargo.toml\n-rw-r--r--  1 root root   1539 Jun 20 13:09 Dockerfile\n-rw-r--r--  1 root root  11356 Jun 20 13:09 LICENSE-APACHE\n-rw-r--r--  1 root root   1077 Jun 20 13:09 LICENSE-MIT\n-rw-r--r--  1 root root  21647 Jun 20 13:09 PIP_COMPATIBILITY.md\n-rw-r--r--  1 root root  21688 Jun 20 13:09 PREVIEW-CHANGELOG.md\n-rw-r--r--  1 root root  34329 Jun 20 13:09 README.md\n-rw-r--r--  1 root root    376 Jun 20 13:09 _typos.toml\ndrwxr-xr-x  5 root root   4096 Jun 20 13:09 assets\n-rw-r--r--  1 root root    664 Jun 20 13:09 clippy.toml\ndrwxr-xr-x 41 root root   4096 Jun 20 13:09 crates\ndrwxr-xr-x  7 root root   4096 Jun 20 13:09 docs\n-rw-r--r--  1 root root   2415 Jun 20 13:09 pyproject.toml\ndrwxr-xr-x  3 root root   4096 Jun 20 13:09 python\n-rw-r--r--  1 root root    202 Jun 20 13:09 ruff.toml\n-rw-r--r--  1 root root     29 Jun 20 13:09 rust-toolchain.toml\ndrwxr-xr-x 10 root root   4096 Jun 20 13:09 scripts\n-rw-r--r--  1 root root  32697 Jun 20 13:09 uv.schema.json\n",
+            "metadata": {
+              "output": "total 464\ndrwxrwxrwx 11 root root   4096 Jun 20 13:09 .\ndrwxr-xr-x 22 root root   4096 Jun 20 13:29 ..\ndrwxr-xr-x  2 root root   4096 Jun 20 13:09 .cargo\ndrwxr-xr-x  2 root root   4096 Jun 20 13:09 .config\n-rw-r--r--  1 root root    355 Jun 20 13:09 .editorconfig\ndrwxr-xr-x  8 root root   4096 Jun 20 13:29 .git\n-rw-r--r--  1 root root     76 Jun 20 13:09 .gitattributes\ndrwxr-xr-x  3 root root   4096 Jun 20 13:09 .github\n-rw-r--r--  1 root root    479 Jun 20 13:09 .gitignore\n-rw-r--r--  1 root root    797 Jun 20 13:09 .pre-commit-config.yaml\n-rw-r--r--  1 root root     43 Jun 20 13:09 .python-versions\n-rw-r--r--  1 root root   4818 Jun 20 13:09 BENCHMARKS.md\n-rw-r--r--  1 root root  85329 Jun 20 13:09 CHANGELOG.md\n-rw-r--r--  1 root root   5016 Jun 20 13:09 CONTRIBUTING.md\n-rw-r--r--  1 root root 134577 Jun 20 13:09 Cargo.lock\n-rw-r--r--  1 root root   9669 Jun 20 13:09 Cargo.toml\n-rw-r--r--  1 root root   1539 Jun 20 13:09 Dockerfile\n-rw-r--r--  1 root root  11356 Jun 20 13:09 LICENSE-APACHE\n-rw-r--r--  1 root root   1077 Jun 20 13:09 LICENSE-MIT\n-rw-r--r--  1 root root  21647 Jun 20 13:09 PIP_COMPATIBILITY.md\n-rw-r--r--  1 root root  21688 Jun 20 13:09 PREVIEW-CHANGELOG.md\n-rw-r--r--  1 root root  34329 Jun 20 13:09 README.md\n-rw-r--r--  1 root root    376 Jun 20 13:09 _typos.toml\ndrwxr-xr-x  5 root root   4096 Jun 20 13:09 assets\n-rw-r--r--  1 root root    664 Jun 20 13:09 clippy.toml\ndrwxr-xr-x 41 root root   4096 Jun 20 13:09 crates\ndrwxr-xr-x  7 root root   4096 Jun 20 13:09 docs\n-rw-r--r--  1 root root   2415 Jun 20 13:09 pyproject.toml\ndrwxr-xr-x  3 root root   4096 Jun 20 13:09 python\n-rw-r--r--  1 root root    202 Jun 20 13:09 ruff.toml\n-rw-r--r--  1 root root     29 Jun 20 13:09 rust-toolchain.toml\ndrwxr-xr-x 10 root root   4096 Jun 20 13:09 scripts\n-rw-r--r--  1 root root  32697 Jun 20 13:09 uv.schema.json\n",
+              "exit": 0,
+              "description": "List workspace contents",
+              "truncated": false
+            },
+            "title": "List workspace contents",
+            "time": {
+              "start": 1781962170197,
+              "end": 1781962170292
+            }
+          },
+          "id": "prt_ee538de41002RQhB21437TXqKZ",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee538c548001UY2vsULu4hL34e"
+        },
+        {
+          "type": "tool",
+          "tool": "glob",
+          "callID": "call_a79301822cef402fa13f6de7",
+          "state": {
+            "status": "completed",
+            "input": {
+              "pattern": "**/*.rs",
+              "path": "/workspace"
+            },
+            "output": "/workspace/scripts/packages/deptry_reproducer/src/lib.rs\n/workspace/crates/uv-trampoline/build.rs\n/workspace/crates/uv-trampoline/src/lib.rs\n/workspace/crates/uv-trampoline/src/helpers.rs\n/workspace/crates/uv-trampoline/src/diagnostics.rs\n/workspace/crates/uv-trampoline/src/bounce.rs\n/workspace/crates/uv-trampoline/src/bin/uv-trampoline-console.rs\n/workspace/crates/uv-trampoline/src/bin/uv-trampoline-gui.rs\n/workspace/crates/uv-state/src/lib.rs\n/workspace/crates/pep508-rs/src/lib.rs\n/workspace/crates/pep508-rs/src/origin.rs\n/workspace/crates/pep508-rs/src/marker.rs\n/workspace/crates/pep508-rs/src/cursor.rs\n/workspace/crates/pep508-rs/src/unnamed.rs\n/workspace/crates/pep508-rs/src/verbatim_url.rs\n/workspace/crates/uv-distribution/src/lib.rs\n/workspace/crates/uv-distribution/src/source/mod.rs\n/workspace/crates/uv-distribution/src/source/built_wheel_metadata.rs\n/workspace/crates/uv-distribution/src/source/revision.rs\n/workspace/crates/uv-distribution/src/pyproject.rs\n/workspace/crates/uv-distribution/src/locks.rs\n/workspace/crates/uv-distribution/src/index/cached_wheel.rs\n/workspace/crates/uv-distribution/src/index/registry_wheel_index.rs\n/workspace/crates/uv-distribution/src/index/built_wheel_index.rs\n/workspace/crates/uv-distribution/src/index/mod.rs\n/workspace/crates/uv-distribution/src/metadata/lowering.rs\n/workspace/crates/uv-distribution/src/metadata/mod.rs\n/workspace/crates/uv-distribution/src/metadata/requires_dist.rs\n/workspace/crates/uv-distribution/src/download.rs\n/workspace/crates/uv-distribution/src/workspace.rs\n/workspace/crates/uv-distribution/src/distribution_database.rs\n/workspace/crates/uv-distribution/src/error.rs\n/workspace/crates/uv-distribution/src/pyproject_mut.rs\n/workspace/crates/uv-distribution/src/reporter.rs\n/workspace/crates/uv-distribution/src/archive.rs\n/workspace/crates/requirements-txt/src/lib.rs\n/workspace/crates/requirements-txt/src/requirement.rs\n/workspace/crates/platform-tags/src/lib.rs\n/workspace/crates/platform-tags/src/tags.rs\n/workspace/crates/platform-tags/src/platform.rs\n/workspace/crates/uv-virtualenv/src/lib.rs\n/workspace/crates/uv-virtualenv/src/bare.rs\n/workspace/crates/uv-dev/src/compile.rs\n/workspace/crates/uv-dev/src/wheel_metadata.rs\n/workspace/crates/uv-dev/src/build.rs\n/workspace/crates/uv-dev/src/render_benchmarks.rs\n/workspace/crates/uv-dev/src/main.rs\n/workspace/crates/uv-dev/src/generate_json_schema.rs\n/workspace/crates/uv-dev/src/clear_compile.rs\n/workspace/crates/uv-build/src/lib.rs\n/workspace/crates/uv-auth/src/lib.rs\n/workspace/crates/uv-auth/src/keyring.rs\n/workspace/crates/uv-auth/src/realm.rs\n/workspace/crates/uv-auth/src/middleware.rs\n/workspace/crates/uv-auth/src/credentials.rs\n/workspace/crates/uv-auth/src/cache.rs\n/workspace/crates/install-wheel-rs/src/lib.rs\n/workspace/crates/install-wheel-rs/src/linker.rs\n/workspace/crates/install-wheel-rs/src/script.rs\n/workspace/crates/install-wheel-rs/src/wheel.rs\n/workspace/crates/install-wheel-rs/src/uninstall.rs\n/workspace/crates/install-wheel-rs/src/record.rs\n/workspace/crates/install-wheel-rs/src/metadata.rs\n/workspace/crates/uv-normalize/src/lib.rs\n/workspace/crates/uv-normalize/src/extra_name.rs\n/workspace/crates/uv-normalize/src/group_name.rs\n/workspace/crates/uv-normalize/src/package_name.rs\n/workspace/crates/uv-macros/src/lib.rs\n/workspace/crates/uv-git/src/lib.rs\n/workspace/crates/uv-git/src/resolver.rs\n/workspace/crates/uv-git/src/git.rs\n/workspace/crates/uv-git/src/sha.rs\n/workspace/crates/uv-git/src/source.rs\n/workspace/crates/uv-installer/src/lib.rs\n/workspace/crates/uv-installer/src/compile.rs\n/workspace/crates/uv-installer/src/plan.rs\n/workspace/crates/uv-installer/src/installer.rs\n/workspace/crates/uv-installer/src/satisfies.rs\n/workspace/crates/uv-installer/src/site_packages.rs\n/workspace/crates/uv-installer/src/uninstall.rs\n/workspace/crates/uv-installer/src/preparer.rs\n/workspace/crates/uv-cache/src/lib.rs\n/workspace/crates/uv-cache/src/by_timestamp.rs\n/workspace/crates/uv-cache/src/wheel.rs\n/workspace/crates/uv-cache/src/removal.rs\n/workspace/crates/uv-cache/src/timestamp.rs\n/workspace/crates/uv-cache/src/cli.rs\n/workspace/crates/uv-cache/src/archive.rs\n/workspace/crates/distribution-filename/src/lib.rs\n/workspace/crates/distribution-filename/src/egg.rs\n/workspace/crates/distribution-filename/src/source_dist.rs\n/workspace/crates/distribution-filename/src/wheel.rs\n/workspace/crates/distribution-filename/src/build_tag.rs\n/workspace/crates/uv/tests/cache_prune.rs\n/workspace/crates/uv/tests/pip_install.rs\n/workspace/crates/uv/tests/common/mod.rs\n/workspace/crates/uv/tests/pip_compile_scenarios.rs\n/workspace/crates/uv/tests/pip_tree.rs\n/workspace/crates/uv/tests/python_pin.rs\n/workspace/crates/uv/tests/pip_freeze.rs\n\n(Results are truncated: showing first 100 results. Consider using a more specific path or pattern.)",
+            "metadata": {
+              "count": 100,
+              "truncated": true
+            },
+            "title": "",
+            "time": {
+              "start": 1781962169935,
+              "end": 1781962171104
+            }
+          },
+          "id": "prt_ee538de47001bYG0OcHjjEXoih",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee538c548001UY2vsULu4hL34e"
+        },
+        {
+          "type": "tool",
+          "tool": "glob",
+          "callID": "call_a1b7cc7f7ff2471986276b23",
+          "state": {
+            "status": "completed",
+            "input": {
+              "pattern": "**/Cargo.toml",
+              "path": "/workspace"
+            },
+            "output": "/workspace/scripts/packages/deptry_reproducer/Cargo.toml\n/workspace/crates/uv-trampoline/Cargo.toml\n/workspace/crates/uv-state/Cargo.toml\n/workspace/crates/pep508-rs/Cargo.toml\n/workspace/crates/uv-distribution/Cargo.toml\n/workspace/crates/requirements-txt/Cargo.toml\n/workspace/crates/platform-tags/Cargo.toml\n/workspace/crates/uv-virtualenv/Cargo.toml\n/workspace/crates/uv-dev/Cargo.toml\n/workspace/crates/uv-build/Cargo.toml\n/workspace/crates/uv-auth/Cargo.toml\n/workspace/crates/install-wheel-rs/Cargo.toml\n/workspace/crates/uv-normalize/Cargo.toml\n/workspace/crates/uv-macros/Cargo.toml\n/workspace/crates/uv-git/Cargo.toml\n/workspace/crates/uv-installer/Cargo.toml\n/workspace/crates/uv-cache/Cargo.toml\n/workspace/crates/distribution-filename/Cargo.toml\n/workspace/crates/uv/Cargo.toml\n/workspace/crates/uv-cli/Cargo.toml\n/workspace/crates/pypi-types/Cargo.toml\n/workspace/crates/uv-settings/Cargo.toml\n/workspace/crates/uv-fs/Cargo.toml\n/workspace/crates/uv-resolver/Cargo.toml\n/workspace/crates/pep440-rs/Cargo.toml\n/workspace/crates/uv-tool/Cargo.toml\n/workspace/crates/uv-types/Cargo.toml\n/workspace/crates/uv-python/Cargo.toml\n/workspace/crates/uv-dispatch/Cargo.toml\n/workspace/crates/uv-version/Cargo.toml\n/workspace/crates/once-map/Cargo.toml\n/workspace/crates/cache-key/Cargo.toml\n/workspace/crates/uv-extract/Cargo.toml\n/workspace/crates/bench/Cargo.toml\n/workspace/crates/distribution-types/Cargo.toml\n/workspace/crates/uv-configuration/Cargo.toml\n/workspace/crates/uv-scripts/Cargo.toml\n/workspace/crates/uv-client/Cargo.toml\n/workspace/crates/uv-requirements/Cargo.toml\n/workspace/crates/uv-warnings/Cargo.toml\n/workspace/Cargo.toml",
+            "metadata": {
+              "count": 41,
+              "truncated": false
+            },
+            "title": "",
+            "time": {
+              "start": 1781962169938,
+              "end": 1781962171205
+            }
+          },
+          "id": "prt_ee538de50001iiYadozl9QWene",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee538c548001UY2vsULu4hL34e"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "b8e23458c2607dd8ec3931380c9224b6ea9a386d",
+          "type": "step-finish",
+          "tokens": {
+            "total": 10651,
+            "input": 10465,
+            "output": 186,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_ee538e349001gysGPg0JXYt5VH",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee538c548001UY2vsULu4hL34e"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ee538c48c001EEsMWlUFM7GvVz",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 13439,
+          "input": 13320,
+          "output": 119,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1781962171324,
+          "completed": 1781962175804
+        },
+        "finish": "tool-calls",
+        "id": "msg_ee538e3bc00161B5FPyBQfC0Vc",
+        "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO"
+      },
+      "parts": [
+        {
+          "snapshot": "b8e23458c2607dd8ec3931380c9224b6ea9a386d",
+          "type": "step-start",
+          "id": "prt_ee538f15f001HMAOF28B8Kvo7D",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee538e3bc00161B5FPyBQfC0Vc"
+        },
+        {
+          "type": "text",
+          "text": "\n\nLet me search for the `--isolated` flag to understand how it's currently defined and hidden.\n\n",
+          "time": {
+            "start": 1781962174817,
+            "end": 1781962174831
+          },
+          "id": "prt_ee538f161001DwaOS3KrqBB7jG",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee538e3bc00161B5FPyBQfC0Vc"
+        },
+        {
+          "type": "tool",
+          "tool": "grep",
+          "callID": "call_8c1ed01add794e2aa785b862",
+          "state": {
+            "status": "completed",
+            "input": {
+              "pattern": "--isolated",
+              "path": "/workspace"
+            },
+            "output": "Found 11 matches\n/workspace/scripts/release.sh:\n  Line 14: uv tool run --from 'rooster-blue>=0.0.7' --python 3.12 --isolated -- \\\n\n  Line 21: uv tool run --from 'rooster-blue>=0.0.7' --python 3.12 --isolated -- \\\n\n\n/workspace/docs/configuration/files.md:\n  Line 40: uv accepts a `--isolated` command-line argument which, when provided, disables the discovery of any\n\n\n/workspace/CHANGELOG.md:\n  Line 562: - Make `--isolated` a global argument ([#3558](https://github.com/astral-sh/uv/pull/3558))\n\n\n/workspace/README.md:\n  Line 258: uv accepts a `--isolated` command-line argument which, when provided, disables the discovery of any\n\n\n/workspace/crates/uv/tests/tool_run.rs:\n  Line 282:     // Verify that `--isolated` uses an isolated environment.\n\n  Line 284:         .arg(\"--isolated\")\n\n\n/workspace/crates/uv-python/template-download-metadata.py:\n  Line 9:     uv run --isolated --with chevron-blue -- crates/uv-python/template-download-metadata.py\n\n\n/workspace/PREVIEW-CHANGELOG.md:\n  Line 19: - Respect `--isolated` in `uv python install` ([#4938](https://github.com/astral-sh/uv/pull/4938))\n\n  Line 52: - Create empty environment for `uv run --isolated` ([#4849](https://github.com/astral-sh/uv/pull/4849))\n\n  Line 357: - Use top-level `--isolated` for `uv run` ([#3431](https://github.com/astral-sh/uv/pull/3431))\n",
+            "metadata": {
+              "matches": 11,
+              "truncated": false
+            },
+            "title": "--isolated",
+            "time": {
+              "start": 1781962174827,
+              "end": 1781962175694
+            }
+          },
+          "id": "prt_ee538f167001BelG1hCMEhMTyO",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee538e3bc00161B5FPyBQfC0Vc"
+        },
+        {
+          "type": "tool",
+          "tool": "grep",
+          "callID": "call_827d75e5d7ad46859bb5b02f",
+          "state": {
+            "status": "completed",
+            "input": {
+              "pattern": "isolated",
+              "path": "/workspace/crates/uv-cli",
+              "include": "*.rs"
+            },
+            "output": "Found 4 matches\n/workspace/crates/uv-cli/src/lib.rs:\n  Line 152:     pub isolated: bool,\n\n  Line 1768:     #[arg(long, conflicts_with = \"isolated\")]\n\n  Line 1925:     #[arg(long, conflicts_with = \"isolated\")]\n\n  Line 1969:     #[arg(long, conflicts_with = \"isolated\")]\n",
+            "metadata": {
+              "matches": 4,
+              "truncated": false
+            },
+            "title": "isolated",
+            "time": {
+              "start": 1781962174830,
+              "end": 1781962175395
+            }
+          },
+          "id": "prt_ee538f16b002KtpKiNz7tMMetZ",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee538e3bc00161B5FPyBQfC0Vc"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "b8e23458c2607dd8ec3931380c9224b6ea9a386d",
+          "type": "step-finish",
+          "tokens": {
+            "total": 13439,
+            "input": 13320,
+            "output": 119,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_ee538f4d0001FJ8oc7WNYFHJnE",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee538e3bc00161B5FPyBQfC0Vc"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ee538c48c001EEsMWlUFM7GvVz",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 14042,
+          "input": 13980,
+          "output": 62,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1781962175806,
+          "completed": 1781962178916
+        },
+        "finish": "tool-calls",
+        "id": "msg_ee538f53e001Z9zhMr8qWPWq1W",
+        "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO"
+      },
+      "parts": [
+        {
+          "snapshot": "b8e23458c2607dd8ec3931380c9224b6ea9a386d",
+          "type": "step-start",
+          "id": "prt_ee539010e001YQGrxXjENpxRuC",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee538f53e001Z9zhMr8qWPWq1W"
+        },
+        {
+          "type": "text",
+          "text": "\n\n",
+          "time": {
+            "start": 1781962178831,
+            "end": 1781962178837
+          },
+          "id": "prt_ee539010f001JegGfCFFEQNgPO",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee538f53e001Z9zhMr8qWPWq1W"
+        },
+        {
+          "type": "tool",
+          "tool": "read",
+          "callID": "call_a426728086cc402e8cb15c9f",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/workspace/crates/uv-cli/src/lib.rs",
+              "offset": 140,
+              "limit": 50
+            },
+            "output": "<path>/workspace/crates/uv-cli/src/lib.rs</path>\n<type>file</type>\n<content>\n140:     pub python_fetch: Option<PythonFetch>,\n141: \n142:     /// Whether to enable experimental, preview features.\n143:     #[arg(global = true, long, hide = true, env = \"UV_PREVIEW\", value_parser = clap::builder::BoolishValueParser::new(), overrides_with(\"no_preview\"))]\n144:     pub preview: bool,\n145: \n146:     #[arg(global = true, long, overrides_with(\"preview\"), hide = true)]\n147:     pub no_preview: bool,\n148: \n149:     /// Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any\n150:     /// parent directories.\n151:     #[arg(global = true, long, hide = true)]\n152:     pub isolated: bool,\n153: \n154:     /// Show the resolved settings for the current command.\n155:     #[arg(global = true, long, hide = true)]\n156:     pub show_settings: bool,\n157: }\n158: \n159: #[derive(Debug, Copy, Clone, clap::ValueEnum)]\n160: pub enum ColorChoice {\n161:     /// Enables colored output only when the output is going to a terminal or TTY with support.\n162:     Auto,\n163: \n164:     /// Enables colored output regardless of the detected environment.\n165:     Always,\n166: \n167:     /// Disables colored output.\n168:     Never,\n169: }\n170: \n171: impl From<ColorChoice> for anstream::ColorChoice {\n172:     fn from(value: ColorChoice) -> Self {\n173:         match value {\n174:             ColorChoice::Auto => Self::Auto,\n175:             ColorChoice::Always => Self::Always,\n176:             ColorChoice::Never => Self::Never,\n177:         }\n178:     }\n179: }\n180: \n181: #[derive(Subcommand)]\n182: #[allow(clippy::large_enum_variant)]\n183: pub enum Commands {\n184:     /// Resolve and install Python packages.\n185:     #[command(\n186:         after_help = \"Use `uv help pip`` for more details.\",\n187:         after_long_help = \"\"\n188:     )]\n189:     Pip(PipNamespace),\n\n(Showing lines 140-189 of 2621. Use offset=190 to continue.)\n</content>",
+            "metadata": {
+              "preview": "    pub python_fetch: Option<PythonFetch>,\n\n    /// Whether to enable experimental, preview features.\n    #[arg(global = true, long, hide = true, env = \"UV_PREVIEW\", value_parser = clap::builder::BoolishValueParser::new(), overrides_with(\"no_preview\"))]\n    pub preview: bool,\n\n    #[arg(global = true, long, overrides_with(\"preview\"), hide = true)]\n    pub no_preview: bool,\n\n    /// Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any\n    /// parent directories.\n    #[arg(global = true, long, hide = true)]\n    pub isolated: bool,\n\n    /// Show the resolved settings for the current command.\n    #[arg(global = true, long, hide = true)]\n    pub show_settings: bool,\n}\n\n#[derive(Debug, Copy, Clone, clap::ValueEnum)]",
+              "truncated": true,
+              "loaded": []
+            },
+            "title": "crates/uv-cli/src/lib.rs",
+            "time": {
+              "start": 1781962178836,
+              "end": 1781962178854
+            }
+          },
+          "id": "prt_ee5390110001eqbbReQ6k0obdo",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee538f53e001Z9zhMr8qWPWq1W"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "b8e23458c2607dd8ec3931380c9224b6ea9a386d",
+          "type": "step-finish",
+          "tokens": {
+            "total": 14042,
+            "input": 13980,
+            "output": 62,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_ee5390127001KKNRKl1476jO88",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee538f53e001Z9zhMr8qWPWq1W"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ee538c48c001EEsMWlUFM7GvVz",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 14940,
+          "input": 14724,
+          "output": 216,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1781962178918,
+          "completed": 1781962223930
+        },
+        "finish": "tool-calls",
+        "id": "msg_ee5390166001zWLokQsN2A21lZ",
+        "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO"
+      },
+      "parts": [
+        {
+          "snapshot": "b8e23458c2607dd8ec3931380c9224b6ea9a386d",
+          "type": "step-start",
+          "id": "prt_ee539145b0015k3vsbrF3RhaQU",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee5390166001zWLokQsN2A21lZ"
+        },
+        {
+          "type": "text",
+          "text": "\n\nI found the issue. The `--isolated` flag is defined with `hide = true` on line 151, which is why it doesn't appear in the help text. I need to remove `hide = true` to make the flag visible in the help output.\n\n",
+          "time": {
+            "start": 1781962183773,
+            "end": 1781962183790
+          },
+          "id": "prt_ee539145d001Aj14z6VqgzPrMn",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee5390166001zWLokQsN2A21lZ"
+        },
+        {
+          "type": "tool",
+          "tool": "edit",
+          "callID": "call_1d297042b70e444c91229853",
+          "state": {
+            "status": "completed",
+            "input": {
+              "filePath": "/workspace/crates/uv-cli/src/lib.rs",
+              "oldString": "    /// Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any\n    /// parent directories.\n    #[arg(global = true, long, hide = true)]\n    pub isolated: bool,",
+              "newString": "    /// Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any\n    /// parent directories.\n    #[arg(global = true, long)]\n    pub isolated: bool,"
+            },
+            "output": "Edit applied successfully.",
+            "metadata": {
+              "diagnostics": {},
+              "diff": "Index: /workspace/crates/uv-cli/src/lib.rs\n===================================================================\n--- /workspace/crates/uv-cli/src/lib.rs\n+++ /workspace/crates/uv-cli/src/lib.rs\n@@ -147,9 +147,9 @@\n pub no_preview: bool,\n \n /// Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any\n /// parent directories.\n-#[arg(global = true, long, hide = true)]\n+#[arg(global = true, long)]\n pub isolated: bool,\n \n /// Show the resolved settings for the current command.\n #[arg(global = true, long, hide = true)]\n",
+              "filediff": {
+                "file": "/workspace/crates/uv-cli/src/lib.rs",
+                "patch": "Index: /workspace/crates/uv-cli/src/lib.rs\n===================================================================\n--- /workspace/crates/uv-cli/src/lib.rs\n+++ /workspace/crates/uv-cli/src/lib.rs\n@@ -147,9 +147,9 @@\n pub no_preview: bool,\n \n /// Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any\n /// parent directories.\n-#[arg(global = true, long, hide = true)]\n+#[arg(global = true, long)]\n pub isolated: bool,\n \n /// Show the resolved settings for the current command.\n #[arg(global = true, long, hide = true)]\n",
+                "additions": 1,
+                "deletions": 1
+              },
+              "truncated": false
+            },
+            "title": "crates/uv-cli/src/lib.rs",
+            "time": {
+              "start": 1781962183834,
+              "end": 1781962223868
+            }
+          },
+          "id": "prt_ee53914690018M6UX9PMDHukMJ",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee5390166001zWLokQsN2A21lZ"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "713eb6637249e3d5fe88ab7e6704fc7864bf71c5",
+          "type": "step-finish",
+          "tokens": {
+            "total": 14940,
+            "input": 14724,
+            "output": 216,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_ee539b0fd002vTyNetnDeTZso3",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee5390166001zWLokQsN2A21lZ"
+        },
+        {
+          "type": "patch",
+          "hash": "b8e23458c2607dd8ec3931380c9224b6ea9a386d",
+          "files": [
+            "/workspace/crates/uv-cli/src/lib.rs"
+          ],
+          "id": "prt_ee539b13900138ucJ2oErH5aPB",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee5390166001zWLokQsN2A21lZ"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ee538c48c001EEsMWlUFM7GvVz",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 15056,
+          "input": 14959,
+          "output": 97,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1781962223932,
+          "completed": 1781962527706
+        },
+        "finish": "tool-calls",
+        "id": "msg_ee539b13c001dL2uuGFFZ8Kd79",
+        "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO"
+      },
+      "parts": [
+        {
+          "snapshot": "713eb6637249e3d5fe88ab7e6704fc7864bf71c5",
+          "type": "step-start",
+          "id": "prt_ee539bf25001RFB7mGK398Jx7F",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee539b13c001dL2uuGFFZ8Kd79"
+        },
+        {
+          "type": "text",
+          "text": "\n\nNow let me verify the change and check if there are any tests or snapshots that need to be updated:\n\n",
+          "time": {
+            "start": 1781962227495,
+            "end": 1781962227505
+          },
+          "id": "prt_ee539bf270014KYOI4aQcmBy4v",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee539b13c001dL2uuGFFZ8Kd79"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_2e46e28e5ba847a49658e8e8",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "cd /workspace && cargo build --release 2>&1 | tail -20",
+              "description": "Build the project",
+              "timeout": 300000
+            },
+            "output": "\n\n<bash_metadata>\nbash tool terminated command after exceeding timeout 300000 ms. If this command is expected to take longer and is not waiting for interactive input, retry with a larger timeout value in milliseconds.\n</bash_metadata>",
+            "metadata": {
+              "output": "\n\n<bash_metadata>\nbash tool terminated command after exceeding timeout 300000 ms. If this command is expected to take longer and is not waiting for interactive input, retry with a larger timeout value in milliseconds.\n</bash_metadata>",
+              "exit": null,
+              "description": "Build the project",
+              "truncated": false
+            },
+            "title": "Build the project",
+            "time": {
+              "start": 1781962227505,
+              "end": 1781962527615
+            }
+          },
+          "id": "prt_ee539bf2b001wZ068f8WGvpKMu",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee539b13c001dL2uuGFFZ8Kd79"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "713eb6637249e3d5fe88ab7e6704fc7864bf71c5",
+          "type": "step-finish",
+          "tokens": {
+            "total": 15056,
+            "input": 14959,
+            "output": 97,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_ee53e5381001pqT9qoB1sZ5luj",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee539b13c001dL2uuGFFZ8Kd79"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ee538c48c001EEsMWlUFM7GvVz",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 15199,
+          "input": 15122,
+          "output": 77,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1781962527709,
+          "completed": 1781962832926
+        },
+        "finish": "tool-calls",
+        "id": "msg_ee53e53dd001GvU6d1rhDqpl4M",
+        "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO"
+      },
+      "parts": [
+        {
+          "snapshot": "713eb6637249e3d5fe88ab7e6704fc7864bf71c5",
+          "type": "step-start",
+          "id": "prt_ee53e678e001pVN70V61nEz0yI",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee53e53dd001GvU6d1rhDqpl4M"
+        },
+        {
+          "type": "text",
+          "text": "\n\n",
+          "time": {
+            "start": 1781962532752,
+            "end": 1781962532759
+          },
+          "id": "prt_ee53e6790001qNETF6pBWmVKsp",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee53e53dd001GvU6d1rhDqpl4M"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_06f00ccb7e7a45d6b797469c",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "cd /workspace && cargo build 2>&1 | tail -30",
+              "description": "Build the project (debug mode)",
+              "timeout": 300000
+            },
+            "output": "\n\n<bash_metadata>\nbash tool terminated command after exceeding timeout 300000 ms. If this command is expected to take longer and is not waiting for interactive input, retry with a larger timeout value in milliseconds.\n</bash_metadata>",
+            "metadata": {
+              "output": "\n\n<bash_metadata>\nbash tool terminated command after exceeding timeout 300000 ms. If this command is expected to take longer and is not waiting for interactive input, retry with a larger timeout value in milliseconds.\n</bash_metadata>",
+              "exit": null,
+              "description": "Build the project (debug mode)",
+              "truncated": false
+            },
+            "title": "Build the project (debug mode)",
+            "time": {
+              "start": 1781962532758,
+              "end": 1781962832870
+            }
+          },
+          "id": "prt_ee53e6791001ZfLhA7AzgQCWl9",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee53e53dd001GvU6d1rhDqpl4M"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "713eb6637249e3d5fe88ab7e6704fc7864bf71c5",
+          "type": "step-finish",
+          "tokens": {
+            "total": 15199,
+            "input": 15122,
+            "output": 77,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_ee542fbe8001lUBOK13b1ZLU50",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee53e53dd001GvU6d1rhDqpl4M"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ee538c48c001EEsMWlUFM7GvVz",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 15385,
+          "input": 15265,
+          "output": 120,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1781962832993,
+          "completed": 1781962851031
+        },
+        "finish": "tool-calls",
+        "id": "msg_ee542fc61001J0g9VUzlyiNSBn",
+        "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO"
+      },
+      "parts": [
+        {
+          "snapshot": "713eb6637249e3d5fe88ab7e6704fc7864bf71c5",
+          "type": "step-start",
+          "id": "prt_ee54340d7001UfGzBGPkY051gH",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee542fc61001J0g9VUzlyiNSBn"
+        },
+        {
+          "type": "text",
+          "text": "\n\nLet me check if there's already a built binary and search for snapshot tests:\n\n",
+          "time": {
+            "start": 1781962850521,
+            "end": 1781962850533
+          },
+          "id": "prt_ee54340d9001WzhVpX07mDPcGU",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee542fc61001J0g9VUzlyiNSBn"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_ebc5601e3ba44be3a039dba2",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "find /workspace/target -name \"uv\" -type f 2>/dev/null | head -5",
+              "description": "Find built uv binary"
+            },
+            "output": "",
+            "metadata": {
+              "output": "",
+              "exit": 0,
+              "description": "Find built uv binary",
+              "truncated": false
+            },
+            "title": "Find built uv binary",
+            "time": {
+              "start": 1781962850529,
+              "end": 1781962850599
+            }
+          },
+          "id": "prt_ee54340dd001wsLWre8cByZ2pQ",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee542fc61001J0g9VUzlyiNSBn"
+        },
+        {
+          "type": "tool",
+          "tool": "glob",
+          "callID": "call_eb1ec2953bf44112b45a086f",
+          "state": {
+            "status": "completed",
+            "input": {
+              "path": "/workspace",
+              "pattern": "**/*snap*"
+            },
+            "output": "/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__parse-constraints-a.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__line-endings-small.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__line-endings-include-a.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__line-endings-constraints-b.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__parse-small.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__parse-unix-bare-url.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__parse-empty.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__line-endings-empty.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__parse-unix-editable.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__line-endings-poetry-with-hashes.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__parse-constraints-b.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__parse-whitespace.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__parse-basic.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__line-endings-whitespace.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__parse-for-poetry.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__parse-poetry-with-hashes.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__parse-windows-editable.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__line-endings-constraints-a.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__parse-include-a.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__line-endings-for-poetry.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__parse-windows-bare-url.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__parse-include-b.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__line-endings-basic.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__parse-unix-semicolon.txt.snap\n/workspace/crates/requirements-txt/src/snapshots/requirements_txt__test__line-endings-include-b.txt.snap\n/workspace/crates/distribution-filename/src/snapshots/distribution_filename__wheel__tests__ok_multiple_tags.snap\n/workspace/crates/distribution-filename/src/snapshots/distribution_filename__wheel__tests__ok_single_tags.snap\n/workspace/crates/distribution-filename/src/snapshots/distribution_filename__wheel__tests__ok_build_tag.snap\n/workspace/crates/uv-resolver/src/snapshots/uv_resolver__lock__tests__hash_optional_missing.snap\n/workspace/crates/uv-resolver/src/snapshots/uv_resolver__lock__tests__missing_dependency_version_unambiguous.snap\n/workspace/crates/uv-resolver/src/snapshots/uv_resolver__lock__tests__source_direct_has_subdir.snap\n/workspace/crates/uv-resolver/src/snapshots/uv_resolver__lock__tests__source_direct_no_subdir.snap\n/workspace/crates/uv-resolver/src/snapshots/uv_resolver__lock__tests__missing_dependency_source_unambiguous.snap\n/workspace/crates/uv-resolver/src/snapshots/uv_resolver__lock__tests__missing_dependency_source_version_ambiguous.snap\n/workspace/crates/uv-resolver/src/snapshots/uv_resolver__lock__tests__hash_required_present.snap\n/workspace/crates/uv-resolver/src/snapshots/uv_resolver__lock__tests__source_directory.snap\n/workspace/crates/uv-resolver/src/snapshots/uv_resolver__lock__tests__missing_dependency_source_version_unambiguous.snap\n/workspace/crates/uv-resolver/src/snapshots/uv_resolver__lock__tests__source_editable.snap\n/workspace/crates/uv-resolver/src/snapshots/uv_resolver__lock__tests__missing_dependency_version_ambiguous.snap\n/workspace/crates/uv-resolver/src/snapshots/uv_resolver__lock__tests__missing_dependency_source_ambiguous.snap",
+            "metadata": {
+              "count": 40,
+              "truncated": false
+            },
+            "title": "",
+            "time": {
+              "start": 1781962850532,
+              "end": 1781962850924
+            }
+          },
+          "id": "prt_ee54340e2001bOqj01hzQns3X5",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee542fc61001J0g9VUzlyiNSBn"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "713eb6637249e3d5fe88ab7e6704fc7864bf71c5",
+          "type": "step-finish",
+          "tokens": {
+            "total": 15385,
+            "input": 15265,
+            "output": 120,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_ee54342b4001UpP4jcsKGxf3GH",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee542fc61001J0g9VUzlyiNSBn"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ee538c48c001EEsMWlUFM7GvVz",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 16501,
+          "input": 16370,
+          "output": 131,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1781962851034,
+          "completed": 1781962866730
+        },
+        "finish": "tool-calls",
+        "id": "msg_ee54342d9001N4H12shpugJlgb",
+        "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO"
+      },
+      "parts": [
+        {
+          "snapshot": "713eb6637249e3d5fe88ab7e6704fc7864bf71c5",
+          "type": "step-start",
+          "id": "prt_ee5437e800013003MXDYoJnNNm",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee54342d9001N4H12shpugJlgb"
+        },
+        {
+          "type": "text",
+          "text": "\n\n",
+          "time": {
+            "start": 1781962866306,
+            "end": 1781962866315
+          },
+          "id": "prt_ee5437e82001e4ZTUbMrr15GlM",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee54342d9001N4H12shpugJlgb"
+        },
+        {
+          "type": "tool",
+          "tool": "grep",
+          "callID": "call_af866591818a4935a1e180a4",
+          "state": {
+            "status": "completed",
+            "input": {
+              "include": "*.rs",
+              "path": "/workspace/crates/uv/tests",
+              "pattern": "help.*isolated|isolated.*help"
+            },
+            "output": "No files found",
+            "metadata": {
+              "matches": 0,
+              "truncated": false
+            },
+            "title": "help.*isolated|isolated.*help",
+            "time": {
+              "start": 1781962866309,
+              "end": 1781962866701
+            }
+          },
+          "id": "prt_ee5437e830010bGIUiLwg5ntdI",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee54342d9001N4H12shpugJlgb"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_318f3769a6894869b6b81c95",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "ls /workspace/target/debug/uv 2>/dev/null && echo \"Binary exists\" || echo \"Binary not found\"",
+              "description": "Check for existing debug binary"
+            },
+            "output": "Binary not found\n",
+            "metadata": {
+              "output": "Binary not found\n",
+              "exit": 0,
+              "description": "Check for existing debug binary",
+              "truncated": false
+            },
+            "title": "Check for existing debug binary",
+            "time": {
+              "start": 1781962866319,
+              "end": 1781962866322
+            }
+          },
+          "id": "prt_ee5437e86001KHz4j8ho2s8OYp",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee54342d9001N4H12shpugJlgb"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "713eb6637249e3d5fe88ab7e6704fc7864bf71c5",
+          "type": "step-finish",
+          "tokens": {
+            "total": 16501,
+            "input": 16370,
+            "output": 131,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_ee543800e001deKyHglHfrbXIj",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee54342d9001N4H12shpugJlgb"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ee538c48c001EEsMWlUFM7GvVz",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 16598,
+          "input": 16527,
+          "output": 71,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1781962866733,
+          "completed": 1781962982421
+        },
+        "finish": "tool-calls",
+        "id": "msg_ee543802d001JvNpge4eSvg04V",
+        "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO"
+      },
+      "parts": [
+        {
+          "snapshot": "713eb6637249e3d5fe88ab7e6704fc7864bf71c5",
+          "type": "step-start",
+          "id": "prt_ee543cf57001aIki745SgktBm1",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee543802d001JvNpge4eSvg04V"
+        },
+        {
+          "type": "text",
+          "text": "\n\n",
+          "time": {
+            "start": 1781962887001,
+            "end": 1781962887006
+          },
+          "id": "prt_ee543cf59001B2QdVDix3t3KiQ",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee543802d001JvNpge4eSvg04V"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_455650fe33b448fc82364c05",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "cd /workspace && cargo build -p uv 2>&1",
+              "description": "Build uv package",
+              "timeout": 600000
+            },
+            "output": "   Compiling serde v1.0.204\n   Compiling serde_json v1.0.120\n   Compiling url v2.5.2\n   Compiling serde_urlencoded v0.7.1\n   Compiling indexmap v2.2.6\n   Compiling reqwest v0.12.5\n   Compiling reqwest-middleware v0.3.2 (https://github.com/astral-sh/reqwest-middleware?rev=21ceec9a5fd2e8d6f71c3ea2999078fecbd13cbe#21ceec9a)\n   Compiling schemars v0.8.21\n   Compiling pep440_rs v0.6.0 (/workspace/crates/pep440-rs)\n   Compiling uv-normalize v0.0.1 (/workspace/crates/uv-normalize)\n   Compiling serde_spanned v0.6.6\n   Compiling toml_datetime v0.6.6\n   Compiling toml_edit v0.22.14\n   Compiling chrono v0.4.38\n   Compiling cache-key v0.0.1 (/workspace/crates/cache-key)\n   Compiling pep508_rs v0.6.0 (/workspace/crates/pep508-rs)\n   Compiling uv-git v0.0.1 (/workspace/crates/uv-git)\n   Compiling toml v0.8.14\n   Compiling pypi-types v0.0.1 (/workspace/crates/pypi-types)\n   Compiling platform-tags v0.0.1 (/workspace/crates/platform-tags)\n   Compiling distribution-filename v0.0.1 (/workspace/crates/distribution-filename)\n   Compiling csv v1.3.0\n   Compiling uv-auth v0.0.1 (/workspace/crates/uv-auth)\n   Compiling rmp-serde v1.3.0\n   Compiling distribution-types v0.0.1 (/workspace/crates/distribution-types)\n   Compiling async_http_range_reader v0.8.0\n   Compiling install-wheel-rs v0.0.1 (/workspace/crates/install-wheel-rs)\n   Compiling uv-cache v0.0.1 (/workspace/crates/uv-cache)\n   Compiling reqwest-retry v0.7.0 (https://github.com/astral-sh/reqwest-middleware?rev=21ceec9a5fd2e8d6f71c3ea2999078fecbd13cbe#21ceec9a)\n   Compiling uv-configuration v0.0.1 (/workspace/crates/uv-configuration)\n   Compiling uv-client v0.0.1 (/workspace/crates/uv-client)\n   Compiling uv-extract v0.0.1 (/workspace/crates/uv-extract)\n   Compiling uv-python v0.0.1 (/workspace/crates/uv-python)\n   Compiling uv-types v0.0.1 (/workspace/crates/uv-types)\n   Compiling uv-distribution v0.0.1 (/workspace/crates/uv-distribution)\n   Compiling priority-queue v2.0.3\n   Compiling pubgrub v0.2.1 (https://github.com/astral-sh/pubgrub?rev=b4435e2f3af10dab2336a0345b35dcd622699d06#b4435e2f)\n   Compiling petgraph v0.6.5\n   Compiling requirements-txt v0.0.1 (/workspace/crates/requirements-txt)\n   Compiling uv-resolver v0.0.1 (/workspace/crates/uv-resolver)\n   Compiling uv-virtualenv v0.0.4 (/workspace/crates/uv-virtualenv)\n   Compiling uv-installer v0.0.1 (/workspace/crates/uv-installer)\n   Compiling tracing-serde v0.1.3\n   Compiling uv-macros v0.0.1 (/workspace/crates/uv-macros)\n   Compiling uv-build v0.0.1 (/workspace/crates/uv-build)\n   Compiling uv-settings v0.0.1 (/workspace/crates/uv-settings)\n   Compiling tracing-subscriber v0.3.18\n   Compiling tracing-tree v0.3.1\n   Compiling uv-requirements v0.1.0 (/workspace/crates/uv-requirements)\n   Compiling uv-cli v0.0.1 (/workspace/crates/uv-cli)\n   Compiling uv-dispatch v0.0.1 (/workspace/crates/uv-dispatch)\n   Compiling uv-tool v0.0.1 (/workspace/crates/uv-tool)\n   Compiling uv-scripts v0.0.1 (/workspace/crates/uv-scripts)\n   Compiling uv v0.2.24 (/workspace/crates/uv)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1m 35s\n",
+            "metadata": {
+              "output": "   Compiling serde v1.0.204\n   Compiling serde_json v1.0.120\n   Compiling url v2.5.2\n   Compiling serde_urlencoded v0.7.1\n   Compiling indexmap v2.2.6\n   Compiling reqwest v0.12.5\n   Compiling reqwest-middleware v0.3.2 (https://github.com/astral-sh/reqwest-middleware?rev=21ceec9a5fd2e8d6f71c3ea2999078fecbd13cbe#21ceec9a)\n   Compiling schemars v0.8.21\n   Compiling pep440_rs v0.6.0 (/workspace/crates/pep440-rs)\n   Compiling uv-normalize v0.0.1 (/workspace/crates/uv-normalize)\n   Compiling serde_spanned v0.6.6\n   Compiling toml_datetime v0.6.6\n   Compiling toml_edit v0.22.14\n   Compiling chrono v0.4.38\n   Compiling cache-key v0.0.1 (/workspace/crates/cache-key)\n   Compiling pep508_rs v0.6.0 (/workspace/crates/pep508-rs)\n   Compiling uv-git v0.0.1 (/workspace/crates/uv-git)\n   Compiling toml v0.8.14\n   Compiling pypi-types v0.0.1 (/workspace/crates/pypi-types)\n   Compiling platform-tags v0.0.1 (/workspace/crates/platform-tags)\n   Compiling distribution-filename v0.0.1 (/workspace/crates/distribution-filename)\n   Compiling csv v1.3.0\n   Compiling uv-auth v0.0.1 (/workspace/crates/uv-auth)\n   Compiling rmp-serde v1.3.0\n   Compiling distribution-types v0.0.1 (/workspace/crates/distribution-types)\n   Compiling async_http_range_reader v0.8.0\n   Compiling install-wheel-rs v0.0.1 (/workspace/crates/install-wheel-rs)\n   Compiling uv-cache v0.0.1 (/workspace/crates/uv-cache)\n   Compiling reqwest-retry v0.7.0 (https://github.com/astral-sh/reqwest-middleware?rev=21ceec9a5fd2e8d6f71c3ea2999078fecbd13cbe#21ceec9a)\n   Compiling uv-configuration v0.0.1 (/workspace/crates/uv-configuration)\n   Compiling uv-client v0.0.1 (/workspace/crates/uv-client)\n   Compiling uv-extract v0.0.1 (/workspace/crates/uv-extract)\n   Compiling uv-python v0.0.1 (/workspace/crates/uv-python)\n   Compiling uv-types v0.0.1 (/workspace/crates/uv-types)\n   Compiling uv-distribution v0.0.1 (/workspace/crates/uv-distribution)\n   Compiling priority-queue v2.0.3\n   Compiling pubgrub v0.2.1 (https://github.com/astral-sh/pubgrub?rev=b4435e2f3af10dab2336a0345b35dcd622699d06#b4435e2f)\n   Compiling petgraph v0.6.5\n   Compiling requirements-txt v0.0.1 (/workspace/crates/requirements-txt)\n   Compiling uv-resolver v0.0.1 (/workspace/crates/uv-resolver)\n   Compiling uv-virtualenv v0.0.4 (/workspace/crates/uv-virtualenv)\n   Compiling uv-installer v0.0.1 (/workspace/crates/uv-installer)\n   Compiling tracing-serde v0.1.3\n   Compiling uv-macros v0.0.1 (/workspace/crates/uv-macros)\n   Compiling uv-build v0.0.1 (/workspace/crates/uv-build)\n   Compiling uv-settings v0.0.1 (/workspace/crates/uv-settings)\n   Compiling tracing-subscriber v0.3.18\n   Compiling tracing-tree v0.3.1\n   Compiling uv-requirements v0.1.0 (/workspace/crates/uv-requirements)\n   Compiling uv-cli v0.0.1 (/workspace/crates/uv-cli)\n   Compiling uv-dispatch v0.0.1 (/workspace/crates/uv-dispatch)\n   Compiling uv-tool v0.0.1 (/workspace/crates/uv-tool)\n   Compiling uv-scripts v0.0.1 (/workspace/crates/uv-scripts)\n   Compiling uv v0.2.24 (/workspace/crates/uv)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1m 35s\n",
+              "exit": 0,
+              "description": "Build uv package",
+              "truncated": false
+            },
+            "title": "Build uv package",
+            "time": {
+              "start": 1781962982326,
+              "end": 1781962982363
+            }
+          },
+          "id": "prt_ee543cf5a001k5snqUxfUPW0YA",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee543802d001JvNpge4eSvg04V"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "713eb6637249e3d5fe88ab7e6704fc7864bf71c5",
+          "type": "step-finish",
+          "tokens": {
+            "total": 16598,
+            "input": 16527,
+            "output": 71,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_ee54543dd001JOGoPIMhXa4tP5",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee543802d001JvNpge4eSvg04V"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ee538c48c001EEsMWlUFM7GvVz",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 17839,
+          "input": 17770,
+          "output": 69,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1781962982424,
+          "completed": 1781962989891
+        },
+        "finish": "tool-calls",
+        "id": "msg_ee5454418001KTpud2c6L7TRSo",
+        "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO"
+      },
+      "parts": [
+        {
+          "snapshot": "713eb6637249e3d5fe88ab7e6704fc7864bf71c5",
+          "type": "step-start",
+          "id": "prt_ee54561070011zTktcr50IvwW2",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee5454418001KTpud2c6L7TRSo"
+        },
+        {
+          "type": "text",
+          "text": "\n\nNow let me test the help output to verify the flag is visible:\n\n",
+          "time": {
+            "start": 1781962989832,
+            "end": 1781962989840
+          },
+          "id": "prt_ee5456108001F6nZCGag0aMEyy",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee5454418001KTpud2c6L7TRSo"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_74794c1b0c8c4e32a28268c5",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "/workspace/target/debug/uv --help 2>&1",
+              "description": "Test uv --help output"
+            },
+            "output": "An extremely fast Python package manager.\n\nUsage: uv [OPTIONS] <COMMAND>\n\nCommands:\n  pip      Resolve and install Python packages\n  tool     Run and manage executable Python packages\n  python   Manage Python installations\n  venv     Create a virtual environment\n  cache    Manage the cache\n  version  Display uv's version\n  help     Display documentation for a command\n\nOptions:\n  -q, --quiet\n          Do not print any output\n  -v, --verbose...\n          Use verbose output\n      --color <COLOR_CHOICE>\n          Control colors in output [default: auto] [possible values: auto, always, never]\n      --native-tls\n          Whether to load TLS certificates from the platform's native certificate store [env:\n          UV_NATIVE_TLS=]\n      --offline\n          Disable network access, relying only on locally cached data and locally available files\n      --python-preference <PYTHON_PREFERENCE>\n          Whether to prefer using Python from uv or on the system [possible values: only-managed,\n          installed, managed, system, only-system]\n      --python-fetch <PYTHON_FETCH>\n          Whether to automatically download Python when required [possible values: automatic,\n          manual]\n      --isolated\n          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any\n          parent directories\n  -n, --no-cache\n          Avoid reading from or writing to the cache [env: UV_NO_CACHE=]\n      --cache-dir <CACHE_DIR>\n          Path to the cache directory [env: UV_CACHE_DIR=]\n      --config-file <CONFIG_FILE>\n          The path to a `uv.toml` file to use for configuration [env: UV_CONFIG_FILE=]\n  -h, --help\n          Print help\n  -V, --version\n          Print version\n\nUse `uv help` for more details.\n",
+            "metadata": {
+              "output": "An extremely fast Python package manager.\n\nUsage: uv [OPTIONS] <COMMAND>\n\nCommands:\n  pip      Resolve and install Python packages\n  tool     Run and manage executable Python packages\n  python   Manage Python installations\n  venv     Create a virtual environment\n  cache    Manage the cache\n  version  Display uv's version\n  help     Display documentation for a command\n\nOptions:\n  -q, --quiet\n          Do not print any output\n  -v, --verbose...\n          Use verbose output\n      --color <COLOR_CHOICE>\n          Control colors in output [default: auto] [possible values: auto, always, never]\n      --native-tls\n          Whether to load TLS certificates from the platform's native certificate store [env:\n          UV_NATIVE_TLS=]\n      --offline\n          Disable network access, relying only on locally cached data and locally available files\n      --python-preference <PYTHON_PREFERENCE>\n          Whether to prefer using Python from uv or on the system [possible values: only-managed,\n          installed, managed, system, only-system]\n      --python-fetch <PYTHON_FETCH>\n          Whether to automatically download Python when required [possible values: automatic,\n          manual]\n      --isolated\n          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any\n          parent directories\n  -n, --no-cache\n          Avoid reading from or writing to the cache [env: UV_NO_CACHE=]\n      --cache-dir <CACHE_DIR>\n          Path to the cache directory [env: UV_CACHE_DIR=]\n      --config-file <CONFIG_FILE>\n          The path to a `uv.toml` file to use for configuration [env: UV_CONFIG_FILE=]\n  -h, --help\n          Print help\n  -V, --version\n          Print version\n\nUse `uv help` for more details.\n",
+              "exit": 0,
+              "description": "Test uv --help output",
+              "truncated": false
+            },
+            "title": "Test uv --help output",
+            "time": {
+              "start": 1781962989853,
+              "end": 1781962989855
+            }
+          },
+          "id": "prt_ee545610c001LfJY2xrFmwO0cl",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee5454418001KTpud2c6L7TRSo"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "713eb6637249e3d5fe88ab7e6704fc7864bf71c5",
+          "type": "step-finish",
+          "tokens": {
+            "total": 17839,
+            "input": 17770,
+            "output": 69,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_ee54561200010Sar8WrDgT6lmF",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee5454418001KTpud2c6L7TRSo"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ee538c48c001EEsMWlUFM7GvVz",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 18448,
+          "input": 18262,
+          "output": 186,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1781962989893,
+          "completed": 1781963000725
+        },
+        "finish": "tool-calls",
+        "id": "msg_ee5456145001P030MW35iCcJgc",
+        "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO"
+      },
+      "parts": [
+        {
+          "snapshot": "713eb6637249e3d5fe88ab7e6704fc7864bf71c5",
+          "type": "step-start",
+          "id": "prt_ee5458b0b0014lYGdJAgAklAqi",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee5456145001P030MW35iCcJgc"
+        },
+        {
+          "type": "text",
+          "text": "\n\nThe `--isolated` flag now appears in the help output. Let me also verify it appears in subcommand help:\n\n",
+          "time": {
+            "start": 1781963000588,
+            "end": 1781963000603
+          },
+          "id": "prt_ee5458b0c001doFtVdiOmwdP2x",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee5456145001P030MW35iCcJgc"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_cd293a5d7aca4ba0b6407580",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "/workspace/target/debug/uv pip --help 2>&1",
+              "description": "Test uv pip --help output"
+            },
+            "output": "Resolve and install Python packages\n\nUsage: uv pip [OPTIONS] <COMMAND>\n\nCommands:\n  compile    Compile a `requirements.in` file to a `requirements.txt` file\n  sync       Sync an environment with a `requirements.txt` file\n  install    Install packages into an environment\n  uninstall  Uninstall packages from an environment\n  freeze     List, in requirements format, packages installed in an environment\n  list       List, in tabular format, packages installed in an environment\n  show       Show information about one or more installed packages\n  tree       Display the dependency tree for an environment\n  check      Verify installed packages have compatible dependencies\n\nOptions:\n  -q, --quiet\n          Do not print any output\n  -v, --verbose...\n          Use verbose output\n      --color <COLOR_CHOICE>\n          Control colors in output [default: auto] [possible values: auto, always, never]\n      --native-tls\n          Whether to load TLS certificates from the platform's native certificate store [env:\n          UV_NATIVE_TLS=]\n      --offline\n          Disable network access, relying only on locally cached data and locally available files\n      --python-preference <PYTHON_PREFERENCE>\n          Whether to prefer using Python from uv or on the system [possible values: only-managed,\n          installed, managed, system, only-system]\n      --python-fetch <PYTHON_FETCH>\n          Whether to automatically download Python when required [possible values: automatic,\n          manual]\n      --isolated\n          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any\n          parent directories\n  -n, --no-cache\n          Avoid reading from or writing to the cache [env: UV_NO_CACHE=]\n      --cache-dir <CACHE_DIR>\n          Path to the cache directory [env: UV_CACHE_DIR=]\n      --config-file <CONFIG_FILE>\n          The path to a `uv.toml` file to use for configuration [env: UV_CONFIG_FILE=]\n  -h, --help\n          Print help\n  -V, --version\n          Print version\n\nUse `uv help pip`` for more details.\n",
+            "metadata": {
+              "output": "Resolve and install Python packages\n\nUsage: uv pip [OPTIONS] <COMMAND>\n\nCommands:\n  compile    Compile a `requirements.in` file to a `requirements.txt` file\n  sync       Sync an environment with a `requirements.txt` file\n  install    Install packages into an environment\n  uninstall  Uninstall packages from an environment\n  freeze     List, in requirements format, packages installed in an environment\n  list       List, in tabular format, packages installed in an environment\n  show       Show information about one or more installed packages\n  tree       Display the dependency tree for an environment\n  check      Verify installed packages have compatible dependencies\n\nOptions:\n  -q, --quiet\n          Do not print any output\n  -v, --verbose...\n          Use verbose output\n      --color <COLOR_CHOICE>\n          Control colors in output [default: auto] [possible values: auto, always, never]\n      --native-tls\n          Whether to load TLS certificates from the platform's native certificate store [env:\n          UV_NATIVE_TLS=]\n      --offline\n          Disable network access, relying only on locally cached data and locally available files\n      --python-preference <PYTHON_PREFERENCE>\n          Whether to prefer using Python from uv or on the system [possible values: only-managed,\n          installed, managed, system, only-system]\n      --python-fetch <PYTHON_FETCH>\n          Whether to automatically download Python when required [possible values: automatic,\n          manual]\n      --isolated\n          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any\n          parent directories\n  -n, --no-cache\n          Avoid reading from or writing to the cache [env: UV_NO_CACHE=]\n      --cache-dir <CACHE_DIR>\n          Path to the cache directory [env: UV_CACHE_DIR=]\n      --config-file <CONFIG_FILE>\n          The path to a `uv.toml` file to use for configuration [env: UV_CONFIG_FILE=]\n  -h, --help\n          Print help\n  -V, --version\n          Print version\n\nUse `uv help pip`` for more details.\n",
+              "exit": 0,
+              "description": "Test uv pip --help output",
+              "truncated": false
+            },
+            "title": "Test uv pip --help output",
+            "time": {
+              "start": 1781963000616,
+              "end": 1781963000619
+            }
+          },
+          "id": "prt_ee5458b12001VIQCgfkUOG69Rg",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee5456145001P030MW35iCcJgc"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_ffdb8d9fab5f4448ae41556d",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "/workspace/target/debug/uv tool --help 2>&1",
+              "description": "Test uv tool --help output"
+            },
+            "output": "Run and manage executable Python packages\n\nUsage: uv tool [OPTIONS] <COMMAND>\n\nCommands:\n  run        Run a tool\n  install    Install a tool\n  list       List installed tools\n  uninstall  Uninstall a tool\n  dir        Show the tools directory\n\nOptions:\n  -q, --quiet\n          Do not print any output\n  -v, --verbose...\n          Use verbose output\n      --color <COLOR_CHOICE>\n          Control colors in output [default: auto] [possible values: auto, always, never]\n      --native-tls\n          Whether to load TLS certificates from the platform's native certificate store [env:\n          UV_NATIVE_TLS=]\n      --offline\n          Disable network access, relying only on locally cached data and locally available files\n      --python-preference <PYTHON_PREFERENCE>\n          Whether to prefer using Python from uv or on the system [possible values: only-managed,\n          installed, managed, system, only-system]\n      --python-fetch <PYTHON_FETCH>\n          Whether to automatically download Python when required [possible values: automatic,\n          manual]\n      --isolated\n          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any\n          parent directories\n  -n, --no-cache\n          Avoid reading from or writing to the cache [env: UV_NO_CACHE=]\n      --cache-dir <CACHE_DIR>\n          Path to the cache directory [env: UV_CACHE_DIR=]\n      --config-file <CONFIG_FILE>\n          The path to a `uv.toml` file to use for configuration [env: UV_CONFIG_FILE=]\n  -h, --help\n          Print help\n  -V, --version\n          Print version\n\nUse `uv help tool` for more details.\n",
+            "metadata": {
+              "output": "Run and manage executable Python packages\n\nUsage: uv tool [OPTIONS] <COMMAND>\n\nCommands:\n  run        Run a tool\n  install    Install a tool\n  list       List installed tools\n  uninstall  Uninstall a tool\n  dir        Show the tools directory\n\nOptions:\n  -q, --quiet\n          Do not print any output\n  -v, --verbose...\n          Use verbose output\n      --color <COLOR_CHOICE>\n          Control colors in output [default: auto] [possible values: auto, always, never]\n      --native-tls\n          Whether to load TLS certificates from the platform's native certificate store [env:\n          UV_NATIVE_TLS=]\n      --offline\n          Disable network access, relying only on locally cached data and locally available files\n      --python-preference <PYTHON_PREFERENCE>\n          Whether to prefer using Python from uv or on the system [possible values: only-managed,\n          installed, managed, system, only-system]\n      --python-fetch <PYTHON_FETCH>\n          Whether to automatically download Python when required [possible values: automatic,\n          manual]\n      --isolated\n          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any\n          parent directories\n  -n, --no-cache\n          Avoid reading from or writing to the cache [env: UV_NO_CACHE=]\n      --cache-dir <CACHE_DIR>\n          Path to the cache directory [env: UV_CACHE_DIR=]\n      --config-file <CONFIG_FILE>\n          The path to a `uv.toml` file to use for configuration [env: UV_CONFIG_FILE=]\n  -h, --help\n          Print help\n  -V, --version\n          Print version\n\nUse `uv help tool` for more details.\n",
+              "exit": 0,
+              "description": "Test uv tool --help output",
+              "truncated": false
+            },
+            "title": "Test uv tool --help output",
+            "time": {
+              "start": 1781963000617,
+              "end": 1781963000620
+            }
+          },
+          "id": "prt_ee5458b15001KcjTPae2ztX08g",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee5456145001P030MW35iCcJgc"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_eede523a01ef4fa19b4189c9",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "/workspace/target/debug/uv help 2>&1",
+              "description": "Test uv help output"
+            },
+            "output": "An extremely fast Python package manager.\n\nUsage: uv [OPTIONS] <COMMAND>\n\nCommands:\n  pip      Resolve and install Python packages\n  tool     Run and manage executable Python packages\n  python   Manage Python installations\n  venv     Create a virtual environment\n  cache    Manage the cache\n  version  Display uv's version\n  help     Display documentation for a command\n\nOptions:\n  -q, --quiet\n          Do not print any output\n  -v, --verbose...\n          Use verbose output\n      --color <COLOR_CHOICE>\n          Control colors in output [default: auto] [possible values: auto, always, never]\n      --native-tls\n          Whether to load TLS certificates from the platform's native certificate store [env:\n          UV_NATIVE_TLS=]\n      --offline\n          Disable network access, relying only on locally cached data and locally available files\n      --python-preference <PYTHON_PREFERENCE>\n          Whether to prefer using Python from uv or on the system [possible values: only-managed,\n          installed, managed, system, only-system]\n      --python-fetch <PYTHON_FETCH>\n          Whether to automatically download Python when required [possible values: automatic,\n          manual]\n      --isolated\n          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any\n          parent directories\n  -n, --no-cache\n          Avoid reading from or writing to the cache [env: UV_NO_CACHE=]\n      --cache-dir <CACHE_DIR>\n          Path to the cache directory [env: UV_CACHE_DIR=]\n      --config-file <CONFIG_FILE>\n          The path to a `uv.toml` file to use for configuration [env: UV_CONFIG_FILE=]\n  -h, --help\n          Print help\n  -V, --version\n          Print version\n\nUse `uv help <command>` for more information on a specific command.\n\n",
+            "metadata": {
+              "output": "An extremely fast Python package manager.\n\nUsage: uv [OPTIONS] <COMMAND>\n\nCommands:\n  pip      Resolve and install Python packages\n  tool     Run and manage executable Python packages\n  python   Manage Python installations\n  venv     Create a virtual environment\n  cache    Manage the cache\n  version  Display uv's version\n  help     Display documentation for a command\n\nOptions:\n  -q, --quiet\n          Do not print any output\n  -v, --verbose...\n          Use verbose output\n      --color <COLOR_CHOICE>\n          Control colors in output [default: auto] [possible values: auto, always, never]\n      --native-tls\n          Whether to load TLS certificates from the platform's native certificate store [env:\n          UV_NATIVE_TLS=]\n      --offline\n          Disable network access, relying only on locally cached data and locally available files\n      --python-preference <PYTHON_PREFERENCE>\n          Whether to prefer using Python from uv or on the system [possible values: only-managed,\n          installed, managed, system, only-system]\n      --python-fetch <PYTHON_FETCH>\n          Whether to automatically download Python when required [possible values: automatic,\n          manual]\n      --isolated\n          Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any\n          parent directories\n  -n, --no-cache\n          Avoid reading from or writing to the cache [env: UV_NO_CACHE=]\n      --cache-dir <CACHE_DIR>\n          Path to the cache directory [env: UV_CACHE_DIR=]\n      --config-file <CONFIG_FILE>\n          The path to a `uv.toml` file to use for configuration [env: UV_CONFIG_FILE=]\n  -h, --help\n          Print help\n  -V, --version\n          Print version\n\nUse `uv help <command>` for more information on a specific command.\n\n",
+              "exit": 0,
+              "description": "Test uv help output",
+              "truncated": false
+            },
+            "title": "Test uv help output",
+            "time": {
+              "start": 1781963000638,
+              "end": 1781963000640
+            }
+          },
+          "id": "prt_ee5458b18001hKQTFAEefqyT1Z",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee5456145001P030MW35iCcJgc"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "713eb6637249e3d5fe88ab7e6704fc7864bf71c5",
+          "type": "step-finish",
+          "tokens": {
+            "total": 18448,
+            "input": 18262,
+            "output": 186,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_ee5458b410019h3pvcEr7MUDCQ",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee5456145001P030MW35iCcJgc"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ee538c48c001EEsMWlUFM7GvVz",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 19861,
+          "input": 19738,
+          "output": 123,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1781963000728,
+          "completed": 1781963011930
+        },
+        "finish": "tool-calls",
+        "id": "msg_ee5458b980016YftXQunZ5LS4X",
+        "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO"
+      },
+      "parts": [
+        {
+          "snapshot": "713eb6637249e3d5fe88ab7e6704fc7864bf71c5",
+          "type": "step-start",
+          "id": "prt_ee545b722001uv5rDy51aNXKKG",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee5458b980016YftXQunZ5LS4X"
+        },
+        {
+          "type": "text",
+          "text": "\n\nThe `--isolated` flag now appears in all help outputs:\n- `uv --help`\n- `uv help`\n- `uv pip --help`\n- `uv tool --help`\n\nLet me verify the exit code is 0:\n\n",
+          "time": {
+            "start": 1781963011876,
+            "end": 1781963011889
+          },
+          "id": "prt_ee545b724001tLbUh2FPdnLTkX",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee5458b980016YftXQunZ5LS4X"
+        },
+        {
+          "type": "tool",
+          "tool": "bash",
+          "callID": "call_b6d77337f06140cebdc306bb",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "/workspace/target/debug/uv --help > /dev/null 2>&1; echo \"Exit code: $?\"",
+              "description": "Check exit code of uv --help"
+            },
+            "output": "Exit code: 0\n",
+            "metadata": {
+              "output": "Exit code: 0\n",
+              "exit": 0,
+              "description": "Check exit code of uv --help",
+              "truncated": false
+            },
+            "title": "Check exit code of uv --help",
+            "time": {
+              "start": 1781963011899,
+              "end": 1781963011901
+            }
+          },
+          "id": "prt_ee545b72d0012jjI2Zap6U3KAJ",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee5458b980016YftXQunZ5LS4X"
+        },
+        {
+          "reason": "tool-calls",
+          "snapshot": "713eb6637249e3d5fe88ab7e6704fc7864bf71c5",
+          "type": "step-finish",
+          "tokens": {
+            "total": 19861,
+            "input": 19738,
+            "output": 123,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_ee545b73e002jjxzkMc18nB12K",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee5458b980016YftXQunZ5LS4X"
+        }
+      ]
+    },
+    {
+      "info": {
+        "parentID": "msg_ee538c48c001EEsMWlUFM7GvVz",
+        "role": "assistant",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/workspace",
+          "root": "/workspace"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 19965,
+          "input": 19881,
+          "output": 84,
+          "reasoning": 0,
+          "cache": {
+            "write": 0,
+            "read": 0
+          }
+        },
+        "modelID": "Qwen/Qwen3.5-397B-A17B-FP8",
+        "providerID": "vllm",
+        "time": {
+          "created": 1781963011932,
+          "completed": 1781963026094
+        },
+        "finish": "stop",
+        "id": "msg_ee545b75c001WTv2SrQGQ14vpl",
+        "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO"
+      },
+      "parts": [
+        {
+          "snapshot": "713eb6637249e3d5fe88ab7e6704fc7864bf71c5",
+          "type": "step-start",
+          "id": "prt_ee545ee84001e8SLYHHSVLmrow",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee545b75c001WTv2SrQGQ14vpl"
+        },
+        {
+          "type": "text",
+          "text": "\n\nThe change is complete. The `--isolated` flag now appears in all help outputs with:\n- The flag name `--isolated` on its own line\n- The description \"Avoid discovering a `pyproject.toml` or `uv.toml` file in the current directory or any parent directories\"\n- Proper formatting matching other global options\n- Exit code 0 when displaying help",
+          "time": {
+            "start": 1781963026053,
+            "end": 1781963026067
+          },
+          "id": "prt_ee545ee85001mgGHMlwFuJvl8T",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee545b75c001WTv2SrQGQ14vpl"
+        },
+        {
+          "reason": "stop",
+          "snapshot": "713eb6637249e3d5fe88ab7e6704fc7864bf71c5",
+          "type": "step-finish",
+          "tokens": {
+            "total": 19965,
+            "input": 19881,
+            "output": 84,
+            "reasoning": 0,
+            "cache": {
+              "write": 0,
+              "read": 0
+            }
+          },
+          "cost": 0,
+          "id": "prt_ee545ee94001gtsoTonCsJIK6q",
+          "sessionID": "ses_11ac73b8effehzK9zcbjby1ewO",
+          "messageID": "msg_ee545b75c001WTv2SrQGQ14vpl"
+        }
+      ]
+    }
+  ]
+}

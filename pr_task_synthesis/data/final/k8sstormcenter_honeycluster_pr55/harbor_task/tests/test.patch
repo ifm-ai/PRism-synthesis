@@ -1,0 +1,36 @@
+diff --git a/test/cti-stix-visualizer.yaml b/test/cti-stix-visualizer.yaml
+index 6b1e59a..30f5d80 100644
+--- a/test/cti-stix-visualizer.yaml
++++ b/test/cti-stix-visualizer.yaml
+@@ -27,4 +27,28 @@ spec:
+         - name: REDIS_PORT
+           value: "6379"
+         - name: REDIS_KEY_PREFIX
+-          value: "tetrastix"
+\ No newline at end of file
++          value: "tetrastix"
++  #  securityContext:  # TODO add sec defaults, its running as nonroot and needs no caps
++  #    runAsUser: 1000
++  #    runAsGroup: 1000
++  #    fsGroup: 1000
++  #    fsGroupChangePolicy: OnRootMismatch
++  #    seccompProfile:
++  #      type: RuntimeDefault
++
++
++---
++
++apiVersion: v1
++kind: Service
++metadata:
++  name: stix-visualizer
++  namespace: redpanda
++spec:
++  selector:
++    app: stix-visualizer
++  ports:
++    - protocol: TCP
++      port: 80
++      targetPort: 3000
++  type: ClusterIP
+\ No newline at end of file

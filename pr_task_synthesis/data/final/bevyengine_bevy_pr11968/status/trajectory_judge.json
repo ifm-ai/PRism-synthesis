@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "High-quality trajectory: solver correctly localized and fixed the MSAA multi-camera bug with an approach matching fix.patch exactly. Oracle verifier (implementation_pattern) passed all checks. This is a clean keep example suitable for RL training."
+}

@@ -1,0 +1,73 @@
+{
+  "base_image": "golang:1.21",
+  "build_steps": [
+    {
+      "step": 1,
+      "type": "base_setup",
+      "description": "Install system packages required for datadog-agent build",
+      "commands": [
+        "apt-get update -qq",
+        "apt-get install -y -qq git curl cmake g++ python3 python3-dev libseccomp-dev python3.11-venv"
+      ]
+    },
+    {
+      "step": 2,
+      "type": "create_benchmark_dir",
+      "description": "Create /opt/benchmark directory for scripts",
+      "commands": [
+        "mkdir -p /opt/benchmark"
+      ]
+    },
+    {
+      "step": 3,
+      "type": "repo_materialization",
+      "description": "Copy and execute repo_setup.sh to materialize /workspace from git",
+      "script": "/opt/benchmark/repo_setup.sh",
+      "commands": [
+        "COPY repo_setup.sh /opt/benchmark/repo_setup.sh",
+        "chmod +x /opt/benchmark/repo_setup.sh",
+        "/opt/benchmark/repo_setup.sh"
+      ]
+    },
+    {
+      "step": 4,
+      "type": "runtime_setup",
+      "description": "Copy and execute setup_runtime.sh to configure Go environment and install dependencies",
+      "script": "/opt/benchmark/setup_runtime.sh",
+      "commands": [
+        "COPY setup_runtime.sh /opt/benchmark/setup_runtime.sh",
+        "chmod +x /opt/benchmark/setup_runtime.sh",
+        "/opt/benchmark/setup_runtime.sh"
+      ]
+    },
+    {
+      "step": 5,
+      "type": "workdir",
+      "description": "Set working directory to /workspace",
+      "commands": [
+        "WORKDIR /workspace"
+      ]
+    }
+  ],
+  "verifier_assets": {
+    "note": "Verifier assets are runtime-mounted, not baked into the image",
+    "eval_sh": "/artifacts/evaluation/eval.sh",
+    "test_patch": "/artifacts/evaluation/test.patch",
+    "hidden_tests": "/artifacts/evaluation/tests/"
+  },
+  "environment_variables": {
+    "PATH": "/usr/local/go/bin:$PATH",
+    "GOPATH": "/root/go",
+    "GOROOT": "/usr/local/go"
+  },
+  "cache_dirs": [
+    "/root/go/pkg/mod",
+    "/opt/benchmark/venv"
+  ],
+  "build_context_files": [
+    "/artifacts/environment/repo_setup.sh",
+    "/artifacts/environment/setup_runtime.sh"
+  ],
+  "output_image_workdir": "/workspace",
+  "notes": "Dockerfile.final uses repo_setup.sh to materialize /workspace from git, then setup_runtime.sh configures Go 1.21.7 and Python venv with invoke. Verifier assets (eval.sh, tests/) are runtime-mounted, not baked into the image."
+}

@@ -1,0 +1,10 @@
+>>>>> Start Test Output
+PHPUnit 9.6.17 by Sebastian Bergmann and contributors.
+
+.                                                                   1 / 1 (100%)
+
+Time: 00:00.031, Memory: 12.00 MB
+
+OK (1 test, 1 assertion)
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

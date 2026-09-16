@@ -1,0 +1,58 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-7.2.1, pluggy-1.0.0+repack -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /artifacts/evaluation/tests
+collecting ... collected 5 items
+
+../artifacts/evaluation/tests/test_vcs_regex.py::test_regex_captures_hash_format PASSED [ 20%]
+../artifacts/evaluation/tests/test_vcs_regex.py::test_regex_captures_gluten_format PASSED [ 40%]
+../artifacts/evaluation/tests/test_vcs_regex.py::test_buggy_regex_gluten_format PASSED [ 60%]
+../artifacts/evaluation/tests/test_vcs_regex.py::test_vcs_xml_has_fixed_regex FAILED [ 80%]
+
+=================================== FAILURES ===================================
+_________________________ test_vcs_xml_has_fixed_regex _________________________
+
+    def test_vcs_xml_has_fixed_regex():
+        """
+        Test that the actual vcs.xml file has the fixed regex pattern.
+        This is the main verification test.
+        """
+        # Use current working directory to support both /workspace and /workspace_fixed
+        vcs_xml_path = Path.cwd() / ".idea" / "vcs.xml"
+    
+        if not vcs_xml_path.exists():
+            print(f"FAIL: vcs.xml not found at {vcs_xml_path}")
+            sys.exit(1)
+    
+        try:
+            issue_regexp = extract_issue_regexp_from_vcs_xml(str(vcs_xml_path))
+        except Exception as e:
+            print(f"FAIL: Could not parse vcs.xml: {e}")
+            sys.exit(1)
+    
+        # The fixed pattern should be: (?:#|GLUTEN-)(\d+)
+        fixed_pattern = r"(?:#|GLUTEN-)(\d+)"
+        # The buggy pattern was: #(\d+)|GLUTEN-(\d+)
+        buggy_pattern = r"#(\d+)|GLUTEN-(\d+)"
+    
+        if issue_regexp == fixed_pattern:
+            print(f"PASS: vcs.xml has the fixed regex pattern: {issue_regexp}")
+        elif issue_regexp == buggy_pattern:
+            print(f"FAIL: vcs.xml still has the buggy regex pattern: {issue_regexp}")
+            print(f"      Expected: {fixed_pattern}")
+>           assert False, f"vcs.xml has buggy regex pattern: {issue_regexp}"
+E           AssertionError: vcs.xml has buggy regex pattern: #(\d+)|GLUTEN-(\d+)
+E           assert False
+
+/artifacts/evaluation/tests/test_vcs_regex.py:112: AssertionError
+----------------------------- Captured stdout call -----------------------------
+FAIL: vcs.xml still has the buggy regex pattern: #(\d+)|GLUTEN-(\d+)
+      Expected: (?:#|GLUTEN-)(\d+)
+=========================== short test summary info ============================
+FAILED ../artifacts/evaluation/tests/test_vcs_regex.py::test_vcs_xml_has_fixed_regex
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+========================= 1 failed, 3 passed in 0.01s ==========================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1
+EXIT_CODE: 1

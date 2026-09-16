@@ -1,0 +1,266 @@
+>>>>> Start Test Output
+[0m[0m[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< org.apache.flink:flink-cdc-runtime >-----------------
+[INFO] Building flink-cdc-runtime 3.2-SNAPSHOT
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] Downloading from mirror: http://mirror.proxy.hpc:8081/repository/maven-public/org/apache/flink/flink-cdc-common/3.2-SNAPSHOT/maven-metadata.xml
+[WARNING] Could not apply configuration for mirror to Wagon org.apache.maven.wagon.providers.http.HttpWagon
+org.codehaus.plexus.component.configurator.ComponentConfigurationException: Cannot find 'connectionTimeout' in class org.apache.maven.wagon.providers.http.wagon.shared.HttpConfiguration
+    at org.eclipse.sisu.plexus.CompositeBeanHelper.setProperty (CompositeBeanHelper.java:252)
+    at org.codehaus.plexus.component.configurator.converters.composite.ObjectWithFieldsConverter.processConfiguration (ObjectWithFieldsConverter.java:101)
+    at org.codehaus.plexus.component.configurator.converters.composite.ObjectWithFieldsConverter.fromConfiguration (ObjectWithFieldsConverter.java:57)
+    at org.eclipse.sisu.plexus.CompositeBeanHelper.convertProperty (CompositeBeanHelper.java:273)
+    at org.eclipse.sisu.plexus.CompositeBeanHelper.setProperty (CompositeBeanHelper.java:174)
+    at org.codehaus.plexus.component.configurator.converters.composite.ObjectWithFieldsConverter.processConfiguration (ObjectWithFieldsConverter.java:101)
+    at org.eclipse.aether.internal.transport.wagon.PlexusWagonConfigurator$WagonComponentConfigurator.configureComponent (PlexusWagonConfigurator.java:101)
+    at org.codehaus.plexus.component.configurator.AbstractComponentConfigurator.configureComponent (AbstractComponentConfigurator.java:44)
+    at org.codehaus.plexus.component.configurator.AbstractComponentConfigurator.configureComponent (AbstractComponentConfigurator.java:37)
+    at org.eclipse.aether.internal.transport.wagon.PlexusWagonConfigurator.configure (PlexusWagonConfigurator.java:86)
+    at org.eclipse.aether.transport.wagon.WagonTransporter.connectWagon (WagonTransporter.java:328)
+    at org.eclipse.aether.transport.wagon.WagonTransporter.pollWagon (WagonTransporter.java:377)
+    at org.eclipse.aether.transport.wagon.WagonTransporter.execute (WagonTransporter.java:426)
+    at org.eclipse.aether.transport.wagon.WagonTransporter.get (WagonTransporter.java:407)
+    at org.eclipse.aether.connector.basic.BasicRepositoryConnector$GetTaskRunner.runTask (BasicRepositoryConnector.java:457)
+    at org.eclipse.aether.connector.basic.BasicRepositoryConnector$TaskRunner.run (BasicRepositoryConnector.java:364)
+    at org.eclipse.aether.util.concurrency.RunnableErrorForwarder$1.run (RunnableErrorForwarder.java:75)
+    at org.eclipse.aether.connector.basic.BasicRepositoryConnector$DirectExecutor.execute (BasicRepositoryConnector.java:628)
+    at org.eclipse.aether.connector.basic.BasicRepositoryConnector.get (BasicRepositoryConnector.java:235)
+    at org.eclipse.aether.internal.impl.DefaultMetadataResolver$ResolveTask.run (DefaultMetadataResolver.java:586)
+    at org.eclipse.aether.util.concurrency.RunnableErrorForwarder$1.run (RunnableErrorForwarder.java:75)
+    at org.eclipse.aether.internal.impl.DefaultMetadataResolver$1.execute (DefaultMetadataResolver.java:510)
+    at org.eclipse.aether.internal.impl.DefaultMetadataResolver.resolve (DefaultMetadataResolver.java:353)
+    at org.eclipse.aether.internal.impl.DefaultMetadataResolver.resolveMetadata (DefaultMetadataResolver.java:181)
+    at org.apache.maven.repository.internal.DefaultVersionResolver.resolveVersion (DefaultVersionResolver.java:213)
+    at org.apache.maven.repository.internal.DefaultArtifactDescriptorReader.loadPom (DefaultArtifactDescriptorReader.java:204)
+    at org.apache.maven.repository.internal.DefaultArtifactDescriptorReader.readArtifactDescriptor (DefaultArtifactDescriptorReader.java:171)
+    at org.eclipse.aether.internal.impl.collect.DefaultDependencyCollector.resolveCachedArtifactDescriptor (DefaultDependencyCollector.java:538)
+    at org.eclipse.aether.internal.impl.collect.DefaultDependencyCollector.getArtifactDescriptorResult (DefaultDependencyCollector.java:523)
+    at org.eclipse.aether.internal.impl.collect.DefaultDependencyCollector.processDependency (DefaultDependencyCollector.java:410)
+    at org.eclipse.aether.internal.impl.collect.DefaultDependencyCollector.processDependency (DefaultDependencyCollector.java:362)
+    at org.eclipse.aether.internal.impl.collect.DefaultDependencyCollector.process (DefaultDependencyCollector.java:349)
+    at org.eclipse.aether.internal.impl.collect.DefaultDependencyCollector.collectDependencies (DefaultDependencyCollector.java:254)
+    at org.eclipse.aether.internal.impl.DefaultRepositorySystem.collectDependencies (DefaultRepositorySystem.java:284)
+    at org.apache.maven.project.DefaultProjectDependenciesResolver.resolve (DefaultProjectDependenciesResolver.java:170)
+    at org.apache.maven.lifecycle.internal.LifecycleDependencyResolver.getDependencies (LifecycleDependencyResolver.java:243)
+    at org.apache.maven.lifecycle.internal.LifecycleDependencyResolver.resolveProjectDependencies (LifecycleDependencyResolver.java:147)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.ensureDependenciesAreResolved (MojoExecutor.java:401)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute (MojoExecutor.java:347)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:215)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:171)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:163)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:117)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:81)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:56)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:128)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:298)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:192)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:105)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:960)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:293)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:196)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke (Method.java:498)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:283)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:226)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:407)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:348)
+[INFO] Downloading from mirror: http://mirror.proxy.hpc:8081/repository/maven-public/org/apache/flink/flink-cdc/3.2-SNAPSHOT/maven-metadata.xml
+[WARNING] Could not apply configuration for mirror to Wagon org.apache.maven.wagon.providers.http.HttpWagon
+org.codehaus.plexus.component.configurator.ComponentConfigurationException: Cannot find 'connectionTimeout' in class org.apache.maven.wagon.providers.http.wagon.shared.HttpConfiguration
+    at org.eclipse.sisu.plexus.CompositeBeanHelper.setProperty (CompositeBeanHelper.java:252)
+    at org.codehaus.plexus.component.configurator.converters.composite.ObjectWithFieldsConverter.processConfiguration (ObjectWithFieldsConverter.java:101)
+    at org.codehaus.plexus.component.configurator.converters.composite.ObjectWithFieldsConverter.fromConfiguration (ObjectWithFieldsConverter.java:57)
+    at org.eclipse.sisu.plexus.CompositeBeanHelper.convertProperty (CompositeBeanHelper.java:273)
+    at org.eclipse.sisu.plexus.CompositeBeanHelper.setProperty (CompositeBeanHelper.java:174)
+    at org.codehaus.plexus.component.configurator.converters.composite.ObjectWithFieldsConverter.processConfiguration (ObjectWithFieldsConverter.java:101)
+    at org.eclipse.aether.internal.transport.wagon.PlexusWagonConfigurator$WagonComponentConfigurator.configureComponent (PlexusWagonConfigurator.java:101)
+    at org.codehaus.plexus.component.configurator.AbstractComponentConfigurator.configureComponent (AbstractComponentConfigurator.java:44)
+    at org.codehaus.plexus.component.configurator.AbstractComponentConfigurator.configureComponent (AbstractComponentConfigurator.java:37)
+    at org.eclipse.aether.internal.transport.wagon.PlexusWagonConfigurator.configure (PlexusWagonConfigurator.java:86)
+    at org.eclipse.aether.transport.wagon.WagonTransporter.connectWagon (WagonTransporter.java:328)
+    at org.eclipse.aether.transport.wagon.WagonTransporter.pollWagon (WagonTransporter.java:377)
+    at org.eclipse.aether.transport.wagon.WagonTransporter.execute (WagonTransporter.java:426)
+    at org.eclipse.aether.transport.wagon.WagonTransporter.get (WagonTransporter.java:407)
+    at org.eclipse.aether.connector.basic.BasicRepositoryConnector$GetTaskRunner.runTask (BasicRepositoryConnector.java:457)
+    at org.eclipse.aether.connector.basic.BasicRepositoryConnector$TaskRunner.run (BasicRepositoryConnector.java:364)
+    at org.eclipse.aether.util.concurrency.RunnableErrorForwarder$1.run (RunnableErrorForwarder.java:75)
+    at org.eclipse.aether.connector.basic.BasicRepositoryConnector$DirectExecutor.execute (BasicRepositoryConnector.java:628)
+    at org.eclipse.aether.connector.basic.BasicRepositoryConnector.get (BasicRepositoryConnector.java:235)
+    at org.eclipse.aether.internal.impl.DefaultMetadataResolver$ResolveTask.run (DefaultMetadataResolver.java:586)
+    at org.eclipse.aether.util.concurrency.RunnableErrorForwarder$1.run (RunnableErrorForwarder.java:75)
+    at org.eclipse.aether.internal.impl.DefaultMetadataResolver$1.execute (DefaultMetadataResolver.java:510)
+    at org.eclipse.aether.internal.impl.DefaultMetadataResolver.resolve (DefaultMetadataResolver.java:353)
+    at org.eclipse.aether.internal.impl.DefaultMetadataResolver.resolveMetadata (DefaultMetadataResolver.java:181)
+    at org.apache.maven.repository.internal.DefaultVersionResolver.resolveVersion (DefaultVersionResolver.java:213)
+    at org.eclipse.aether.internal.impl.DefaultArtifactResolver.resolve (DefaultArtifactResolver.java:282)
+    at org.eclipse.aether.internal.impl.DefaultArtifactResolver.resolveArtifacts (DefaultArtifactResolver.java:229)
+    at org.eclipse.aether.internal.impl.DefaultArtifactResolver.resolveArtifact (DefaultArtifactResolver.java:207)
+    at org.apache.maven.repository.internal.DefaultModelResolver.resolveModel (DefaultModelResolver.java:172)
+    at org.apache.maven.repository.internal.DefaultModelResolver.resolveModel (DefaultModelResolver.java:222)
+    at org.apache.maven.model.building.DefaultModelBuilder.readParentExternally (DefaultModelBuilder.java:1150)
+    at org.apache.maven.model.building.DefaultModelBuilder.readParent (DefaultModelBuilder.java:916)
+    at org.apache.maven.model.building.DefaultModelBuilder.build (DefaultModelBuilder.java:361)
+    at org.apache.maven.model.building.DefaultModelBuilder.build (DefaultModelBuilder.java:267)
+    at org.apache.maven.repository.internal.DefaultArtifactDescriptorReader.loadPom (DefaultArtifactDescriptorReader.java:296)
+    at org.apache.maven.repository.internal.DefaultArtifactDescriptorReader.readArtifactDescriptor (DefaultArtifactDescriptorReader.java:171)
+    at org.eclipse.aether.internal.impl.collect.DefaultDependencyCollector.resolveCachedArtifactDescriptor (DefaultDependencyCollector.java:538)
+    at org.eclipse.aether.internal.impl.collect.DefaultDependencyCollector.getArtifactDescriptorResult (DefaultDependencyCollector.java:523)
+    at org.eclipse.aether.internal.impl.collect.DefaultDependencyCollector.processDependency (DefaultDependencyCollector.java:410)
+    at org.eclipse.aether.internal.impl.collect.DefaultDependencyCollector.processDependency (DefaultDependencyCollector.java:362)
+    at org.eclipse.aether.internal.impl.collect.DefaultDependencyCollector.process (DefaultDependencyCollector.java:349)
+    at org.eclipse.aether.internal.impl.collect.DefaultDependencyCollector.collectDependencies (DefaultDependencyCollector.java:254)
+    at org.eclipse.aether.internal.impl.DefaultRepositorySystem.collectDependencies (DefaultRepositorySystem.java:284)
+    at org.apache.maven.project.DefaultProjectDependenciesResolver.resolve (DefaultProjectDependenciesResolver.java:170)
+    at org.apache.maven.lifecycle.internal.LifecycleDependencyResolver.getDependencies (LifecycleDependencyResolver.java:243)
+    at org.apache.maven.lifecycle.internal.LifecycleDependencyResolver.resolveProjectDependencies (LifecycleDependencyResolver.java:147)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.ensureDependenciesAreResolved (MojoExecutor.java:401)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute (MojoExecutor.java:347)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:215)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:171)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:163)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:117)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:81)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:56)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:128)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:298)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:192)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:105)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:960)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:293)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:196)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke (Method.java:498)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:283)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:226)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:407)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:348)
+[INFO] Downloading from mirror: http://mirror.proxy.hpc:8081/repository/maven-public/org/apache/flink/flink-cdc-pipeline-udf-examples/3.2-SNAPSHOT/maven-metadata.xml
+[WARNING] Could not apply configuration for mirror to Wagon org.apache.maven.wagon.providers.http.HttpWagon
+org.codehaus.plexus.component.configurator.ComponentConfigurationException: Cannot find 'connectionTimeout' in class org.apache.maven.wagon.providers.http.wagon.shared.HttpConfiguration
+    at org.eclipse.sisu.plexus.CompositeBeanHelper.setProperty (CompositeBeanHelper.java:252)
+    at org.codehaus.plexus.component.configurator.converters.composite.ObjectWithFieldsConverter.processConfiguration (ObjectWithFieldsConverter.java:101)
+    at org.codehaus.plexus.component.configurator.converters.composite.ObjectWithFieldsConverter.fromConfiguration (ObjectWithFieldsConverter.java:57)
+    at org.eclipse.sisu.plexus.CompositeBeanHelper.convertProperty (CompositeBeanHelper.java:273)
+    at org.eclipse.sisu.plexus.CompositeBeanHelper.setProperty (CompositeBeanHelper.java:174)
+    at org.codehaus.plexus.component.configurator.converters.composite.ObjectWithFieldsConverter.processConfiguration (ObjectWithFieldsConverter.java:101)
+    at org.eclipse.aether.internal.transport.wagon.PlexusWagonConfigurator$WagonComponentConfigurator.configureComponent (PlexusWagonConfigurator.java:101)
+    at org.codehaus.plexus.component.configurator.AbstractComponentConfigurator.configureComponent (AbstractComponentConfigurator.java:44)
+    at org.codehaus.plexus.component.configurator.AbstractComponentConfigurator.configureComponent (AbstractComponentConfigurator.java:37)
+    at org.eclipse.aether.internal.transport.wagon.PlexusWagonConfigurator.configure (PlexusWagonConfigurator.java:86)
+    at org.eclipse.aether.transport.wagon.WagonTransporter.connectWagon (WagonTransporter.java:328)
+    at org.eclipse.aether.transport.wagon.WagonTransporter.pollWagon (WagonTransporter.java:377)
+    at org.eclipse.aether.transport.wagon.WagonTransporter.execute (WagonTransporter.java:426)
+    at org.eclipse.aether.transport.wagon.WagonTransporter.get (WagonTransporter.java:407)
+    at org.eclipse.aether.connector.basic.BasicRepositoryConnector$GetTaskRunner.runTask (BasicRepositoryConnector.java:457)
+    at org.eclipse.aether.connector.basic.BasicRepositoryConnector$TaskRunner.run (BasicRepositoryConnector.java:364)
+    at org.eclipse.aether.util.concurrency.RunnableErrorForwarder$1.run (RunnableErrorForwarder.java:75)
+    at org.eclipse.aether.connector.basic.BasicRepositoryConnector$DirectExecutor.execute (BasicRepositoryConnector.java:628)
+    at org.eclipse.aether.connector.basic.BasicRepositoryConnector.get (BasicRepositoryConnector.java:235)
+    at org.eclipse.aether.internal.impl.DefaultMetadataResolver$ResolveTask.run (DefaultMetadataResolver.java:586)
+    at org.eclipse.aether.util.concurrency.RunnableErrorForwarder$1.run (RunnableErrorForwarder.java:75)
+    at org.eclipse.aether.internal.impl.DefaultMetadataResolver$1.execute (DefaultMetadataResolver.java:510)
+    at org.eclipse.aether.internal.impl.DefaultMetadataResolver.resolve (DefaultMetadataResolver.java:353)
+    at org.eclipse.aether.internal.impl.DefaultMetadataResolver.resolveMetadata (DefaultMetadataResolver.java:181)
+    at org.apache.maven.repository.internal.DefaultVersionResolver.resolveVersion (DefaultVersionResolver.java:213)
+    at org.apache.maven.repository.internal.DefaultArtifactDescriptorReader.loadPom (DefaultArtifactDescriptorReader.java:204)
+    at org.apache.maven.repository.internal.DefaultArtifactDescriptorReader.readArtifactDescriptor (DefaultArtifactDescriptorReader.java:171)
+    at org.eclipse.aether.internal.impl.collect.DefaultDependencyCollector.resolveCachedArtifactDescriptor (DefaultDependencyCollector.java:538)
+    at org.eclipse.aether.internal.impl.collect.DefaultDependencyCollector.getArtifactDescriptorResult (DefaultDependencyCollector.java:523)
+    at org.eclipse.aether.internal.impl.collect.DefaultDependencyCollector.processDependency (DefaultDependencyCollector.java:410)
+    at org.eclipse.aether.internal.impl.collect.DefaultDependencyCollector.processDependency (DefaultDependencyCollector.java:362)
+    at org.eclipse.aether.internal.impl.collect.DefaultDependencyCollector.process (DefaultDependencyCollector.java:349)
+    at org.eclipse.aether.internal.impl.collect.DefaultDependencyCollector.collectDependencies (DefaultDependencyCollector.java:254)
+    at org.eclipse.aether.internal.impl.DefaultRepositorySystem.collectDependencies (DefaultRepositorySystem.java:284)
+    at org.apache.maven.project.DefaultProjectDependenciesResolver.resolve (DefaultProjectDependenciesResolver.java:170)
+    at org.apache.maven.lifecycle.internal.LifecycleDependencyResolver.getDependencies (LifecycleDependencyResolver.java:243)
+    at org.apache.maven.lifecycle.internal.LifecycleDependencyResolver.resolveProjectDependencies (LifecycleDependencyResolver.java:147)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.ensureDependenciesAreResolved (MojoExecutor.java:401)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.doExecute (MojoExecutor.java:347)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:215)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:171)
+    at org.apache.maven.lifecycle.internal.MojoExecutor.execute (MojoExecutor.java:163)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:117)
+    at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject (LifecycleModuleBuilder.java:81)
+    at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build (SingleThreadedBuilder.java:56)
+    at org.apache.maven.lifecycle.internal.LifecycleStarter.execute (LifecycleStarter.java:128)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:298)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:192)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:105)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:960)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:293)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:196)
+    at sun.reflect.NativeMethodAccessorImpl.invoke0 (Native Method)
+    at sun.reflect.NativeMethodAccessorImpl.invoke (NativeMethodAccessorImpl.java:62)
+    at sun.reflect.DelegatingMethodAccessorImpl.invoke (DelegatingMethodAccessorImpl.java:43)
+    at java.lang.reflect.Method.invoke (Method.java:498)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:283)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:226)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:407)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:348)
+[INFO] 
+[INFO] --- spotless-maven-plugin:2.4.2:check (spotless-check) @ flink-cdc-runtime ---
+[INFO] 
+[INFO] --- maven-checkstyle-plugin:2.17:check (validate) @ flink-cdc-runtime ---
+[INFO] 
+[INFO] --- maven-enforcer-plugin:3.0.0-M1:enforce (enforce-maven-version) @ flink-cdc-runtime ---
+[INFO] 
+[INFO] --- maven-remote-resources-plugin:1.5:process (process-resource-bundles) @ flink-cdc-runtime ---
+[INFO] 
+[INFO] --- maven-resources-plugin:3.1.0:resources (default-resources) @ flink-cdc-runtime ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /workspace/flink-cdc-runtime/src/main/resources
+[INFO] Copying 3 resources
+[INFO] 
+[INFO] --- flatten-maven-plugin:1.5.0:flatten (flatten) @ flink-cdc-runtime ---
+[INFO] Generating flattened POM of project org.apache.flink:flink-cdc-runtime:jar:3.2-SNAPSHOT...
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.7.0:compile (default-compile) @ flink-cdc-runtime ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 115 source files to /workspace/flink-cdc-runtime/target/classes
+[INFO] /workspace/flink-cdc-runtime/src/main/java/org/apache/flink/cdc/runtime/typeutils/DataTypeConverter.java: Some input files use or override a deprecated API.
+[INFO] /workspace/flink-cdc-runtime/src/main/java/org/apache/flink/cdc/runtime/typeutils/DataTypeConverter.java: Recompile with -Xlint:deprecation for details.
+[INFO] /workspace/flink-cdc-runtime/src/main/java/org/apache/flink/cdc/runtime/serializer/data/writer/BinaryWriter.java: Some input files use unchecked or unsafe operations.
+[INFO] /workspace/flink-cdc-runtime/src/main/java/org/apache/flink/cdc/runtime/serializer/data/writer/BinaryWriter.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- maven-resources-plugin:3.1.0:testResources (default-testResources) @ flink-cdc-runtime ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO] Copying 3 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.7.0:testCompile (default-testCompile) @ flink-cdc-runtime ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 55 source files to /workspace/flink-cdc-runtime/target/test-classes
+[INFO] /workspace/flink-cdc-runtime/src/test/java/org/apache/flink/cdc/runtime/serializer/SerializerTestBase.java: /workspace/flink-cdc-runtime/src/test/java/org/apache/flink/cdc/runtime/serializer/SerializerTestBase.java uses or overrides a deprecated API.
+[INFO] /workspace/flink-cdc-runtime/src/test/java/org/apache/flink/cdc/runtime/serializer/SerializerTestBase.java: Recompile with -Xlint:deprecation for details.
+[INFO] /workspace/flink-cdc-runtime/src/test/java/org/apache/flink/cdc/runtime/serializer/EnumSerializerTest.java: Some input files use unchecked or unsafe operations.
+[INFO] /workspace/flink-cdc-runtime/src/test/java/org/apache/flink/cdc/runtime/serializer/EnumSerializerTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- maven-surefire-plugin:3.0.0-M5:test (default-test) @ flink-cdc-runtime ---
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running org.apache.flink.cdc.runtime.operators.transform.PostTransformOperatorTest
+2267 [main] INFO  org.apache.flink.streaming.runtime.tasks.StreamTask - No state backend has been configured, using default (HashMap) org.apache.flink.runtime.state.hashmap.HashMapStateBackend@439a8f59
+2269 [main] INFO  org.apache.flink.runtime.state.StateBackendLoader - State backend loader loads the state backend as HashMapStateBackend
+2270 [main] INFO  org.apache.flink.streaming.runtime.tasks.StreamTask - Checkpoint storage is set to 'jobmanager'
+2366 [main] INFO  org.apache.flink.cdc.runtime.operators.schema.coordinator.SchemaRegistryRequestHandler - Register sink subtask 0.
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.181 s - in org.apache.flink.cdc.runtime.operators.transform.PostTransformOperatorTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  20.688 s
+[INFO] Finished at: 2026-06-21T04:31:14Z
+[INFO] ------------------------------------------------------------------------
+[0m[0m>>>>> End Test Output
+OPENENV_EXIT_CODE=0

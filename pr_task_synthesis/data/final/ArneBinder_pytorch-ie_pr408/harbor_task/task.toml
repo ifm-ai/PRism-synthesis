@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "ArneBinder_pytorch-ie_pr408"
+description = "OpenEnv: ArneBinder/pytorch-ie PR #408"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/ArneBinder/pytorch-ie.git"
+git_pr_id = "408"
+git_base_commit = "f1b05e73b0e377a71ef6a6bdd64aa21a8881d0f7"
+task_id = "ArneBinder_pytorch-ie_pr408"
+repo_full_name = "ArneBinder/pytorch-ie"
+domain = "ML_DEEP_LEARNING"
+primary_language = "Python"
+runtime_family = "python"
+complexity = "medium"
+star_category = "stars_51_100"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

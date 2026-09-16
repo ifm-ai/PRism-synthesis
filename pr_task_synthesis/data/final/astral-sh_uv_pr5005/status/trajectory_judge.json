@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "High-value trajectory: solver correctly localized the issue (hide = true on --isolated flag), made the exact fix from fix.patch, and manually verified all help outputs show the flag. Oracle verifier confirms all 12 snapshot tests pass. The solver did not run formal tests due to build timeout, but manual verification was thorough and correct."
+}

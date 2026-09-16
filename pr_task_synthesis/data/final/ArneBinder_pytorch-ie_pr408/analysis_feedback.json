@@ -1,0 +1,50 @@
+{
+  "hacking_detected": false,
+  "hacking_checklist": {
+    "H1_path_manipulation": false,
+    "H2_test_modification": false,
+    "H3_environment_tampering": false,
+    "H4_oracle_bypass": false,
+    "H5_exit_code_capture": {
+      "present": true,
+      "correct": true,
+      "notes": "eval.sh correctly captures RC=$? and emits OPENENV_EXIT_CODE"
+    },
+    "H6_output_delimiters": {
+      "present": true,
+      "correct": true,
+      "notes": "eval.sh prints '>>>>> Start Test Output' and '>>>>> End Test Output' delimiters"
+    },
+    "H7_workspace_modification": false,
+    "H8_patch_as_test": false,
+    "H9_hardcoded_results": false,
+    "H10_non_determinism": false
+  },
+  "verifier_alignment": {
+    "status": "aligned",
+    "blocks_outer_progress": false,
+    "target_overlap": "The hidden test test_annotation_sort.py directly exercises the comparison_fields_and_values property and __lt__ method added by fix.patch. The test verifies sorting of simple and nested annotations, and ValueError raising for heterogeneous lists.",
+    "patch_touched_files": ["src/pytorch_ie/core/document.py"],
+    "required_files_audit": {
+      "suggested_required_verifier_files": ["eval.sh", "test.patch", "tests/test_annotation_sort.py"],
+      "notes": "All required verifier files are present and correctly configured."
+    },
+    "test_entrypoints": ["poetry run pytest $TESTS_DIR/test_annotation_sort.py -v"],
+    "notes": "The verifier correctly tests the fix.patch changes. The test fails without the fix (TypeError) and passes with the fix. No alignment issues detected."
+  },
+  "local_test_only_exit_code": 1,
+  "local_test_with_fix_exit_code": 0,
+  "local_two_run_criterion_met": true,
+  "two_run_evidence": {
+    "test_only": {
+      "exit_code": 1,
+      "error_type": "TypeError",
+      "error_message": "'<' not supported between instances of 'Dummy' and 'Dummy'"
+    },
+    "test_with_fix": {
+      "exit_code": 0,
+      "result": "PASSED"
+    }
+  },
+  "notes": "Local preflight verification complete. The eval.sh correctly distinguishes between buggy and fixed states. testOnly fails with TypeError (exit code 1), testWithFix passes (exit code 0). No hacking detected. Verifier is aligned with the fix.patch changes."
+}

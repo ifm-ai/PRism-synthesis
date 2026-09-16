@@ -1,0 +1,23 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "verification_command": "poetry run pytest $TESTS_DIR/test_annotation_sort.py -v",
+  "activation_source": "source $(poetry env info --path)/bin/activate",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "external_hidden_tests",
+  "copied_test_patch": true,
+  "supplemental_tests_created": true,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that Annotation subclasses can be sorted using Python's built-in sorted() function by comparing only dataclass fields with compare=True, ignoring _targets, and raising ValueError when comparison field names differ between instances.",
+  "fix_patch_grounding": "The fix.patch adds comparison_fields_and_values property and __lt__ method to Annotation class to enable deterministic sorting of annotation collections based on comparable fields.",
+  "issue_context_used": "The issue.md describes the requirement for implementing ordering on Annotation class that considers only fields with compare=True, ignores _targets, and raises ValueError with specific message when field names differ.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": ["poetry run pytest $TESTS_DIR/test_annotation_sort.py -v"],
+  "required_verifier_files": ["eval.sh", "test.patch", "tests/test_annotation_sort.py"],
+  "notes": "Evaluator uses external hidden test at tests/test_annotation_sort.py. The test.patch is copied for reference. The test verifies sorting behavior for simple and nested annotations, and ValueError raising for heterogeneous annotation lists. Test fails without fix (TypeError) and passes with fix."
+}

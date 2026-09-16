@@ -1,0 +1,32 @@
+>>>>> Start Test Output
+ts-jest[config] (WARN) [94mmessage[0m[90m TS151001: [0mIf you have issues related to imports, you should consider setting `esModuleInterop` to `true` in your TypeScript configuration file (usually `tsconfig.json`). See https://blogs.msdn.microsoft.com/typescript/2018/01/31/announcing-typescript-2-7/#easier-ecmascript-module-interoperability for more information.
+PASS ../artifacts/evaluation/tests/wgsl-shader-fixes.test.ts
+  WGSL Shader Fixes
+    bumpFragment.fx
+      ✓ should use fragmentInputs.vDetailUV instead of bare vDetailUV in TBNUV select (1 ms)
+      ✓ should use fragmentInputs.vDetailUV in textureSample for detail
+      ✓ should use fragmentInputs.vBumpUV in textureSample for bump
+      ✓ should use vec3f construction for detailNormal scaling (whiteout method) (1 ms)
+      ✓ should use vec3f construction for detailNormal scaling (RNM method)
+      ✓ should use vec3f construction for detailNormal in DETAIL-only branch (1 ms)
+    depthPrePass.fx
+      ✓ should use fragmentOutputs.color instead of gl_FragColor
+      ✓ should return fragmentOutputs instead of bare return (1 ms)
+    oitFragment.fx
+      ✓ should use var instead of uvar for halfFloat declaration
+    morphTargetsVertex.fx
+      ✓ should use vec4f construction for tangentUpdated in texture mode
+      ✓ should use vec4f construction for tangentUpdated in non-texture mode
+    default.fragment.fx
+      ✓ should use fragmentInputs.vDecalUV instead of vDecalUV (first occurrence)
+      ✓ should use fragmentInputs.vDecalUV instead of vDecalUV (second occurrence)
+      ✓ should use uniforms.vDetailInfos.y instead of bare vDetailInfos.y (1 ms)
+      ✓ should use uniforms.refractionMatrix and scene.view for refraction calculation
+
+Test Suites: 1 passed, 1 total
+Tests:       15 passed, 15 total
+Snapshots:   0 total
+Time:        0.465 s, estimated 1 s
+Ran all test suites.
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

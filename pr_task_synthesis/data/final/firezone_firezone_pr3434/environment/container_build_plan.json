@@ -1,0 +1,33 @@
+{
+  "base_image": "debian:bookworm-slim",
+  "system_packages": [
+    "git",
+    "curl",
+    "pkg-config",
+    "libssl-dev",
+    "ca-certificates",
+    "build-essential"
+  ],
+  "repo_setup_path": "/opt/benchmark/repo_setup.sh",
+  "setup_runtime_path": "/opt/benchmark/setup_runtime.sh",
+  "eval_path": "/opt/benchmark/eval.sh",
+  "workdir": "/workspace",
+  "build_context_files": [
+    "setup_runtime.sh",
+    "repo_setup.sh"
+  ],
+  "runtime_mounts": [
+    {
+      "source": "/artifacts/evaluation/eval.sh",
+      "target": "/opt/benchmark/eval.sh"
+    },
+    {
+      "source": "/artifacts/evaluation/test.patch",
+      "target": "/opt/benchmark/test.patch"
+    }
+  ],
+  "test_command": "cd /workspace/rust && cargo test --package firezone-relay --features proptest ping_pong_ip6_relay",
+  "rust_toolchain": "1.75.0",
+  "environment_ecosystem": "rust",
+  "package_manager": "cargo"
+}

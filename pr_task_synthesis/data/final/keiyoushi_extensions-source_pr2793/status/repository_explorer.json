@@ -1,0 +1,14 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "platform_constraint": "linux",
+  "high_value_files": [
+    "CONTRIBUTING.md",
+    "README.md",
+    "common.gradle",
+    "src/en/voyceme/build.gradle",
+    "src/en/voyceme/src/eu/kanade/tachiyomi/extension/en/voyceme/VoyceMe.kt",
+    ".github/workflows/build_push.yml"
+  ],
+  "notes": "Repository is a Gradle-based Android extension project (Keiyoushi/Tachiyomi extensions-source). The CI runs on Linux (ubuntu-latest) and the build system is cross-platform. No platform incompatibility - the FIX/TEST path is runnable in a Linux x86-64 container."
+}

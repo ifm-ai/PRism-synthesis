@@ -1,0 +1,86 @@
+{
+  "pr_summary": "Consolidate containerd image metadata events to avoid duplicates in the workloadmeta collector. The fix modifies files in comp/core/workloadmeta/collectors/internal/containerd/ to handle image events properly and prevent duplicate metadata.",
+  "runtime_family": "Go",
+  "package_manager": "go modules",
+  "touched_files": [
+    "comp/core/workloadmeta/collectors/internal/containerd/image.go",
+    "comp/core/workloadmeta/collectors/internal/containerd/image_test.go",
+    "comp/core/workloadmeta/collectors/internal/containerd/event_builder.go",
+    "comp/core/workloadmeta/collectors/internal/containerd/event_builder_test.go"
+  ],
+  "important_build_files": [
+    "go.mod",
+    "go.sum",
+    ".go-version",
+    "requirements.txt",
+    "pyproject.toml"
+  ],
+  "important_test_files": [
+    "comp/core/workloadmeta/collectors/internal/containerd/containerd_test.go",
+    "comp/core/workloadmeta/collectors/internal/containerd/image_test.go",
+    "comp/core/workloadmeta/collectors/internal/containerd/event_builder_test.go",
+    "comp/core/workloadmeta/collectors/internal/containerd/container_builder_test.go"
+  ],
+  "candidate_build_commands": [
+    "invoke agent.build",
+    "invoke agent.build --build-exclude=systemd",
+    "invoke install-tools",
+    "invoke deps"
+  ],
+  "candidate_test_commands": [
+    "invoke test --targets=./comp/core/workloadmeta/collectors/internal/containerd",
+    "invoke test --targets=./pkg/util/containerd",
+    "go test -tags containerd ./comp/core/workloadmeta/collectors/internal/containerd/..."
+  ],
+  "candidate_smoke_commands": [
+    "go build -tags containerd ./cmd/agent",
+    "go version",
+    "go env GOPATH"
+  ],
+  "candidate_activation_checks": [
+    "go version",
+    "which go",
+    "go env GOROOT",
+    "go env GOPATH"
+  ],
+  "environment_management": "Go modules (go.mod). Build orchestrated via invoke (Python-based task runner). Requires Python 3.9+, Go 1.21+, CMake 3.12+, C++ compiler.",
+  "special_system_dependencies": [
+    "Python 3.9+ development libraries",
+    "CMake 3.12+",
+    "C++ compiler",
+    "libseccomp-dev (for Linux builds)",
+    "Containerd client library"
+  ],
+  "high_value_files": [
+    "go.mod",
+    "comp/core/workloadmeta/collectors/internal/containerd/image.go",
+    "comp/core/workloadmeta/collectors/internal/containerd/containerd.go",
+    "comp/core/workloadmeta/collectors/internal/containerd/event_builder.go",
+    "pkg/util/containerd/containerd_util.go",
+    "Dockerfiles/agent/Dockerfile",
+    ".github/workflows/windows-unittests.yml"
+  ],
+  "patch_file_cues": [
+    "containerd image metadata handling",
+    "workloadmeta collector",
+    "image events consolidation",
+    "duplicate event prevention"
+  ],
+  "test_file_cues": [
+    "//go:build containerd",
+    "TestIgnoreContainer",
+    "containerd fake client",
+    "image metadata tests"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "Primary Dockerfile at Dockerfiles/agent/Dockerfile uses Ubuntu base image",
+    "network_linux.go in containerd collector with '//go:build containerd' tag",
+    "Windows has separate unittests workflow (.github/workflows/windows-unittests.yml) indicating cross-platform support",
+    "network_stub.go for non-Linux with '//go:build containerd && !linux'",
+    "pkg/util/system has platform-specific files: cpu_unix.go, cpu_windows.go, network_linux.go, network_windows.go",
+    "README.md build instructions reference Linux-focused setup with invoke",
+    "Containerd is primarily a Linux container runtime (though Windows support exists)"
+  ],
+  "notes": "This is a Go project (datadog-agent) using go modules for dependency management. The build system uses invoke (Python-based task runner). The project is cross-platform but primarily targets Linux. The containerd collector files use '//go:build containerd' build tags. Tests require the 'containerd' build tag. The fix involves consolidating image metadata events in the workloadmeta collector to avoid duplicates. Windows builds are supported but require separate tooling (MSYS2, Windows-specific scripts). The project requires Python 3.9+, Go 1.21+, CMake 3.12+, and a C++ compiler for development."
+}

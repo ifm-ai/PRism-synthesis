@@ -1,0 +1,27 @@
+>>>>> Start Test Output
+=== RUN   TestIAMPolicy_NoOverlyBroadCognitoWildcard
+--- PASS: TestIAMPolicy_NoOverlyBroadCognitoWildcard (0.00s)
+=== RUN   TestIAMPolicy_CognitoIdpSpecificPermission
+--- PASS: TestIAMPolicy_CognitoIdpSpecificPermission (0.00s)
+=== RUN   TestIAMPolicy_EC2DescribeConsolidated
+--- PASS: TestIAMPolicy_EC2DescribeConsolidated (0.00s)
+=== RUN   TestIAMPolicy_EC2ModifyVpcWildcard
+--- PASS: TestIAMPolicy_EC2ModifyVpcWildcard (0.00s)
+=== RUN   TestIAMPolicy_RouteTablePermissions
+--- PASS: TestIAMPolicy_RouteTablePermissions (0.00s)
+=== RUN   TestIAMPolicy_NetworkACLPermissions
+--- PASS: TestIAMPolicy_NetworkACLPermissions (0.00s)
+=== RUN   TestIAMPolicy_FlowLogsPermissions
+--- PASS: TestIAMPolicy_FlowLogsPermissions (0.00s)
+=== RUN   TestIAMPolicy_NoDuplicateDescribeVpcEndpointActions
+--- PASS: TestIAMPolicy_NoDuplicateDescribeVpcEndpointActions (0.00s)
+=== RUN   TestIAMPolicy_NoIndividualModifyVpcActions
+--- PASS: TestIAMPolicy_NoIndividualModifyVpcActions (0.00s)
+=== RUN   TestIAMPolicy_StructureValid
+--- PASS: TestIAMPolicy_StructureValid (0.00s)
+=== RUN   TestIAMPolicy_ExpectedActionCount
+--- PASS: TestIAMPolicy_ExpectedActionCount (0.00s)
+PASS
+ok  	test	0.005s
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

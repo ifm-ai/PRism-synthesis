@@ -1,0 +1,20 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image": "ubuntu:22.04",
+  "copied_artifacts": [
+    "setup_runtime.sh",
+    "repo_setup.sh"
+  ],
+  "uses_repo_setup_script": true,
+  "repo_materialization_mode": "git_clone_during_build",
+  "container_build_plan_written": true,
+  "build_backend_target": "buildah",
+  "buildability_assessment": "Dockerfile regenerated with ubuntu:22.04 base image. Buildability review passed: (1) Valid Dockerfile syntax with proper FROM, RUN, COPY, ENV, WORKDIR structure. (2) Build-context complete - setup_runtime.sh and repo_setup.sh present. (3) Base-image compatibility correct - ubuntu:22.04 uses apt-get. (4) Script paths consistent - copied to /opt/benchmark/ and executed with matching paths. (5) Workspace contract preserved - no /workspace copying, relies on repo_setup.sh for git materialization. (6) Verifier separation maintained - no eval.sh or test assets baked in. (7) Command survivability assured - all tools installed before use. Dockerfile is buildable with Buildah.",
+  "blocking_risks": [],
+  "warnings": [
+    "Base image changed from condaforge/mambaforge:latest to ubuntu:22.04 - this is intentional to fix the apt-get failure due to empty /etc/apt/sources.list in the previous image"
+  ],
+  "recommended_fixes": [],
+  "notes": "Dockerfile.final has been regenerated with ubuntu:22.04 as the base image. The previous base image (condaforge/mambaforge:latest) had an empty apt sources list which caused apt-get update to fail. The new base image is a standard Ubuntu 22.04 which has proper apt configuration. Miniforge is now installed manually via wget during the build process. System packages git, curl, build-essential, libopenmpi-dev, openmpi-bin, libhdf5-dev, wget, and ca-certificates are installed via apt-get. The repo_setup.sh and setup_runtime.sh scripts are copied to /opt/benchmark/ and executed in sequence. The final WORKDIR is set to /workspace."
+}

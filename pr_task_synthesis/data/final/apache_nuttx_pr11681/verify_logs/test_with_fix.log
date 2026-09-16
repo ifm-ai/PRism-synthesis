@@ -1,0 +1,38 @@
+WARNING: Skipping mount /etc/localtime [binds]: /etc/localtime doesn't exist in container
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.10.12, pytest-6.2.5, py-1.11.0, pluggy-1.6.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /tests/tests
+plugins: json-0.4.0, ordering-0.6, repeat-0.9.1
+collecting ... collected 25 items
+
+../tests/tests/test_fix_verification.py::TestCoreBugFix::test_setbits_initialization PASSED [  4%]
+../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_adc_driver_exists PASSED [  8%]
+../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_gpio_driver_exists PASSED [ 12%]
+../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_pwm_driver_exists PASSED [ 16%]
+../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_qencoder_driver_exists PASSED [ 20%]
+../tests/tests/test_fix_verification.py::TestNewDriverFiles::test_usb_driver_exists PASSED [ 24%]
+../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_defconfig_exists PASSED [ 28%]
+../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_adc_config PASSED [ 32%]
+../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_gpio_config PASSED [ 36%]
+../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_pwm_config PASSED [ 40%]
+../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_qencoder_config PASSED [ 44%]
+../tests/tests/test_fix_verification.py::TestPysimConfig::test_pysim_cm7_has_usb_config PASSED [ 48%]
+../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_adc_init PASSED [ 52%]
+../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_gpio_init PASSED [ 56%]
+../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_pwm_init PASSED [ 60%]
+../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_qencoder_init PASSED [ 64%]
+../tests/tests/test_fix_verification.py::TestBringupIntegration::test_bringup_includes_usb_init PASSED [ 68%]
+../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_adc PASSED [ 72%]
+../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_gpio PASSED [ 76%]
+../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_pwm PASSED [ 80%]
+../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_qencoder PASSED [ 84%]
+../tests/tests/test_fix_verification.py::TestMakefileUpdates::test_makefile_includes_usb PASSED [ 88%]
+../tests/tests/test_fix_verification.py::TestBoardHeaderUpdates::test_board_h_has_adc_definitions PASSED [ 92%]
+../tests/tests/test_fix_verification.py::TestBoardHeaderUpdates::test_board_h_has_tim_definitions PASSED [ 96%]
+../tests/tests/test_fix_verification.py::TestBoardHeaderUpdates::test_board_h_has_otg_definitions PASSED [100%]
+
+============================== 25 passed in 0.03s ==============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

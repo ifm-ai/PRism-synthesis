@@ -1,0 +1,21 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image": "mcr.microsoft.com/dotnet/sdk:8.0",
+  "copied_artifacts": [
+    "setup_runtime.sh",
+    "repo_setup.sh"
+  ],
+  "uses_repo_setup_script": true,
+  "repo_materialization_mode": "git_clone_via_repo_setup_sh",
+  "container_build_plan_written": true,
+  "build_backend_target": "buildah",
+  "buildability_assessment": "buildable",
+  "blocking_risks": [],
+  "warnings": [
+    "eval.sh and test assets are runtime-mounted, not baked into image",
+    "NuGet restore may require network access at build time"
+  ],
+  "recommended_fixes": [],
+  "notes": "Dockerfile.final created and reviewed for .NET JSON formatter project. Buildability review passed: valid syntax, build-context files present (setup_runtime.sh, repo_setup.sh), apt-get compatible with Ubuntu-based .NET SDK 8.0 image, script paths consistent, workspace contract respected (no /workspace copying, repo_setup.sh materializes via git), verifier assets properly separated (eval.sh runtime-mounted). Base image mcr.microsoft.com/dotnet/sdk:8.0 provides .NET 8.0 SDK with backward compatibility for .NET 6.0 and .NET Standard 2.0 targets. repo_setup.sh materializes /workspace from git repository (FracturedJson at commit 6f5f9fee985b4398e46ec506a40f2545e799ff62). setup_runtime.sh restores NuGet packages."
+}

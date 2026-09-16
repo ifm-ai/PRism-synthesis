@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "official_verifier": {
+    "execution_mode": "real_execution",
+    "test_only_exit_code": 1,
+    "test_with_fix_exit_code": 0
+  },
+  "non_discriminating": false,
+  "notes": "Local preflight verification completed successfully. Test-only run failed (exit code 1) as expected for buggy workspace. Test-with-fix run passed (exit code 0) after applying fix.patch and rebuilding MLX C++ extension. Verifier alignment is good: test targets (python/tests/test_random.py) cover the public API of the patched C++ code (mlx/random.cpp) at the mx.random.normal function boundary. No hacking signals detected. Required verifier files are clean."
+}

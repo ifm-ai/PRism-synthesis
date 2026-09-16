@@ -1,0 +1,85 @@
+{
+  "pr_summary": "Fix WebGPU shader code bugs in WGSL shader files. The patch corrects variable references in bumpFragment.fx (use fragmentInputs.vDetailUV, fragmentInputs.vBumpUV instead of vDetailUV, vBumpUV), depthPrePass.fx (use fragmentOutputs.color and return fragmentOutputs instead of gl_FragColor and bare return), morphTargetsVertex.fx (properly construct vec4f for tangent update), oitFragment.fx (change 'uvar' to 'var' for halfFloat variable), and default.fragment.fx (fix fragmentInputs.vDecalUV references and refraction matrix calculation).",
+  "runtime_family": "JavaScript/TypeScript",
+  "package_manager": "npm",
+  "touched_files": [
+    "packages/dev/core/src/ShadersWGSL/ShadersInclude/bumpFragment.fx",
+    "packages/dev/core/src/ShadersWGSL/ShadersInclude/depthPrePass.fx",
+    "packages/dev/core/src/ShadersWGSL/ShadersInclude/morphTargetsVertex.fx",
+    "packages/dev/core/src/ShadersWGSL/ShadersInclude/oitFragment.fx",
+    "packages/dev/core/src/ShadersWGSL/default.fragment.fx"
+  ],
+  "important_build_files": [
+    "package.json",
+    "tsconfig.json",
+    "tsconfig.build.json",
+    "tsconfig.devpackages.json",
+    "lerna.json",
+    "nx.json",
+    "jest.config.ts"
+  ],
+  "important_test_files": [
+    "packages/dev/core/test/unit/",
+    "packages/tools/tests/test/unit/",
+    "packages/tools/tests/playwright.config.ts"
+  ],
+  "candidate_build_commands": [
+    "npm run build:dev",
+    "npm run build:source",
+    "npm run build:shaders",
+    "npx nx build babylonjs"
+  ],
+  "candidate_test_commands": [
+    "npm test",
+    "npm run test:unit",
+    "npm run test:visualization",
+    "jest --selectProjects=unit"
+  ],
+  "candidate_smoke_commands": [
+    "node --version",
+    "npm --version",
+    "npm run build:tools"
+  ],
+  "candidate_activation_checks": [
+    "node -e \"console.log(process.version)\"",
+    "npm ls --depth=0"
+  ],
+  "environment_management": "npm workspaces with lerna and nx monorepo management",
+  "special_system_dependencies": [
+    "Node.js >=16.0.0 <23.0.0",
+    "npm >=8.0.0",
+    "Playwright (for visualization tests)",
+    "Puppeteer (for integration tests)"
+  ],
+  "high_value_files": [
+    "packages/dev/core/src/ShadersWGSL/default.fragment.fx",
+    "packages/dev/core/src/ShadersWGSL/ShadersInclude/bumpFragment.fx",
+    "packages/dev/core/src/ShadersWGSL/ShadersInclude/depthPrePass.fx",
+    "packages/dev/core/src/ShadersWGSL/ShadersInclude/morphTargetsVertex.fx",
+    "packages/dev/core/src/ShadersWGSL/ShadersInclude/oitFragment.fx",
+    "package.json",
+    "jest.config.ts",
+    "tsconfig.json"
+  ],
+  "patch_file_cues": [
+    "WGSL shader files with .fx extension",
+    "WebGPU-specific shader code (fragmentInputs, fragmentOutputs, vec2f, vec3f, vec4f types)",
+    "Shader include files in ShadersInclude subdirectory"
+  ],
+  "test_file_cues": [
+    "Jest configuration with multiple projects (unit, visualization, integration, performance, interactions)",
+    "Playwright for visualization/visual tests",
+    "Unit tests in packages/dev/core/test/unit/",
+    "Test tools package at packages/tools/tests/"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "package.json specifies Node.js runtime with no platform restrictions",
+    "CI workflows use standard npm/node tooling",
+    "No Windows-specific APIs or MSVC dependencies in touched files",
+    "WGSL shader files are platform-agnostic GPU code",
+    "Jest and Playwright test frameworks are cross-platform",
+    "No .sln, .vcxproj, Xcode projects, or platform-specific build targets"
+  ],
+  "notes": "Babylon.js is a TypeScript/JavaScript 3D rendering engine using a monorepo structure managed by npm workspaces, lerna, and nx. The fix targets WebGPU WGSL shader files which are text-based shader source files. The build system uses TypeScript compilation and webpack bundling. Tests use Jest for unit tests and Playwright for visualization tests. The project is fully cross-platform and runs on Linux without issues. The touched .fx files are WGSL shader source files (not Windows-specific) that get processed during the build."
+}

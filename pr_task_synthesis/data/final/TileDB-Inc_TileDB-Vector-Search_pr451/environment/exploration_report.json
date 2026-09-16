@@ -1,0 +1,90 @@
+{
+  "pr_summary": "Extend the public API to support distance_metric (euclidean, cosine) for IVF-FLAT indexes. The fix adds INNER_PRODUCT and COSINE distance metric support to the IVF-FLAT index implementation, including vector normalization for cosine distance and proper handling of inner product results.",
+  "runtime_family": "Python",
+  "package_manager": "pip",
+  "touched_files": [
+    "apis/python/src/tiledb/vector_search/index.py",
+    "apis/python/src/tiledb/vector_search/ingestion.py",
+    "apis/python/src/tiledb/vector_search/ivf_flat_index.py",
+    "apis/python/src/tiledb/vector_search/module.cc",
+    "apis/python/src/tiledb/vector_search/module.py",
+    "apis/python/src/tiledb/vector_search/utils.py",
+    "src/include/api/vamana_index.h",
+    "src/include/scoring.h"
+  ],
+  "important_build_files": [
+    "pyproject.toml",
+    "src/CMakeLists.txt",
+    "apis/python/CMakeLists.txt",
+    "environment.yml"
+  ],
+  "important_test_files": [
+    "apis/python/test/test_distance_metrics.py",
+    "apis/python/test/test_ingestion.py",
+    "apis/python/test/test_index.py",
+    "apis/python/test/test_api.py"
+  ],
+  "candidate_build_commands": [
+    "pip install .",
+    "pip install .[test]",
+    "cmake -S ./src -B ./src/build -DCMAKE_BUILD_TYPE=Debug -DTILEDB_VS_PYTHON=ON -DTILEDB_PATH=$TILEDB_PATH",
+    "cmake --build ./src/build -j3"
+  ],
+  "candidate_test_commands": [
+    "cd apis/python && pytest -n logical --durations=0",
+    "cd apis/python && pytest test/test_distance_metrics.py -s",
+    "cd apis/python && pytest test/test_ingestion.py -s",
+    "pytest --nbmake test/ipynb"
+  ],
+  "candidate_smoke_commands": [
+    "python -c \"import tiledb.vector_search; print(tiledb.vector_search.__version__)\"",
+    "python -c \"from tiledb.vector_search import _tiledbvspy as vspy; print(vspy.DistanceMetric.L2)\"",
+    "python -c \"from tiledb.vector_search.ingestion import ingest; print('ingest module loaded')\""
+  ],
+  "candidate_activation_checks": [
+    "python -c \"import tiledb; print(tiledb.__version__)\"",
+    "python -c \"import numpy; print(numpy.__version__)\"",
+    "python -c \"import sklearn; print(sklearn.__version__)\""
+  ],
+  "environment_management": "pip with scikit-build-core for C++ extension building; conda environment available via environment.yml",
+  "special_system_dependencies": [
+    "libopenblas-dev (Linux)",
+    "cmake >= 3.22",
+    "pybind11",
+    "TileDB library (tiledb >= 0.31.0)",
+    "build-essential (Linux)"
+  ],
+  "high_value_files": [
+    "apis/python/src/tiledb/vector_search/ivf_flat_index.py",
+    "apis/python/src/tiledb/vector_search/ingestion.py",
+    "apis/python/src/tiledb/vector_search/index.py",
+    "apis/python/src/tiledb/vector_search/module.cc",
+    "src/include/scoring.h",
+    "pyproject.toml",
+    "apis/python/test/test_distance_metrics.py"
+  ],
+  "patch_file_cues": [
+    "DistanceMetric enum usage (L2, INNER_PRODUCT, COSINE)",
+    "normalize_vectors and normalize_vector functions added to utils.py",
+    "flip_results function for inner product result transformation",
+    "cosine_distance_normalized struct in scoring.h",
+    "distance_metric parameter propagation through ingestion and query paths"
+  ],
+  "test_file_cues": [
+    "test_cosine_distance - validates cosine distance against sklearn",
+    "test_inner_product_distances - validates inner product distances",
+    "test_l2_distance - validates L2/Euclidean distances",
+    "test_ivf_flat_ingestion_cosine - IVF-FLAT with cosine metric",
+    "query_and_check helper function for validation"
+  ],
+  "platform_constraint": "linux",
+  "platform_constraint_evidence": [
+    "CI workflow ci-python.yml runs on ubuntu-latest",
+    "CI workflow ci.yml runs on ubuntu-latest and windows-latest (cross-platform)",
+    "pyproject.toml has wheel.expand-macos-universal-tags but project builds on Linux",
+    "Dockerfile uses Ubuntu/Miniconda base",
+    "Documentation shows Linux build instructions with apt-get",
+    "No Windows-only APIs or MSVC-specific code in touched files"
+  ],
+  "notes": "This is a Python package with C++ extensions built using scikit-build-core and pybind11. The project is cross-platform (Linux, macOS, Windows) but CI primarily runs on Ubuntu. The fix.patch adds INNER_PRODUCT and COSINE distance metric support to IVF-FLAT indexes. The test.patch adds comprehensive tests for distance metrics including cosine distance validation against sklearn. The project requires TileDB as a core dependency and uses numpy < 2.0.0. Building from source requires cmake >= 3.22, pybind11, and TileDB library. For testing, pytest and scikit-learn are required."
+}

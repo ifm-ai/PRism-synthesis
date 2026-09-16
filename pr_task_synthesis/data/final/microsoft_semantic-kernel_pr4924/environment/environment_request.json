@@ -1,0 +1,51 @@
+{
+  "base_image_candidate": "python:3.10-slim",
+  "system_packages": [
+    "git",
+    "curl",
+    "python3-pip",
+    "python3-venv"
+  ],
+  "base_setup_commands": [
+    "apt-get update -qq",
+    "apt-get install -y -qq git curl python3-pip python3-venv"
+  ],
+  "setup_runtime_commands": [
+    "cd /workspace/python",
+    "python3 -m venv .venv",
+    "source .venv/bin/activate",
+    "pip install --upgrade pip --quiet",
+    "pip install poetry --quiet",
+    "poetry config virtualenvs.in-project true",
+    "poetry install --no-interaction --no-ansi"
+  ],
+  "activation_commands": [
+    "source /workspace/python/.venv/bin/activate"
+  ],
+  "activation_command": "source /workspace/python/.venv/bin/activate",
+  "activation_type": "venv",
+  "activation_validation_command": "bash -c 'source /workspace/python/.venv/bin/activate && python --version'",
+  "detected_test_command": "cd /workspace/python && pytest tests/unit/ai/open_ai/services/test_openai_chat_completion.py -v",
+  "runtime_smoke_command": "cd /workspace/python && python -c 'import semantic_kernel; print(semantic_kernel.__version__)'",
+  "runtime_profile": {
+    "ecosystem": "python",
+    "package_manager": "poetry",
+    "env": "poetry-venv",
+    "env_name": ".venv",
+    "prepare_commands": [
+      "poetry config virtualenvs.in-project true",
+      "poetry install --no-interaction --no-ansi"
+    ],
+    "activation_commands": [
+      "source /workspace/python/.venv/bin/activate"
+    ],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "poetry install already includes dev dependencies (pytest, pytest-asyncio)",
+    "cache_dirs": [
+      "/workspace/python/.venv",
+      "$HOME/.cache/pypoetry"
+    ],
+    "notes": "Poetry creates an in-project virtualenv at /workspace/python/.venv. Dev dependencies include pytest and pytest-asyncio required for running tests. Unit tests are reachable; integration tests may require additional configuration."
+  },
+  "notes": "Base image python:3.10-slim provides Python 3.10 which satisfies the ^3.8 requirement. Git and curl are explicitly included in system_packages. Poetry is used for dependency management with an in-project virtualenv. The fix modifies line 201 in open_ai_chat_completion_base.py to use getattr(choice, 'logprobs', None) for safe attribute access."
+}

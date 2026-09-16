@@ -1,0 +1,29 @@
+Hidden tests directory: /artifacts/evaluation/tests
+total 28
+drwxr-xr-x 4 root root 4096 Jun 25 14:58 .
+drwxr-xr-x 3 root root 4096 Jun 25 14:48 ..
+drwxr-xr-x 3 root root 4096 Jun 25 14:58 .pytest_cache
+drwxr-xr-x 2 root root 4096 Jun 25 14:58 __pycache__
+-rw-r--r-- 1 root root 8537 Jun 25 14:58 test_tensorflow_layers_instantiation.py
+=== Running hidden verifier tests ===
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.1, pluggy-1.6.0 -- /opt/benchmark/gudhi_env/bin/python
+cachedir: .pytest_cache
+rootdir: /artifacts/evaluation/tests
+collecting ... collected 9 items
+
+../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_grid_perslay_weight_instantiation PASSED [ 11%]
+../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_gaussian_mixture_perslay_weight_instantiation PASSED [ 22%]
+../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_power_perslay_weight_instantiation PASSED [ 33%]
+../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_gaussian_perslay_phi_instantiation PASSED [ 44%]
+../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_tent_perslay_phi_instantiation PASSED [ 55%]
+../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_flat_perslay_phi_instantiation PASSED [ 66%]
+../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerInstantiation::test_perslay_instantiation PASSED [ 77%]
+../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestTensorFlowLayerDynamicArgument::test_layer_instantiation_no_dynamic_error PASSED [ 88%]
+../artifacts/evaluation/tests/test_tensorflow_layers_instantiation.py::TestPerslayLayerBehavior::test_power_perslay_weight_call PASSED [100%]
+
+============================== 9 passed in 2.67s ===============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0
+EXIT_CODE=0

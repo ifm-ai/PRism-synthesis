@@ -1,0 +1,101 @@
+{
+  "base_image_candidate": "ubuntu:22.04",
+  "system_packages": [
+    "git",
+    "curl",
+    "wget",
+    "unzip",
+    "openjdk-17-jdk",
+    "libstdc++6",
+    "libncurses5",
+    "libbz2-1.0",
+    "libzstd1"
+  ],
+  "base_setup_commands": [
+    "export DEBIAN_FRONTEND=noninteractive",
+    "apt-get update",
+    "apt-get install -y git curl wget unzip openjdk-17-jdk libstdc++6 libncurses5 libbz2-1.0 libzstd1",
+    "rm -rf /var/lib/apt/lists/*"
+  ],
+  "setup_runtime_commands": [
+    "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64",
+    "export PATH=$JAVA_HOME/bin:$PATH",
+    "export ANDROID_HOME=/opt/android-sdk",
+    "export ANDROID_SDK_ROOT=/opt/android-sdk",
+    "mkdir -p /opt/android-sdk/cmdline-tools",
+    "curl -fsSL https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip -o /tmp/cmdline-tools.zip",
+    "unzip -q /tmp/cmdline-tools.zip -d /opt/android-sdk/cmdline-tools",
+    "mv /opt/android-sdk/cmdline-tools/cmdline-tools /opt/android-sdk/cmdline-tools/latest",
+    "rm /tmp/cmdline-tools.zip",
+    "yes | /opt/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses",
+    "curl -fsSL https://dl.google.com/android/repository/platform-tools-latest-linux.zip -o /tmp/platform-tools.zip",
+    "unzip -q /tmp/platform-tools.zip -d /opt/android-sdk/",
+    "rm /tmp/platform-tools.zip",
+    "curl -fsSL https://dl.google.com/android/repository/platform-34-ext7_r03.zip -o /tmp/platform-34.zip",
+    "mkdir -p /opt/android-sdk/platforms",
+    "unzip -q /tmp/platform-34.zip -d /opt/android-sdk/platforms/",
+    "rm /tmp/platform-34.zip",
+    "curl -fsSL https://dl.google.com/android/repository/build-tools_r29.0.3-linux.zip -o /tmp/build-tools.zip",
+    "mkdir -p /opt/android-sdk/build-tools",
+    "unzip -q /tmp/build-tools.zip -d /opt/android-sdk/build-tools/29.0.3/",
+    "rm /tmp/build-tools.zip",
+    "curl -fsSL --max-time 900 https://dl.google.com/android/repository/android-ndk-r26b-linux.zip -o /tmp/ndk.zip || echo 'NDK download skipped - install separately if needed'",
+    "if [ -f /tmp/ndk.zip ]; then mkdir -p /opt/android-sdk/ndk/26.1.10909125 && unzip -q /tmp/ndk.zip -d /opt/android-sdk/ndk/26.1.10909125/ && rm /tmp/ndk.zip; fi",
+    "export GRADLE_USER_HOME=/opt/gradle",
+    "mkdir -p /opt/gradle",
+    "curl -fsSL https://services.gradle.org/distributions/gradle-8.6-bin.zip -o /tmp/gradle-8.6-bin.zip",
+    "unzip -q /tmp/gradle-8.6-bin.zip -d /opt/gradle",
+    "rm /tmp/gradle-8.6-bin.zip",
+    "export PATH=/opt/gradle/gradle-8.6/bin:$PATH"
+  ],
+  "activation_commands": [
+    "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64",
+    "export PATH=$JAVA_HOME/bin:$PATH",
+    "export ANDROID_HOME=/opt/android-sdk",
+    "export ANDROID_SDK_ROOT=/opt/android-sdk",
+    "export GRADLE_USER_HOME=/opt/gradle",
+    "export PATH=/opt/gradle/gradle-8.6/bin:$PATH"
+  ],
+  "activation_command": "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 && export PATH=$JAVA_HOME/bin:$PATH && export ANDROID_HOME=/opt/android-sdk && export ANDROID_SDK_ROOT=/opt/android-sdk && export GRADLE_USER_HOME=/opt/gradle && export PATH=/opt/gradle/gradle-8.6/bin:$PATH",
+  "activation_type": "java",
+  "activation_validation_command": "echo $JAVA_HOME && echo $ANDROID_HOME && echo $GRADLE_USER_HOME && java -version 2>&1 | head -1",
+  "detected_test_command": "./gradlew testReleaseUnitTest",
+  "runtime_smoke_command": "./gradlew --version",
+  "runtime_profile": {
+    "ecosystem": "android",
+    "package_manager": "gradle",
+    "env": {
+      "JAVA_HOME": "/usr/lib/jvm/java-17-openjdk-amd64",
+      "ANDROID_HOME": "/opt/android-sdk",
+      "ANDROID_SDK_ROOT": "/opt/android-sdk",
+      "GRADLE_USER_HOME": "/opt/gradle"
+    },
+    "env_name": "android-jdk17-gradle8.6",
+    "prepare_commands": [
+      "Install JDK 17",
+      "Install Android SDK command-line tools",
+      "Accept Android SDK licenses",
+      "Install platform-tools",
+      "Install platforms;android-34",
+      "Install build-tools;29.0.3",
+      "Install ndk;26.1.10909125 (optional - large download)",
+      "Install Gradle 8.6"
+    ],
+    "activation_commands": [
+      "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64",
+      "export ANDROID_HOME=/opt/android-sdk",
+      "export ANDROID_SDK_ROOT=/opt/android-sdk",
+      "export GRADLE_USER_HOME=/opt/gradle",
+      "export PATH=$JAVA_HOME/bin:/opt/gradle/gradle-8.6/bin:$PATH"
+    ],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "gradle handles test dependencies via build.gradle.kts",
+    "cache_dirs": [
+      "/opt/android-sdk",
+      "/opt/gradle",
+      "/root/.gradle/caches"
+    ],
+    "notes": "Android project requiring JDK 17, Android SDK 34, Build Tools 29.0.3, and NDK 26.1.10909125. Uses Gradle 8.6 wrapper. Unit tests run via ./gradlew testReleaseUnitTest. NDK is optional for unit tests but required for native builds."
+  },
+  "notes": "This is an Android application (Mihon manga reader) that builds on Linux. The CI workflow confirms compatibility with ubuntu-latest. git and curl are explicitly installed as baseline packages. The project uses Gradle wrapper (8.6) for builds. Android SDK is installed via direct downloads for reliability. The fix changes Instant.now().toEpochMilli() to Instant.now().epochSecond in ImageSaver.kt. NDK 26.1.10909125 download may timeout due to size (~1GB) - script handles gracefully with fallback instructions."
+}

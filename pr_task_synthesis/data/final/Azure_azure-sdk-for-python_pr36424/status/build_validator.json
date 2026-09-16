@@ -1,0 +1,9 @@
+{
+  "status": "success",
+  "blocks_outer_progress": false,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "route_to": null,
+  "notes": "Build completed successfully. Image exported as OCI archive to /artifacts/environment/openenv_validation_oci.tar. The fixed Dockerfile (without python3.11-venv in apt-get install) builds correctly."
+}

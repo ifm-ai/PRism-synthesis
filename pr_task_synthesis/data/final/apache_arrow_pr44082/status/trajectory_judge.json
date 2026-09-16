@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "fail",
+  "oracle_outcome": "fail",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "Solver correctly localized to the benchmark file and explored bit_util.h but failed to implement the BytesForItems template correctly. The verifier is aligned and behavioral. This is a valid RL training example showing a solver that understood the problem but made implementation errors."
+}

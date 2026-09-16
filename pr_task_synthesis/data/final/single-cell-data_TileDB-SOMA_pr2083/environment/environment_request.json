@@ -1,0 +1,79 @@
+{
+  "base_image_candidate": "python:3.11-slim",
+  "system_packages": [
+    "cmake",
+    "libssl-dev",
+    "pkg-config",
+    "python3-venv",
+    "patch",
+    "python3-dev",
+    "g++",
+    "git",
+    "curl"
+  ],
+  "base_setup_commands": [
+    "apt-get update -qq",
+    "apt-get install -y -qq cmake libssl-dev pkg-config python3.11-venv patch python3-dev git curl"
+  ],
+  "setup_runtime_commands": [
+    "python3 -m venv /opt/benchmark/venv",
+    "source /opt/benchmark/venv/bin/activate",
+    "pip install --upgrade pip",
+    "pip install 'setuptools<70' wheel",
+    "cd /workspace/apis/python",
+    "echo '1.0.0' > RELEASE-VERSION",
+    "pip install 'pybind11[global]>=2.10.0'",
+    "pip install -e .",
+    "pip install pytest sparse 'typeguard<3.0' 'anndata<0.11'"
+  ],
+  "activation_commands": [
+    "source /opt/benchmark/venv/bin/activate"
+  ],
+  "activation_command": "source /opt/benchmark/venv/bin/activate",
+  "activation_type": "venv",
+  "activation_validation_command": "bash -c 'source /opt/benchmark/venv/bin/activate && python -c \"import tiledbsoma; print(tiledbsoma.__version__)\"'",
+  "detected_test_command": "python -m pytest tests/test_basic_anndata_io.py::test_null_obs -v",
+  "runtime_smoke_command": "python -c 'import tiledbsoma; print(tiledbsoma.__version__)'",
+  "workdir": "/workspace",
+  "env_vars": {
+    "LD_LIBRARY_PATH": "/workspace/dist/lib:/workspace/build/externals/install/lib"
+  },
+  "runtime_profile": {
+    "ecosystem": "python",
+    "package_manager": "pip",
+    "env": "/opt/benchmark/venv",
+    "env_name": "benchmark",
+    "prepare_commands": [
+      "python3 -m venv /opt/benchmark/venv",
+      "pip install --upgrade pip setuptools wheel",
+      "pip install 'pybind11[global]>=2.10.0'",
+      "pip install -e .",
+      "pip install pytest sparse 'typeguard<3.0' 'anndata<0.11'"
+    ],
+    "activation_commands": [
+      "source /opt/benchmark/venv/bin/activate"
+    ],
+    "base_deps_installed": [
+      "tiledbsoma",
+      "anndata",
+      "pandas",
+      "pyarrow",
+      "numpy",
+      "scipy",
+      "scanpy",
+      "tiledb",
+      "somacore",
+      "numba",
+      "pytest",
+      "sparse",
+      "typeguard"
+    ],
+    "test_only_install_strategy": "pip install pytest sparse 'typeguard<3.0' 'anndata<0.11'",
+    "cache_dirs": [
+      "/opt/benchmark/venv",
+      "/root/.cache/pip"
+    ],
+    "notes": "TileDB-SOMA requires native library build (libtiledbsoma) which is built during pip install -e. The build requires cmake, patch, and python3-dev. Older setuptools (<70) is required for pkg_resources compatibility. Older anndata (<0.11) and typeguard (<3.0) are required for API compatibility with this codebase. CXXFLAGS=-Wno-error=dangling-reference is set conditionally for g++ 13+ compilers to work around spdlog/fmt compatibility issues (not needed for g++ 12)."
+  },
+  "notes": "Base image python:3.11-slim provides git and curl by default, so they do not need to be installed separately in apt-get. The native library libtiledbsoma is built from source during pip install. This requires cmake>=3.21, patch, and python3-dev for building pybind11 extensions. The pkg_resources module requires setuptools<70. Test compatibility requires anndata<0.11 and typeguard<3.0. The setup_runtime.sh script conditionally sets CXXFLAGS=-Wno-error=dangling-reference for g++ 13+ compilers."
+}

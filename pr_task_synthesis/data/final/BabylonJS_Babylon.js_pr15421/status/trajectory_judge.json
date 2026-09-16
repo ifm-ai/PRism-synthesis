@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "fail",
+  "oracle_outcome": "fail",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "This is a valuable RL training example showing a solver that correctly localized the problem area (ShadersWGSL shader files) and made meaningful behavioral edits, but failed due to incomplete implementation. The oracle verifier correctly identified missing fixes through behavioral pattern matching. The trajectory demonstrates valid approach with implementation gaps - useful for training recovery strategies."
+}

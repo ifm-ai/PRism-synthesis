@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "k8sstormcenter_honeycluster_pr55"
+description = "OpenEnv: k8sstormcenter/honeycluster PR #55"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/k8sstormcenter/honeycluster.git"
+git_pr_id = "55"
+git_base_commit = "e560e5ae7fa128ccc5d785129bcb4efc7a0747d8"
+task_id = "k8sstormcenter_honeycluster_pr55"
+repo_full_name = "k8sstormcenter/honeycluster"
+domain = "SECURITY_FORENSICS"
+primary_language = "Shell"
+runtime_family = "kubernetes"
+complexity = "hard"
+star_category = "stars_6_50"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "golang:1.23.2",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Terraform/Go runtime with conftest v0.48.0 for OPA testing. Go 1.23.2 pre-installed in golang:1.23.2 base image. Conftest v0.48.0 installed via go install (pinned for Go 1.23.2 compatibility). Git, curl, jq available. Terraform CLI requires base image inclusion or network access during build.",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "TestTransitGateway\nTestInspectionVPCs\nok  \ttest\t0.014s",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "export GOROOT=/usr/local/go && export GOPATH=/home/agent_sandbox/go && export PATH=$GOROOT/bin:$GOPATH/bin:$PATH && export GOPROXY=${GOPROXY:-http://mirror.proxy.hpc:8081/repository/go-proxy/,direct}",
+  "notes": "Environment synthesis complete. Go 1.23.2 pre-installed in golang:1.23.2 base image (avoids network restriction for go.dev downloads). Git and curl included in base image. Conftest v0.48.0 installed via go install (pinned for Go 1.23.2 compatibility - latest requires Go 1.25.8+). Test runner (go test) confirmed reachable with test discovery successful. Terraform CLI not installed due to network restrictions in current environment - should be included in base image or installed during container build phase when network access is available. All Go test directories have modules initialized."
+}

@@ -1,0 +1,137 @@
+WARNING: Skipping mount /etc/localtime [binds]: /etc/localtime doesn't exist in container
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.15, pytest-9.1.0, pluggy-1.6.0 -- /opt/conda/envs/arrow-cpp/bin/python3
+cachedir: .pytest_cache
+rootdir: /tests/tests
+collecting ... collected 8 items
+
+../tests/tests/test_benchmark_fix.py::TestBytesForItemsTemplate::test_bytes_for_items_template_exists FAILED [ 12%]
+../tests/tests/test_benchmark_fix.py::TestBytesForItemsTemplate::test_boolean_specialization_uses_bit_packing FAILED [ 25%]
+../tests/tests/test_benchmark_fix.py::TestBytesForItemsTemplate::test_float16_specialization_uses_2_bytes FAILED [ 37%]
+../tests/tests/test_benchmark_fix.py::TestSetBytesProcessed::test_set_bytes_processed_signature_fixed FAILED [ 50%]
+../tests/tests/test_benchmark_fix.py::TestSetBytesProcessed::test_items_processed_separate_from_bytes_processed FAILED [ 62%]
+../tests/tests/test_benchmark_fix.py::TestSetBytesProcessed::test_bytesforitems_used_in_setbytesprocessed FAILED [ 75%]
+../tests/tests/test_benchmark_fix.py::TestRequiredIncludes::test_type_traits_include FAILED [ 87%]
+../tests/tests/test_benchmark_fix.py::TestRequiredIncludes::test_bit_util_include PASSED [100%]
+
+=================================== FAILURES ===================================
+________ TestBytesForItemsTemplate.test_bytes_for_items_template_exists ________
+
+self = <test_benchmark_fix.TestBytesForItemsTemplate object at 0x7fc66eb6add0>
+
+    def test_bytes_for_items_template_exists(self):
+        """Check if the BytesForItems template function exists."""
+        content = get_benchmark_content()
+        pattern = r'template\s*<\s*typename\s+ParquetType\s*>\s*\n?\s*int64_t\s+BytesForItems\s*\(\s*int64_t\s+num_items\s*\)'
+>       assert re.search(pattern, content), "BytesForItems template function NOT found"
+E       AssertionError: BytesForItems template function NOT found
+E       assert None
+E        +  where None = <function search at 0x7fc66ec86480>('template\\s*<\\s*typename\\s+ParquetType\\s*>\\s*\\n?\\s*int64_t\\s+BytesForItems\\s*\\(\\s*int64_t\\s+num_items\\s*\\)', '// Licensed to the Apache Software Foundation (ASF) under one\n// or more contributor license agreements.  See the NOTICE file\n// distributed with this work for additional information\n// regarding copyright ownership.  The ASF licenses this file\n// to you under the Apache License, Version 2.0 (the\n// "License"); you may not use this file except in compliance\n// with the License.  You may obtain a copy of the License at\n//\n//   http://www.apache.org/licenses/LICENSE-2.0\n//\n// Unless required by applicable law or agreed to in writing,\n// software distributed under the License is distributed on an\n// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n// KIND, either express or implied.  See the License for the\n// specific language governing permissions and limitations\n// under the License.\n\n#include "benchmark/benchmark.h"\n\n#include <array>\n#include <iostream>\n#include <random>\n\n#include "parquet/arrow/reader.h"\n#include "parquet/arrow/writer.h"\n#include "parquet/column_reader.h"\n#include "parquet/column_writer.h"\n#include "parquet/file_reader.h"\n#include "parquet/file_writer.h"\n#include "parquet/platform.h"\n#include "parquet/properties.h"\n\n#inclu...ableFromVector<Int64Type>(values, true);\n  auto output = CreateOutputStream();\n  // This writes 10 RowGroups\n  EXIT_NOT_OK(\n      WriteTable(*table, ::arrow::default_memory_pool(), output, BENCHMARK_SIZE / 10));\n  PARQUET_ASSIGN_OR_THROW(auto buffer, output->Finish());\n  std::vector<int> rgs{0, 2, 4, 6, 8};\n\n  while (state.KeepRunning()) {\n    auto reader =\n        ParquetFileReader::Open(std::make_shared<::arrow::io::BufferReader>(buffer));\n    std::unique_ptr<FileReader> unique_reader;\n    EXIT_NOT_OK(FileReader::Make(::arrow::default_memory_pool(), std::move(reader),\n                                 &unique_reader));\n    std::shared_ptr<FileReader> arrow_reader = std::move(unique_reader);\n    ASSIGN_OR_ABORT(auto generator,\n                    arrow_reader->GetRecordBatchGenerator(arrow_reader, rgs, {0}));\n    auto fut = ::arrow::CollectAsyncGenerator(generator);\n    ASSIGN_OR_ABORT(auto batches, fut.result());\n    ASSIGN_OR_ABORT(auto actual, ::arrow::Table::FromRecordBatches(std::move(batches)));\n  }\n  SetMetricsProcessed<true, Int64Type>(state);\n}\n\nBENCHMARK(BM_ReadMultipleRowGroupsGenerator);\n\n}  // namespace benchmark\n\n}  // namespace parquet\n')
+E        +    where <function search at 0x7fc66ec86480> = re.search
+
+/tests/tests/test_benchmark_fix.py:40: AssertionError
+____ TestBytesForItemsTemplate.test_boolean_specialization_uses_bit_packing ____
+
+self = <test_benchmark_fix.TestBytesForItemsTemplate object at 0x7fc66df2b050>
+
+    def test_boolean_specialization_uses_bit_packing(self):
+        """Check if BooleanType specialization uses bit-packing."""
+        content = get_benchmark_content()
+        pattern = r'template\s*<>\s*\n?\s*int64_t\s+BytesForItems\s*<\s*BooleanType\s*>\s*\(\s*int64_t\s+num_items\s*\)\s*\{[^}]*::arrow::bit_util::BytesForBits\s*\(\s*num_items\s*\)'
+>       assert re.search(pattern, content, re.DOTALL), \
+            "BooleanType specialization with bit-packing NOT found"
+E       AssertionError: BooleanType specialization with bit-packing NOT found
+E       assert None
+E        +  where None = <function search at 0x7fc66ec86480>('template\\s*<>\\s*\\n?\\s*int64_t\\s+BytesForItems\\s*<\\s*BooleanType\\s*>\\s*\\(\\s*int64_t\\s+num_items\\s*\\)\\s*\\{[^}]*::arrow::bit_util::BytesForBits\\s*\\(\\s*num_items\\s*\\)', '// Licensed to the Apache Software Foundation (ASF) under one\n// or more contributor license agreements.  See the NOTICE file\n// distributed with this work for additional information\n// regarding copyright ownership.  The ASF licenses this file\n// to you under the Apache License, Version 2.0 (the\n// "License"); you may not use this file except in compliance\n// with the License.  You may obtain a copy of the License at\n//\n//   http://www.apache.org/licenses/LICENSE-2.0\n//\n// Unless required by applicable law or agreed to in writing,\n// software distributed under the License is distributed on an\n// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n// KIND, either express or implied.  See the License for the\n// specific language governing permissions and limitations\n// under the License.\n\n#include "benchmark/benchmark.h"\n\n#include <array>\n#include <iostream>\n#include <random>\n\n#include "parquet/arrow/reader.h"\n#include "parquet/arrow/writer.h"\n#include "parquet/column_reader.h"\n#include "parquet/column_writer.h"\n#include "parquet/file_reader.h"\n#include "parquet/file_writer.h"\n#include "parquet/platform.h"\n#include "parquet/properties.h"\n\n#inclu...ableFromVector<Int64Type>(values, true);\n  auto output = CreateOutputStream();\n  // This writes 10 RowGroups\n  EXIT_NOT_OK(\n      WriteTable(*table, ::arrow::default_memory_pool(), output, BENCHMARK_SIZE / 10));\n  PARQUET_ASSIGN_OR_THROW(auto buffer, output->Finish());\n  std::vector<int> rgs{0, 2, 4, 6, 8};\n\n  while (state.KeepRunning()) {\n    auto reader =\n        ParquetFileReader::Open(std::make_shared<::arrow::io::BufferReader>(buffer));\n    std::unique_ptr<FileReader> unique_reader;\n    EXIT_NOT_OK(FileReader::Make(::arrow::default_memory_pool(), std::move(reader),\n                                 &unique_reader));\n    std::shared_ptr<FileReader> arrow_reader = std::move(unique_reader);\n    ASSIGN_OR_ABORT(auto generator,\n                    arrow_reader->GetRecordBatchGenerator(arrow_reader, rgs, {0}));\n    auto fut = ::arrow::CollectAsyncGenerator(generator);\n    ASSIGN_OR_ABORT(auto batches, fut.result());\n    ASSIGN_OR_ABORT(auto actual, ::arrow::Table::FromRecordBatches(std::move(batches)));\n  }\n  SetMetricsProcessed<true, Int64Type>(state);\n}\n\nBENCHMARK(BM_ReadMultipleRowGroupsGenerator);\n\n}  // namespace benchmark\n\n}  // namespace parquet\n', re.DOTALL)
+E        +    where <function search at 0x7fc66ec86480> = re.search
+E        +    and   re.DOTALL = re.DOTALL
+
+/tests/tests/test_benchmark_fix.py:46: AssertionError
+______ TestBytesForItemsTemplate.test_float16_specialization_uses_2_bytes ______
+
+self = <test_benchmark_fix.TestBytesForItemsTemplate object at 0x7fc66df28050>
+
+    def test_float16_specialization_uses_2_bytes(self):
+        """Check if Float16LogicalType specialization uses 2 bytes."""
+        content = get_benchmark_content()
+        pattern = r'template\s*<>\s*\n?\s*int64_t\s+BytesForItems\s*<\s*Float16LogicalType\s*>\s*\(\s*int64_t\s+num_items\s*\)\s*\{[^}]*num_items\s*\*\s*(sizeof\s*\(\s*uint16_t\s*\)\s*|2\s*)'
+>       assert re.search(pattern, content, re.DOTALL), \
+            "Float16LogicalType specialization NOT found"
+E       AssertionError: Float16LogicalType specialization NOT found
+E       assert None
+E        +  where None = <function search at 0x7fc66ec86480>('template\\s*<>\\s*\\n?\\s*int64_t\\s+BytesForItems\\s*<\\s*Float16LogicalType\\s*>\\s*\\(\\s*int64_t\\s+num_items\\s*\\)\\s*\\{[^}]*num_items\\s*\\*\\s*(sizeof\\s*\\(\\s*uint16_t\\s*\\)\\s*|2\\s*)', '// Licensed to the Apache Software Foundation (ASF) under one\n// or more contributor license agreements.  See the NOTICE file\n// distributed with this work for additional information\n// regarding copyright ownership.  The ASF licenses this file\n// to you under the Apache License, Version 2.0 (the\n// "License"); you may not use this file except in compliance\n// with the License.  You may obtain a copy of the License at\n//\n//   http://www.apache.org/licenses/LICENSE-2.0\n//\n// Unless required by applicable law or agreed to in writing,\n// software distributed under the License is distributed on an\n// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n// KIND, either express or implied.  See the License for the\n// specific language governing permissions and limitations\n// under the License.\n\n#include "benchmark/benchmark.h"\n\n#include <array>\n#include <iostream>\n#include <random>\n\n#include "parquet/arrow/reader.h"\n#include "parquet/arrow/writer.h"\n#include "parquet/column_reader.h"\n#include "parquet/column_writer.h"\n#include "parquet/file_reader.h"\n#include "parquet/file_writer.h"\n#include "parquet/platform.h"\n#include "parquet/properties.h"\n\n#inclu...ableFromVector<Int64Type>(values, true);\n  auto output = CreateOutputStream();\n  // This writes 10 RowGroups\n  EXIT_NOT_OK(\n      WriteTable(*table, ::arrow::default_memory_pool(), output, BENCHMARK_SIZE / 10));\n  PARQUET_ASSIGN_OR_THROW(auto buffer, output->Finish());\n  std::vector<int> rgs{0, 2, 4, 6, 8};\n\n  while (state.KeepRunning()) {\n    auto reader =\n        ParquetFileReader::Open(std::make_shared<::arrow::io::BufferReader>(buffer));\n    std::unique_ptr<FileReader> unique_reader;\n    EXIT_NOT_OK(FileReader::Make(::arrow::default_memory_pool(), std::move(reader),\n                                 &unique_reader));\n    std::shared_ptr<FileReader> arrow_reader = std::move(unique_reader);\n    ASSIGN_OR_ABORT(auto generator,\n                    arrow_reader->GetRecordBatchGenerator(arrow_reader, rgs, {0}));\n    auto fut = ::arrow::CollectAsyncGenerator(generator);\n    ASSIGN_OR_ABORT(auto batches, fut.result());\n    ASSIGN_OR_ABORT(auto actual, ::arrow::Table::FromRecordBatches(std::move(batches)));\n  }\n  SetMetricsProcessed<true, Int64Type>(state);\n}\n\nBENCHMARK(BM_ReadMultipleRowGroupsGenerator);\n\n}  // namespace benchmark\n\n}  // namespace parquet\n', re.DOTALL)
+E        +    where <function search at 0x7fc66ec86480> = re.search
+E        +    and   re.DOTALL = re.DOTALL
+
+/tests/tests/test_benchmark_fix.py:53: AssertionError
+________ TestSetBytesProcessed.test_set_bytes_processed_signature_fixed ________
+
+self = <test_benchmark_fix.TestSetBytesProcessed object at 0x7fc66df288d0>
+
+    def test_set_bytes_processed_signature_fixed(self):
+        """Check if SetBytesProcessed has single template parameter (fixed version)."""
+        content = get_benchmark_content()
+        # The fixed version has: template <typename ParquetType>
+        fixed_pattern = r'template\s*<\s*typename\s+ParquetType\s*>\s*\n?\s*void\s+SetBytesProcessed\s*\(\s*::benchmark::State\s*&\s*state'
+>       assert re.search(fixed_pattern, content), \
+            "SetBytesProcessed does not have fixed single template parameter"
+E       AssertionError: SetBytesProcessed does not have fixed single template parameter
+E       assert None
+E        +  where None = <function search at 0x7fc66ec86480>('template\\s*<\\s*typename\\s+ParquetType\\s*>\\s*\\n?\\s*void\\s+SetBytesProcessed\\s*\\(\\s*::benchmark::State\\s*&\\s*state', '// Licensed to the Apache Software Foundation (ASF) under one\n// or more contributor license agreements.  See the NOTICE file\n// distributed with this work for additional information\n// regarding copyright ownership.  The ASF licenses this file\n// to you under the Apache License, Version 2.0 (the\n// "License"); you may not use this file except in compliance\n// with the License.  You may obtain a copy of the License at\n//\n//   http://www.apache.org/licenses/LICENSE-2.0\n//\n// Unless required by applicable law or agreed to in writing,\n// software distributed under the License is distributed on an\n// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n// KIND, either express or implied.  See the License for the\n// specific language governing permissions and limitations\n// under the License.\n\n#include "benchmark/benchmark.h"\n\n#include <array>\n#include <iostream>\n#include <random>\n\n#include "parquet/arrow/reader.h"\n#include "parquet/arrow/writer.h"\n#include "parquet/column_reader.h"\n#include "parquet/column_writer.h"\n#include "parquet/file_reader.h"\n#include "parquet/file_writer.h"\n#include "parquet/platform.h"\n#include "parquet/properties.h"\n\n#inclu...ableFromVector<Int64Type>(values, true);\n  auto output = CreateOutputStream();\n  // This writes 10 RowGroups\n  EXIT_NOT_OK(\n      WriteTable(*table, ::arrow::default_memory_pool(), output, BENCHMARK_SIZE / 10));\n  PARQUET_ASSIGN_OR_THROW(auto buffer, output->Finish());\n  std::vector<int> rgs{0, 2, 4, 6, 8};\n\n  while (state.KeepRunning()) {\n    auto reader =\n        ParquetFileReader::Open(std::make_shared<::arrow::io::BufferReader>(buffer));\n    std::unique_ptr<FileReader> unique_reader;\n    EXIT_NOT_OK(FileReader::Make(::arrow::default_memory_pool(), std::move(reader),\n                                 &unique_reader));\n    std::shared_ptr<FileReader> arrow_reader = std::move(unique_reader);\n    ASSIGN_OR_ABORT(auto generator,\n                    arrow_reader->GetRecordBatchGenerator(arrow_reader, rgs, {0}));\n    auto fut = ::arrow::CollectAsyncGenerator(generator);\n    ASSIGN_OR_ABORT(auto batches, fut.result());\n    ASSIGN_OR_ABORT(auto actual, ::arrow::Table::FromRecordBatches(std::move(batches)));\n  }\n  SetMetricsProcessed<true, Int64Type>(state);\n}\n\nBENCHMARK(BM_ReadMultipleRowGroupsGenerator);\n\n}  // namespace benchmark\n\n}  // namespace parquet\n')
+E        +    where <function search at 0x7fc66ec86480> = re.search
+
+/tests/tests/test_benchmark_fix.py:65: AssertionError
+___ TestSetBytesProcessed.test_items_processed_separate_from_bytes_processed ___
+
+self = <test_benchmark_fix.TestSetBytesProcessed object at 0x7fc66df282d0>
+
+    def test_items_processed_separate_from_bytes_processed(self):
+        """Check that items_processed and bytes_processed are handled separately."""
+        content = get_benchmark_content()
+        pattern = r'void\s+SetBytesProcessed[^{]*\{([^}]+)\}'
+        match = re.search(pattern, content, re.DOTALL)
+>       assert match, "Could not find SetBytesProcessed function"
+E       AssertionError: Could not find SetBytesProcessed function
+E       assert None
+
+/tests/tests/test_benchmark_fix.py:78: AssertionError
+______ TestSetBytesProcessed.test_bytesforitems_used_in_setbytesprocessed ______
+
+self = <test_benchmark_fix.TestSetBytesProcessed object at 0x7fc66df28e90>
+
+    def test_bytesforitems_used_in_setbytesprocessed(self):
+        """Check that SetBytesProcessed uses BytesForItems."""
+        content = get_benchmark_content()
+        pattern = r'void\s+SetBytesProcessed[^{]*\{([^}]+)\}'
+        match = re.search(pattern, content, re.DOTALL)
+>       assert match, "Could not find SetBytesProcessed function"
+E       AssertionError: Could not find SetBytesProcessed function
+E       assert None
+
+/tests/tests/test_benchmark_fix.py:90: AssertionError
+________________ TestRequiredIncludes.test_type_traits_include _________________
+
+self = <test_benchmark_fix.TestRequiredIncludes object at 0x7fc66df29210>
+
+    def test_type_traits_include(self):
+        """Check that <type_traits> is included."""
+        content = get_benchmark_content()
+>       assert '#include <type_traits>' in content, \
+            "<type_traits> header NOT included"
+E       AssertionError: <type_traits> header NOT included
+E       assert '#include <type_traits>' in '// Licensed to the Apache Software Foundation (ASF) under one\n// or more contributor license agreements.  See the NOTICE file\n// distributed with this work for additional information\n// regarding copyright ownership.  The ASF licenses this file\n// to you under the Apache License, Version 2.0 (the\n// "License"); you may not use this file except in compliance\n// with the License.  You may obtain a copy of the License at\n//\n//   http://www.apache.org/licenses/LICENSE-2.0\n//\n// Unless required by applicable law or agreed to in writing,\n// software distributed under the License is distributed on an\n// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY\n// KIND, either express or implied.  See the License for the\n// specific language governing permissions and limitations\n// under the License.\n\n#include "benchmark/benchmark.h"\n\n#include <array>\n#include <iostream>\n#include <random>\n\n#include "parquet/arrow/reader.h"\n#include "parquet/arrow/writer.h"\n#include "parquet/column_reader.h"\n#include "parquet/column_writer.h"\n#include "parquet/file_reader.h"\n#include "parquet/file_writer.h"\n#include "parquet/platform.h"\n#include "parquet/properties.h"\n\n#inclu...ableFromVector<Int64Type>(values, true);\n  auto output = CreateOutputStream();\n  // This writes 10 RowGroups\n  EXIT_NOT_OK(\n      WriteTable(*table, ::arrow::default_memory_pool(), output, BENCHMARK_SIZE / 10));\n  PARQUET_ASSIGN_OR_THROW(auto buffer, output->Finish());\n  std::vector<int> rgs{0, 2, 4, 6, 8};\n\n  while (state.KeepRunning()) {\n    auto reader =\n        ParquetFileReader::Open(std::make_shared<::arrow::io::BufferReader>(buffer));\n    std::unique_ptr<FileReader> unique_reader;\n    EXIT_NOT_OK(FileReader::Make(::arrow::default_memory_pool(), std::move(reader),\n                                 &unique_reader));\n    std::shared_ptr<FileReader> arrow_reader = std::move(unique_reader);\n    ASSIGN_OR_ABORT(auto generator,\n                    arrow_reader->GetRecordBatchGenerator(arrow_reader, rgs, {0}));\n    auto fut = ::arrow::CollectAsyncGenerator(generator);\n    ASSIGN_OR_ABORT(auto batches, fut.result());\n    ASSIGN_OR_ABORT(auto actual, ::arrow::Table::FromRecordBatches(std::move(batches)));\n  }\n  SetMetricsProcessed<true, Int64Type>(state);\n}\n\nBENCHMARK(BM_ReadMultipleRowGroupsGenerator);\n\n}  // namespace benchmark\n\n}  // namespace parquet\n'
+
+/tests/tests/test_benchmark_fix.py:103: AssertionError
+=========================== short test summary info ============================
+FAILED ../tests/tests/test_benchmark_fix.py::TestBytesForItemsTemplate::test_bytes_for_items_template_exists
+FAILED ../tests/tests/test_benchmark_fix.py::TestBytesForItemsTemplate::test_boolean_specialization_uses_bit_packing
+FAILED ../tests/tests/test_benchmark_fix.py::TestBytesForItemsTemplate::test_float16_specialization_uses_2_bytes
+FAILED ../tests/tests/test_benchmark_fix.py::TestSetBytesProcessed::test_set_bytes_processed_signature_fixed
+FAILED ../tests/tests/test_benchmark_fix.py::TestSetBytesProcessed::test_items_processed_separate_from_bytes_processed
+FAILED ../tests/tests/test_benchmark_fix.py::TestSetBytesProcessed::test_bytesforitems_used_in_setbytesprocessed
+FAILED ../tests/tests/test_benchmark_fix.py::TestRequiredIncludes::test_type_traits_include
+========================= 7 failed, 1 passed in 0.03s ==========================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

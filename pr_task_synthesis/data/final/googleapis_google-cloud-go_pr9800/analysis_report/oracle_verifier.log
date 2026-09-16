@@ -1,0 +1,7 @@
+>>>>> Start Test Output
+=== RUN   TestGrpcCredentialsProvider_TokenType
+--- PASS: TestGrpcCredentialsProvider_TokenType (0.00s)
+PASS
+ok  	cloud.google.com/go/auth/grpctransport	0.074s
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

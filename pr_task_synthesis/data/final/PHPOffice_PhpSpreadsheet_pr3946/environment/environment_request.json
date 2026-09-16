@@ -1,0 +1,49 @@
+{
+  "base_image_candidate": "mirror.gcr.io/library/php:8.2-cli",
+  "system_packages": [
+    "git",
+    "curl",
+    "libpng-dev",
+    "libjpeg62-turbo-dev",
+    "libfreetype-dev",
+    "libzip-dev"
+  ],
+  "base_setup_commands": [
+    "echo 'deb http://deb.debian.org/debian bookworm main' > /etc/apt/sources.list",
+    "echo 'deb http://deb.debian.org/debian bookworm-updates main' >> /etc/apt/sources.list",
+    "echo 'deb http://security.debian.org/debian-security bookworm-security main' >> /etc/apt/sources.list",
+    "apt-get update",
+    "apt-get install -y git curl libpng-dev libjpeg62-turbo-dev libfreetype-dev libzip-dev",
+    "docker-php-ext-configure gd --with-freetype --with-jpeg",
+    "docker-php-ext-install gd zip mbstring xml dom simplexml fileinfo ctype iconv xmlreader xmlwriter"
+  ],
+  "setup_runtime_commands": [
+    "php --version",
+    "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer",
+    "composer --version",
+    "php -m"
+  ],
+  "activation_commands": [],
+  "activation_command": "",
+  "activation_type": "system",
+  "activation_validation_command": "php --version && composer --version",
+  "detected_test_command": "vendor/bin/phpunit",
+  "runtime_smoke_command": "php --version && composer --version",
+  "runtime_profile": {
+    "ecosystem": "php",
+    "package_manager": "composer",
+    "env": "system",
+    "env_name": null,
+    "prepare_commands": [
+      "composer install --no-progress --prefer-dist --optimize-autoloader"
+    ],
+    "activation_commands": [],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "composer install --no-dev",
+    "cache_dirs": [
+      "/root/.composer/cache"
+    ],
+    "notes": "PHP 8.2 CLI base image with Composer installed. All required extensions for PHPSpreadsheet are installed via docker-php-ext-install. No virtual environment needed as PHP uses system-level installation."
+  },
+  "notes": "Base image: mirror.gcr.io/library/php:8.2-cli (mirror of docker.io/library/php:8.2-cli to avoid Docker Hub rate limiting). git and curl are installed via apt-get in base_setup_commands. Apt sources are explicitly pinned to Debian bookworm repositories to avoid conflicts with trixie/testing packages. Package names updated for bookworm compatibility: libfreetype-dev (instead of libfreetype6-dev) and libjpeg62-turbo-dev (instead of libjpeg-dev). Composer is installed from getcomposer.org. The project requires PHP 8.0+ and specific extensions which are installed using docker-php-ext-install. This approach uses the official PHP Docker image which provides the docker-php-ext-* scripts for easy extension installation."
+}

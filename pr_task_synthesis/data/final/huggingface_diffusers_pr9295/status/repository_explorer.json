@@ -1,4 +1,0 @@
-{
-  "platform_constraint": "none",
-  "platform_constraint_evidence": "No platform-specific constraints found. The repository supports Linux, Windows, and macOS. Setup.py shows flax/jax is disabled on Windows but this doesn't affect core functionality."
-}

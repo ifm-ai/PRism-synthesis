@@ -1,0 +1,91 @@
+{
+  "base_image": "debian:bookworm",
+  "system_packages": [
+    "ca-certificates",
+    "git",
+    "curl",
+    "golang-go",
+    "libvips-dev",
+    "pkg-config",
+    "gcc",
+    "libexpat1-dev",
+    "libgsf-1-dev",
+    "libfftw3-dev",
+    "libcfitsio-dev",
+    "libimagequant-dev",
+    "libcgif-dev",
+    "libexif12",
+    "libjpeg-dev",
+    "libpng-dev",
+    "libwebp-dev",
+    "libpango1.0-dev",
+    "libfontconfig-dev",
+    "libtiff-dev",
+    "librsvg2-dev",
+    "libcairo2-dev",
+    "libmatio-dev",
+    "liblcms2-dev",
+    "libopenexr-dev",
+    "libopenjp2-7-dev",
+    "liborc-0.4-dev"
+  ],
+  "environment_variables": {
+    "DEBIAN_FRONTEND": "noninteractive",
+    "GOPATH": "/root/go",
+    "PATH": "/usr/local/go/bin:$GOPATH/bin:$PATH",
+    "CGO_CFLAGS_ALLOW": "-Xpreprocessor"
+  },
+  "build_context_scripts": [
+    "setup_runtime.sh",
+    "repo_setup.sh"
+  ],
+  "image_artifacts": {
+    "/opt/benchmark/setup_runtime.sh": "copied from build context",
+    "/opt/benchmark/repo_setup.sh": "copied from build context"
+  },
+  "build_steps": [
+    {
+      "type": "base_image",
+      "description": "Start from debian:bookworm"
+    },
+    {
+      "type": "environment_setup",
+      "description": "Set DEBIAN_FRONTEND, GOPATH, PATH, CGO_CFLAGS_ALLOW"
+    },
+    {
+      "type": "system_packages",
+      "description": "Install system packages including ca-certificates, git, curl, golang-go, libvips-dev and all transitive dependencies"
+    },
+    {
+      "type": "script_copy",
+      "description": "Copy setup_runtime.sh and repo_setup.sh to /opt/benchmark/"
+    },
+    {
+      "type": "repo_materialization",
+      "description": "Execute repo_setup.sh to clone and setup the repository at /workspace"
+    },
+    {
+      "type": "runtime_setup",
+      "description": "Execute setup_runtime.sh to download Go modules and build vips package"
+    },
+    {
+      "type": "workdir",
+      "description": "Set WORKDIR to /workspace"
+    }
+  ],
+  "excluded_from_image": [
+    "/artifacts/evaluation/eval.sh",
+    "/artifacts/evaluation/test.patch",
+    "/artifacts/evaluation/tests/"
+  ],
+  "runtime_mounts_expected": [
+    {
+      "source": "/artifacts/evaluation/eval.sh",
+      "target": "/workspace",
+      "purpose": "Verifier script mounted at runtime"
+    }
+  ],
+  "build_backend": "buildah",
+  "output_format": "oci",
+  "notes": "ca-certificates included to enable SSL certificate verification for git clone operations"
+}

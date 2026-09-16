@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "mirror.gcr.io/library/php:8.2-cli",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "PHP 8.2 CLI with Composer. All required extensions for PHPSpreadsheet (ctype, dom, gd, iconv, fileinfo, mbstring, simplexml, xml, xmlreader, xmlwriter, zip) installed via docker-php-ext-install. git and curl included in base system packages. Apt sources pinned to Debian bookworm repositories to avoid trixie/testing conflicts. Package names updated: libfreetype-dev and libjpeg62-turbo-dev for bookworm compatibility.",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "Container preflight verification completed successfully using buildah. testOnly (buggy code) FAILED with exit code 2 (uninitialized property error). testWithFix (fixed code) PASSED with exit code 0 (1 test, 1 assertion). Container build validation succeeded with php:8.2-cli base image. PHP and Composer are installed and verified in the built container (OCI archive at /artifacts/environment/openenv_validation_oci.tar). Test runner (vendor/bin/phpunit) is available and functional at runtime.",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "",
+  "notes": "FIXED: Debian repository conflict issue. Apt sources are now explicitly pinned to Debian bookworm repositories (bookworm main, bookworm-updates, bookworm-security) to prevent mixing with trixie/testing packages. Updated package names for bookworm compatibility: libfreetype-dev (was libfreetype6-dev) and libjpeg62-turbo-dev (was libjpeg-dev). Container preflight verification confirmed test_runner_reachable=true with actual test execution."
+}

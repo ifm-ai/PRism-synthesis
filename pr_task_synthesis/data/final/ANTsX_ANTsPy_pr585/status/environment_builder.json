@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "base_image_candidate": "python:3.11-slim-bookworm",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Python 3.11 venv at /opt/benchmark/venv with antspyx 0.6.3 and test dependencies installed",
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "tests/test_bugs.py::Test_bugs::test_resample_returns_NaNs\ntests/test_contrib.py::TestModule_transforms::test_RandomRotate3D_example\ntests/test_contrib.py::TestModule_transforms::test_RandomZoom3D_example\ntests/test_contrib.py::TestModule_transforms::test_Rotate3D\ntests/test_contrib.py::TestModule_transforms::test_Rotate3D_example",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "source /opt/benchmark/venv/bin/activate",
+  "notes": "Environment successfully created with pre-built antspyx wheel (v0.6.3). Git and curl included in base system packages. Test runner (pytest) successfully collected 170 tests. Note: /workspace source shadows installed package; tests should run from outside /workspace or with adjusted PYTHONPATH."
+}

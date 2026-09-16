@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "hacking_detected": false,
+  "official_verifier": {
+    "execution_mode": "real_execution",
+    "test_only_exit_code": 1,
+    "test_with_fix_exit_code": 0
+  },
+  "non_discriminating": false,
+  "notes": "Local two-run preflight completed successfully. testOnly: pytest executed and 4 tests failed (exit code 1) - correctly detects buggy state with 'bundle--kubehound-attack-*' prefix. testWithFix: pytest executed and all 6 tests passed (exit code 0) - correctly validates fixed state with 'bundle--kubehound-attempt-*' prefix and new bundle types. No hacking patterns detected. Verifier alignment is direct - tests validate the JSON bundle changes made by fix.patch."
+}

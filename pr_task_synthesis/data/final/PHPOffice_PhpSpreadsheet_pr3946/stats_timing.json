@@ -1,0 +1,87 @@
+{
+ "version": "v2",
+ "total_duration": 14849.8,
+ "total_turns": 4,
+ "outcome": "success",
+ "success_turn": 4,
+ "setup": {
+  "root_agent_setup": 0
+ },
+ "preflight_check": {
+  "preflight_check_environment": 0
+ },
+ "turns": [
+  {
+   "turn": 1,
+   "operations": {
+    "snapshot_sessions": 1,
+    "agent_turn_run": 9137,
+    "collect_turn_trajectories": 72,
+    "audit_artifacts": 0
+   },
+   "outcome": "incomplete_artifacts",
+   "duration": 9211
+  },
+  {
+   "turn": 2,
+   "operations": {
+    "snapshot_sessions": 1,
+    "agent_turn_run": 4691,
+    "collect_turn_trajectories": 16,
+    "audit_artifacts": 0
+   },
+   "outcome": "incomplete_artifacts",
+   "duration": 4709
+  },
+  {
+   "turn": 3,
+   "operations": {
+    "snapshot_sessions": 1,
+    "agent_turn_run": 48,
+    "collect_turn_trajectories": 3,
+    "audit_artifacts": 0,
+    "quality_gate_checks": 0
+   },
+   "outcome": "quality_gate_failed",
+   "duration": 53.573,
+   "quality_gate_signals": []
+  },
+  {
+   "turn": 4,
+   "operations": {
+    "snapshot_sessions": 1,
+    "agent_turn_run": 260,
+    "collect_turn_trajectories": 3,
+    "audit_artifacts": 0,
+    "quality_gate_checks": 0,
+    "audit_image_build": 447,
+    "image_build_breakdown": {
+     "buildah_bud": 301,
+     "apptainer_build": 139,
+     "workspace_check": 0
+    },
+    "eval_verification": 6
+   },
+   "outcome": "success",
+   "duration": 719
+  }
+ ],
+ "analyzer_builder": {
+  "opencode_install": 1,
+  "solver_run": 80,
+  "trajectory_snapshot_sessions": 1,
+  "trajectory_judge": 53,
+  "collect_turn_trajectories": 3,
+  "analyzer_builder": 149
+ },
+ "harbor_export": {
+  "ecr_push": 5,
+  "export_harbor_task": 5
+ },
+ "manager_block_streak": 0,
+ "manager_block_last_reason": "",
+ "quality_gate_failures": 1,
+ "extra_attr": {
+  "run_retry": 2
+ }
+}

@@ -1,0 +1,30 @@
+{
+  "status": "completed",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "infrastructure_reason": null,
+  "verification_command": "cargo test --test verify_fix --release -- --nocapture",
+  "activation_source": "export RUSTUP_HOME=/opt/rustup && export CARGO_HOME=/opt/cargo && export PATH=\"$CARGO_HOME/bin:$PATH\"",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "hidden_tests",
+  "copied_test_patch": false,
+  "supplemental_tests_created": true,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Verifies that the MSAA multi-camera fix is correctly applied by checking three key code patterns in prepare_view_targets: (1) tuple destructuring includes main_texture, (2) main_texture is created in or_insert_with closure, and (3) main_texture is cloned for shared state instead of creating new AtomicUsize per camera.",
+  "fix_patch_grounding": "The fix changes prepare_view_targets to store main_texture (Arc<AtomicUsize>) in the cache entry keyed by (target, hdr) instead of creating a new Arc<AtomicUsize> per camera entity. This is verified by checking: 'let (a, b, sampled, main_texture) = textures', 'let main_texture = Arc::new(AtomicUsize::new(0));' in the closure, and 'main_texture: main_texture.clone()' in MainTargetTextures construction.",
+  "issue_context_used": "The issue describes MSAA rendering failure when multiple cameras share a target because each camera had independent texture swap markers; the fix ensures shared state so write-back and texture swapping works correctly for any number of cameras.",
+  "verification_mode": "implementation_pattern",
+  "test_entrypoints": [
+    "cargo test --test verify_fix --release -- --nocapture"
+  ],
+  "required_verifier_files": [
+    "eval.sh",
+    "tests/fix_verifier/Cargo.toml",
+    "tests/fix_verifier/tests/verify_fix.rs"
+  ],
+  "notes": "Implementation pattern verification via cargo test. The fix is an internal data structure change in prepare_view_targets() that cannot be tested behaviorally without running actual GPU rendering. The verifier is a Rust test crate that reads the bevy_render source and checks for three specific code patterns that distinguish the fixed code from the buggy code. All three patterns must be present and the buggy patterns must be absent for the test to pass. Tests correctly discriminate: buggy workspace fails (exit 101), fixed workspace passes (exit 0)."
+}

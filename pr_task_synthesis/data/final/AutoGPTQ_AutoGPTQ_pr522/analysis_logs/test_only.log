@@ -1,0 +1,205 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.0, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /artifacts/evaluation/tests
+plugins: anyio-4.14.0
+collecting ... collected 16 items
+
+../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_convert_to_marlin_exists FAILED [  6%]
+../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_get_cached_marlin_save_name_local_path FAILED [ 12%]
+../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_get_cached_marlin_save_name_returns_assets_path FAILED [ 18%]
+../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_marlin_utils_module_exists FAILED [ 25%]
+../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_prepare_model_for_marlin_load_exists FAILED [ 31%]
+../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_validate_marlin_compatibility_asymmetric FAILED [ 37%]
+../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_validate_marlin_compatibility_desc_act FAILED [ 43%]
+../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_validate_marlin_compatibility_invalid_bits FAILED [ 50%]
+../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_validate_marlin_compatibility_invalid_group_size FAILED [ 56%]
+../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_validate_marlin_compatibility_valid_config FAILED [ 62%]
+../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_validate_marlin_device_support_exists FAILED [ 68%]
+../artifacts/evaluation/tests/test_marlin_utils.py::TestBaseQuantizeConfigMarlinField::test_is_marlin_format_can_be_set PASSED [ 75%]
+../artifacts/evaluation/tests/test_marlin_utils.py::TestBaseQuantizeConfigMarlinField::test_is_marlin_format_default_value FAILED [ 81%]
+../artifacts/evaluation/tests/test_marlin_utils.py::TestBaseQuantizeConfigMarlinField::test_is_marlin_format_field_exists FAILED [ 87%]
+../artifacts/evaluation/tests/test_marlin_utils.py::TestBaseQuantizeConfigMarlinField::test_to_dict_includes_is_marlin_format FAILED [ 93%]
+../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinImportInBase::test_marlin_imports_in_base PASSED [100%]
+
+=================================== FAILURES ===================================
+____________ TestMarlinUtilsInterface.test_convert_to_marlin_exists ____________
+
+self = <test_marlin_utils.TestMarlinUtilsInterface testMethod=test_convert_to_marlin_exists>
+
+    def test_convert_to_marlin_exists(self):
+        """Test convert_to_marlin function exists with correct signature."""
+>       from auto_gptq.utils.marlin_utils import convert_to_marlin
+E       ModuleNotFoundError: No module named 'auto_gptq.utils.marlin_utils'
+
+/artifacts/evaluation/tests/test_marlin_utils.py:165: ModuleNotFoundError
+------------------------------ Captured log call -------------------------------
+WARNING  auto_gptq.nn_modules.qlinear.qlinear_cuda:qlinear_cuda.py:16 CUDA extension not installed.
+WARNING  auto_gptq.nn_modules.qlinear.qlinear_cuda_old:qlinear_cuda_old.py:15 CUDA extension not installed.
+_____ TestMarlinUtilsInterface.test_get_cached_marlin_save_name_local_path _____
+
+self = <test_marlin_utils.TestMarlinUtilsInterface testMethod=test_get_cached_marlin_save_name_local_path>
+
+    def test_get_cached_marlin_save_name_local_path(self):
+        """Test _get_cached_marlin_save_name returns local path for local directories."""
+>       from auto_gptq.utils.marlin_utils import _get_cached_marlin_save_name
+E       ModuleNotFoundError: No module named 'auto_gptq.utils.marlin_utils'
+
+/artifacts/evaluation/tests/test_marlin_utils.py:50: ModuleNotFoundError
+_ TestMarlinUtilsInterface.test_get_cached_marlin_save_name_returns_assets_path _
+
+self = <test_marlin_utils.TestMarlinUtilsInterface testMethod=test_get_cached_marlin_save_name_returns_assets_path>
+
+    def test_get_cached_marlin_save_name_returns_assets_path(self):
+        """Test _get_cached_marlin_save_name returns path containing 'assets' for remote models."""
+>       from auto_gptq.utils.marlin_utils import _get_cached_marlin_save_name
+E       ModuleNotFoundError: No module named 'auto_gptq.utils.marlin_utils'
+
+/artifacts/evaluation/tests/test_marlin_utils.py:38: ModuleNotFoundError
+___________ TestMarlinUtilsInterface.test_marlin_utils_module_exists ___________
+
+self = <test_marlin_utils.TestMarlinUtilsInterface testMethod=test_marlin_utils_module_exists>
+
+    def test_marlin_utils_module_exists(self):
+        """Test that the marlin_utils module can be imported."""
+>       from auto_gptq.utils.marlin_utils import (
+            prepare_model_for_marlin_load,
+            _validate_marlin_compatibility,
+            _validate_marlin_device_support,
+            _get_cached_marlin_save_name,
+            convert_to_marlin,
+        )
+E       ModuleNotFoundError: No module named 'auto_gptq.utils.marlin_utils'
+
+/artifacts/evaluation/tests/test_marlin_utils.py:28: ModuleNotFoundError
+______ TestMarlinUtilsInterface.test_prepare_model_for_marlin_load_exists ______
+
+self = <test_marlin_utils.TestMarlinUtilsInterface testMethod=test_prepare_model_for_marlin_load_exists>
+
+    def test_prepare_model_for_marlin_load_exists(self):
+        """Test prepare_model_for_marlin_load function exists with correct signature."""
+>       from auto_gptq.utils.marlin_utils import prepare_model_for_marlin_load
+E       ModuleNotFoundError: No module named 'auto_gptq.utils.marlin_utils'
+
+/artifacts/evaluation/tests/test_marlin_utils.py:145: ModuleNotFoundError
+____ TestMarlinUtilsInterface.test_validate_marlin_compatibility_asymmetric ____
+
+self = <test_marlin_utils.TestMarlinUtilsInterface testMethod=test_validate_marlin_compatibility_asymmetric>
+
+    def test_validate_marlin_compatibility_asymmetric(self):
+        """Test _validate_marlin_compatibility rejects asymmetric quantization."""
+>       from auto_gptq.utils.marlin_utils import _validate_marlin_compatibility
+E       ModuleNotFoundError: No module named 'auto_gptq.utils.marlin_utils'
+
+/artifacts/evaluation/tests/test_marlin_utils.py:102: ModuleNotFoundError
+_____ TestMarlinUtilsInterface.test_validate_marlin_compatibility_desc_act _____
+
+self = <test_marlin_utils.TestMarlinUtilsInterface testMethod=test_validate_marlin_compatibility_desc_act>
+
+    def test_validate_marlin_compatibility_desc_act(self):
+        """Test _validate_marlin_compatibility rejects desc_act."""
+>       from auto_gptq.utils.marlin_utils import _validate_marlin_compatibility
+E       ModuleNotFoundError: No module named 'auto_gptq.utils.marlin_utils'
+
+/artifacts/evaluation/tests/test_marlin_utils.py:116: ModuleNotFoundError
+___ TestMarlinUtilsInterface.test_validate_marlin_compatibility_invalid_bits ___
+
+self = <test_marlin_utils.TestMarlinUtilsInterface testMethod=test_validate_marlin_compatibility_invalid_bits>
+
+    def test_validate_marlin_compatibility_invalid_bits(self):
+        """Test _validate_marlin_compatibility rejects invalid bits."""
+>       from auto_gptq.utils.marlin_utils import _validate_marlin_compatibility
+E       ModuleNotFoundError: No module named 'auto_gptq.utils.marlin_utils'
+
+/artifacts/evaluation/tests/test_marlin_utils.py:74: ModuleNotFoundError
+_ TestMarlinUtilsInterface.test_validate_marlin_compatibility_invalid_group_size _
+
+self = <test_marlin_utils.TestMarlinUtilsInterface testMethod=test_validate_marlin_compatibility_invalid_group_size>
+
+    def test_validate_marlin_compatibility_invalid_group_size(self):
+        """Test _validate_marlin_compatibility rejects invalid group_size."""
+>       from auto_gptq.utils.marlin_utils import _validate_marlin_compatibility
+E       ModuleNotFoundError: No module named 'auto_gptq.utils.marlin_utils'
+
+/artifacts/evaluation/tests/test_marlin_utils.py:88: ModuleNotFoundError
+___ TestMarlinUtilsInterface.test_validate_marlin_compatibility_valid_config ___
+
+self = <test_marlin_utils.TestMarlinUtilsInterface testMethod=test_validate_marlin_compatibility_valid_config>
+
+    def test_validate_marlin_compatibility_valid_config(self):
+        """Test _validate_marlin_compatibility returns None for valid config."""
+>       from auto_gptq.utils.marlin_utils import _validate_marlin_compatibility
+E       ModuleNotFoundError: No module named 'auto_gptq.utils.marlin_utils'
+
+/artifacts/evaluation/tests/test_marlin_utils.py:60: ModuleNotFoundError
+_____ TestMarlinUtilsInterface.test_validate_marlin_device_support_exists ______
+
+self = <test_marlin_utils.TestMarlinUtilsInterface testMethod=test_validate_marlin_device_support_exists>
+
+    def test_validate_marlin_device_support_exists(self):
+        """Test _validate_marlin_device_support function exists."""
+>       from auto_gptq.utils.marlin_utils import _validate_marlin_device_support
+E       ModuleNotFoundError: No module named 'auto_gptq.utils.marlin_utils'
+
+/artifacts/evaluation/tests/test_marlin_utils.py:130: ModuleNotFoundError
+____ TestBaseQuantizeConfigMarlinField.test_is_marlin_format_default_value _____
+
+self = <test_marlin_utils.TestBaseQuantizeConfigMarlinField testMethod=test_is_marlin_format_default_value>
+
+    def test_is_marlin_format_default_value(self):
+        """Test that is_marlin_format has correct default value."""
+        from auto_gptq.modeling._base import BaseQuantizeConfig
+    
+        config = BaseQuantizeConfig()
+        # Default should be False
+>       self.assertEqual(config.is_marlin_format, False)
+                         ^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'BaseQuantizeConfig' object has no attribute 'is_marlin_format'
+
+/artifacts/evaluation/tests/test_marlin_utils.py:193: AttributeError
+_____ TestBaseQuantizeConfigMarlinField.test_is_marlin_format_field_exists _____
+
+self = <test_marlin_utils.TestBaseQuantizeConfigMarlinField testMethod=test_is_marlin_format_field_exists>
+
+    def test_is_marlin_format_field_exists(self):
+        """Test that BaseQuantizeConfig has is_marlin_format field."""
+        from auto_gptq.modeling._base import BaseQuantizeConfig
+        from dataclasses import fields
+    
+        field_names = [field.name for field in fields(BaseQuantizeConfig)]
+>       self.assertIn("is_marlin_format", field_names)
+E       AssertionError: 'is_marlin_format' not found in ['bits', 'group_size', 'damp_percent', 'desc_act', 'static_groups', 'sym', 'true_sequential', 'model_name_or_path', 'model_file_base_name', 'awq_gemm_checkpoint']
+
+/artifacts/evaluation/tests/test_marlin_utils.py:185: AssertionError
+___ TestBaseQuantizeConfigMarlinField.test_to_dict_includes_is_marlin_format ___
+
+self = <test_marlin_utils.TestBaseQuantizeConfigMarlinField testMethod=test_to_dict_includes_is_marlin_format>
+
+    def test_to_dict_includes_is_marlin_format(self):
+        """Test that to_dict() includes is_marlin_format field."""
+        from auto_gptq.modeling._base import BaseQuantizeConfig
+    
+        config = BaseQuantizeConfig()
+        config.is_marlin_format = True
+        config_dict = config.to_dict()
+    
+>       self.assertIn("is_marlin_format", config_dict)
+E       AssertionError: 'is_marlin_format' not found in {'bits': 4, 'group_size': -1, 'damp_percent': 0.01, 'desc_act': True, 'static_groups': False, 'sym': True, 'true_sequential': True, 'model_name_or_path': None, 'model_file_base_name': None}
+
+/artifacts/evaluation/tests/test_marlin_utils.py:211: AssertionError
+=========================== short test summary info ============================
+FAILED ../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_convert_to_marlin_exists
+FAILED ../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_get_cached_marlin_save_name_local_path
+FAILED ../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_get_cached_marlin_save_name_returns_assets_path
+FAILED ../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_marlin_utils_module_exists
+FAILED ../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_prepare_model_for_marlin_load_exists
+FAILED ../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_validate_marlin_compatibility_asymmetric
+FAILED ../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_validate_marlin_compatibility_desc_act
+FAILED ../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_validate_marlin_compatibility_invalid_bits
+FAILED ../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_validate_marlin_compatibility_invalid_group_size
+FAILED ../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_validate_marlin_compatibility_valid_config
+FAILED ../artifacts/evaluation/tests/test_marlin_utils.py::TestMarlinUtilsInterface::test_validate_marlin_device_support_exists
+FAILED ../artifacts/evaluation/tests/test_marlin_utils.py::TestBaseQuantizeConfigMarlinField::test_is_marlin_format_default_value
+FAILED ../artifacts/evaluation/tests/test_marlin_utils.py::TestBaseQuantizeConfigMarlinField::test_is_marlin_format_field_exists
+FAILED ../artifacts/evaluation/tests/test_marlin_utils.py::TestBaseQuantizeConfigMarlinField::test_to_dict_includes_is_marlin_format
+========================= 14 failed, 2 passed in 2.79s =========================

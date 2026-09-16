@@ -1,0 +1,61 @@
+{
+  "build_context_files": [
+    "/artifacts/environment/setup_runtime.sh",
+    "/artifacts/environment/repo_setup.sh"
+  ],
+  "build_steps": [
+    {
+      "step": 1,
+      "description": "Start from debian:bookworm base image"
+    },
+    {
+      "step": 2,
+      "description": "Install system packages: git, curl, wget, ca-certificates, gnupg, xmlstarlet, maven"
+    },
+    {
+      "step": 3,
+      "description": "Create /opt/benchmark directory for build scripts"
+    },
+    {
+      "step": 4,
+      "description": "Copy setup_runtime.sh and repo_setup.sh from build context to /opt/benchmark/"
+    },
+    {
+      "step": 5,
+      "description": "Execute repo_setup.sh to materialize /workspace from git repository"
+    },
+    {
+      "step": 6,
+      "description": "Execute setup_runtime.sh to install Java 8 (Temurin JDK 8u412) and pre-cache Maven dependencies"
+    },
+    {
+      "step": 7,
+      "description": "Set environment variables JAVA_HOME, MAVEN_HOME, and PATH"
+    },
+    {
+      "step": 8,
+      "description": "Set WORKDIR to /workspace"
+    }
+  ],
+  "base_image": "debian:bookworm",
+  "runtime_setup": {
+    "java_version": "Temurin JDK 8u412",
+    "maven_version": "3.8.7 (from debian packages)",
+    "java_home": "/opt/java/jdk8u412-b08",
+    "maven_home": "/usr/share/maven"
+  },
+  "repo_materialization": {
+    "method": "git shallow clone with partial blob filter",
+    "repository": "https://github.com/apache/flink-cdc.git",
+    "commit": "e2bb917ad02c5fd8ee3ec898842d9f0c1aac5f5c"
+  },
+  "dependency_caching": {
+    "method": "mvn dependency:go-offline",
+    "target_module": "flink-cdc-runtime",
+    "cache_directory": "/root/.m2/repository"
+  },
+  "output_image": {
+    "workdir": "/workspace",
+    "ready_for": "RL agent execution with pre-cached dependencies"
+  }
+}

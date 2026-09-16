@@ -1,0 +1,85 @@
+{
+  "base_image": "python:3.11-slim",
+  "build_context_artifacts": [
+    "repo_setup.sh",
+    "setup_runtime.sh"
+  ],
+  "system_packages": [
+    "git",
+    "curl",
+    "build-essential",
+    "python3-dev"
+  ],
+  "package_manager": "poetry",
+  "package_manager_install_command": "pip install --break-system-packages poetry",
+  "build_steps": [
+    {
+      "step": 1,
+      "action": "FROM",
+      "description": "Use python:3.11-slim as base image"
+    },
+    {
+      "step": 2,
+      "action": "RUN",
+      "description": "Install system packages (git, curl, build-essential, python3-dev)"
+    },
+    {
+      "step": 3,
+      "action": "RUN",
+      "description": "Install poetry via pip"
+    },
+    {
+      "step": 4,
+      "action": "COPY",
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh",
+      "description": "Copy repo_setup.sh to build context"
+    },
+    {
+      "step": 5,
+      "action": "RUN",
+      "description": "Execute repo_setup.sh to materialize /workspace from git"
+    },
+    {
+      "step": 6,
+      "action": "COPY",
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh",
+      "description": "Copy setup_runtime.sh to build context"
+    },
+    {
+      "step": 7,
+      "action": "RUN",
+      "description": "Execute setup_runtime.sh to create Poetry environment and install dependencies"
+    },
+    {
+      "step": 8,
+      "action": "WORKDIR",
+      "path": "/workspace",
+      "description": "Set working directory to /workspace"
+    }
+  ],
+  "runtime_mounts": {
+    "description": "Verifier assets mounted at runtime, not baked into image",
+    "excluded_from_image": [
+      "eval.sh",
+      "test.patch",
+      "tests/"
+    ]
+  },
+  "repo_materialization": {
+    "mode": "git_clone",
+    "script": "repo_setup.sh",
+    "target": "/workspace",
+    "repository": "https://github.com/ArneBinder/pytorch-ie.git",
+    "commit": "f1b05e73b0e377a71ef6a6bdd64aa21a8881d0f7"
+  },
+  "runtime_environment": {
+    "type": "poetry",
+    "python_version": "3.11",
+    "activation": "source $(poetry env info --path)/bin/activate"
+  },
+  "build_backend": "buildah",
+  "output_format": "oci",
+  "output_archive": "/artifacts/environment/openenv_validation_oci.tar"
+}

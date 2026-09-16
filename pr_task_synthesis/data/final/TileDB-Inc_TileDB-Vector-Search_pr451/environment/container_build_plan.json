@@ -1,0 +1,76 @@
+{
+  "build_context": {
+    "source_files": [
+      "repo_setup.sh",
+      "setup_runtime.sh"
+    ],
+    "context_path": "/artifacts/environment"
+  },
+  "build_commands": {
+    "buildah": "buildah build -t tiledb-vector-search:latest -f /artifacts/environment/Dockerfile.final /artifacts/environment",
+    "buildah_with_export": "buildah build -t tiledb-vector-search:latest -f /artifacts/environment/Dockerfile.final /artifacts/environment && buildah push tiledb-vector-search:latest oci-archive:/artifacts/environment/openenv_validation_oci.tar"
+  },
+  "base_image": "python:3.11-slim-bookworm",
+  "expected_image_size_mb": 1200,
+  "image_spec": {
+    "from": "python:3.11-slim-bookworm",
+    "system_packages": [
+      "git",
+      "curl",
+      "python3.11-venv",
+      "python3.11-dev",
+      "libopenblas-dev",
+      "build-essential",
+      "cmake"
+    ],
+    "virtualenv_path": "/opt/benchmark/venv",
+    "workspace_path": "/workspace",
+    "workdir": "/workspace",
+    "copied_artifacts": [
+      {
+        "source": "repo_setup.sh",
+        "destination": "/opt/benchmark/repo_setup.sh"
+      },
+      {
+        "source": "setup_runtime.sh",
+        "destination": "/opt/benchmark/setup_runtime.sh"
+      }
+    ],
+    "runtime_mounted_assets": [
+      "/artifacts/evaluation/eval.sh",
+      "/artifacts/evaluation/test.patch"
+    ]
+  },
+  "build_steps": [
+    {
+      "step": 1,
+      "description": "Install system packages",
+      "command": "apt-get update && apt-get install -y git curl python3.11-venv python3.11-dev libopenblas-dev build-essential cmake"
+    },
+    {
+      "step": 2,
+      "description": "Create directories",
+      "command": "mkdir -p /opt/benchmark /workspace && chmod 777 /workspace"
+    },
+    {
+      "step": 3,
+      "description": "Copy and execute repo_setup.sh to materialize /workspace",
+      "command": "COPY repo_setup.sh /opt/benchmark/repo_setup.sh && /opt/benchmark/repo_setup.sh"
+    },
+    {
+      "step": 4,
+      "description": "Copy and execute setup_runtime.sh to create Python venv and install dependencies",
+      "command": "COPY setup_runtime.sh /opt/benchmark/setup_runtime.sh && /opt/benchmark/setup_runtime.sh"
+    },
+    {
+      "step": 5,
+      "description": "Set working directory",
+      "command": "WORKDIR /workspace"
+    }
+  ],
+  "verification": {
+    "smoke_test": "source /opt/benchmark/venv/bin/activate && python -c \"import tiledb.vector_search; print(tiledb.vector_search.__version__)\"",
+    "test_command": "cd apis/python && pytest test/test_distance_metrics.py -s -k \"test_cosine_distance or test_inner_product_distances or test_ivf_flat_cosine_simple or test_ivf_flat_ingestion_cosine\""
+  },
+  "notes": "eval.sh and test.patch are runtime-mounted verifier assets, not baked into the image. The image is ready for RL agent use with WORKDIR /workspace."
+}

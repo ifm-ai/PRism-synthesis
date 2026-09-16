@@ -1,0 +1,39 @@
+Looking in indexes: http://mirror.proxy.hpc:8081/repository/pypi-proxy/simple/
+Requirement already satisfied: pyspark in ./python/.venv/lib/python3.11/site-packages (4.1.2)
+Requirement already satisfied: py4j<0.10.9.10,>=0.10.9.7 in ./python/.venv/lib/python3.11/site-packages (from pyspark) (0.10.9.9)
+Looking in indexes: http://mirror.proxy.hpc:8081/repository/pypi-proxy/simple/
+Obtaining file:///workspace/python
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: apache-sedona
+  Building editable for apache-sedona (pyproject.toml): started
+  Building editable for apache-sedona (pyproject.toml): finished with status 'done'
+  Created wheel for apache-sedona: filename=apache_sedona-1.5.1-0.editable-cp311-cp311-linux_x86_64.whl size=3478 sha256=b8759be3bc42dfd0a6e102dc1ad312554667de4679a6233e12a786e87c2e2777
+  Stored in directory: /tmp/pip-ephem-wheel-cache-d3hd5eq3/wheels/3d/23/b0/6aa2e6700286497d1d65222efb6505e8b4d33282d4b2346fd0
+Successfully built apache-sedona
+Installing collected packages: apache-sedona
+  Attempting uninstall: apache-sedona
+    Found existing installation: apache-sedona 1.5.1
+    Uninstalling apache-sedona-1.5.1:
+      Successfully uninstalled apache-sedona-1.5.1
+Successfully installed apache-sedona-1.5.1
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.0, pluggy-1.6.0 -- /workspace/python/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /tests/tests
+collecting ... collected 3 items
+
+../tests/tests/test_st_s2_to_geom_quick.py::test_st_s2_to_geom_import PASSED [ 33%]
+../tests/tests/test_st_s2_to_geom_quick.py::test_st_s2_to_geom_in_exports PASSED [ 66%]
+../tests/tests/test_st_s2_to_geom_quick.py::test_st_s2_to_geom_signature PASSED [100%]
+
+============================== 3 passed in 0.55s ===============================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0

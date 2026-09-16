@@ -1,0 +1,71 @@
+{
+  "base_image": "python:3.11-slim-bookworm",
+  "build_steps": [
+    {
+      "step": 1,
+      "instruction": "FROM",
+      "description": "Set base image to python:3.11-slim-bookworm"
+    },
+    {
+      "step": 2,
+      "instruction": "ENV",
+      "description": "Set DEBIAN_FRONTEND=noninteractive for apt"
+    },
+    {
+      "step": 3,
+      "instruction": "RUN",
+      "description": "Install system packages: git, curl, python3.11-venv, python3-pip"
+    },
+    {
+      "step": 4,
+      "instruction": "COPY",
+      "description": "Copy setup_runtime.sh to /opt/benchmark/setup_runtime.sh"
+    },
+    {
+      "step": 5,
+      "instruction": "COPY",
+      "description": "Copy repo_setup.sh to /opt/benchmark/repo_setup.sh"
+    },
+    {
+      "step": 6,
+      "instruction": "RUN",
+      "description": "Make scripts executable"
+    },
+    {
+      "step": 7,
+      "instruction": "RUN",
+      "description": "Execute repo_setup.sh to materialize /workspace from git"
+    },
+    {
+      "step": 8,
+      "instruction": "RUN",
+      "description": "Execute setup_runtime.sh to create Python venv and install dependencies"
+    },
+    {
+      "step": 9,
+      "instruction": "WORKDIR",
+      "description": "Set final working directory to /workspace"
+    }
+  ],
+  "copy_operations": [
+    {
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh",
+      "context": "build-context"
+    },
+    {
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh",
+      "context": "build-context"
+    }
+  ],
+  "final_workdir": "/workspace",
+  "entrypoint_notes": "Default CMD is /bin/bash; runtime entrypoint can be overridden. The Python virtual environment is located at /opt/benchmark/venv and must be activated via 'source /opt/benchmark/venv/bin/activate' before running Python commands. BigDL-LLM package is accessible via .pth file pointing to /workspace/python/llm/src.",
+  "runtime_mounts_excluded": [
+    "/artifacts/evaluation/eval.sh",
+    "/artifacts/evaluation/test.patch",
+    "/artifacts/evaluation/tests/"
+  ],
+  "build_backend": "buildah",
+  "oci_export_target": "/artifacts/environment/openenv_validation_oci.tar"
+}

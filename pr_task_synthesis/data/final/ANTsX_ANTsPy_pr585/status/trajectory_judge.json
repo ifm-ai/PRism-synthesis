@@ -1,0 +1,10 @@
+{
+  "status": "completed",
+  "solver_outcome": "pass",
+  "oracle_outcome": "pass",
+  "filter_label": "keep",
+  "keep_for_rl": "keep",
+  "needs_instruction_change": false,
+  "needs_verifier_change": false,
+  "notes": "Clean successful trajectory: solver correctly localized the problem, made the appropriate edit to add singleprecision parameter, and oracle verified the behavioral change. No struggle patterns detected. All primary scores remain at 4. This is a high-value RL training example showing correct problem-solving behavior."
+}

@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "apache_incubator-gluten_pr8329"
+description = "OpenEnv: apache/incubator-gluten PR #8329"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/apache/incubator-gluten.git"
+git_pr_id = "8329"
+git_base_commit = "748ece1b8e3565b3da746d612d21b2e2a8405273"
+task_id = "apache_incubator-gluten_pr8329"
+repo_full_name = "apache/incubator-gluten"
+domain = "CLI_DEVELOPER_TOOLING"
+primary_language = "Scala"
+runtime_family = "Java/Scala"
+complexity = "easy"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

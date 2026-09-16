@@ -1,0 +1,141 @@
+{
+  "base_image": "python:3.11-slim",
+  "build_backend": "buildah",
+  "target_platform": "linux/amd64",
+  "build_stages": [
+    {
+      "stage": "base",
+      "from": "python:3.11-slim",
+      "operations": [
+        {
+          "type": "RUN",
+          "command": "apt-get update -qq && apt-get install -y -qq git curl python3.11-venv python3-pip g++ && rm -rf /var/lib/apt/lists/*",
+          "purpose": "Install system dependencies"
+        },
+        {
+          "type": "RUN",
+          "command": "mkdir -p /opt/benchmark",
+          "purpose": "Create benchmark directory"
+        }
+      ]
+    },
+    {
+      "stage": "scripts",
+      "operations": [
+        {
+          "type": "COPY",
+          "source": "setup_runtime.sh",
+          "destination": "/opt/benchmark/setup_runtime.sh",
+          "purpose": "Copy runtime setup script from build context"
+        },
+        {
+          "type": "COPY",
+          "source": "repo_setup.sh",
+          "destination": "/opt/benchmark/repo_setup.sh",
+          "purpose": "Copy repo setup script from build context"
+        },
+        {
+          "type": "RUN",
+          "command": "chmod +x /opt/benchmark/setup_runtime.sh /opt/benchmark/repo_setup.sh",
+          "purpose": "Make scripts executable"
+        }
+      ]
+    },
+    {
+      "stage": "repo_materialization",
+      "operations": [
+        {
+          "type": "RUN",
+          "command": "/opt/benchmark/repo_setup.sh",
+          "purpose": "Materialize /workspace from git repository"
+        }
+      ]
+    },
+    {
+      "stage": "runtime_setup",
+      "operations": [
+        {
+          "type": "RUN",
+          "command": "/opt/benchmark/setup_runtime.sh",
+          "purpose": "Create Python venv and install dependencies"
+        }
+      ]
+    },
+    {
+      "stage": "final",
+      "operations": [
+        {
+          "type": "WORKDIR",
+          "path": "/workspace",
+          "purpose": "Set working directory for RL agent"
+        }
+      ]
+    }
+  ],
+  "copied_artifacts": [
+    {
+      "source": "setup_runtime.sh",
+      "destination": "/opt/benchmark/setup_runtime.sh",
+      "type": "build_context_script"
+    },
+    {
+      "source": "repo_setup.sh",
+      "destination": "/opt/benchmark/repo_setup.sh",
+      "type": "build_context_script"
+    }
+  ],
+  "excluded_artifacts": [
+    {
+      "path": "/artifacts/evaluation/eval.sh",
+      "reason": "Runtime-mounted verifier asset"
+    },
+    {
+      "path": "/artifacts/evaluation/test.patch",
+      "reason": "Runtime-mounted verifier asset"
+    },
+    {
+      "path": "/artifacts/evaluation/tests/",
+      "reason": "Runtime-mounted verifier asset"
+    }
+  ],
+  "workspace_contract": {
+    "materialization_mode": "repo_setup_script",
+    "repo_setup_script": "/opt/benchmark/repo_setup.sh",
+    "workspace_path": "/workspace",
+    "no_snapshot_copy": true
+  },
+  "runtime_environment": {
+    "python_version": "3.11",
+    "venv_path": "/opt/benchmark/venv",
+    "activation_command": "source /opt/benchmark/venv/bin/activate",
+    "package_manager": "pip",
+    "primary_deps": [
+      "torch==2.4.0 (CPU-only)",
+      "transformers>=4.31.0,<5.0.0",
+      "accelerate>=0.26.0",
+      "safetensors",
+      "datasets",
+      "peft>=0.5.0,<0.9.0",
+      "tqdm",
+      "numpy<2.0.0",
+      "sentencepiece",
+      "rouge",
+      "gekko",
+      "pytest",
+      "parameterized"
+    ],
+    "editable_install": {
+      "package": "auto_gptq",
+      "flags": ["BUILD_CUDA_EXT=0", "DISABLE_QIGEN=1"]
+    }
+  },
+  "build_output": {
+    "oci_archive": "/artifacts/environment/openenv_validation_oci.tar",
+    "validation_backend": "buildah"
+  },
+  "notes": [
+    "eval.sh and test assets are runtime-mounted, not baked into image",
+    "repo_setup.sh clones from https://github.com/AutoGPTQ/AutoGPTQ.git at commit be78af8d4fd80b5afa0a8a7df7b0e0ec44420003",
+    "CPU-only PyTorch installed for testing; Marlin kernel tests require GPU hardware"
+  ]
+}

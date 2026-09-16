@@ -1,0 +1,30 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "infrastructure_limited": false,
+  "infrastructure_reason": null,
+  "runtime_family": "Rust",
+  "base_image_candidate": "rust:1-slim",
+  "runtime_created": true,
+  "activation_verified": true,
+  "base_deps_installed": true,
+  "runtime_profile_summary": "Rust cargo workspace with stable and nightly toolchains, eBPF build support via libbpf/clang/llvm, systemd journal logging support",
+  "test_runner_reachable": true,
+  "test_runner_reachability_evidence": "0 tests, 0 benchmarks\n     Running unittests src/lib.rs (target/debug/deps/bpfman_api-7fc5fdb2f2947b80)\n0 tests, 0 benchmarks\n     Running unittests src/bin/rpc/main.rs (target/debug/deps/bpfman_rpc-44fcd5faad5ef3a3)\n0 tests, 0 benchmarks",
+  "setup_runtime_exit_code": 0,
+  "activation_command": "source $HOME/.cargo/env",
+  "notes": "bpfman is a Linux-only eBPF program manager. The environment includes both stable (1.96.0) and nightly Rust toolchains. System packages clang, llvm, libbpf-dev, libelf-dev, protobuf-compiler, cmake, libssl-dev, gcc-multilib, git, curl are installed. The setup script successfully built bpfman-rpc and bpfman binaries. Test runner is reachable but the project has no unit tests in bpfman-api - integration tests exist in tests/integration-test crate.",
+  "system_packages": [
+    "git",
+    "curl",
+    "clang",
+    "llvm",
+    "libbpf-dev",
+    "libelf-dev",
+    "protobuf-compiler",
+    "cmake",
+    "libssl-dev",
+    "gcc-multilib",
+    "pkg-config"
+  ]
+}

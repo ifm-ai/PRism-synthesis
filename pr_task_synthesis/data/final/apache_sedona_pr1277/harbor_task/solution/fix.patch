@@ -1,0 +1,127 @@
+diff --git a/common/src/main/java/org/apache/sedona/common/Functions.java b/common/src/main/java/org/apache/sedona/common/Functions.java
+index 3177cf2fa..95512a1c8 100644
+--- a/common/src/main/java/org/apache/sedona/common/Functions.java
++++ b/common/src/main/java/org/apache/sedona/common/Functions.java
+@@ -860,6 +860,16 @@ public class Functions {
+         return S2Utils.roundCellsToSameLevel(new ArrayList<>(cellIds), level).stream().map(S2CellId::id).collect(Collectors.toList()).toArray(new Long[cellIds.size()]);
+     }
+ 
++    /**
++     *
++     * @param cellIds array of cell ids
++     * @return An array of polygons for the cell ids
++     */
++    public static Geometry[] s2ToGeom(long[] cellIds) {
++        List<S2CellId> s2CellObjs = Arrays.stream(cellIds).mapToObj(S2CellId::new).collect(Collectors.toList());
++        return s2CellObjs.stream().map(S2Utils::toJTSPolygon).toArray(Polygon[]::new);
++    }
++
+     /**
+      * cover the geometry with H3 cells
+      * @param input the input geometry
+diff --git a/flink/src/main/java/org/apache/sedona/flink/Catalog.java b/flink/src/main/java/org/apache/sedona/flink/Catalog.java
+index 7b32e269c..a8efefc12 100644
+--- a/flink/src/main/java/org/apache/sedona/flink/Catalog.java
++++ b/flink/src/main/java/org/apache/sedona/flink/Catalog.java
+@@ -134,6 +134,7 @@ public class Catalog {
+                 new Functions.ST_Subdivide(),
+                 new Functions.ST_SymDifference(),
+                 new Functions.ST_S2CellIDs(),
++                new Functions.ST_S2ToGeom(),
+                 new Functions.ST_GeometricMedian(),
+                 new Functions.ST_NumPoints(),
+                 new Functions.ST_Force3D(),
+diff --git a/flink/src/main/java/org/apache/sedona/flink/expressions/Functions.java b/flink/src/main/java/org/apache/sedona/flink/expressions/Functions.java
+index 65f066230..1bcb29d49 100644
+--- a/flink/src/main/java/org/apache/sedona/flink/expressions/Functions.java
++++ b/flink/src/main/java/org/apache/sedona/flink/expressions/Functions.java
+@@ -848,6 +848,14 @@ public class Functions {
+         }
+     }
+ 
++    public static class ST_S2ToGeom extends ScalarFunction {
++        @DataTypeHint(value = "RAW", bridgedTo = org.locationtech.jts.geom.Geometry[].class)
++        public Geometry[] eval(@DataTypeHint(value = "ARRAY<BIGINT>") Long[] cellIds
++        ) {
++            return org.apache.sedona.common.Functions.s2ToGeom(Arrays.stream(cellIds).mapToLong(Long::longValue).toArray());
++        }
++    }
++
+     public static class ST_H3CellIDs extends ScalarFunction {
+         @DataTypeHint(value = "ARRAY<BIGINT>")
+         public Long[] eval(@DataTypeHint(value = "RAW", bridgedTo = org.locationtech.jts.geom.Geometry.class) Object o,
+diff --git a/python/sedona/sql/st_functions.py b/python/sedona/sql/st_functions.py
+index d6f31fa0d..cdcdb2daa 100644
+--- a/python/sedona/sql/st_functions.py
++++ b/python/sedona/sql/st_functions.py
+@@ -101,6 +101,7 @@ __all__ = [
+     "ST_RemovePoint",
+     "ST_Reverse",
+     "ST_S2CellIDs",
++    "ST_S2ToGeom",
+     "ST_SetPoint",
+     "ST_SetSRID",
+     "ST_SRID",
+@@ -1187,6 +1188,18 @@ def ST_S2CellIDs(geometry: ColumnOrName, level: Union[ColumnOrName, int]) -> Col
+     return _call_st_function("ST_S2CellIDs", args)
+ 
+ 
++@validate_argument_types
++def ST_S2ToGeom(cells: Union[ColumnOrName, list]) -> Column:
++    """Create a polygon from the S2 cells
++
++    :param cells: S2 cells
++    :type cells: List[long]
++    :return: the Polygon for all S2 cells
++    :rtype: Geometry
++    """
++    return _call_st_function("ST_S2ToGeom", cells)
++
++
+ @validate_argument_types
+ def ST_SetPoint(line_string: ColumnOrName, index: Union[ColumnOrName, int], point: ColumnOrName) -> Column:
+     """Replace a point in a linestring.
+diff --git a/spark/common/src/main/scala/org/apache/sedona/sql/UDF/Catalog.scala b/spark/common/src/main/scala/org/apache/sedona/sql/UDF/Catalog.scala
+index a41b780d4..ef981cabb 100644
+--- a/spark/common/src/main/scala/org/apache/sedona/sql/UDF/Catalog.scala
++++ b/spark/common/src/main/scala/org/apache/sedona/sql/UDF/Catalog.scala
+@@ -161,6 +161,7 @@ object Catalog {
+     function[ST_MLineFromText](0),
+     function[ST_Split](),
+     function[ST_S2CellIDs](),
++    function[ST_S2ToGeom](),
+     function[ST_GeometricMedian](1e-6, 1000, false),
+     function[ST_DistanceSphere](),
+     function[ST_DistanceSpheroid](),
+diff --git a/spark/common/src/main/scala/org/apache/spark/sql/sedona_sql/expressions/Functions.scala b/spark/common/src/main/scala/org/apache/spark/sql/sedona_sql/expressions/Functions.scala
+index 50dab461e..606057d64 100644
+--- a/spark/common/src/main/scala/org/apache/spark/sql/sedona_sql/expressions/Functions.scala
++++ b/spark/common/src/main/scala/org/apache/spark/sql/sedona_sql/expressions/Functions.scala
+@@ -984,6 +984,13 @@ case class ST_S2CellIDs(inputExpressions: Seq[Expression])
+   }
+ }
+ 
++case class ST_S2ToGeom(inputExpressions: Seq[Expression])
++  extends InferredExpression(Functions.s2ToGeom _) {
++  protected def withNewChildrenInternal(newChildren: IndexedSeq[Expression]) = {
++    copy(inputExpressions = newChildren)
++  }
++}
++
+ case class ST_H3CellIDs(inputExpressions: Seq[Expression])
+   extends InferredExpression(Functions.h3CellIDs _) {
+ 
+diff --git a/spark/common/src/main/scala/org/apache/spark/sql/sedona_sql/expressions/st_functions.scala b/spark/common/src/main/scala/org/apache/spark/sql/sedona_sql/expressions/st_functions.scala
+index b0ef539d8..cf05ee548 100644
+--- a/spark/common/src/main/scala/org/apache/spark/sql/sedona_sql/expressions/st_functions.scala
++++ b/spark/common/src/main/scala/org/apache/spark/sql/sedona_sql/expressions/st_functions.scala
+@@ -272,6 +272,9 @@ object st_functions extends DataFrameAPI {
+ 
+   def ST_S2CellIDs(geometry: String, level: Int): Column = wrapExpression[ST_S2CellIDs](geometry, level)
+ 
++  def ST_S2ToGeom(cellIDs: Column): Column = wrapExpression[ST_S2ToGeom](cellIDs)
++  def ST_S2ToGeom(cellIDs: Array[Long]): Column = wrapExpression[ST_S2ToGeom](cellIDs)
++
+   def ST_SetPoint(lineString: Column, index: Column, point: Column): Column = wrapExpression[ST_SetPoint](lineString, index, point)
+   def ST_SetPoint(lineString: String, index: Int, point: String): Column = wrapExpression[ST_SetPoint](lineString, index, point)
+ 

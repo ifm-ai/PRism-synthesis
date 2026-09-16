@@ -1,0 +1,180 @@
+>>>>> Start Test Output
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.1.1, pluggy-1.6.0 -- /opt/benchmark/venv/bin/python
+cachedir: .pytest_cache
+rootdir: /artifacts/evaluation/tests
+plugins: cov-7.1.0
+collecting ... collected 9 items
+
+../artifacts/evaluation/tests/test_import_path_fix.py::TestYAMLConfigurations::test_pipe_example_yml FAILED [ 11%]
+../artifacts/evaluation/tests/test_import_path_fix.py::TestYAMLConfigurations::test_goldenspike_yml FAILED [ 22%]
+../artifacts/evaluation/tests/test_import_path_fix.py::TestNotebookImports::test_build_save_load_pipeline_notebook FAILED [ 33%]
+../artifacts/evaluation/tests/test_import_path_fix.py::TestNotebookImports::test_degradation_demo_notebook FAILED [ 44%]
+../artifacts/evaluation/tests/test_import_path_fix.py::TestNotebookImports::test_photometric_realization_demo_notebook FAILED [ 55%]
+../artifacts/evaluation/tests/test_import_path_fix.py::TestNotebookImports::test_posterior_demo_notebook FAILED [ 66%]
+../artifacts/evaluation/tests/test_import_path_fix.py::TestNotebookImports::test_goldenspike_notebook FAILED [ 77%]
+../artifacts/evaluation/tests/test_import_path_fix.py::TestIntegration::test_yaml_load_and_parse PASSED [ 88%]
+../artifacts/evaluation/tests/test_import_path_fix.py::TestIntegration::test_no_old_import_paths_in_examples FAILED [100%]
+
+=================================== FAILURES ===================================
+_________________ TestYAMLConfigurations.test_pipe_example_yml _________________
+
+self = <test_import_path_fix.TestYAMLConfigurations object at 0x7ffb7493fd10>
+
+    def test_pipe_example_yml(self):
+        """Test pipe_example.yml uses correct module path."""
+        yaml_path = "/workspace/examples/core_examples/pipe_example.yml"
+        with open(yaml_path, 'r') as f:
+            config = yaml.safe_load(f)
+    
+        # Find the LSSTErrorModel stage
+        lsst_stage = None
+        for stage in config.get('stages', []):
+            if stage.get('classname') == 'LSSTErrorModel':
+                lsst_stage = stage
+                break
+    
+        assert lsst_stage is not None, "LSSTErrorModel stage not found in config"
+>       assert lsst_stage.get('module_name') == 'rail.creation.degraders.photometric_errors', \
+            f"Expected 'rail.creation.degraders.photometric_errors', got '{lsst_stage.get('module_name')}'"
+E       AssertionError: Expected 'rail.creation.degraders.photometric_errors', got 'rail.creation.degraders.lsst_error_model'
+E       assert 'rail.creatio...t_error_model' == 'rail.creatio...metric_errors'
+E         
+E         - rail.creation.degraders.photometric_errors
+E         ?                         ^^^ -------      ^
+E         + rail.creation.degraders.lsst_error_model
+E         ?                         ^^^       ^^^^^^
+
+/artifacts/evaluation/tests/test_import_path_fix.py:37: AssertionError
+_________________ TestYAMLConfigurations.test_goldenspike_yml __________________
+
+self = <test_import_path_fix.TestYAMLConfigurations object at 0x7ffb7466c910>
+
+    def test_goldenspike_yml(self):
+        """Test goldenspike.yml uses correct module path."""
+        yaml_path = "/workspace/examples/goldenspike_examples/goldenspike.yml"
+        with open(yaml_path, 'r') as f:
+            config = yaml.safe_load(f)
+    
+        # Find all LSSTErrorModel stages
+        lsst_stages = []
+        for stage in config.get('stages', []):
+            if stage.get('classname') == 'LSSTErrorModel':
+                lsst_stages.append(stage)
+    
+        assert len(lsst_stages) > 0, "LSSTErrorModel stages not found in config"
+        for stage in lsst_stages:
+>           assert stage.get('module_name') == 'rail.creation.degraders.photometric_errors', \
+                f"Expected 'rail.creation.degraders.photometric_errors', got '{stage.get('module_name')}'"
+E           AssertionError: Expected 'rail.creation.degraders.photometric_errors', got 'rail.creation.degraders.lsst_error_model'
+E           assert 'rail.creatio...t_error_model' == 'rail.creatio...metric_errors'
+E             
+E             - rail.creation.degraders.photometric_errors
+E             ?                         ^^^ -------      ^
+E             + rail.creation.degraders.lsst_error_model
+E             ?                         ^^^       ^^^^^^
+
+/artifacts/evaluation/tests/test_import_path_fix.py:54: AssertionError
+__________ TestNotebookImports.test_build_save_load_pipeline_notebook __________
+
+self = <test_import_path_fix.TestNotebookImports object at 0x7ffb7466cf10>
+
+    def test_build_save_load_pipeline_notebook(self):
+        """Test Build_Save_Load_Run_Pipeline.ipynb uses correct imports."""
+        nb_path = "/workspace/examples/core_examples/Build_Save_Load_Run_Pipeline.ipynb"
+        success, msg = self._check_notebook_has_correct_import(nb_path)
+>       assert success, msg
+E       AssertionError: Found old import path 'rail.creation.degraders.lsst_error_model' in notebook
+E       assert False
+
+/artifacts/evaluation/tests/test_import_path_fix.py:87: AssertionError
+______________ TestNotebookImports.test_degradation_demo_notebook ______________
+
+self = <test_import_path_fix.TestNotebookImports object at 0x7ffb7466d4d0>
+
+    def test_degradation_demo_notebook(self):
+        """Test degradation-demo.ipynb uses correct imports."""
+        nb_path = "/workspace/examples/creation_examples/degradation-demo.ipynb"
+        success, msg = self._check_notebook_has_correct_import(nb_path)
+>       assert success, msg
+E       AssertionError: Found old import path 'rail.creation.degraders.lsst_error_model' in notebook
+E       assert False
+
+/artifacts/evaluation/tests/test_import_path_fix.py:93: AssertionError
+________ TestNotebookImports.test_photometric_realization_demo_notebook ________
+
+self = <test_import_path_fix.TestNotebookImports object at 0x7ffb7466da90>
+
+    def test_photometric_realization_demo_notebook(self):
+        """Test photometric_realization_demo.ipynb uses correct imports."""
+        nb_path = "/workspace/examples/creation_examples/photometric_realization_demo.ipynb"
+        success, msg = self._check_notebook_has_correct_import(nb_path)
+>       assert success, msg
+E       AssertionError: Found old import path 'rail.creation.degraders.lsst_error_model' in notebook
+E       assert False
+
+/artifacts/evaluation/tests/test_import_path_fix.py:99: AssertionError
+_______________ TestNotebookImports.test_posterior_demo_notebook _______________
+
+self = <test_import_path_fix.TestNotebookImports object at 0x7ffb7466e090>
+
+    def test_posterior_demo_notebook(self):
+        """Test posterior-demo.ipynb uses correct imports."""
+        nb_path = "/workspace/examples/creation_examples/posterior-demo.ipynb"
+        success, msg = self._check_notebook_has_correct_import(nb_path)
+>       assert success, msg
+E       AssertionError: Found old import path 'rail.creation.degraders.lsst_error_model' in notebook
+E       assert False
+
+/artifacts/evaluation/tests/test_import_path_fix.py:105: AssertionError
+________________ TestNotebookImports.test_goldenspike_notebook _________________
+
+self = <test_import_path_fix.TestNotebookImports object at 0x7ffb7466e650>
+
+    def test_goldenspike_notebook(self):
+        """Test goldenspike.ipynb uses correct imports."""
+        nb_path = "/workspace/examples/goldenspike_examples/goldenspike.ipynb"
+        success, msg = self._check_notebook_has_correct_import(nb_path)
+>       assert success, msg
+E       AssertionError: Found old import path 'rail.creation.degraders.lsst_error_model' in notebook
+E       assert False
+
+/artifacts/evaluation/tests/test_import_path_fix.py:111: AssertionError
+_____________ TestIntegration.test_no_old_import_paths_in_examples _____________
+
+self = <test_import_path_fix.TestIntegration object at 0x7ffb7466f350>
+
+    def test_no_old_import_paths_in_examples(self):
+        """Verify no example files contain the old import path."""
+        examples_dir = "/workspace/examples"
+        old_path = "rail.creation.degraders.lsst_error_model"
+    
+        files_with_old_path = []
+        for root, dirs, files in os.walk(examples_dir):
+            for f in files:
+                if f.endswith('.yml') or f.endswith('.yaml') or f.endswith('.ipynb'):
+                    file_path = os.path.join(root, f)
+                    with open(file_path, 'r') as fh:
+                        content = fh.read()
+                        if old_path in content:
+                            files_with_old_path.append(file_path)
+    
+>       assert len(files_with_old_path) == 0, \
+            f"Found old import path in: {', '.join(files_with_old_path)}"
+E       AssertionError: Found old import path in: /workspace/examples/creation_examples/degradation-demo.ipynb, /workspace/examples/creation_examples/photometric_realization_demo.ipynb, /workspace/examples/creation_examples/posterior-demo.ipynb, /workspace/examples/core_examples/Build_Save_Load_Run_Pipeline.ipynb, /workspace/examples/core_examples/pipe_example.yml, /workspace/examples/goldenspike_examples/goldenspike.yml, /workspace/examples/goldenspike_examples/goldenspike.ipynb
+E       assert 7 == 0
+E        +  where 7 = len(['/workspace/examples/creation_examples/degradation-demo.ipynb', '/workspace/examples/creation_examples/photometric_realization_demo.ipynb', '/workspace/examples/creation_examples/posterior-demo.ipynb', '/workspace/examples/core_examples/Build_Save_Load_Run_Pipeline.ipynb', '/workspace/examples/core_examples/pipe_example.yml', '/workspace/examples/goldenspike_examples/goldenspike.yml', ...])
+
+/artifacts/evaluation/tests/test_import_path_fix.py:145: AssertionError
+=========================== short test summary info ============================
+FAILED ../artifacts/evaluation/tests/test_import_path_fix.py::TestYAMLConfigurations::test_pipe_example_yml
+FAILED ../artifacts/evaluation/tests/test_import_path_fix.py::TestYAMLConfigurations::test_goldenspike_yml
+FAILED ../artifacts/evaluation/tests/test_import_path_fix.py::TestNotebookImports::test_build_save_load_pipeline_notebook
+FAILED ../artifacts/evaluation/tests/test_import_path_fix.py::TestNotebookImports::test_degradation_demo_notebook
+FAILED ../artifacts/evaluation/tests/test_import_path_fix.py::TestNotebookImports::test_photometric_realization_demo_notebook
+FAILED ../artifacts/evaluation/tests/test_import_path_fix.py::TestNotebookImports::test_posterior_demo_notebook
+FAILED ../artifacts/evaluation/tests/test_import_path_fix.py::TestNotebookImports::test_goldenspike_notebook
+FAILED ../artifacts/evaluation/tests/test_import_path_fix.py::TestIntegration::test_no_old_import_paths_in_examples
+========================= 8 failed, 1 passed in 0.05s ==========================
+>>>>> End Test Output
+OPENENV_EXIT_CODE=1

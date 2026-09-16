@@ -1,0 +1,9 @@
+{
+  "status": "success",
+  "blocks_outer_progress": false,
+  "build_backend": "buildah",
+  "buildable": true,
+  "failure_class": "success",
+  "route_to": null,
+  "notes": "Build completed successfully. The container image was built using Buildah and exported to /artifacts/environment/openenv_validation_oci.tar (1.2GB). All setup steps completed: system packages installed, nuttx repository cloned, nuttx-apps cloned to /apps, kconfig-frontends installed, Python dependencies installed, and NuttX configured for nucleo-h745zi:nsh_cm7 target."
+}

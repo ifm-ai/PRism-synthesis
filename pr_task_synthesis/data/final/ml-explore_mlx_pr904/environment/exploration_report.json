@@ -1,0 +1,82 @@
+{
+  "pr_summary": "Fix mx.random.normal producing -inf/inf values for half-precision dtypes (float16, bfloat16) by adding above_minus_one() helper in mlx/random.cpp to properly handle lower bound for these types",
+  "runtime_family": "C++/Python",
+  "package_manager": "pip",
+  "touched_files": [
+    "mlx/random.cpp"
+  ],
+  "important_build_files": [
+    "CMakeLists.txt",
+    "setup.py",
+    "pyproject.toml",
+    "mlx/CMakeLists.txt"
+  ],
+  "important_test_files": [
+    "python/tests/test_random.py",
+    "tests/random_tests.cpp"
+  ],
+  "candidate_build_commands": [
+    "pip install -e .",
+    "CMAKE_ARGS=\"-DMLX_BUILD_METAL=OFF\" python3 setup.py build_ext --inplace",
+    "CMAKE_ARGS=\"-DMLX_BUILD_METAL=OFF\" python3 setup.py develop",
+    "mkdir -p build && cd build && cmake .. -DMLX_BUILD_METAL=OFF && make -j"
+  ],
+  "candidate_test_commands": [
+    "python3 -m unittest discover python/tests -v",
+    "python3 -m unittest python/tests/test_random.py",
+    "./build/tests/tests"
+  ],
+  "candidate_smoke_commands": [
+    "python3 -c \"import mlx.core as mx; print(mx.random.normal())\""
+  ],
+  "candidate_activation_checks": [
+    "python3 -c \"import mlx.core as mx; print(mx.__version__)\"",
+    "python3 -c \"import mlx.core as mx; a = mx.random.normal(dtype=mx.float16); print(a)\""
+  ],
+  "environment_management": {
+    "type": "pip",
+    "build_requires": [
+      "cmake>=3.24",
+      "nanobind",
+      "setuptools>=42"
+    ],
+    "test_requires": [
+      "numpy",
+      "torch"
+    ],
+    "system_deps": [
+      "libblas-dev",
+      "liblapack-dev",
+      "liblapacke-dev"
+    ]
+  },
+  "special_system_dependencies": [
+    "BLAS",
+    "LAPACK",
+    "Metal framework (macOS only, optional)"
+  ],
+  "high_value_files": [
+    "mlx/random.cpp",
+    "python/tests/test_random.py",
+    "tests/random_tests.cpp",
+    "CMakeLists.txt",
+    "setup.py"
+  ],
+  "patch_file_cues": [
+    "mlx/random.cpp: adds above_minus_one() template helper for half-precision types",
+    "mlx/random.cpp: modifies normal() function to use dtype-specific lower bound"
+  ],
+  "test_file_cues": [
+    "python/tests/test_random.py: test_normal() tests float16/bfloat16 dtypes",
+    "tests/random_tests.cpp: test random normal with float16/bfloat16 checks abs(out) < inf"
+  ],
+  "platform_constraint": "cross_platform",
+  "platform_constraint_evidence": [
+    "CMakeLists.txt supports Linux/macOS with MLX_BUILD_METAL option for GPU",
+    "CircleCI config shows linux_build_and_test job with -DMLX_BUILD_METAL=OFF",
+    "README states MLX is 'prioritised for Apple silicon' but builds on Linux",
+    "Fix patch touches mlx/random.cpp which is platform-agnostic C++ code",
+    "Test file python/tests/test_random.py runs on Linux in CI"
+  ],
+  "notes": "MLX is Apple's machine learning framework optimized for Apple silicon but supports Linux builds without Metal GPU. The fix in mlx/random.cpp addresses half-precision random number generation by adding above_minus_one() helper. Tests exist in both Python (python/tests/test_random.py) and C++ (tests/random_tests.cpp). Linux builds require disabling Metal: CMAKE_ARGS=\"-DMLX_BUILD_METAL=OFF\"."
+}

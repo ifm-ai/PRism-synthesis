@@ -1,0 +1,29 @@
+{
+  "status": "complete",
+  "blocks_outer_progress": false,
+  "blocks_reason": null,
+  "blocks_target": null,
+  "infrastructure_blocked": false,
+  "infrastructure_reason": null,
+  "verification_command": "cargo test --package firezone-relay --features proptest test_ipv6_allocation_can_bind_ipv6_peer -- --nocapture",
+  "activation_source": "environment_request.json activation_command",
+  "eval_template_version": "1.0",
+  "verifier_asset_mode": "test.patch",
+  "copied_test_patch": true,
+  "supplemental_tests_created": false,
+  "extra_test_dependencies_installed": false,
+  "extra_test_dependency_commands": [],
+  "setup_runtime_updates": [],
+  "claimed_coverage": "Tests that IPv6 allocations can bind to IPv6 peers by exercising the can_relay_to() fix - buggy code rejects all IPv6 addresses with addr.is_ipv4(), fixed code allows IPv6 when allocation has IPv6 relay addresses.",
+  "fix_patch_grounding": "The fix.patch modifies Allocation::can_relay_to() to check if the allocation has IPv6 relay addresses (first_relay_addr.is_ipv6() || second_relay_addr.is_some_and(|a| a.is_ipv6())) instead of unconditionally rejecting all IPv6 with addr.is_ipv4().",
+  "issue_context_used": "Added deterministic #[test] test_ipv6_allocation_can_bind_ipv6_peer that creates IPv6 allocation on dual-stack server and binds to IPv6 peer - fails on buggy code (PeerAddressFamilyMismatch error), passes on fixed code.",
+  "verification_mode": "behavioral",
+  "test_entrypoints": [
+    "cargo test --package firezone-relay --features proptest test_ipv6_allocation_can_bind_ipv6_peer -- --nocapture"
+  ],
+  "required_verifier_files": [
+    "eval.sh",
+    "test.patch"
+  ],
+  "notes": "Updated test.patch to add deterministic #[test] test_ipv6_allocation_can_bind_ipv6_peer that explicitly tests the can_relay_to() behavior. The test creates an IPv6 allocation and attempts to bind to an IPv6 peer. On buggy code, can_relay_to() returns false for IPv6 addresses, causing the test to fail. On fixed code, can_relay_to() correctly allows IPv6 peers for IPv6 allocations, test passes. The eval.sh applies test.patch at runtime and runs the new test."
+}

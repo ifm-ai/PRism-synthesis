@@ -1,0 +1,43 @@
+{
+  "base_image_candidate": "node:20-bookworm",
+  "system_packages": [
+    "git",
+    "curl",
+    "git-lfs"
+  ],
+  "base_setup_commands": [
+    "apt-get update",
+    "apt-get install -y git curl git-lfs",
+    "git lfs install"
+  ],
+  "setup_runtime_commands": [
+    "cd /workspace && npm install --ignore-scripts",
+    "git lfs install"
+  ],
+  "activation_commands": [
+    "node --version && npm --version"
+  ],
+  "activation_command": "",
+  "activation_type": "system",
+  "activation_validation_command": "node --version && npm --version",
+  "detected_test_command": "npm test",
+  "runtime_smoke_command": "node --version && npm --version && git lfs version",
+  "runtime_profile": {
+    "ecosystem": "node",
+    "package_manager": "npm",
+    "env": {},
+    "env_name": null,
+    "prepare_commands": [
+      "npm install --ignore-scripts"
+    ],
+    "activation_commands": [],
+    "base_deps_installed": true,
+    "test_only_install_strategy": "npm ci --ignore-scripts",
+    "cache_dirs": [
+      "/root/.npm",
+      "node_modules"
+    ],
+    "notes": "Node.js 20+ project using npm. Test infrastructure is Jest with ESM modules. Requires git-lfs for test model downloads. npm install uses --ignore-scripts to skip onnxruntime-node postinstall script that downloads GPU binary from GitHub and causes ConnectTimeoutError. CPU-only inference is supported via onnxruntime-web's WASM fallback."
+  },
+  "notes": "Transformers.js project requires Node.js 18+. Using node:20-bookworm as base image. git, curl, and git-lfs are included in system packages. The project uses ESM modules (type: module in package.json) and Jest for testing. Fixed runtime_setup_failure by using --ignore-scripts flag during npm install to skip the onnxruntime-node postinstall script that downloads GPU binaries from GitHub. CPU-only inference is sufficient for tests and is handled by onnxruntime-web's WASM fallback."
+}

@@ -1,0 +1,35 @@
+schema_version = "1.1"
+
+[task]
+name = "AutoGPTQ_AutoGPTQ_pr522"
+description = "OpenEnv: AutoGPTQ/AutoGPTQ PR #522"
+authors = []
+keywords = []
+
+[metadata]
+source = "openenv"
+git_url = "https://github.com/AutoGPTQ/AutoGPTQ.git"
+git_pr_id = "522"
+git_base_commit = "be78af8d4fd80b5afa0a8a7df7b0e0ec44420003"
+task_id = "AutoGPTQ_AutoGPTQ_pr522"
+repo_full_name = "AutoGPTQ/AutoGPTQ"
+domain = "ML_DEEP_LEARNING"
+primary_language = "Python"
+runtime_family = "Python"
+complexity = "hard"
+star_category = "stars_1001_inf"
+
+[verifier]
+timeout_sec = 600.0
+
+[agent]
+timeout_sec = 900.0
+
+
+
+[environment]
+build_timeout_sec = 600.0
+os = "linux"
+cpus = 2
+memory_mb = 4096
+storage_mb = 20480

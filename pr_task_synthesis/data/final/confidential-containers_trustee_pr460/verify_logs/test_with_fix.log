@@ -1,0 +1,15 @@
+/tests/eval.sh: line 15: /root/.cargo/env: No such file or directory
+>>>>> Start Test Output
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.02s
+     Running test_se_skip_certs.rs (/tests/tests/target/debug/deps/test_se_skip_certs-aed6c3d31f070dc7)
+
+running 4 tests
+test test_certificate_verification_uses_skip_certs_unconditionally ... ok
+test test_fix_pattern_matches_expected_structure ... ok
+test test_no_cfg_not_debug_assertions_in_verification ... ok
+test test_se_skip_certs_verification_is_unconditional ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+>>>>> End Test Output
+OPENENV_EXIT_CODE=0
