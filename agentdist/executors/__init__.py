@@ -17,6 +17,10 @@ class ExecutorFactory:
             return LocalExecutionBackend
         elif backend == "apptainer":
             return ApptainerExecutionBackend
+        elif backend == "kubernetes":
+            from agentdist.executors.kubernetes import KubeExecutionBackend
+
+            return KubeExecutionBackend
         else:
             raise EnvironmentError(
                 f"Provided backend {backend} execution doesn't supported"

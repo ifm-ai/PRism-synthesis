@@ -107,7 +107,6 @@ context = (
     .config("concurrent_tasks", 50)              # max parallel tasks
     .config("eager_stage_cleanup", True)         # destroy executor between stages
     .config("skip_env_setup", False)             # skip conda env setup
-    .config("offload_executor", True)            # offload isolated ops to K8s jobs
     .config("telemetry.exporter_type", "otlp,console")
     .config("telemetry.exporter_endpoint", "http://otel-collector:4317")
     .build()
@@ -121,7 +120,7 @@ context = (
 | `concurrent_tasks` | 1000 | Semaphore limit — max items processed in parallel |
 | `eager_stage_cleanup` | `False` | Destroy executor after each stage completes |
 | `skip_env_setup` | `False` | Skip conda/virtualenv setup inside containers |
-| `offload_executor` | `True` | Serialize isolated ops as K8s Jobs instead of inline execution |
+| `offload_executor` | `False` | Not supported in this copy — the job tier it offloaded to was removed, so `True` raises |
 | `telemetry.exporter_type` | `None` | Comma-separated: `otlp`, `console` |
 | `telemetry.exporter_endpoint` | `None` | OTLP collector URL |
 | `telemetry.metrics_file` | `None` | Local file for metrics export |
@@ -415,7 +414,7 @@ UDFs used in `.map()` receive:
 ```python
 def my_udf(item: str, state: State | None, **kwargs):
     # item   — the resolved instruction string (from map(instruction=...))
-    # state  — State object if AgentFlowJobContext was given a state; else None
+    # state  — State object if the data object was given one; else None
     # kwargs — future extensibility
     ...
 ```

@@ -193,3 +193,50 @@ Nested containers are the one real requirement: buildah and Apptainer both run *
 sandbox, which needs working user namespaces and a subuid/subgid range on the host. The
 Kubernetes version of this pipeline got that from a privileged pod with `SYS_ADMIN`; here it comes
 from `--fakeroot` and the `unshare -r` that `secure=True` applies.
+## Running it on Kubernetes instead
+
+This pipeline was originally run on Kubernetes, and that path still works — the backend is the
+only thing that changes. Swap the `ContainerExecConfig` in `agent_config()` for a
+`KubernetesExecConfig` and set `backend="kubernetes"`:
+
+```python
+from agentdist.structures.executor import KubernetesExecConfig
+
+        backend="kubernetes",
+        backend_config=KubernetesExecConfig(
+            name=f"swe-{data['task_id']}".replace("_", "-").lower(),
+            image="<registry>/swe-env-builder:latest",
+            image_secret="<pull-secret>",
+            namespace="<namespace>",
+            service_account_name="<service-account>",
+            cpu=4,
+            mem=32,                    
+            post_setup_commands=[...],
+            env_vars={...},
+            env_artifacts=task_artifacts(task_context),
+            secure=True,
+            security_config={"privileged": True, "capabilities": {"add": ["SYS_ADMIN"]}},
+            env_start_timeout=1800,
+            skip_remote_env_setup=True,
+        ),
+```
+
+Everything else — `agent.py`, the prompts, the turn loop, the quality gate — is untouched. The
+orchestrator creates one pod per task, runs the agent through the pod's exec API, moves files in
+and out as tar over that same connection, and deletes the pod when the task finishes. The image is
+the one built from this folder's `Dockerfile`, pushed to a registry your cluster can pull from.
+
+Two things are worth knowing before trying it:
+
+- **`privileged: True` with `SYS_ADMIN` is not optional here.** The agent builds container images
+  from inside its own container, and buildah and Apptainer both need user namespaces to do that.
+  Under Apptainer it comes from `--fakeroot` and `unshare -r`; a normal pod cannot do it at all.
+  If your cluster forbids privileged pods, this pipeline will not run on it.
+- **The orchestrator stays wherever you run `pipeline.py`.** The original also had a job tier that
+  submitted the orchestrator itself into the cluster and fanned work across many worker pods. That
+  tier was removed along with the rest of the cluster plumbing, so what is left drives the pods
+  from one process, bounded by `--concurrent`.
+
+`kubernetes` is imported only when you ask for that backend, so it need not be installed
+otherwise — `pip install kubernetes` when you do. The executor reads your kubeconfig, falling back
+to in-cluster credentials when it is running inside the cluster itself.

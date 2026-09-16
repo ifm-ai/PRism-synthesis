@@ -38,4 +38,28 @@ Each folder has a README describing the pipeline and its files, and a `data/` fo
 examples of every stage. `pr_thoughts` and `pr_tasks` are shown on the same 200 PRs, so the two
 outputs can be compared side by side.
 
-The code is meant to be read: it contains the full logic that determines the data, without the batching and cluster plumbing used to run it at scale. It uses vllm, transformers and pyarrow.
+**[`agentdist/`](agentdist) — the runtime the two agentic pipelines run on.** `pr_thoughts` and
+`pr_tasks` need nothing but a model: they send a prompt and keep the answer. The other two have to
+put an agent in a container, let it edit files and run commands for hours, and collect what it
+leaves behind — so they need a runtime, and it ships here rather than being assumed.
+
+A pipeline reads as a small dataflow:
+
+```python
+context = AgentFlowContext.builder.app_name("...").config("concurrent_tasks", 4).build()
+data    = context.from_stream(load_tasks)            # a @udf generator of records
+data.map(instruction=..., func=agent_config, artifacts=...) \
+    .save(target_path=..., custom_func=...).execute()
+```
+
+`func` returns an `AgentConfig` for each record: which agent class to run, which backend to run it
+in, and how to set the sandbox up. The orchestrator starts one sandbox per record, runs the agent
+inside it, saves the result and tears the sandbox down, with a semaphore bounding how many run at
+once. Swapping `backend="apptainer"` for `"kubernetes"`, `"docker"` or `"local"` changes where the
+agent runs and nothing else — the pipeline, the agent and the prompts are identical. Its dependencies are `pydantic`, `cloudpickle`, `colorlog`, `function_schema` and
+`opentelemetry`.
+
+The code is meant to be read: it contains the full logic that determines the data. For the two
+text pipelines that means no batching or cluster plumbing at all — they use `vllm`, `transformers`
+and `pyarrow`. The two agentic pipelines cannot be shown that way, because what they produce
+depends on what happens inside a container, so they ship the runtime too.
