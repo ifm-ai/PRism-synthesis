@@ -49,8 +49,11 @@ rejected and retried twice before the chain fails.
   token budgeting, and trajectory export.
 - `synthesis.py`: the task-synthesis and handoff prompts, their validation and retries.
 - `trajectory.py`: `ChainSegment` and the flattener that turns N sessions into one conversation.
-- `sandbox.def`: the Apptainer image — opencode, git, and a private Python at `/.environ` that the
-  trajectory export runs under, kept separate from whatever the task's repository installs.
+- `Dockerfile`: the sandbox image, as the pipeline was actually run with. A multi-language
+  sandbox — Go, Rust, Java, Dart, .NET, Julia, Scala, Kotlin, PHP, Ruby, Lua and Python on top of
+  Node — because the agent has to build and test whatever repository the chain happens to name.
+  It also provides the private Python at `/.environ/miniconda` that the trajectory export runs
+  under, kept away from whatever the task's repository installs.
 - `data/input.jsonl`: one hundred real chain definitions, each with its per-PR descriptions and
   the `license` of the repository it came from.
 - `data/final/<task_id>/`: the matching run for each — `pr_chain_conversation.json` (the flattened
@@ -59,9 +62,28 @@ rejected and retried twice before the chain fails.
 
 ## Running it
 
-```bash
-apptainer build --fakeroot sandbox.sif sandbox.def
+Build the image, then convert it for Apptainer:
 
+```bash
+docker build -t pr-chain-sandbox .
+apptainer build sandbox.sif docker-daemon://pr-chain-sandbox:latest
+```
+
+`docker-daemon://` reads straight out of the local Docker daemon, so nothing has to be pushed
+anywhere. It is a large image — six language SDKs are copied in from their own base images —
+so expect a long first build. Alternatives:
+
+- **From a registry** — push once, then
+  `apptainer build sandbox.sif docker://<registry>/pr-chain-sandbox:latest` on each machine.
+  Worth it here, given the build cost.
+- **Skip the .sif** — pass `--image docker://<registry>/pr-chain-sandbox:latest` directly;
+  Apptainer converts on first use and caches the result.
+- **No Docker at all** — `apptainer build sandbox.sif docker-archive://image.tar` from a
+  `docker save` tarball.
+
+Then:
+
+```bash
 export MODEL_BASE_URL=http://<vllm-host>:8000/v1
 export MODEL=Qwen/Qwen3.5-397B-A17B-FP8
 export MODEL_API_KEY=...            # whatever your endpoint expects; EMPTY for a bare vLLM
