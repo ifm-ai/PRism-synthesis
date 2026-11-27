@@ -15,7 +15,7 @@
   "script_destinations": {
     "setup_runtime.sh": "/opt/benchmark/setup_runtime.sh",
     "repo_setup.sh": "/opt/benchmark/repo_setup.sh"
-  ],
+  },
   "build_steps": [
     {
       "type": "from",
